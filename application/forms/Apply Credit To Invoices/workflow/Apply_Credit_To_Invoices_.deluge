@@ -1,0 +1,51 @@
+Apply_Credit_To_Invoices_ as "Apply Credit To Invoices Initialization"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Credit_Note == null)
+				{
+					used_credit_note_id_list = List();
+					for each  curr_apply_credit_to_invoices in Apply_Credit_To_Invoices
+					{
+						if(curr_apply_credit_to_invoices.Credit_Note != null)
+						{
+							used_credit_note_id_list.add(curr_apply_credit_to_invoices.Credit_Note);
+						}
+					}
+					credit_note_id_with_credits_remaining_list = List();
+					for each  curr_credit_note in Credit_Note[Status == "Approved" || Status == "Open"]
+					{
+						if(curr_credit_note.Credits_Remaining > 0)
+						{
+							credit_note_id_with_credits_remaining_list.add(curr_credit_note.ID);
+						}
+					}
+					credit_note_selection_list = List();
+					for each  curr_credit_note_id in credit_note_id_with_credits_remaining_list
+					{
+						if(!used_credit_note_id_list.contains(curr_credit_note_id))
+						{
+							credit_note_selection_list.add(curr_credit_note_id);
+						}
+					}
+					input.Credit_Note:ui.add(credit_note_selection_list);
+				}
+				else
+				{
+					input.Credit_Note_Selection_Trigger = !Credit_Note_Selection_Trigger;
+				}
+			)
+		}
+	}
+
+}
+

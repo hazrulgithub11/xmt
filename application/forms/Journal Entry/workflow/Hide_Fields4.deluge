@@ -1,0 +1,32 @@
+Hide_Fields4 as "Hide Fields"
+{
+	type =  form
+	form = Journal_Entry
+
+	record event = on add or edit
+		status = inactive
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Invoice;
+				hide Debit_Note;
+				hide Credit_Note;
+				hide Payment_Received;
+				hide Deposits;
+				hide Created_By_The_System;
+				hide Journal_Entry_Line_Item.Invoice;
+				hide Journal_Entry_Line_Item.Credit_Note;
+				hide Journal_Entry_Line_Item.Debit_Note;
+				hide Journal_Entry_Line_Item.Deposits;
+				hide Journal_Entry_Line_Item.Journal_Entry;
+				hide Journal_Entry_Line_Item.Payment_Received;
+			)
+		}
+	}
+
+}
+

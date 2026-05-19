@@ -1,0 +1,20 @@
+Disable_Fields18 as "Disable Fields"
+{
+	type =  form
+	form = User
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Email;
+			)
+		}
+	}
+
+}
+

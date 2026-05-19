@@ -1,0 +1,7 @@
+void invoice.recalculate_overdue(int tenantId, int invId)
+{
+	totalDue = Invoice[Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid" && Customer_Code == tenantId && ID != invId].sum(Amount_Due);
+	getInv = Invoice[ID == invId];
+	//getInv.Overdue_Charges=totalDue;
+	getInv.Total_Amount_Due=getInv.Grand_Total + totalDue;
+}

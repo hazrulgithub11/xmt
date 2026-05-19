@@ -1,0 +1,122 @@
+		form Apply_Credit_To_Invoices
+		{
+			displayname = "Apply Credit To Invoices"
+			success message = "Data Added Successfully!"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Credit_Note
+			(
+				type = picklist	
+				displayname = "Credit Note"
+				values  = Credit_Note.ID
+    			displayformat = [Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Credits_Remaining
+			(
+				type = decimal
+				displayname = "Credits Remaining"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Unpaid_Invoices
+			(
+				type = grid
+				displayname = "Unpaid Invoices"
+				must have Invoice
+				(
+					type = picklist	
+					displayname = "Invoice No"
+					values  = Invoice.ID
+    				displayformat = [Invoice_No]
+					sortorder = ascending
+					width = medium
+				)
+				must have Invoice_Date
+				(
+    				type = date
+					displayname = "Invoice Date"
+					alloweddays = 0,1,2,3,4,5,6
+					width = medium
+				)
+				must have Grand_Total
+				(
+					type = decimal
+					displayname = "Grand Total"
+					format = commadotwestern
+					width = medium
+				)
+				must have Amount_Due
+				(
+					type = decimal
+					displayname = "Amount Due"
+					format = commadotwestern
+					width = medium
+				)
+				must have Credits_To_Apply
+				(
+					type = decimal
+					displayname = "Credits To Apply"
+					format = commadotwestern
+					width = medium
+				)
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			Section1
+			(
+				type = section
+				displayname = "Section"
+	 			row = 3
+	 			column = 0   
+				width = medium
+			)
+			Credit_Note_Selection_Trigger
+			(
+    			type = checkbox
+				initial value = false
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

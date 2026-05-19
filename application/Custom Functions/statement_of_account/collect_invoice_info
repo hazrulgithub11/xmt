@@ -1,0 +1,81 @@
+list statement_of_account.collect_invoice_info(date startDate, date endDate, int customerProfile, string statementType, list customerCodes)
+{
+	invList = list();
+	if(statementType == "Statement Of Account")
+	{
+		if(customerCodes.size() > 0)
+		{
+			for each  customerCode in customerCodes
+			{
+				for each  inv in Invoice[Invoice_Date >= startDate && Invoice_Date <= endDate && Customer == customerProfile && Customer_Code == customerCode]
+				{
+					getTenant = Tenancy[ID == inv.Customer_Code];
+					invoiceMp = Map();
+					invoiceMp.put("Tenant_Name",getTenant.Tenant_Name);
+					invoiceMp.put("Customer_Code",getTenant.Customer_Code);
+					invoiceMp.put("Date",inv.Invoice_Date);
+					invoiceMp.put("Details",inv.Invoice_No + "- due on " + inv.Due_Date);
+					invoiceMp.put("Transaction","Invoice");
+					invoiceMp.put("Amount",inv.Grand_Total);
+					invoiceMp.put("Payment",null);
+					invList.add(invoiceMp);
+				}
+			}
+		}
+		else
+		{
+			for each  inv in Invoice[Invoice_Date >= startDate && Invoice_Date <= endDate && Customer == customerProfile]
+			{
+				getTenant = Tenancy[ID == inv.Customer_Code];
+				invoiceMp = Map();
+				invoiceMp.put("Tenant_Name",getTenant.Tenant_Name);
+				invoiceMp.put("Customer_Code",getTenant.Customer_Code);
+				invoiceMp.put("Date",inv.Invoice_Date);
+				invoiceMp.put("Details",inv.Invoice_No + "- due on " + inv.Due_Date);
+				invoiceMp.put("Transaction","Invoice");
+				invoiceMp.put("Amount",inv.Grand_Total);
+				invoiceMp.put("Payment",null);
+				invList.add(invoiceMp);
+			}
+		}
+	}
+	else if(statementType == "Statement Of Outstanding")
+	{
+		if(customerCodes.size() > 0)
+		{
+			for each  customerCode in customerCodes
+			{
+				for each  inv in Invoice[Invoice_Date >= startDate && Invoice_Date <= endDate && Customer == customerProfile && Customer_Code == customerCode && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"]
+				{
+					getTenant = Tenancy[ID == inv.Customer_Code];
+					invoiceMp = Map();
+					invoiceMp.put("Tenant_Name",getTenant.Tenant_Name);
+					invoiceMp.put("Customer_Code",getTenant.Customer_Code);
+					invoiceMp.put("Date",inv.Invoice_Date);
+					invoiceMp.put("Details",inv.Invoice_No + "- due on " + inv.Due_Date);
+					invoiceMp.put("Transaction","Invoice");
+					invoiceMp.put("Amount",inv.Amount_Due);
+					invoiceMp.put("Payment",null);
+					invList.add(invoiceMp);
+				}
+			}
+		}
+		else
+		{
+			for each  inv in Invoice[Invoice_Date >= startDate && Invoice_Date <= endDate && Customer == customerProfile && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"]
+			{
+				getTenant = Tenancy[ID == inv.Customer_Code];
+				invoiceMp = Map();
+				invoiceMp.put("Tenant_Name",getTenant.Tenant_Name);
+				invoiceMp.put("Customer_Code",getTenant.Customer_Code);
+				invoiceMp.put("Date",inv.Invoice_Date);
+				invoiceMp.put("Details",inv.Invoice_No + "- due on " + inv.Due_Date);
+				invoiceMp.put("Transaction","Invoice");
+				invoiceMp.put("Amount",inv.Amount_Due);
+				invoiceMp.put("Payment",null);
+				invList.add(invoiceMp);
+			}
+		}
+	}
+	return invList;
+}

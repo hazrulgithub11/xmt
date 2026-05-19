@@ -1,0 +1,33 @@
+Validate_Record_Deletion4 as "Validate Record Deletion"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// Reference Invoice
+				reference_invoice_list = Apply_Credit_To_Invoice_Line[Credit_Note == input.ID].ID.getAll();
+				if(reference_invoice_list.size() > 0)
+				{
+					alert "This Credit Note cannot be deleted because it has already been applied to one or more invoices.";
+					cancel delete;
+				}
+				// Reference Refund Note
+				reference_refund_note_list = Refund_Note[Reference_Credit_Note == input.ID].ID.getAll();
+				if(reference_refund_note_list.size() > 0)
+				{
+					alert "This Credit Note cannot be deleted because refund notes are linked to it. Please delete the associated refund notes first.";
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

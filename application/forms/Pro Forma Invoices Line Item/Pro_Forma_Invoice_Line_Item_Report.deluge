@@ -1,0 +1,100 @@
+list Pro_Forma_Invoice_Line_Item_Report
+{
+	displayName = "Pro Forma Invoice Line Item Report"
+	show all rows from Pro_Forma_Invoices_Line_Item    
+	(
+		Item as "nvoic"
+		Description
+		Unit_Price as "Unit Price"
+		Quantity
+		Total
+		Customer_Name as "Customer Name"
+		Pro_Forma_Invoice as "Pro Forma Invoice"
+		Item_Code as "Item Code"
+		Customer_Code as "Customer Code"
+		Sub_Total as "Sub Total"
+		Tax
+		Tax_Pct as "Tax Pct"
+		Tax_Amount as "Tax Amount"
+		Total_MYR as "Total (MYR)"
+		Business_Segment as "Business Segment"
+		Business_Unit as "Business Unit"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Item as "nvoic"
+					Description
+					Unit_Price as "Unit Price"
+					Quantity
+					Item_Code as "Item Code"
+					Customer_Code as "Customer Code"
+					Sub_Total as "Sub Total"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+			record
+			(
+				Edit   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Item as "nvoic"
+					Description
+					Unit_Price as "Unit Price"
+					Quantity
+					Total
+					Customer_Name as "Customer Name"
+					Pro_Forma_Invoice as "Pro Forma Invoice"
+					Item_Code as "Item Code"
+					Customer_Code as "Customer Code"
+					Sub_Total as "Sub Total"
+					Tax
+					Tax_Pct as "Tax Pct"
+					Tax_Amount as "Tax Amount"
+					Total_MYR as "Total (MYR)"
+					Business_Segment as "Business Segment"
+					Business_Unit as "Business Unit"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+    	)
+	)
+}

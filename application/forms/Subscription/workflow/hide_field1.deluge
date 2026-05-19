@@ -1,0 +1,21 @@
+hide_field1 as "hide field"
+{
+	type =  form
+	form = Subscription
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Create_Work_Order;
+				hide Work_Order_Type;
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,23 @@
+Handle_Edit_Submission_V2 as "Handle Edit Submission V2"
+{
+	type =  form
+	form = Subscription
+
+	record event = on edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					for each  subLineItem in Subscription_Line_Item[Subscription == null]
+				{
+					delete from Subscription_Line_Item[ID == subLineItem.ID];
+				}
+			)
+		}
+	}
+
+}
+

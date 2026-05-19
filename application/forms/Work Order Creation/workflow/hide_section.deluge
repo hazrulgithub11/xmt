@@ -1,0 +1,17 @@
+hide_section as "hide section"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on add
+
+	field rules
+	{
+		actions 
+		{
+			hide TAC_ATA_CONVERTER,TIP_IP_PHONE,TAS_ACCESS_SWITCH,TBI_BROADBAND_INTERNET_ACCESS,TDI_DEDICATED_INTERNET_ACCESS,TCT_CABLE_TRAY,TDC_DATA_CENTRE,TRS_RACK_SPACE,TGB_GPON_BROADBAND,THC_HALF_CIRCUIT,TWF_WIFI,TDF_DEFAULT;
+		}
+	}
+
+}
+

@@ -1,0 +1,24 @@
+string generate_delivery_order_no()
+{
+	// 	suffix = "/" + zoho.currentdate.getYear().toString();
+	// 	invoiceInfo = Invoice[Delivery_Order_No.containsIgnoreCase(suffix) && Delivery_Order_No != ""] sort by Delivery_Order_No desc;
+	// 	if(invoiceInfo.ID == null)
+	// 	{
+	// 		count = 0;
+	// 	}
+	// 	else
+	// 	{
+	// 		count = invoiceInfo.Delivery_Order_No.getprefix(suffix).toLong();
+	// 	}
+	// 	count = count + 1;
+	// 	if(count < 10)
+	// 	{
+	// 		pad = "0";
+	// 	}
+	// 	else
+	// 	{
+	// 		pad = "";
+	// 	}
+	// 	doNumber = pad + count + suffix;
+	return "";
+}

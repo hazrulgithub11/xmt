@@ -1,0 +1,21 @@
+Validate_Record_Deletion8 as "Validate Record Deletion"
+{
+	type =  form
+	form = Transaction_Type
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					alert "The Transaction Type can’t be deleted.";
+				cancel delete;
+			)
+		}
+	}
+
+}
+

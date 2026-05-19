@@ -1,0 +1,72 @@
+list All_Payment_Terms
+{
+	displayName = "Payment Terms"
+	show all rows from Payment_Term    
+	(
+		Days as "Payment Term"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Days as "Payment Term"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Days as "Payment Term"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

@@ -1,0 +1,30 @@
+Handle_Deposit_Date as "Handle Deposit Date"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on user input of Pro_Forma_Invoice_Date
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Pro_Forma_Invoice_Date == null)
+				{
+					input.Due_Date = null;
+				}
+				else
+				{
+					if(input.Payment_Term != null)
+					{
+						input.Due_Date = input.Pro_Forma_Invoice_Date.addDay(input.Payment_Term.Days);
+					}
+				}
+			)
+		}
+	}
+
+}
+

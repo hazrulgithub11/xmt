@@ -1,0 +1,63 @@
+		form Date_form
+		{
+			displayname = "Date form"
+			store data in zc = false
+			success message = ""
+			Section1
+			(
+				type = section
+				displayname = "Section"
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Prefix_Date_Duration
+			(
+				type = picklist
+				displayname = "Prefix Date Duration"
+				maxchar = 100
+				values = {"This Month","This Year","Custom"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Section
+			(
+				type = section
+	 			row = 2
+	 			column = 0   
+				width = medium
+			)
+			must have Start_Date
+			(
+    			type = date
+				displayname = "Start Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			must have End_Date
+			(
+    			type = date
+				displayname = "End Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 2
+	 			column = 2   
+				width = medium
+			)
+	
+			actions
+			{
+				Filter
+				(
+   					type = submit
+   					displayname = "Filter"
+				)
+				Reset
+				(
+   					type = reset
+   					displayname = "Reset"
+				)
+			}
+		}

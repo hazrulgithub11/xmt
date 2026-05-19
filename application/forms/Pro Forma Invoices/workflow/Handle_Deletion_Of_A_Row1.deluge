@@ -1,0 +1,10 @@
+// Workflow: Handle Deletion Of A Row
+// Link name: Handle_Deletion_Of_A_Row1
+// Record event: on add or edit
+// Trigger: on delete row of Pro_Forma_Invoice_Line_Item
+
+input.Sub_Total = ifnull(input.Sub_Total,0) - ifnull(row.Sub_Total,0);
+input.Total_Tax = ifnull(input.Total_Tax,0) - ifnull(row.Tax_Amount,0);
+input.Grand_Total = ifnull(input.Grand_Total,0) - ifnull(row.Total,0);
+input.Amount_Due = input.Grand_Total;
+input.Grand_Total_MYR = ifnull(input.Grand_Total_MYR,0) - ifnull(row.Total_MYR,0);

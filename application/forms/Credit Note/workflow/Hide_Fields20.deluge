@@ -1,0 +1,57 @@
+Hide_Fields20 as "Hide Fields"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Status != "Rejected")
+				{
+					hide Rejection_Reason;
+				}
+				if(input.Status != "Rejected")
+				{
+					hide Confirm_resubmission;
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Charge_Category == "Miscellaneous Charges")
+				{
+					hide Call_Charges;
+					clear Call_Charges;
+				}
+				else if(input.Charge_Category == "Fixed Charges")
+				{
+					hide Call_Charges;
+					clear Call_Charges;
+				}
+				else
+				{
+					show Call_Charges;
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					hide Customer_Name_Trigger;
+				hide Is_Initialization;
+				hide User_Input_Trigger;
+				hide Credit_Applied_Invoices.CAI_Apply_Credit_To_Invoice_Line_ID;
+			)
+		}
+	}
+
+}
+

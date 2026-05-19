@@ -1,0 +1,20 @@
+prefill_subscription_stat1 as "prefill subscription status"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Subscription_Status = "Active";
+			)
+		}
+	}
+
+}
+

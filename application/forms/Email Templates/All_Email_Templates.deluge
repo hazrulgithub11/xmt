@@ -1,0 +1,100 @@
+list All_Email_Templates
+{
+	displayName = "Email Templates"
+	show all rows from Email_Templates    
+	(
+		Reminder_Type as "Reminder Type"
+		Status
+		Subject_field as "Subject"
+		Body
+		Template_Type as "Template Type"
+		Placeholders
+	)
+	conditional formatting
+	(
+		"Active"
+		{
+			condition = (Status == "Active")
+			fields = [Status]
+			format = "color:#000000;background-color:#1bbc9b;"
+		}
+		"Inactive"
+		{
+			condition = (Status == "Inactive")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#e84c3d;"
+		}
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Template_Type as "Template Type"
+					Status
+					Placeholders
+					Subject_field as "Subject"
+					Body
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Template_Type as "Template Type"
+					Status
+					Placeholders
+					Reminder_Type as "Reminder Type"
+					Subject_field as "Subject"
+					Body
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

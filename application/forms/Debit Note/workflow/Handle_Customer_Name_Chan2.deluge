@@ -1,0 +1,36 @@
+Handle_Customer_Name_Chan2 as "Handle Customer Name Changes"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on user input of Customer
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
+				if(invoice_id_list.size() == 0)
+				{
+					input.Reference_Invoice:ui.add({});
+					alert "No invoice found for this customer. Debit Note must have an invoice reference.";
+				}
+				else
+				{
+					input.Reference_Invoice:ui.add(invoice_id_list);
+				}
+			)
+		}
+	}
+
+}
+

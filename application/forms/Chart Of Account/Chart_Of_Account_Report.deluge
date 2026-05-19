@@ -1,0 +1,74 @@
+list Chart_Of_Account_Report
+{
+	displayName = "Chart Of Account Report"
+	show all rows from Chart_Of_Account    
+	(
+		Account
+		Bank_Account_Number as "Bank Account Number"
+		Account_Code as "Account Code"
+		Account_Type as "Account Type"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Account
+					Bank_Account_Number as "Bank Account Number"
+					Account_Code as "Account Code"
+					Account_Type as "Account Type"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Account
+					Bank_Account_Number as "Bank Account Number"
+					Account_Code as "Account Code"
+					Account_Type as "Account Type"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

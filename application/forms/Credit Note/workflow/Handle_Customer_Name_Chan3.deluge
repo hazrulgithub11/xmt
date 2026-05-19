@@ -1,0 +1,20 @@
+Handle_Customer_Name_Chan3 as "Handle Customer Name Changes"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on user input of Customer
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+			)
+		}
+	}
+
+}
+

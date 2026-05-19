@@ -1,0 +1,221 @@
+		form Customer_Statement
+		{
+			displayname = "Customer Statement"
+			success message = "Data Added Successfully!"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Customer_Name
+			(
+				type = picklist	
+				displayname = "Customer Name"
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Code
+			(
+				type = list	
+				displayname = "Customer Code"
+				values  = Tenancy[Customer_Name.ID == input.Customer_Name].ID
+    			displayformat = [Customer_Code]
+				sortorder = ascending
+				height = 60px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Statement_Type
+			(
+				type = picklist
+				displayname = "Statement Type"
+				maxchar = 100
+				values = {"Statement Of Account","Statement Of Outstanding"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Start_Date
+			(
+    			type = date
+				displayname = "Start Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have End_Date
+			(
+    			type = date
+				displayname = "End Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Transactions
+			(
+				type = grid
+				Tenant_Name
+				(
+    				type = text
+					displayname = "Tenant Name"
+					width = medium
+				)
+				Customer_Code
+				(
+    				type = text
+					displayname = "Customer Code"
+					width = medium
+				)
+				Date_field
+				(
+    				type = date
+					displayname = "Date"
+					alloweddays = 0,1,2,3,4,5,6
+					width = 100px
+				)
+				Transaction
+				(
+					type = picklist
+					maxchar = 100
+					values = {"Invoice","Debit Note","Pro Forma Invoice","Credit Note","Payment Received","Opening Balance"}
+					width = 100px
+				)
+				Details
+				(
+    				type = textarea
+					height = 100px
+					width = 200px
+				)
+				Amount
+				(
+					type = decimal
+					format = commadotwestern
+					width = 100px
+				)
+				Payments
+				(
+					type = decimal
+					format = commadotwestern
+					width = 100px
+				)
+				Balance
+				(
+					type = decimal
+					format = commadotwestern
+					width = 100px
+				)
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			Account_Summary
+			(
+				type = section
+				displayname = "Account Summary"
+				visibility = true
+	 			row = 3
+	 			column = 0   
+				width = medium
+			)
+			Opening_Balance
+			(
+				type = decimal
+				displayname = "Opening Balance"
+				format = commadotwestern
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Invoiced_Amount
+			(
+				type = decimal
+				displayname = "Invoiced Amount"
+				format = commadotwestern
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Amount_Paid
+			(
+				type = decimal
+				displayname = "Amount Paid"
+				format = commadotwestern
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Balance_Due
+			(
+				type = decimal
+				displayname = "Balance Due"
+				format = commadotwestern
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Section2
+			(
+				type = section
+				displayname = "Section"
+	 			row = 4
+	 			column = 0   
+				width = medium
+			)
+			Organization
+			(
+				type = picklist	
+				values  = Organization_Settings.ID
+    			displayformat = [Organization_Name]
+				sortorder = ascending
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					Generate
+					(
+   						type = submit
+   						displayname = "Generate"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		print template
+			{
+				Statement_Of_Accounts
+				{
+							displayname = "Statement Of Accounts"
+							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_7549596999999955","imageType":"upload","fileId":"6069490000000054013"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_874800299999997","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_8747995","height":"25"}}]}]}},{"type":"columns","element":{"split":"45,26,27,2","id":"u_elem_19871543899999857","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_19871543099999905","height":"25"}},{"type":"spacer","element":{"id":"u_elem_13332458999999985","height":"25"}},{"type":"spacer","element":{"id":"u_elem_13430216999999955","height":"25"}},{"type":"spacer","element":{"id":"u_elem_1347186","height":"25"}},{"type":"spacer","element":{"id":"u_elem_13788218999999985","height":"25"}},{"type":"columns","element":{"split":"16,84","id":"u_elem_1353359599999994","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_1353359299999997","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Name"},{"Related_Fields":["Country"],"Label_Name":"Customer_Name"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Name"},{"Related_Fields":["State"],"Label_Name":"Customer_Name"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n            width=\"50%\"><font style=\"font-size: 14px\"\n            color=\"#000000\">To<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font\n              style=\"font-size: 12px\"><font color=\"#000000\"><font\n                  style=\"\"><font\n                  style=\"font-size: 12px\"> ${Customer_Name}<\/font><span\n            style=\"font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\"><br /><\/span><\/font><\/font><\/font><span\n              style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\"><span>${Customer_Name.Business_Street}&nbsp;<\/span><span\n                style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\"><span>${Customer_Name.City}<\/span><span\n            style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\">&nbsp;<\/span><\/span><\/span><span\n            style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\"><br /><\/span><span\n            style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\">${Customer_Name.State}<\/span><span\n            style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\">,<\/span><span\n            style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\">${Customer_Name.Postcode}<\/span><span\n            style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\">,<br /><\/span><span\n            style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\">${Customer_Name.Country}<\/span><span style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 12px; font-weight: 400; font-style: normal\">&nbsp;<\/span><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_12536035","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_7549596999999955","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_7519365","align":"right","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}},{"type":"spacer","element":{"id":"u_elem_9981673999999985","height":"25"}},{"type":"text","element":{"Fields":[{"Related_Fields":["City"],"Label_Name":"Organization"},{"Related_Fields":["Country"],"Label_Name":"Organization"},{"Related_Fields":["Organization_Name"],"Label_Name":"Organization"},{"Related_Fields":["Postcode"],"Label_Name":"Organization"},{"Related_Fields":["State"],"Label_Name":"Organization"},{"Related_Fields":["Street"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <span><\/span>\n   <table cellspacing=\"0\"\n    style=\"margin: 0px auto; width: 100%; border: none\">\n    <tbody>\n    <\/tbody>\n   <\/table>\n   <table\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n    width=\"50%\"><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table><span\n      style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-style: normal\"><b>${Organization.Organization_Name}<\/b><\/span>\n   <div>\n    <span\n        style=\"font-size: inherit; letter-spacing: 0px\"><font\n          style=\"font-size: 12px\">${Organization.Street}, ${Organization.Postcode}<span\n      style=\"font-family: Lato, Arimo, sans-serif\">,<\/span> <\/font> <\/span><span\n      style=\"font-size: inherit; letter-spacing: 0px\"> <\/span><span\n      style=\"letter-spacing: 0px; font-size: 12px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.City}<\/span><span\n      style=\"letter-spacing: 0px; font-size: 12px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">,<\/span><span\n      style=\"font-size: inherit; letter-spacing: 0px\"> <\/span><span\n      style=\"letter-spacing: 0px; font-size: 12px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.State},<\/span><span\n      style=\"font-size: inherit; letter-spacing: 0px\"> <\/span><span\n      style=\"letter-spacing: 0px; font-size: 12px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.Country}<\/span><span\n      style=\"font-size: inherit; letter-spacing: 0px\"> <\/span><span style=\"letter-spacing: 0px; font-size: 12px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">&nbsp;<\/span>\n   <\/div>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_11534705","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_781312","height":"25"}}]}]}},{"type":"columns","element":{"split":"65,33,2","id":"u_elem_19727417299999952","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_19860127","height":"34"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Statement_Type"}],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n          style=\"font-size: 18px\"><span><font style=\"\"><b\n        style=\"font-size: 18px\">${Statement_Type}<\/b><\/font><\/span><span style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span><\/font><br /><\/p>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_20911692099999905","height":"25"}}]}]}},{"type":"columns","element":{"split":"69,29,2","id":"u_elem_20012344099999905","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_20050190099999905","height":"16"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"End_Date"},{"Label_Name":"Start_Date"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td width=\"33%\"\n            style=\"text-align: center\"><font\n              style=\"font-size: 12px\"><font color=\"#000000\"> <span\n              style=\"font-size: 12px\">${Start_Date}<\/span> <\/font><span\n                style=\"font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\"><font\n                  color=\"#000000\">&nbsp;to&nbsp; ${End_Date} <span style=\"font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span><\/font> <\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_209054855","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_20472526799999952","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_20849477200000048","height":"25"}}]}]}},{"type":"columns","element":{"split":"3,31,21,43,2","id":"u_elem_20608165299999952","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_21766314200000048","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_218327655","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_20611788700000048","height":"61"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Paid"},{"Label_Name":"Balance_Due"},{"Label_Name":"Invoiced_Amount"},{"Label_Name":"Opening_Balance"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n        style=\"margin: 0px auto; width: 100%; border: none\">\n    <tbody>\n     <tr\n          style=\"background-color: rgb(240, 240, 240)\">\n      <td\n          width=\"50%\" style=\"border: none\"><b><font\n          style=\"font-size: 12px\">Account Summary<\/font> <\/b><\/td>\n      <td\n          width=\"50%\"\n          style=\"border: none\"><br /><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n          style=\"font-size: 12px\">Opening Balance<\/font><\/td>\n      <td\n            style=\"text-align: right; border: none\"><font\n              style=\"font-size: 12px\"> <span\n              style=\"font-size: 12px\">${Opening_Balance}<\/span> <span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n          style=\"font-size: 12px\">Invoiced Amount<\/font><\/td>\n      <td\n            style=\"text-align: right; border: none\"><font\n              style=\"font-size: 12px\"> <span\n              style=\"font-size: 12px\">${Invoiced_Amount}<\/span> <span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n          style=\"font-size: 12px\">Amount Paid<\/font><\/td>\n      <td\n            style=\"text-align: right; border: none\"><font\n              style=\"font-size: 12px\"> <span\n              style=\"font-size: 12px\">${Amount_Paid}<\/span> <span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51)\"><font\n          style=\"font-size: 12px\">Balance Due<\/font><\/td>\n      <td\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51)\"><font\n              style=\"font-size: 12px\"> <span\n              style=\"font-size: 12px\">${Balance_Due}<\/span> <span style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_20896397099999905","height":"25"}}]}]}},{"type":"columns","element":{"split":"2,98","id":"u_elem_20800036399999857","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_20880684799999952","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_20863225","height":"25"}},{"type":"columns","element":{"split":"98,2","id":"u_elem_20887400","elemStyle":"","collayouts":[{"colElements":[{"id":"u_elem_136137355181877211","type":"lookupfields","element":{"valueStyle":"width: 100%","valueTextStyle":"display: flex","fieldLayoutType":"1","related_Form":"ZC_SUBFORM_1025","labelText":"Transaction","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Transactions","refFields":[{"valueStyle":"width: 10%","fieldLayoutType":"2","labelText":"Date","labelStyle":"width: 10%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0)","Label_Name":"Date_field"},{"valueStyle":"width: 25%","fieldLayoutType":"2","labelText":"Tenant Name","labelStyle":"width: 25%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0)","Label_Name":"Tenant_Name"},{"valueStyle":"width: 15%","fieldLayoutType":"2","labelText":"Customer Code","labelStyle":"width: 15%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0)","Label_Name":"Customer_Code"},{"valueStyle":"width: 15%","fieldLayoutType":"2","labelText":"Transaction","labelStyle":"width: 15%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0)","Label_Name":"Transaction"},{"valueStyle":"width: 20%; text-align: left","fieldLayoutType":"2","labelText":"Details","labelStyle":"width: 20%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0)","Label_Name":"Details"},{"valueStyle":"width: 10%; text-align: right","fieldLayoutType":"2","labelText":"Amount","labelStyle":"width: 10%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0); text-align: right","Label_Name":"Amount"},{"valueStyle":"width: 10%; text-align: right","fieldLayoutType":"2","labelText":"Payments","labelStyle":"width: 10%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0); text-align: right","Label_Name":"Payments"},{"valueStyle":"width: 10%; text-align: right","fieldLayoutType":"2","labelText":"Balance","labelStyle":"width: 10%; color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(0, 0, 0); text-align: right","Label_Name":"Balance"}],"labelTextStyle":""}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_20887399","height":"25"}}]}]}}]}]}},{"type":"columns","element":{"split":"58,40,2","id":"u_elem_21045909999999404","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_522857","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_21460979999999702","height":"25"}},{"type":"text","element":{"Fields":[{"Label_Name":"Balance_Due"},{"Related_Fields":["Currency"],"Label_Name":"Customer_Name"}],"content":"<div\n    style=\"border-width: 0px; border-style: solid; border-color: rgb(68, 68, 68)\">\n   <table\n    style=\"text-align: right; margin: 0px auto; width: 100%; border: 0px; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td width=\"33%\"\n            style=\"text-align: right; border-right: none\"><font\n            color=\"#000000\"\n                style=\"font-size: 14px\"><b>BALANCE DUE&nbsp;<span>${Customer_Name.Currency}<\/span><span\n          style=\"color: rgb(0, 0, 0); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 700; font-style: normal\">&nbsp;<\/span>&nbsp;<\/b><\/font><\/td>\n      <td\n          width=\"33%\" style=\"text-align: right\"><span><b><font\n            color=\"#000000\">${Balance_Due}<\/font><\/b><\/span> <span style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_528630599999994","height":"25"}}]}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
+				}
+			}
+		}

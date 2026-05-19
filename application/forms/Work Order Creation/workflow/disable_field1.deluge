@@ -1,0 +1,17 @@
+disable_field1 as "disable field"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions 
+		{
+			disable Subscription,Remark_TBI,Remark_TDI,Remark_THC,Remark_TDF;
+		}
+	}
+
+}
+

@@ -1,0 +1,7 @@
+void invoice.update_invoice_amount_due(int invoiceID, float newAmountDue)
+{
+	othersMap = Map();
+	mp = Map();
+	mp.put("Amount_Due",newAmountDue);
+	zoho.creator.updateRecord(zoho.adminuserid,zoho.appname,"All_Invoices",invoiceID,mp,othersMap,"zoho_creator_connection");
+}

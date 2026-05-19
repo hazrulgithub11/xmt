@@ -1,0 +1,17 @@
+filter_the_element_in_das as "filter the element in dashboard"
+{
+	type =  form
+	form = Date_form
+	button = Filter
+	on click
+	{
+		actions 
+		{
+		on click
+		(
+			openUrl(zoho.appuri + "#Page:Admin_Dashboard?startDate=" + input.Start_Date + "&endDate=" + input.End_Date + "&prefixDateDuration=" + input.Prefix_Date_Duration,"same window");
+		)
+		}
+	}
+}
+

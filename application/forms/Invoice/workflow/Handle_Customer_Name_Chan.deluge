@@ -1,0 +1,20 @@
+Handle_Customer_Name_Chan as "Handle Customer Name Changes"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on user input of Customer
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+			)
+		}
+	}
+
+}
+

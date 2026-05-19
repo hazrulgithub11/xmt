@@ -1,0 +1,26 @@
+Handle_record_deletion3 as "Handle record deletion"
+{
+	type =  form
+	form = Circuit_ID_Type
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					circuit_id_type_id = input.ID;
+				circuit_id_type_used_count = Circuit_ID[Circuit_ID_Type == circuit_id_type_id].count();
+				if(circuit_id_type_used_count > 0)
+				{
+					alert "Cannot delete this Circuit ID Type. It is used by " + circuit_id_type_used_count + " Circuit_ID record(s). Remove/replace those references first.";
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

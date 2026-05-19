@@ -1,0 +1,50 @@
+		form Project_Location_Telco_Provider
+		{
+			displayname = "Project/Location/Telco Provider"
+			success message = "Project/location/telco Provider Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Project_Location_Telco_Provider
+			(
+    			type = text
+				displayname = "Project/Location/Telco Provider"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

@@ -1,0 +1,34 @@
+Handle_Credit_Note_Select1 as "Handle Credit_Note_Selection_Trigger Workflow"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on user input of Credit_Note_Selection_Trigger
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// Credits Note fields
+				clear Unpaid_Invoices;
+				input.Credits_Remaining = input.Credit_Note.Credits_Remaining;
+				// Invoice selection
+				unpaid_invoice_list = Invoice[Customer == input.Credit_Note.Customer && Amount_Due > 0 && Blueprint.Current_Stage in {"Partially Paid","Sent"}];
+				for each  curr_unpaid_invoice in unpaid_invoice_list
+				{
+					curr_new_invoice_row = Apply_Credit_To_Invoices.Unpaid_Invoices();
+					curr_new_invoice_row.Invoice=curr_unpaid_invoice.ID;
+					curr_new_invoice_row.Invoice_Date=curr_unpaid_invoice.Invoice_Date;
+					curr_new_invoice_row.Grand_Total=curr_unpaid_invoice.Grand_Total;
+					curr_new_invoice_row.Amount_Due=curr_unpaid_invoice.Amount_Due;
+					curr_new_invoice_row.Credits_To_Apply=0;
+					input.Unpaid_Invoices.insert(curr_new_invoice_row);
+				}
+			)
+		}
+	}
+
+}
+

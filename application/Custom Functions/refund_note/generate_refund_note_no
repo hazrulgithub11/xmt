@@ -1,0 +1,40 @@
+string refund_note.generate_refund_note_no()
+{
+	prefix = "RN" + zoho.currentdate.getYear().toString().subText(2,4);
+	invoiceInfo = Refund_Note[Invoice_No.containsIgnoreCase(prefix) && Invoice_No != ""] sort by Invoice_No desc;
+	if(invoiceInfo.ID == null)
+	{
+		count = 0;
+	}
+	else
+	{
+		count = invoiceInfo.Invoice_No.getsuffix(prefix).toLong();
+	}
+	count = count + 1;
+	if(count < 10)
+	{
+		pad = "00000";
+	}
+	else if(count < 100)
+	{
+		pad = "0000";
+	}
+	else if(count < 1000)
+	{
+		pad = "000";
+	}
+	else if(count < 10000)
+	{
+		pad = "00";
+	}
+	else if(count < 100000)
+	{
+		pad = "0";
+	}
+	else
+	{
+		pad = "";
+	}
+	invNumber = prefix + pad + count;
+	return invNumber;
+}

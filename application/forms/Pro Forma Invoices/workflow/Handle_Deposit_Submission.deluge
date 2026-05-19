@@ -1,0 +1,20 @@
+Handle_Deposit_Submission as "Handle Deposit Submission"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Pro_Forma_Invoice_No = thisapp.deposit.generate_proforma_invoice_no();
+			)
+		}
+	}
+
+}
+

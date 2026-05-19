@@ -1,0 +1,20 @@
+Delete_User as "Delete User"
+{
+	type =  form
+	form = User
+
+	record event = on delete
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					thisapp.permissions.deleteUser(input.Email.toLowerCase());
+			)
+		}
+	}
+
+}
+

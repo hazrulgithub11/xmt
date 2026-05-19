@@ -1,0 +1,23 @@
+Pre_fill_Field1 as "Pre-fill Field"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					getOrganization = Organization_Settings[ID != null];
+				input.Supplier_TIN = getOrganization.Supplier_TIN;
+				input.SST_ID = getOrganization.SST_ID;
+				input.Organization = Organization_Settings[ID != null].ID;
+			)
+		}
+	}
+
+}
+

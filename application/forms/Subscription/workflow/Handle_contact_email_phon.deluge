@@ -1,0 +1,35 @@
+Handle_contact_email_phon as "Handle contact, email, phone changes"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Customer_Code
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Customer_Code != null)
+				{
+					tenancyRecord = Tenancy[ID == input.Customer_Code];
+					if(tenancyRecord != null)
+					{
+						input.Contact = tenancyRecord.Contact;
+						input.Technical_Email = tenancyRecord.Technical_Email;
+						input.Phone_Number = tenancyRecord.Phone_Number;
+					}
+					else
+					{
+						input.Contact = null;
+						input.Technical_Email = null;
+						input.Phone_Number = null;
+					}
+				}
+			)
+		}
+	}
+
+}
+

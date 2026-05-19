@@ -1,0 +1,206 @@
+Handle_Generate_Report as "Handle Generate Report"
+{
+	type =  form
+	form = Customer_Statement
+
+	record event = on add or edit
+
+	on success
+	{
+		actions  (Statement_Type == "Statement Of Account")
+		{
+			custom deluge script
+			(
+					/*
+				 				 				input.Transactions.clear();
+				 				 				input.Opening_Balance = null;
+				 				 				input.Invoiced_Amount = null;
+				 				 				input.Amount_Paid = null;
+				 				 				input.Balance_Due = null;
+				 				 				customerCodes = input.Customer_Code;
+				 				 				if(customerCodes.size() > 0)
+				 				 				{
+				 				 					totalInvoiceValue = 0;
+				 				 					totalProformaInvoiceValue = 0;
+				 				 					totalDebitNoteValue = 0;
+				 				 					totalCreditNoteValue = 0;
+				 				 					totalPaymentReceivedValue = 0;
+				 				 					totalOpeningBalancePreviousSystem = 0;
+				 				 					for each  customerCode in customerCodes
+				 				 					{
+				 				 						invoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Customer_Code == customerCode].sum(Grand_Total),0);
+				 				 						proformaInvoiceValue = ifnull(Pro_Forma_Invoices[Pro_Forma_Invoice_Date < input.Start_Date && Customer_Name == input.Customer_Name && Customer_Code == customerCode].sum(Grand_Total),0);
+				 				 						debitNoteValue = ifnull(Debit_Note_Temporary[Debit_Note_Date < input.Start_Date && Customer == input.Customer_Name && Customer_Code == customerCode].sum(Grand_Total),0);
+				 				 						creditNoteValue = ifnull(Credit_Note_Temporary[Credit_Note_Date < input.Start_Date && Customer == input.Customer_Name && Customer_Code == customerCode].sum(Grand_Total),0);
+				 				 						paymentReceivedValue = ifnull(Payment_Received[Payment_Date < input.Start_Date && Customer_Name == input.Customer_Name && Customer_Code == customerCode].sum(Amount_Received),0);
+				 				 						customerCodeOpeningBalanacePreviousSystem = Tenancy[ID == customerCode].Opening_Balance;
+				 				 						totalInvoiceValue = totalInvoiceValue + invoiceValue;
+				 				 						totalProformaInvoiceValue = totalProformaInvoiceValue + proformaInvoiceValue;
+				 				 						totalDebitNoteValue = totalDebitNoteValue + debitNoteValue;
+				 				 						totalCreditNoteValue = totalCreditNoteValue + creditNoteValue;
+				 				 						totalPaymentReceivedValue = totalPaymentReceivedValue + paymentReceivedValue;
+				 				 						totalOpeningBalancePreviousSystem = totalOpeningBalancePreviousSystem + ifnull(customerCodeOpeningBalanacePreviousSystem,0);
+				 				 					}
+				 				 				}
+				 				 				else
+				 				 				{
+				 				 					totalInvoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name].sum(Grand_Total),0);
+				 				 					totalProformaInvoiceValue = ifnull(Pro_Forma_Invoices[Pro_Forma_Invoice_Date < input.Start_Date && Customer_Name == input.Customer_Name].sum(Grand_Total),0);
+				 				 					totalDebitNoteValue = ifnull(Debit_Note_Temporary[Debit_Note_Date < input.Start_Date && Customer == input.Customer_Name].sum(Grand_Total),0);
+				 				 					totalCreditNoteValue = ifnull(Credit_Note_Temporary[Credit_Note_Date < input.Start_Date && Customer == input.Customer_Name].sum(Grand_Total),0);
+				 				 					totalPaymentReceivedValue = ifnull(Payment_Received[Payment_Date < input.Start_Date && Customer_Name == input.Customer_Name].sum(Amount_Received),0);
+				 				 					totalOpeningBalancePreviousSystem = ifnull(Tenancy[Customer_Name == input.Customer_Name].sum(Opening_Balance),0);
+				 				 				}
+				 				 				totalAmountOpeningBalance = totalInvoiceValue + totalProformaInvoiceValue + totalDebitNoteValue - totalCreditNoteValue + totalOpeningBalancePreviousSystem;
+				 				 				obList = list();
+				 				 				obMap = Map();
+				 				 				if(customerCodes.size() == 1)
+				 				 				{
+				 				 					getTenant = Tenancy[ID == customerCodes.get(0)];
+				 				 					obMap.put("Tenant_Name",getTenant.Tenant_Name);
+				 				 					obMap.put("Customer_Code",getTenant.Customer_Code);
+				 				 				}
+				 				 				obMap.put("Date",input.Start_Date);
+				 				 				obMap.put("Details","");
+				 				 				obMap.put("Transaction","Opening Balance");
+				 				 				obMap.put("Amount",totalAmountOpeningBalance);
+				 				 				obMap.put("Balance",totalAmountOpeningBalance);
+				 				 				obList.add(obMap);
+				 				 				unsortedList = List();
+				 				 				unsortedList.addAll(obList);
+				 				 				unsortedList.addAll(thisapp.statement_of_account.collect_invoice_info(input.Start_Date,input.End_Date,input.Customer_Name,input.Statement_Type,customerCodes));
+				 				 				unsortedList.addAll(thisapp.statement_of_account.collect_proforma_invoice_info(input.Start_Date,input.End_Date,input.Customer_Name,input.Statement_Type,customerCodes));
+				 				 				unsortedList.addAll(thisapp.statement_of_account.collect_debit_note_info(input.Start_Date,input.End_Date,input.Customer_Name,input.Statement_Type,customerCodes));
+				 				 				unsortedList.addAll(thisapp.statement_of_account.collect_credit_note_info(input.Start_Date,input.End_Date,input.Customer_Name,customerCodes));
+				 				 				unsortedList.addAll(thisapp.statement_of_account.collect_payment_received_info(input.Start_Date,input.End_Date,input.Customer_Name,customerCodes));
+				 				 				totalBalanceAmount = totalAmountOpeningBalance;
+				 				 				totalAmountPaid = 0;
+				 				 				totalInvoiceAmount = 0;
+				 				 				sortedList = thisapp.sort_list(unsortedList,"Date");
+				 				 				for each  transactionInfo in sortedList
+				 				 				{
+				 				 					transactionAmount = ifnull(transactionInfo.get("Amount"),0);
+				 				 					transactionPayment = ifnull(transactionInfo.get("Payment"),0);
+				 				 					transactionRow = Customer_Statement.Transactions();
+				 				 					transactionRow.Tenant_Name=ifnull(transactionInfo.get("Tenant_Name"),"");
+				 				 					transactionRow.Customer_Code=ifnull(transactionInfo.get("Customer_Code"),"");
+				 				 					transactionRow.Date_field=transactionInfo.get("Date");
+				 				 					transactionRow.Transaction=transactionInfo.get("Transaction");
+				 				 					transactionRow.Details=transactionInfo.get("Details");
+				 				 					if(transactionInfo.get("Transaction") == "Opening Balance")
+				 				 					{
+				 				 						transactionRow.Amount=transactionAmount;
+				 				 						transactionRow.Balance=totalBalanceAmount;
+				 				 					}
+				 				 					else if(transactionInfo.get("Transaction") == "Payment Received")
+				 				 					{
+				 				 						transactionRow.Payments=transactionPayment;
+				 				 						transactionRow.Balance=totalBalanceAmount - transactionPayment;
+				 				 						totalAmountPaid = totalAmountPaid + transactionPayment;
+				 				 						totalBalanceAmount = totalBalanceAmount - transactionPayment;
+				 				 					}
+				 				 					else
+				 				 					{
+				 				 						transactionRow.Amount=transactionAmount;
+				 				 						transactionRow.Balance=totalBalanceAmount + transactionAmount;
+				 				 						totalInvoiceAmount = totalInvoiceAmount + transactionAmount;
+				 				 						totalBalanceAmount = totalBalanceAmount + transactionAmount;
+				 				 					}
+				 				 					input.Transactions.insert(transactionRow);
+				 				 				}
+				 				 				input.Opening_Balance = ifnull(totalAmountOpeningBalance,0);
+				 				 				input.Invoiced_Amount = ifnull(totalInvoiceAmount,0);
+				 				 				input.Amount_Paid = ifnull(totalAmountPaid,0);
+				 				 				input.Balance_Due = ifnull(totalBalanceAmount,0);
+				 				 				*/
+			)
+		}
+		actions  (Statement_Type == "Statement Of Outstanding")
+		{
+			custom deluge script
+			(
+					input.Transactions.clear();
+				input.Opening_Balance = null;
+				input.Invoiced_Amount = null;
+				input.Amount_Paid = null;
+				input.Balance_Due = null;
+				customerCodes = input.Customer_Code;
+				if(customerCodes.size() > 0)
+				{
+					totalInvoiceValue = 0;
+					totalProformaInvoiceValue = 0;
+					totalDebitNoteValue = 0;
+					for each  customerCode in customerCodes
+					{
+						invoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
+						proformaInvoiceValue = ifnull(Pro_Forma_Invoices[Pro_Forma_Invoice_Date < input.Start_Date && Customer_Name == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+						debitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+						totalInvoiceValue = totalInvoiceValue + invoiceValue;
+						totalProformaInvoiceValue = totalProformaInvoiceValue + proformaInvoiceValue;
+						totalDebitNoteValue = totalDebitNoteValue + debitNoteValue;
+					}
+				}
+				else
+				{
+					totalInvoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
+					totalProformaInvoiceValue = ifnull(Pro_Forma_Invoices[Pro_Forma_Invoice_Date < input.Start_Date && Customer_Name == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+					totalDebitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+				}
+				totalAmountOpeningBalance = totalInvoiceValue + totalProformaInvoiceValue + totalDebitNoteValue;
+				obList = list();
+				obMap = Map();
+				if(customerCodes.size() == 1)
+				{
+					getTenant = Tenancy[ID == customerCodes.get(0)];
+					obMap.put("Tenant_Name",getTenant.Tenant_Name);
+					obMap.put("Customer_Code",getTenant.Customer_Code);
+				}
+				obMap.put("Date",input.Start_Date);
+				obMap.put("Details","");
+				obMap.put("Transaction","Opening Balance");
+				obMap.put("Amount",totalAmountOpeningBalance);
+				obMap.put("Balance",totalAmountOpeningBalance);
+				obList.add(obMap);
+				unsortedList = List();
+				unsortedList.addAll(obList);
+				unsortedList.addAll(thisapp.statement_of_account.collect_invoice_info(input.Start_Date,input.End_Date,input.Customer_Name,input.Statement_Type,customerCodes));
+				unsortedList.addAll(thisapp.statement_of_account.collect_proforma_invoice_info(input.Start_Date,input.End_Date,input.Customer_Name,input.Statement_Type,customerCodes));
+				unsortedList.addAll(thisapp.statement_of_account.collect_debit_note_info(input.Start_Date,input.End_Date,input.Customer_Name,input.Statement_Type,customerCodes));
+				totalBalanceAmount = totalAmountOpeningBalance;
+				totalAmountPaid = 0;
+				totalInvoiceAmount = 0;
+				sortedList = thisapp.sort_list(unsortedList,"Date");
+				for each  transactionInfo in sortedList
+				{
+					transactionAmount = ifnull(transactionInfo.get("Amount"),0);
+					transactionPayment = ifnull(transactionInfo.get("Payment"),0);
+					transactionRow = Customer_Statement.Transactions();
+					transactionRow.Tenant_Name=transactionInfo.get("Tenant_Name");
+					transactionRow.Customer_Code=transactionInfo.get("Customer_Code");
+					transactionRow.Date_field=transactionInfo.get("Date");
+					transactionRow.Transaction=transactionInfo.get("Transaction");
+					transactionRow.Details=transactionInfo.get("Details");
+					if(transactionInfo.get("Transaction") == "Opening Balance")
+					{
+						transactionRow.Amount=transactionAmount;
+						transactionRow.Balance=totalBalanceAmount;
+					}
+					else
+					{
+						transactionRow.Amount=transactionAmount;
+						transactionRow.Balance=totalBalanceAmount + transactionAmount;
+						totalInvoiceAmount = totalInvoiceAmount + transactionAmount;
+						totalBalanceAmount = totalBalanceAmount + transactionAmount;
+					}
+					input.Transactions.insert(transactionRow);
+				}
+				input.Opening_Balance = ifnull(totalAmountOpeningBalance,0);
+				input.Invoiced_Amount = ifnull(totalInvoiceAmount,0);
+				input.Amount_Paid = ifnull(totalAmountPaid,0);
+				input.Balance_Due = ifnull(totalBalanceAmount,0);
+			)
+		}
+	}
+
+}
+

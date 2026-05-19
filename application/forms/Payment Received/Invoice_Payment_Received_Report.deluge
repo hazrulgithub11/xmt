@@ -1,0 +1,124 @@
+list Invoice_Payment_Received_Report
+{
+	displayName = "Invoice Payment Received Report"
+	show all rows from Payment_Received  [Payment_Type == "Invoice/Debit Note"]  
+	(
+		Customer_Code as "Customer Code"
+		(
+			view = All_Tenancies
+		)
+		Customer_Name as "Customer Name"
+		(
+			view = All_Customers_Profile
+		)
+		Payment_Date as "Payment Date"
+		Payment_Method as "Payment Method"
+		Amount_Received as "Amount Received"
+		(
+			display = total	
+		)
+		Reference
+		Payment_Received_No as "Payment Received No."
+		Payment_Type as "Payment Type"
+		Paid_To as "Paid To"
+		Customer_Name.Added_Time as "Added Time"
+		Added_Time as "Added Time"
+		Amount_Received_MYR as "Amount Received (MYR)"
+		(
+			display = total	
+		)
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Payment_Received_No as "Payment Received No."
+					Customer_Code as "Customer Code"
+					Customer_Name as "Customer Name"
+					Payment_Date as "Payment Date"
+					Payment_Method as "Payment Method"
+					Amount_Received as "Amount Received"
+					Amount_Received_MYR as "Amount Received (MYR)"
+					Reference
+					Paid_To as "Paid To"
+					Customer_Name.Added_Time as "Added Time"
+					Added_Time as "Added Time"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Payment_Received_No as "Payment Received No."
+					Payment_Date as "Payment Date"
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Payment_Method as "Payment Method"
+					Reference
+					Payment_Type as "Payment Type"
+					Paid_To as "Paid To"
+					Amount_Received as "Amount Received"
+				)
+			)
+			datablock2
+			(
+		     	title = "Payment Received Line Item"
+		     	related field = Payment_Received_Line_Item.Payment_Received
+				fields
+				(
+					Document_Date as "Document Date"
+					Reference_No as "Reference No."
+					Description
+					Invoice_No as "Invoice No."
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+					Amount
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

@@ -1,0 +1,71 @@
+list All_Project_location_telco_Providers
+{
+	displayName = "Project/Location/Telco Providers"
+	show all rows from Project_Location_Telco_Provider    
+	(
+		Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

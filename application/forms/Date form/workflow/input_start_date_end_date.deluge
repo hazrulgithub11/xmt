@@ -1,0 +1,54 @@
+input_start_date_end_date as "input start date & end date"
+{
+	type =  form
+	form = Date_form
+
+	record event = on add
+
+	on user input of Prefix_Date_Duration
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Prefix_Date_Duration != null)
+				{
+					currentdate = zoho.currentdate;
+					earlydate = "01-Jan-2000";
+					if(input.Prefix_Date_Duration == "This Month")
+					{
+						disable Start_Date;
+						disable End_Date;
+						input.Start_Date = currentdate.toStartOfMonth();
+						input.End_Date = currentdate.eomonth(0);
+					}
+					else if(input.Prefix_Date_Duration == "This Year")
+					{
+						disable Start_Date;
+						disable End_Date;
+						input.Start_Date = "01-Jan-" + today.getYear().toString();
+						input.End_Date = "31-Dec-" + today.getYear().toString();
+					}
+					else if(input.Prefix_Date_Duration == "Custom")
+					{
+						enable Start_Date;
+						enable End_Date;
+					}
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Prefix_Date_Duration == "")
+				{
+					input.Start_Date = null;
+					input.End_Date = null;
+				}
+			)
+		}
+	}
+
+}
+

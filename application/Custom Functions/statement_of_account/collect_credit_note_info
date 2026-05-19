@@ -1,0 +1,5 @@
+list statement_of_account.collect_credit_note_info(date startDate, date endDate, int customerProfile, list customerCodes)
+{
+	cnList = List();
+	return cnList;
+}

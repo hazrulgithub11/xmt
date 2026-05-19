@@ -1,0 +1,128 @@
+Handle_Validation_Submiss3 as "Handle Validation Submission"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					countItem = 0;
+				for each  curr_monthly_rental in input.Monthly_Rental
+				{
+					countItem = countItem + 1;
+				}
+				for each  curr_internet_charge in input.Internet_Charges
+				{
+					countItem = countItem + 1;
+				}
+				for each  curr_call_charge in input.Call_Charges
+				{
+					countItem = countItem + 1;
+				}
+				if(countItem == 0)
+				{
+					alert "Add at least one item need to be added.";
+					cancel submit;
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					chargesCategories = input.Charge_Category;
+				if(chargesCategories.containsIgnoreCase("Telephone Charges"))
+				{
+					rowNumber = 0;
+					for each  callCharges in input.Call_Charges
+					{
+						rowNumber = rowNumber + 1;
+					}
+					if(rowNumber == 0)
+					{
+						alert "Please fill Call Charges";
+						cancel submit;
+					}
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					// Quantity and Unit Price validation
+				// Monthly Rental
+				for each  curr_monthly_rental in input.Monthly_Rental
+				{
+					if(ifnull(curr_monthly_rental.Quantity_Monthly_Rental,0) <= 0)
+					{
+						alert "Please enter a quantity more than 0";
+						cancel submit;
+					}
+					if(ifnull(curr_monthly_rental.Unit_Price_Monthly_Rental,0) <= 0)
+					{
+						alert "Please enter a unit price more than 0";
+						cancel submit;
+					}
+				}
+				// Internet Charges
+				for each  curr_internet_charges in input.Internet_Charges
+				{
+					if(ifnull(curr_internet_charges.Quantity_Internet_Charges,0) <= 0)
+					{
+						alert "Please enter a quantity more than 0";
+						cancel submit;
+					}
+					if(ifnull(curr_internet_charges.Unit_Price_Internet_Charges,0) <= 0)
+					{
+						alert "Please enter a unit price more than 0";
+						cancel submit;
+					}
+				}
+				// Call Charges
+				for each  curr_call_charges in input.Call_Charges
+				{
+					if(ifnull(curr_call_charges.Quantity_Call_Charges,0) <= 0)
+					{
+						alert "Please enter a quantity more than 0";
+						cancel submit;
+					}
+					if(ifnull(curr_call_charges.Unit_Price_Call_Charges,0) <= 0)
+					{
+						alert "Please enter a unit price more than 0";
+						cancel submit;
+					}
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Reference_Credit_Note.Credits_Remaining < input.Grand_Total)
+				{
+					alert "The refund amount cannot exceed the credit remaining of " + input.Reference_Credit_Note.Credits_Remaining;
+					cancel submit;
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					if(Is_Refund_Note_Created_from_Credit_Note == false)
+				{
+					alert "Please create refund note from credit note.";
+					cancel submit;
+				}
+			)
+		}
+	}
+
+}
+

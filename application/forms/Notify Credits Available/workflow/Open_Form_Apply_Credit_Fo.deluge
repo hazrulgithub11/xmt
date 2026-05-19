@@ -1,0 +1,24 @@
+Open_Form_Apply_Credit_Fo as "Open Form Apply Credit Form"
+{
+	type =  form
+	form = Notify_Credits_Available
+	button = Yes
+	on click
+	{
+		actions 
+		{
+		on click
+		(
+			invoice = "Invoice=" + input.Invoice;
+				invoiceBalance = "&Invoice_Balance=" + input.Invoice.Amount_Due;
+				customerCode = "&Customer_Name=" + input.Customer_Name;
+				customerName = "&Customer_Code=" + input.Customer_Code;
+				invoiceBalanceDue = "&Invoice_Balance_Due=" + input.Invoice.Amount_Due;
+				url = "#Form:Apply_Credits?" + invoice + invoiceBalance + customerCode + customerName + invoiceBalanceDue;
+				openUrl("#Script:page.close","parent window");
+				openUrl(url,"popup window","height=100%,width=100%");
+		)
+		}
+	}
+}
+

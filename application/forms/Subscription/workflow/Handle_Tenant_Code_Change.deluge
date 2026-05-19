@@ -1,0 +1,76 @@
+Handle_Tenant_Code_Change as "Handle Tenant Code Changes"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Customer_Code
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					getTenant = Tenancy[ID == input.Customer_Code];
+				input.Payment_Term = ifnull(getTenant.Payment_Term,null);
+				input.Payable_To1 = ifnull(getTenant.Payable_To1,null);
+				input.Contract_Start_Date = null;
+				input.Contract_Period = null;
+				input.Contract_End_Date = null;
+				input.Prorate = false;
+				input.Prorate_Note1 = "";
+				grandTotal = 0;
+				grandTotalMYR = 0;
+				if(input.Customer_Code != null)
+				{
+					quantity = thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+					for each  subLineItem in input.Subcription_Line_Items
+					{
+						//subLineItem.Quantity=quantity;
+						subLineItem.Quantity1=quantity;
+						//subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity,0);
+						subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity1,0);
+						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Tax_Pct / 100;
+						subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
+						subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Exchange_Rate,1);
+						subLineItem.Business_Segment=null;
+						subLineItem.Business_Unit=null;
+						grandTotal = grandTotal + ifnull(subLineItem.Total,0);
+						grandTotalMYR = grandTotalMYR + ifnull(subLineItem.Total_MYR,0);
+					}
+					if(input.Customer_PO_No != "")
+					{
+						subscriptionList = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No.contains(input.Customer_PO_No)].ID.getAll();
+						if(subscriptionList.size() > 0)
+						{
+							alert "The Customer PO No. " + input.Customer_PO_No + " already exists for this tenant. Please enter a different PO No.";
+							input.Customer_PO_No = "";
+						}
+					}
+				}
+				else
+				{
+					for each  subLineItem in input.Subcription_Line_Items
+					{
+						//subLineItem.Quantity=quantity;
+						subLineItem.Quantity1=quantity;
+						//subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity,0);
+						subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity1,0);
+						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Tax_Pct / 100;
+						subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
+						subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Exchange_Rate,1);
+						subLineItem.Business_Segment=null;
+						subLineItem.Business_Unit=null;
+						grandTotal = grandTotal + ifnull(subLineItem.Total,0);
+						grandTotalMYR = grandTotalMYR + ifnull(subLineItem.Total_MYR,0);
+					}
+					input.Customer_PO_No = "";
+				}
+				input.Grand_Total = grandTotal;
+				input.Grand_Total_MYR = grandTotalMYR;
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,127 @@
+list Organization_Settings2
+{
+	displayName = "Organization Settings"
+	show all rows from Organization_Settings    
+	(
+		Organization_Name as "Organization Name"
+		Street
+		Postcode
+		City
+		Company_Phone_Number as "Company Phone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Company_Email as "Company Email"
+		SST_ID as "SST ID"
+		Supplier_TIN as "Supplier TIN"
+		Finance_Email as "Finance Email"
+		Company_Fax as "Company Fax Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Company_Registration_Number as "Company Registration Number"
+		Company_Website as "Company Website"
+		Helpdesk
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Client_ID as "Client ID"
+		Client_Secret as "Client Secret"
+		Scheme_ID as "Scheme ID"
+		Scheme_agency_ID as "Scheme agency ID"
+		Tax_Name as "Tax Name"
+		LHDN_Portal_Environment as "LHDN Portal Environment"
+		Country
+		State
+		Base_Currency as "Base Currency"
+		MSIC_Description as "MSIC Description"
+		Company_Registration_Number_Scheme as "Company Registration Number Scheme"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Organization_Name as "Organization Name"
+					Street
+					Postcode
+					City
+					Company_Phone_Number as "Company Phone Number"
+					State
+					Base_Currency as "Base Currency"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+			record
+			(
+				Edit   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Organization_Name as "Organization Name"
+					Street
+					Postcode
+					City
+					Company_Phone_Number as "Company Phone Number"
+					Company_Email as "Company Email"
+					SST_ID as "SST ID"
+					Supplier_TIN as "Supplier TIN"
+					Finance_Email as "Finance Email"
+					Company_Fax as "Company Fax Number"
+					Company_Registration_Number as "Company Registration Number"
+					Company_Website as "Company Website"
+					Helpdesk
+					Client_ID as "Client ID"
+					Client_Secret as "Client Secret"
+					Scheme_ID as "Scheme ID"
+					Scheme_agency_ID as "Scheme agency ID"
+					Tax_Name as "Tax Name"
+					LHDN_Portal_Environment as "LHDN Portal Environment"
+					Country
+					State
+					Base_Currency as "Base Currency"
+					MSIC_Description as "MSIC Description"
+					Company_Registration_Number_Scheme as "Company Registration Number Scheme"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+    	)
+	)
+}

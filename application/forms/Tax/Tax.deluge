@@ -1,0 +1,68 @@
+		form Tax
+		{
+			success message = "Tax Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Tax_Name
+			(
+    			type = text
+				displayname = "Tax Name"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Tax_Type
+			(
+				type = picklist
+				displayname = "Tax Type"
+				maxchar = 100
+				values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Tax_Percentage
+			(
+				type = decimal
+				displayname = "Tax Percentage"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

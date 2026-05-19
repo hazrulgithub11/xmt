@@ -1,0 +1,20 @@
+Handle_Exchange_Rate1 as "Handle Exchange Rate"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on user input of Exchange_Rate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

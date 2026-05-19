@@ -1,0 +1,22 @@
+Handle_Call_Charges_Tax_2 as "Handle Call Charges Tax "
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on user input of Call_Charges.Tax_Call_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					row.Tax_Type_Call_Charges=row.Tax_Call_Charges.Tax_Type;
+				row.Tax_Pct_Call_Charges=row.Tax_Call_Charges.Tax_Percentage;
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,24 @@
+Pre_Fill_Line_Item_Custom1 as "Pre Fill Line Item Customer and Tenant"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					for each  paymentReceived in input.Payment_Received_Line_Item
+				{
+					paymentReceived.Customer_Name=input.Customer_Name;
+					paymentReceived.Customer_Code=input.Customer_Code;
+				}
+			)
+		}
+	}
+
+}
+

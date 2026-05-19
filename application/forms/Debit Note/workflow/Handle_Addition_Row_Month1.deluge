@@ -1,0 +1,38 @@
+Handle_Addition_Row_Month1 as "Handle Addition Row Monthly Rental"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on add row of Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					clear row.Business_Segment_Monthly_Rental;
+				clear row.Business_Unit_Monthly_Rental;
+				customerInfo = Customer_Profile[ID == input.Customer];
+				if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+				{
+					row.Business_Segment_Monthly_Rental:ui.add(customerInfo.Business_Segment);
+				}
+				else
+				{
+					clear row.Business_Segment_Monthly_Rental;
+					clear row.Business_Unit_Monthly_Rental;
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

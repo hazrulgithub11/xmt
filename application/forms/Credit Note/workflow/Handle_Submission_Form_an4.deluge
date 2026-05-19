@@ -1,0 +1,20 @@
+Handle_Submission_Form_an4 as "Handle Submission Form and Submit Invoice to LHDN"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					openUrl("#Report:Credit_Notes","same window");
+			)
+		}
+	}
+
+}
+

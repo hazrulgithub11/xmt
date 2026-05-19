@@ -1,0 +1,302 @@
+form Payment_Received
+{
+	displayname = "Payment Received"
+	success message = "Data Added Successfully!"
+	Main_Section
+	(
+		type = section
+		displayname = "Main Section"
+	 	row = 1
+	 	column = 0   
+		width = medium
+	)
+	must have Payment_Type
+	(
+		type = picklist
+		displayname = "Payment Type"
+		maxchar = 100
+		values = {"Invoice/Debit Note","Deposit"}
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Doc. No. will be generated after record is created"
+    	]
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	unique Payment_Received_No
+	(
+    	type = text
+		displayname = "Payment Received No."
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Name
+	(
+		type = picklist	
+		displayname = "Customer Name"
+		values  = Customer_Profile.ID
+    	displayformat = [Customer_Name]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Customer_TIN
+	(
+    	type = text
+		displayname = "Customer TIN"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Customer_SST
+	(
+    	type = text
+		displayname = "Customer SST"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Email
+	(
+    	type = email
+		displayname = "Customer Email"
+		maxchar = 80
+	 	row = 1
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Customer_Code
+	(
+		type = picklist	
+		displayname = "Customer Code"
+		values  = Tenancy[Customer_Name.ID == input.Customer_Name].ID
+    	displayformat = [Customer_Code]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Payment_Date
+	(
+    	type = date
+		displayname = "Payment Date"
+		initial value = "${zoho.currentdate}"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Payment_Method
+	(
+		type = picklist
+		displayname = "Payment Method"
+		maxchar = 100
+		values = {"Cash","Cheque","IBFT","IBG","Foreign TT"}
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Paid_To
+	(
+		type = picklist	
+		displayname = "Paid To"
+		values  = Chart_Of_Account[Account_Type == "Bank"].ID
+    	displayformat = [Account + " - " + Bank_Account_Number]
+		sortorder = ascending
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Reference
+	(
+    	type = text
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Payment_Received_Line_Item
+	(
+		type = grid
+		displayname = "Payment Received Line Item"
+		values  = Payment_Received_Line_Item.ID
+    	bidirectional = Payment_Received
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	Bill_Section
+	(
+		type = section
+		displayname = "Bill Section"
+	 	row = 3
+	 	column = 0   
+		width = medium
+	)
+	Amount_Received
+	(
+		type = decimal
+		displayname = "Amount Received"
+		format = commadotwestern
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	must have Currency
+	(
+		type = picklist
+		maxchar = 100
+		values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	must have Exchange_Rate
+	(
+		type = decimal
+		displayname = "Exchange Rate"
+		format = commadotwestern
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Amount_Received_MYR
+	(
+		type = decimal
+		displayname = "Amount Received (MYR)"
+		format = commadotwestern
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Total_Still_Owing
+	(
+		type = decimal
+		displayname = "Total Still Owing"
+		format = commadotwestern
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Organization
+	(
+		type = picklist	
+		values  = Organization_Settings.ID
+    	displayformat = [Organization_Name]
+		sortorder = ascending
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Receipt_Sent
+	(
+    	type = checkbox
+		displayname = "Receipt Sent"
+		initial value = false
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	System_Section
+	(
+		type = section
+		displayname = "System Section"
+	 	row = 4
+	 	column = 0   
+		width = medium
+	)
+	Payment_Type_Single_Record
+	(
+		type = picklist
+		displayname = "Payment Type Single Record"
+		maxchar = 100
+		values = {"Invoice","Pro Forma Invoice","Debit Note"}
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Single_Record_Payment
+	(
+    	type = checkbox
+		displayname = "Single Record Payment "
+		initial value = false
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Send_Email
+	(
+    	type = checkbox
+		displayname = "Send Email"
+		initial value = false
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Debit_Note
+	(
+		type = picklist	
+		displayname = "Debit Note"
+		values  = Debit_Note.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Invoice
+	(
+		type = picklist	
+		values  = Invoice.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Pro_Forma_Invoices
+	(
+		type = picklist	
+		displayname = "Pro Forma Invoices"
+		values  = Pro_Forma_Invoices.ID
+    	displayformat = [Pro_Forma_Invoice_No]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	
+	actions
+	{
+		on add
+		{
+			submit
+			(
+   				type = submit
+   				displayname = "Submit"
+			)
+			reset
+			(
+   				type = reset
+   				displayname = "Reset"
+			)
+		}
+		on edit
+		{
+			update
+			(
+   				type = submit
+   				displayname = "Update"
+			)
+			cancel
+			(
+   				type = cancel
+   				displayname = "Cancel"
+			)
+		}
+	}
+}

@@ -1,0 +1,32 @@
+Handle_Deletion_Subscript as "Handle Deletion Subscription Record"
+{
+	type =  form
+	form = Subscription
+
+	record event = on delete
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					/*
+				 				 				for each  subLineItem in input.Subcription_Line_Items
+				 				 				{
+				 				 					getInvLineItems = Invoice_Line_Item[Circuit_ID == subLineItem.Circuit_ID].ID.getAll();
+				 				 					getCNLineItems = Credit_Note_Line_Item[Circuit_ID == subLineItem.Circuit_ID].ID.getAll();
+				 				 					getDNLineItems = Debit_Note_Line_Item[Circuit_ID == subLineItem.Circuit_ID].ID.getAll();
+				 				 					if(getInvLineItems.size() == 0 && getCNLineItems.size() == 0 && getDNLineItems.size() == 0)
+				 				 					{
+				 				 						delete from Circuit_ID[ID == subLineItem.Circuit_ID];
+				 				 					}
+				 				 					delete from Subscription_Line_Item[ID == subLineItem.ID];
+				 				 				}
+				 				 				*/
+			)
+		}
+	}
+
+}
+

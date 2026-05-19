@@ -1,0 +1,25 @@
+prefill_message_and_image as "prefill message and image"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on user input of Announcement
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// // Fetch the Announcement image based on the selected announcement
+				getAnnouncement = Announcement[ID == input.Announcement];
+				if(getAnnouncement != null)
+				{
+					input.Announcement_image = getAnnouncement.Announcement_Image;
+				}
+			)
+		}
+	}
+
+}
+

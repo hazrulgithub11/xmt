@@ -1,0 +1,28 @@
+Handle_Business_Segment_C3 as "Handle Business Segment Call Charges"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on user input of Call_Charges.Business_Segment_Call_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(row.Business_Segment_Call_Charges != null)
+				{
+					getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Call_Charges].ID.getAll();
+					row.Business_Unit_Call_Charges:ui.add(getBusinessUnitIDs);
+				}
+				else
+				{
+					clear row.Business_Unit_Call_Charges;
+				}
+			)
+		}
+	}
+
+}
+

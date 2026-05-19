@@ -1,0 +1,85 @@
+list statement_of_account.collect_debit_note_info(date startDate, date endDate, int customerProfile, string statementType, list customerCodes)
+{
+	/*
+                 	dbList = list();
+                 	if(statementType == "Statement Of Account")
+                 	{
+                 		if(customerCodes.size() > 0)
+                 		{
+                 			for each  customerCode in customerCodes
+                 			{
+                 				for each  db in Debit_Note[Debit_Note_Date >= startDate && Debit_Note_Date <= endDate && Customer == customerProfile && Customer_Code == customerCode]
+                 				{
+                 					getTenant = Tenancy[ID == db.Customer_Code];
+                 					dbMap = Map();
+                 					dbMap.put("Tenant_Name",getTenant.Tenant_Name);
+                 					dbMap.put("Customer_Code",getTenant.Customer_Code);
+                 					dbMap.put("Date",db.Debit_Note_Date);
+                 					dbMap.put("Details",db.Debit_Note_No + "- due on " + db.Due_Date);
+                 					dbMap.put("Transaction","Debit Note");
+                 					dbMap.put("Amount",db.Grand_Total);
+                 					dbMap.put("Payment",null);
+                 					dbList.add(dbMap);
+                 				}
+                 			}
+                 		}
+                 		else
+                 		{
+                 			for each  db in Debit_Note[Debit_Note_Date >= startDate && Debit_Note_Date <= endDate && Customer == customerProfile]
+                 			{
+                 				getTenant = Tenancy[ID == db.Customer_Code];
+                 				dbMap = Map();
+                 				dbMap.put("Tenant_Name",getTenant.Tenant_Name);
+                 				dbMap.put("Customer_Code",getTenant.Customer_Code);
+                 				dbMap.put("Date",db.Debit_Note_Date);
+                 				dbMap.put("Details",db.Debit_Note_No + "- due on " + db.Due_Date);
+                 				dbMap.put("Transaction","Debit Note");
+                 				dbMap.put("Amount",db.Grand_Total);
+                 				dbMap.put("Payment",null);
+                 				dbList.add(dbMap);
+                 			}
+                 		}
+                 	}
+                 	else if(statementType == "Statement Of Outstanding")
+                 	{
+                 		if(customerCodes.size() > 0)
+                 		{
+                 			for each  customerCode in customerCodes
+                 			{
+                 				for each  db in Debit_Note[Debit_Note_Date >= startDate && Debit_Note_Date <= endDate && Customer == customerProfile && Customer_Code == customerCode && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"]
+                 				{
+                 					getTenant = Tenancy[ID == db.Customer_Code];
+                 					dbMap = Map();
+                 					dbMap.put("Tenant_Name",getTenant.Tenant_Name);
+                 					dbMap.put("Customer_Code",getTenant.Customer_Code);
+                 					dbMap.put("Date",db.Debit_Note_Date);
+                 					dbMap.put("Details",db.Debit_Note_No + "- due on " + db.Due_Date);
+                 					dbMap.put("Transaction","Debit Note");
+                 					dbMap.put("Amount",db.Amount_Due);
+                 					dbMap.put("Payment",null);
+                 					dbList.add(dbMap);
+                 				}
+                 			}
+                 		}
+                 		else
+                 		{
+                 			for each  db in Debit_Note[Debit_Note_Date >= startDate && Debit_Note_Date <= endDate && Customer == customerProfile && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"]
+                 			{
+                 				getTenant = Tenancy[ID == db.Customer_Code];
+                 				dbMap = Map();
+                 				dbMap.put("Tenant_Name",getTenant.Tenant_Name);
+                 				dbMap.put("Customer_Code",getTenant.Customer_Code);
+                 				dbMap.put("Date",db.Debit_Note_Date);
+                 				dbMap.put("Details",db.Debit_Note_No + "- due on " + db.Due_Date);
+                 				dbMap.put("Transaction","Debit Note");
+                 				dbMap.put("Amount",db.Amount_Due);
+                 				dbMap.put("Payment",null);
+                 				dbList.add(dbMap);
+                 			}
+                 		}
+                 	}
+                 	return dbList;
+                 	*/
+	dblist = list();
+	return dblist;
+}

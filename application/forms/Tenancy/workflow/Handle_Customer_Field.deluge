@@ -1,0 +1,26 @@
+Handle_Customer_Field as "Handle Customer Field"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add or edit
+
+	on user input of Customer_Name
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Auto_Fill_with_Customer_Details = false;
+				input.Tenant_Name = "";
+				input.Street = "";
+				input.Postcode = "";
+				input.City = "";
+				input.State = null;
+				input.Country = null;
+			)
+		}
+	}
+
+}
+

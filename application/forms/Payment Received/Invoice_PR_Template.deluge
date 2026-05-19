@@ -1,0 +1,111 @@
+list Invoice_Payment_Received_Report1
+{
+	displayName = "Invoice PR Template"
+	template = Official_Receipt
+	print template = Official_Receipt
+	show all rows from Payment_Received  [Payment_Type == "Invoice/Debit Note"]  
+	(
+		Customer_Code as "Customer Code"
+		Customer_Name as "Customer Name"
+		Payment_Date as "Payment Date"
+		Payment_Method as "Payment Method"
+		Amount_Received as "Amount Received"
+		Reference
+		Payment_Received_No as "Payment Received No."
+		Payment_Type as "Payment Type"
+		Paid_To as "Paid To"
+		Customer_Name.Added_Time as "Added Time"
+		Added_Time as "Added Time"
+	)
+	custom actions
+	(
+		"Send Payment Received"
+		(
+	  			workflow = Send_Payment_Received_Inv
+				show action in view header = true
+				confirmation before execution
+				(
+					message for individual record = "Execute the Send Payment Received action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Payment_Received_No as "Payment Received No."
+					Customer_Code as "Customer Code"
+					Customer_Name as "Customer Name"
+					Payment_Date as "Payment Date"
+					Payment_Method as "Payment Method"
+					Amount_Received as "Amount Received"
+					Reference
+					Paid_To as "Paid To"
+					Customer_Name.Added_Time as "Added Time"
+					Added_Time as "Added Time"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Customer_Code as "Customer Code"
+					Customer_Name as "Customer Name"
+					Payment_Date as "Payment Date"
+					Payment_Method as "Payment Method"
+					Amount_Received as "Amount Received"
+					Reference
+					Payment_Received_No as "Payment Received No."
+					Payment_Type as "Payment Type"
+					Paid_To as "Paid To"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+			 	"Send Payment Received"
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

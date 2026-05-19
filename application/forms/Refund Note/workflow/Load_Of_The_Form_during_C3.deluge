@@ -1,0 +1,37 @@
+Load_Of_The_Form_during_C3 as "Load Of The Form during Creation"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// Organization info 
+				getOrganization = Organization_Settings[ID != null];
+				input.Supplier = getOrganization.ID;
+				input.Supplier_Name = getOrganization.Organization_Name;
+				input.Supplier_TIN = getOrganization.Supplier_TIN;
+				input.Supplier_ID_Type = getOrganization.Company_Registration_Number_Scheme;
+				input.Supplier_Registration_Identification_Passport_Number = getOrganization.Company_Registration_Number;
+				input.Supplier_SST_Registration_Number = getOrganization.SST_ID;
+				input.Supplier_Business_Activity_Description = getOrganization.MSIC_Description;
+				input.Supplier_E_mail = getOrganization.Company_Email;
+				input.Supplier_Telephone_Number = getOrganization.Company_Phone_Number;
+				input.Supplier_Street = getOrganization.Street;
+				input.Supplier_City = getOrganization.City;
+				input.Supplier_Postcode = getOrganization.Postcode;
+				input.Supplier_Country = getOrganization.Country;
+				input.Supplier_State = getOrganization.State;
+				input.Base_Currency = getOrganization.Base_Currency;
+				hide Invoice_No;
+			)
+		}
+	}
+
+}
+

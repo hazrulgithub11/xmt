@@ -1,0 +1,127 @@
+list All_Customers_Profile
+{
+	displayName = "All Customers Profile"
+	show all rows from Customer_Profile    
+	(
+		Customer_Name as "Customer Name"
+		Customer_Registration_Number as "Customer Registration Number"
+		Business_Street as "Business Address"
+		City
+		Email_Address as "Email Address"
+		Phone_Number as "Phone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Delivery_Address_same_as_Business_Address as "Delivery Address same as Business Address"
+		Delivery_Street as "Delivery Street"
+		Delivery_City as "Delivery City"
+		Delivery_Phone_Number as "Delivery Phone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Status
+		Attachment
+		Postcode
+		Delivery_Postcode as "Delivery Postcode"
+		Customer_TIN as "Customer TIN"
+		Customer_SST as "Customer SST"
+		Credit_Available as "Credit Available"
+		Business_Segment as "Business Segment"
+		Delivery_Country as "Delivery Country"
+		Delivery_State as "Delivery State"
+		Country
+		State
+		Customer_Registration_Number_Scheme as "Customer Registration Number Scheme"
+		Currency
+	)
+	sort by
+	(
+		Customer_Name ascending
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Business_Street as "Business Address"
+					Email_Address as "Email Address"
+					Business_Segment as "Business Segment"
+					Delivery_Country as "Delivery Country"
+					Delivery_State as "Delivery State"
+					Country
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    		 	Edit 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Customer_Registration_Number as "Customer Registration Number"
+					Customer_TIN as "Customer TIN"
+					Customer_SST as "Customer SST"
+					Business_Street as "Business Address"
+					City
+					Email_Address as "Email Address"
+					Credit_Available as "Credit Available"
+					Attachment
+					Delivery_Country as "Delivery Country"
+					Delivery_State as "Delivery State"
+					Country
+					State
+					Customer_Registration_Number_Scheme as "Customer Registration Number Scheme"
+					Currency
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

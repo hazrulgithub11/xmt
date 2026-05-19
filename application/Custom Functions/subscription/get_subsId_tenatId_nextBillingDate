@@ -1,0 +1,10 @@
+void subscription.get_subsId_tenatId_nextBillingDate(string customerPONo)
+{
+	getSubs = Subscription[Customer_PO_No == "TWSPC1"];
+	getTenant = Tenancy[ID = getSubs.Customer_Code];
+	info "customerPoNo:" + getSubs.Customer_PO_No;
+	info "subscriptionID:" + getSubs.ID;
+	info "billCycle:" + thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+	info "tenantID:" + getSubs.Customer_Code;
+	info "nextBillingDate:" + getSubs.Next_Billing_Date;
+}

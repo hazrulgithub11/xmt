@@ -1,0 +1,44 @@
+Handle_Unit_Price1 as "Handle Unit Price"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on user input of Pro_Forma_Invoice_Line_Item.Unit_Price
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(ifnull(row.Unit_Price,0) < 1)
+				{
+					alert "Please enter a unit price more than 0";
+					row.Unit_Price=1;
+				}
+				row.Sub_Total=ifnull(row.Unit_Price,1) * ifnull(row.Quantity,0);
+				row.Tax_Amount=row.Sub_Total * ifnull(row.Tax_Pct,0) / 100;
+				row.Total=row.Sub_Total + row.Tax_Amount;
+				row.Total_MYR=row.Total * ifnull(input.Exchange_Rate,1);
+				grandTotalMYR = 0;
+				grandTotal = 0;
+				subTotal = 0;
+				totalTax = 0;
+				for each  piLineItem in input.Pro_Forma_Invoice_Line_Item
+				{
+					subTotal = subTotal + ifnull(piLineItem.Sub_Total,0);
+					totalTax = totalTax + ifnull(piLineItem.Tax_Amount,0);
+					grandTotal = grandTotal + ifnull(piLineItem.Total,0);
+					grandTotalMYR = grandTotalMYR + ifnull(piLineItem.Total_MYR,0);
+				}
+				input.Sub_Total = subTotal;
+				input.Total_Tax = totalTax;
+				input.Grand_Total = grandTotal;
+				input.Grand_Total_MYR = grandTotalMYR;
+				input.Amount_Due = input.Grand_Total;
+			)
+		}
+	}
+
+}
+

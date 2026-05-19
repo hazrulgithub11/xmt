@@ -1,0 +1,24 @@
+Pre_fill_Inv_Line_Item_Te2 as "Pre-fill Inv Line Item Tenant and Customer Field"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					for each  depositLineItem in input.Pro_Forma_Invoice_Line_Item
+				{
+					depositLineItem.Customer_Name=input.Customer_Name;
+					depositLineItem.Customer_Code=input.Customer_Code;
+				}
+			)
+		}
+	}
+
+}
+

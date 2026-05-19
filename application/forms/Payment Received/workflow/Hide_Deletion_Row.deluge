@@ -1,0 +1,17 @@
+Hide_Deletion_Row as "Hide Deletion Row"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on edit
+
+	field rules
+	{
+		actions 
+		{
+		hide delete row of Payment_Received_Line_Item;
+		}
+	}
+
+}
+

@@ -1,0 +1,190 @@
+create_ticket_in_desk1 as "create ticket in desk"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on add
+
+	on success
+	{
+		actions  (Create_Ticket == true)
+		{
+			custom deluge script
+			(
+					// createTicket = thisapp.subscription.createTicket(input.Subscription,input.Work_Order_Type);
+				woUrl = "https://creatorapp.zohopublic.com/" + zoho.adminuser + "/" + zoho.appname + "/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?ID=" + input.ID.toString();
+				createTicket = thisapp.subscription.createTicketUpdateWo(input.Subscription,input.ID,input.Work_Order_Type,woUrl);
+				// if(createTicket.get("code") == 200)
+				// {
+				// 	success message createTicket.get("message");
+				// }
+				thisapp.close_form();
+				// subscription_id = input.Subscription;
+				// contact_name = "";
+				// contact_email = "";
+				// contact_phone = "";
+				// customer_code_id = "";
+				// work_order_type = input.Work_Order_Type;
+				// department_id = "1027140000000006907";
+				// ticket_type = work_order_type;
+				// cf_ticket_type = "";
+				// if(work_order_type == "Termination")
+				// {
+				// 	cf_ticket_type = "WO - Service Termination";
+				// }
+				// else
+				// {
+				// 	cf_ticket_type = work_order_type;
+				// }
+				// if(subscription_id != null && cf_ticket_type != "")
+				// {
+				// 	subscription_record = Subscription[ID == subscription_id];
+				// 	if(subscription_record != null)
+				// 	{
+				// 		// Fetch Subscription Record Details
+				// 		subscription_record_id = subscription_record.ID;
+				// 		contact_name = subscription_record.Contact;
+				// 		contact_email = subscription_record.Technical_Email;
+				// 		contact_phone = subscription_record.Phone_Number;
+				// 		customer_code_id = subscription_record.Customer_Code;
+				// 		// Construct the billing URL using the Subscription Record ID
+				// 		billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Subscriptions/tx4ySnHU1HYjQ89uUMrdV9syzmgYnVTpb4QZTJdY24QnQBSV89m3OWsTq0f6vWwnaa2sVa2rwNhYdbYZJqhNaAEuhbAr9E4xEGvG?ID=" + subscription_record_id.toString();
+				// 		info "Billing URL: " + billing_url;
+				// 		// Fetch Customer Code display value
+				// 		customer_code_display_value = "";
+				// 		account_id = "";
+				// 		if(customer_code_id != null)
+				// 		{
+				// 			tenancy_record = Tenancy[ID == customer_code_id.toLong()];
+				// 			if(tenancy_record != null)
+				// 			{
+				// 				customer_code_display_value = tenancy_record.Customer_Code;
+				// 			}
+				// 			search_account_url = "https://desk.zoho.com/api/v1/accounts/search?accountName=" + customer_code_display_value;
+				// 			search_account_response = invokeurl
+				// 			[
+				// 				url :search_account_url
+				// 				type :GET
+				// 				connection:"zdesk"
+				// 			];
+				// 			if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+				// 			{
+				// 				account_id = search_account_response.get("data").get(0).get("id");
+				// 				//info "Account found: " + account_id;
+				// 			}
+				// 			else
+				// 			{
+				// 				//info "No matching account found for customer code: " + customer_code_display_value;
+				// 			}
+				// 		}
+				// 		// Search for contact by custom field email (cf_technical_email)
+				// 		contact_id = "";
+				// 		search_contact_url = "https://desk.zoho.com/api/v1/contacts/search";
+				// 		search_contact_params = Map();
+				// 		search_contact_params.put("cf_technical_email",contact_email);
+				// 		search_contact_response = invokeurl
+				// 		[
+				// 			url :search_contact_url
+				// 			type :GET
+				// 			parameters:search_contact_params.toString()
+				// 			connection:"zdesk"
+				// 		];
+				// 		if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+				// 		{
+				// 			contact_id = search_contact_response.get("data").get(0).get("id");
+				// 			account_id = search_contact_response.get("data").get(0).get("accountId");
+				// 			info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
+				// 			info "Associated Account ID: " + account_id;
+				// 		}
+				// 		else
+				// 		{
+				// 			info "No contact found with email: " + contact_email;
+				// 			// Create a new contact if not found
+				// 			cf = Map();
+				// 			cf.put("cf_technical_contact_name",contact_name);
+				// 			cf.put("cf_technical_email",contact_email);
+				// 			cf.put("cf_technical_phone_number",contact_phone);
+				// 			contact_data = Map();
+				// 			contact_data.put("lastName",contact_name);
+				// 			contact_data.put("email",contact_email);
+				// 			contact_data.put("cf",cf);
+				// 			desk_contact_url = "https://desk.zoho.com/api/v1/contacts";
+				// 			create_contact_response = invokeurl
+				// 			[
+				// 				url :desk_contact_url
+				// 				type :POST
+				// 				parameters:contact_data.toString()
+				// 				connection:"zdesk"
+				// 			];
+				// 			if(create_contact_response.get("id") != null)
+				// 			{
+				// 				contact_id = create_contact_response.get("id");
+				// 				info "New contact created successfully. ID: " + contact_id;
+				// 			}
+				// 			else
+				// 			{
+				// 				info "Failed to create contact. Response: " + create_contact_response.toString();
+				// 			}
+				// 		}
+				// 		// Create the ticket
+				// 		if(contact_id != "")
+				// 		{
+				// 			cf = Map();
+				// 			cf.put("cf_customer_code",customer_code_display_value);
+				// 			cf.put("cf_contact",contact_name);
+				// 			cf.put("cf_ticket_type",cf_ticket_type);
+				// 			cf.put("cf_url_to_subscription_record_in_billing_system",billing_url);
+				// 			cf.put("cf_problem_category","Not Applicable");
+				// 			cf.put("cf_subcategory","Not Applicable");
+				// 			cf.put("cf_maintenance_type","Not Applicable");
+				// 			ticket_data = Map();
+				// 			ticket_data.put("subject","Work Order - " + cf_ticket_type);
+				// 			ticket_data.put("description","This ticket is created for " + cf_ticket_type);
+				// 			ticket_data.put("departmentId",department_id);
+				// 			ticket_data.put("contactId",contact_id);
+				// 			ticket_data.put("accountId",account_id);
+				// 			ticket_data.put("status","Open");
+				// 			ticket_data.put("cf",cf);
+				// 			ticket_data.put("email",contact_email);
+				// 			ticket_data.put("phone",contact_phone);
+				// 			desk_ticket_url = "https://desk.zoho.com/api/v1/tickets";
+				// 			create_ticket_response = invokeurl
+				// 			[
+				// 				url :desk_ticket_url
+				// 				type :POST
+				// 				parameters:ticket_data.toString()
+				// 				connection:"zdesk"
+				// 			];
+				// 			if(create_ticket_response.get("id") != null)
+				// 			{
+				// 				ticket_id = create_ticket_response.get("id");
+				// 				ticket_number = create_ticket_response.get("ticketNumber");
+				// 				info "Ticket created successfully. Ticket ID: " + ticket_id + ", Ticket Number: " + ticket_number;
+				// 				input.Ticket_ID = ticket_id;
+				// 				input.Ticket_Number = ticket_number;
+				// 			}
+				// 			else
+				// 			{
+				// 				info "Failed to create ticket. Error: " + create_ticket_response.toString();
+				// 			}
+				// 		}
+				// 		else
+				// 		{
+				// 			info "Invalid Contact ID. Ticket creation aborted.";
+				// 		}
+				// 	}
+				// 	else
+				// 	{
+				// 		info "No subscription record found for Subscription ID: " + subscription_id;
+				// 	}
+				// }
+				// else
+				// {
+				// 	info "Please ensure Subscription and Work Order Type are selected.";
+				// }
+			)
+		}
+	}
+
+}
+

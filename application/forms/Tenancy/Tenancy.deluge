@@ -1,0 +1,329 @@
+		form Tenancy
+		{
+			success message = "Tenancy Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Customer_Name
+			(
+				type = picklist	
+				displayname = "Customer Name"
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Auto_Fill_with_Customer_Details
+			(
+    			type = checkbox
+				displayname = "Auto-Fill with Customer Details"
+				initial value = false
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Display_Name
+			(
+    			type = text
+				displayname = "Display Name"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Tenant_Name
+			(
+    			type = text
+				displayname = "Tenant Name"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have unique Customer_Code
+			(
+    			type = text
+				displayname = "Customer Code"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Project_Location_Telco_Provider
+			(
+				type = picklist	
+				displayname = "Project/Location/Telco Provider"
+				values  = Project_Location_Telco_Provider.ID
+    			displayformat = [Project_Location_Telco_Provider]
+				allow new entries
+				[
+					displayname = "Add New"
+				]
+				sortorder = ascending
+    			description
+    			[
+    				type = tooltip
+    			 	message = "Service End Location"
+    			]
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Building
+			(
+				type = picklist	
+				values  = Building.ID
+    			displayformat = [Building]
+				allow new entries
+				[
+					displayname = "Add New"
+				]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Account_Type
+			(
+				type = picklist
+				displayname = "Account Type"
+				maxchar = 100
+				values = {"FK","MRT","PROJ"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			unique Account_Number
+			(
+    			type = text
+				displayname = "Account Number"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Payable_To1
+			(
+				type = list	
+				displayname = "Payable To"
+				values  = Chart_Of_Account[Account_Type == "Bank"].ID
+    			displayformat = [Account + " - " + Bank_Account_Number]
+				sortorder = ascending
+				height = 60px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Status
+			(
+				type = picklist
+				maxchar = 100
+				values = {"Active","Inactive","Terminated"}
+				initial value = "Active"
+				sortorder = ascending
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Billing_Cycle
+			(
+				type = picklist
+				displayname = "Billing Cycle"
+				maxchar = 100
+				values = {"Monthly","Quarterly","Half Yearly","Yearly"}
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Bill_Every
+			(
+				type = picklist
+				displayname = "Bill Every"
+				maxchar = 100
+				values = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","Last Day Of Month"}
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Bill_For
+			(
+				type = picklist
+				displayname = "Bill For"
+				maxchar = 100
+				values = {"Current Duration","Previous Duration"}
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Payment_Term
+			(
+				type = picklist	
+				displayname = "Payment Term"
+				values  = Payment_Term.ID
+    			displayformat = [Days]
+				allow new entries
+				[
+					displayname = "Add New"
+				]
+				sortorder = ascending
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Enable_Reminder
+			(
+				type = picklist
+				displayname = "Enable Reminder ?"
+				maxchar = 100
+				values = {"Yes","No"}
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Contact
+			(
+    			type = text
+				displayname = "Technical Contact Name"
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Technical_Email
+			(
+    			type = email
+				displayname = "Technical Email"
+				maxchar = 80
+	 			row = 1
+	 			column = 2   
+				width = medium
+				personal data = true
+			)
+			Phone_Number
+			(
+    			type = phonenumber
+				displayname = "Technical Phone Number"
+    			defaultcountry="my"
+	 			row = 1
+	 			column = 2   
+				width = medium
+				personal data = true
+			)
+			Latest_Billing_Date
+			(
+    			type = date
+				displayname = "Latest Billing Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Next_Billing_Date
+			(
+    			type = date
+				displayname = "Next Billing Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Final_Billing_Date
+			(
+    			type = date
+				displayname = "Final Billing Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Street
+			(
+    			type = textarea
+				height = 100px
+	 			row = 1
+	 			column = 3   
+				width = medium
+			)
+			Postcode
+			(
+    			type = text
+	 			row = 1
+	 			column = 3   
+				width = medium
+			)
+			City
+			(
+    			type = text
+	 			row = 1
+	 			column = 3   
+				width = medium
+			)
+			State
+			(
+				type = picklist
+				maxchar = 100
+				values = {"Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Pulau Pinang","Perak","Perlis","Selangor","Terengganu","Sabah","Sarawak","Wilayah Persekutuan Kuala Lumpur","Wilayah Persekutuan Labuan","Wilayah Persekutuan Putrajaya","Not Applicable"}
+				others option = true
+	 			row = 1
+	 			column = 3   
+				width = medium
+			)
+			Country
+			(
+				type = picklist
+				maxchar = 100
+				values = {"ARUBA","AFGHANISTAN","ANGOLA","ANGUILLA","ALAND ISLANDS","ALBANIA","ANDORA","NETHERLANDS ANTILLE","UNITED ARAB EMIRATES","ARGENTINA","ARMENIA","AMERICAN SAMOA","ANTARCTICA","FRENCH SOUTHERN TERRITORIES","ANTIGUA AND BARBUDA","AUSTRALIA","AUSTRIA","AZERBAIDJAN","BURUNDI","BELGIUM","BENIN","BONAIRE, SINT EUSTATIUS AND SABA","BURKINA FASO","BANGLADESH","BULGARIA","BAHRAIN","BAHAMAS","BOSNIA AND HERZEGOVINA","SAINT BARTHELEMY","BELARUS","BELIZE","BERMUDA","BOLIVIA","BRAZIL","BARBADOS","BRUNEI DARUSSALAM","BHUTAN","BOUVET ISLAND","BOTSWANA","CENTRAL AFRICAN REPUBLIC","CANADA","COCOS ISLAND","SWITZERLAND","CHILE","CHINA","COTE D'IVOIRE","CAMEROON","CONGO, THE DEMOCRATIC REPUBLIC","CONGO","COOK ISLANDS","COLOMBIA","COMOROS","CABO VERDE","COSTA RICA","CRIMEA","CUBA","CURACAO","CHRISTMAS ISLANDS","CAYMAN ISLANDS","CYPRUS","CZECH REPUBLIC","GERMANY","DJIBOUTI","DOMINICA","DENMARK","DOMINICAN REPUBLIC","ALGERIA","ECUADOR","EGYPT","ERITREA","WESTERN SAHARA","SPAIN","ESTONIA","ETHIOPIA","FINLAND","FIJI","FALKLAND ISLANDS (MALVINAS)","FRANCE","FAEROE ISLANDS","MICRONESIA, FEDERATED STATES OF","GABON","UNITED KINGDOM","GEORGIA","GUERNSEY","GHANA","GIBRALTAR","GUINEA","GUADELOUPE","GAMBIA","GUINEA-BISSAU","EQUATORIAL GUINEA","GREECE","GRENADA","GREENLAND","GUATEMALA","FRENCH GUIANA","GUAM","GUYANA","HONG KONG","HEARD AND MCDONALD ISLANDS","HONDURAS","CROATIA","HAITI","HUNGARY","INDONESIA","ISLE OF MAN","INDIA","BRITISH INDIAN OCEAN TERRITORY","IRELAND","IRAN","IRAQ","ICELAND","ISRAEL","ITALY","JAMAICA","JERSEY (CHANNEL ISLANDS)","JORDAN","JAPAN","KAZAKHSTAN","KENYA","KYRGYZSTAN","CAMBODIA","KIRIBATI","ST.KITTS AND NEVIS","THE REPUBLIC OF KOREA","KUWAIT","LAOS","LEBANON","LIBERIA","LIBYAN ARAB JAMAHIRIYA","SAINT LUCIA","LIECHTENSTEIN","SRI LANKA","LESOTHO","LITHUANIA","LUXEMBOURG","LATVIA","MACAO","SAINT MARTIN (FRENCH PART)","MOROCCO","MONACO","MOLDOVA, REPUBLIC OF","MADAGASCAR","MALDIVES","MEXICO","MARSHALL ISLANDS","MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF","MALI","MALTA","MYANMAR","MONTENEGRO","MONGOLIA","NORTHERN MARIANA ISLANDS","MOZAMBIQUE","MAURITANIA","MONTSERRAT","MARTINIQUE","MAURITIUS","MALAWI","MALAYSIA","MAYOTTE","NAMIBIA","NEW CALEDONIA","NIGER","NORFOLK ISLAND","NIGERIA","NICARAGUA","NIUE","NETHERLANDS","NORWAY","NEPAL","NAURU","NEW ZEALAND","OMAN","PAKISTAN","PANAMA","PITCAIRN","PERU","PHILIPPINES","PALAU","PAPUA NEW GUINEA","POLAND","PUERTO RICO","DEMOC.PEOPLES REP.OF KOREA","PORTUGAL","PARAGUAY","PALESTINIAN TERRITORY, OCCUPIED","FRENCH POLYNESIA","QATAR","REUNION","ROMANIA","RUSSIAN FEDERATION (USSR)","RWANDA","SAUDI ARABIA","SCOTLAND","SUDAN","SENEGAL","SINGAPORE","SOUTH GEORGIA AND THE SOUTH SANDWICH ISLAND","ST. HELENA","SVALBARD AND JAN MAYEN ISLANDS","SOLOMON ISLANDS","SIERRA LEONE","EL SALVADOR","SAN MARINO","SOMALIA","ST. PIERRE AND MIQUELON","SERBIA & MONTENEGRO","SOUTH SUDAN","SAO TOME AND PRINCIPE","SURINAME","SLOVAK REPUBLIC","SLOVENIA","SWEDEN","ESWATINI, KINGDOM OF (SWAZILAND)","SINT MAARTEN","SEYCHELLES","SYRIAN ARAB REPUBLIC","TURKS AND CAICOS ISLANDS","CHAD","TOGO","THAILAND","TAJIKISTAN","TOKELAU","TURKMENISTAN","TIMOR-LESTE","TONGA","TRINIDAD AND TOBAGO","TUNISIA","TURKIYE","TUVALU","TAIWAN","TANZANIA UNITED REPUBLIC","UGANDA","UKRAINE","UNITED STATES MINOR OUTLYING ISLANDS","URUGUAY","UNITED STATES OF AMERICA","UZBEKISTAN","VATICAN CITY STATE (HOLY SEE)","SAINT VINCENT AND GRENADINES","VENEZUELA","VIRGIN ISLANDS(BRITISH)","VIRGIN ISLANDS(US)","VIETNAM","VANUATU","WALLIS AND FUTUNA ISLANDS","SAMOA","KOSOVO","YEMEN","SOUTH AFRICA","ZAMBIA","ZIMBABWE"}
+	 			row = 1
+	 			column = 3   
+				width = medium
+			)
+			Record_ID
+			(
+    			type = text
+				displayname = "Record ID"
+				private = true
+	 			row = 1
+	 			column = 3   
+				width = medium
+			)
+			Opening_Balance
+			(
+				displayname = "Opening Balance"
+				type = MYR
+				format = commadotwestern
+	 			row = 1
+	 			column = 3   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

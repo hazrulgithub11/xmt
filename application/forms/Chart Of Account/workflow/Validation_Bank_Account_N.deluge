@@ -1,0 +1,21 @@
+Validation_Bank_Account_N as "Validation Bank Account Number"
+{
+	type =  form
+	form = Chart_Of_Account
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions  ((Account_Type == "Bank" && Bank_Account_Number == "") || (Account_Type == "Bank" && Bank_Account_Number is null))
+		{
+			custom deluge script
+			(
+					alert(Bank_Account_Number,"This field is mandatory. Enter a value.");
+				cancel submit;
+			)
+		}
+	}
+
+}
+

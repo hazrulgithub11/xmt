@@ -1,0 +1,312 @@
+		form Subscription
+		{
+			success message = "Subscription Added Successfully"
+			feature property = 64
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Customer_Name
+			(
+				type = picklist	
+				displayname = "Customer Name"
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Customer_Code
+			(
+				type = picklist	
+				displayname = "Customer Code"
+				values  = Tenancy[Customer_Name.ID == input.Customer_Name].ID
+    			displayformat = [Customer_Code]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_PO_No
+			(
+    			type = text
+				displayname = "Customer PO No."
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Attachment
+			(
+    			type = upload file
+				browse = local_drive
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Contract_Start_Date
+			(
+    			type = date
+				displayname = "Contract Start Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Contract_Period
+			(
+				type = number
+				displayname = "Contract Period (Month)"
+    			description
+    			[
+    				type = tooltip
+    			 	message = "Enter number of months"
+    			]
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Contract_End_Date
+			(
+    			type = date
+				displayname = "Contract End Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Prorate
+			(
+    			type = checkbox
+				displayname = "Prorate?"
+				initial value = false
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Prorate_Note1
+			(
+    			type = textarea
+				displayname = "Prorate Note"
+				height = 100px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Charge_Category
+			(
+				type = picklist
+				displayname = "Charge Category"
+				maxchar = 100
+				values = {"Miscellaneous Charges","Fixed Charges","Telephone Charges"}
+				initial value = "Miscellaneous Charges"
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Payment_Term
+			(
+				type = picklist	
+				displayname = "Payment Term"
+				values  = Payment_Term.ID
+    			displayformat = [Days]
+				sortorder = ascending
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Next_Billing_Date
+			(
+    			type = date
+				displayname = "Next Billing Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Latest_Billing_Date
+			(
+    			type = date
+				displayname = "Latest Billing Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Final_Billing_Date
+			(
+    			type = date
+				displayname = "Final Billing Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Pro_Forma_Invoices
+			(
+				type = picklist	
+				displayname = "Pro Forma Invoices"
+				values  = Pro_Forma_Invoices[Customer_Name.ID == input.Customer_Name].ID
+    			displayformat = [Pro_Forma_Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Contact
+			(
+    			type = text
+				displayname = "Technical Contact Name"
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Technical_Email
+			(
+    			type = email
+				displayname = "Technical Email"
+				maxchar = 80
+	 			row = 1
+	 			column = 2   
+				width = medium
+				personal data = true
+			)
+			must have Phone_Number
+			(
+    			type = phonenumber
+				displayname = "Technical Phone Number"
+    			defaultcountry="my"
+	 			row = 1
+	 			column = 2   
+				width = medium
+				personal data = true
+			)
+			Create_Work_Order
+			(
+    			type = checkbox
+				displayname = "Create Work Order"
+				initial value = false
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Work_Order_Type
+			(
+				type = picklist
+				displayname = "Work Order Type"
+				maxchar = 100
+				values = {"WO - Service Activation","WO - Service Change Request","WO - Service Termination"}
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Subscription_Status
+			(
+				type = picklist
+				displayname = "Subscription Status"
+				maxchar = 100
+				values = {"Active","Inactive","Terminated"}
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			must have Subcription_Line_Items
+			(
+				type = grid
+				displayname = "Subcription Line Items"
+				values  = Subscription_Line_Item.ID
+    			bidirectional = Subscription
+				auto width = false
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			Section1
+			(
+				type = section
+				displayname = "Section"
+	 			row = 3
+	 			column = 0   
+				width = medium
+			)
+			Grand_Total
+			(
+				type = decimal
+				displayname = "Grand Total"
+				format = commadotwestern
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			must have Currency
+			(
+				type = picklist
+				maxchar = 100
+				values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			must have Exchange_Rate
+			(
+				type = decimal
+				displayname = "Exchange Rate"
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Grand_Total_MYR
+			(
+				type = decimal
+				displayname = "Grand Total MYR"
+				format = commadotwestern
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			must have Payable_To1
+			(
+				type = list	
+				displayname = "Payable To"
+				values  = Chart_Of_Account[Account_Type == "Bank"].ID
+    			displayformat = [Account + " - " + Bank_Account_Number]
+				sortorder = ascending
+				height = 60px
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

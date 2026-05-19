@@ -1,0 +1,60 @@
+Handle_Call_Charges_Item3 as "Handle Call Charges Item"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on user input of Call_Charges.Item_Call_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Exchange_Rate == null)
+				{
+					info "Ensure Exchange Rate is not empty";
+					row.Item_Call_Charges=null;
+					return;
+				}
+				// Call Charges
+				if(row.Item_Call_Charges == null)
+				{
+					row.Item_Code_Call_Charges=null;
+					row.Classification_Codes_Call_Charges=null;
+					row.Description_Call_Charges=null;
+					row.Quantity_Call_Charges=null;
+					row.Unit_Price_Call_Charges=null;
+					row.Sub_Total_Call_Charges=null;
+					row.Tax_Call_Charges=null;
+					row.Tax_Type_Call_Charges=null;
+					row.Tax_Pct_Call_Charges=null;
+					row.Tax_Amount_Call_Charges=null;
+					row.Total_Call_Charges=null;
+					row.Customer_PO_No_Call_Charges=null;
+					row.Business_Segment_Call_Charges=null;
+					row.Business_Unit_Call_Charges=null;
+					row.Circuit_ID_Call_Charges=null;
+					row.Circuit_ID_Type_Call_Charges=null;
+					row.Sub_Line_Item_Call_Charges=null;
+				}
+				else
+				{
+					row.Item_Code_Call_Charges=row.Item_Call_Charges.Item_Code;
+					row.Classification_Codes_Call_Charges=row.Item_Call_Charges.Classification_Codes;
+					row.Description_Call_Charges=row.Item_Call_Charges.Description;
+					row.Quantity_Call_Charges=1;
+					row.Unit_Price_Call_Charges=row.Item_Call_Charges.Unit_Price;
+					row.Tax_Call_Charges=row.Item_Call_Charges.Tax;
+					row.Tax_Type_Call_Charges=row.Item_Call_Charges.Tax.Tax_Type;
+					row.Tax_Pct_Call_Charges=row.Item_Call_Charges.Tax.Tax_Percentage;
+					row.Circuit_ID_Call_Charges=row.Item_Call_Charges.Circuit_ID;
+					row.Circuit_ID_Type_Call_Charges=row.Item_Call_Charges.Circuit_ID_Type;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

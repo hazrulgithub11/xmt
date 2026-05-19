@@ -1,0 +1,23 @@
+Hide_Fields9 as "Hide Fields"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Pro_Forma_Invoice_No;
+				hide Status;
+				hide Amount_Due;
+				hide Amount_Paid;
+			)
+		}
+	}
+
+}
+

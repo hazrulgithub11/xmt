@@ -1,0 +1,294 @@
+list All_Work_Order_Creations
+{
+	displayName = "All Work Order Creations"
+	show all rows from Work_Order_Creation    
+	(
+		Subscription
+		Work_Order_Type as "Work Order Type"
+		Ticket_ID as "Ticket ID"
+		Ticket_Number as "Ticket Number"
+		ID
+		Customer_Name as "Customer Name"
+		Customer_Code as "Customer Code"
+		Brand_TAC as "Brand"
+		Model_TAC as "Model"
+		Serial_Number_TAC as "Serial Number"
+		MAC_Address_TAC as "MAC Address"
+		Extension_No_TAC as "Extension No."
+		DID_No_TAC as "DID No."
+		Brand_TIP as "Brand"
+		Model_TIP as "Model"
+		Serial_Number_TIP as "Serial Number"
+		MAC_Address_TIP as "MAC Address"
+		Extension_No_TIP as "Extension No."
+		DID_No_TIP as "DID No."
+		Type_TAS as "Type"
+		Brand_TAS as "Brand"
+		Model_No_TAS as "Model No."
+		Serial_Number_TAS as "Serial Number"
+		Management_IP_Address_TAS as "Management IP Address"
+		Hostname_TAS as "Hostname"
+		Bandwidth_Speed_TBI as "Bandwidth Speed"
+		Interface_Type_TBI as "Interface Type"
+		Network_ID_TBI as "Network ID"
+		Gateway_IP_TBI as "Gateway IP"
+		Customer_IP_TBI as "Customer_IP"
+		Broadcast_IP_TBI as "Broadcast IP"
+		Subnet_Mask_TBI as "Subnet Mask"
+		VLAN_ID_TBI as "VLAN ID"
+		CPE_Brand_TBI as "CPE Brand"
+		CPE_Model_No_TBI as "CPE Model No."
+		CPE_Serial_No_TBI as "CPE Serial No."
+		CPE_Mgmt_IP_TBI as "CPE Mgmt IP"
+		CPE_Hostname_TBI as "CPE Hostname"
+		Bandwidth_Speed_TDI as "Bandwidth Speed"
+		Interface_Type_TDI as "Interface Type"
+		Network_ID_TDI as "Network ID"
+		Gateway_IP_TDI as "Gateway IP"
+		Customer_IP_TDI as "Customer IP"
+		Broadcast_IP_TDI as "Broadcast IP"
+		Subnet_Mask_TDI as "Subnet Mask"
+		VLAN_ID_TDI as "VLAN ID"
+		CPE_Brand_TDI as "CPE Brand"
+		CPE_Model_No_TDI as "CPE Model No."
+		CPE_Serial_No_TDI as "CPE Serial No."
+		CPE_Mgmt_IP_TDI as "CPE Mgmt IP"
+		CPE_Hostname_TDI as "CPE Hostname"
+		No_of_Cores_TCT as "No. of Cores"
+		Source_Site_A_Location_TCT as "Source(Site A) Location"
+		Source_Panel_Name_TCT as "Source (Panel Name)"
+		Source_Port_No_X_Y_TCT as "Source (Port No. ) - X,Y"
+		Destination_Site_B_Location_TCT as "Destination (Site B) Location"
+		Destination_Panel_Name_TCT as "Destination (Panel Name)"
+		Destination_Port_No_X_Y_TCT as "Destination (Port No. ) - X,Y"
+		Site_ID_TCT as "Site ID"
+		Rack_No_TDC as "Rack No."
+		Rack_U_size_TDC as "Rack (U) size"
+		Data_Centre_Address_TDC as "Data Centre Address"
+		Rack_No_TRS as "Rack No."
+		Rack_U_size_TRS as "Rack (U) size"
+		Data_Centre_Address_TRS as "Data Centre Address"
+		Bandwidth_Speed_TGB as "Bandwidth Speed"
+		Network_ID_TGB as "Network ID"
+		Gateway_IP_TGB as "Gateway IP"
+		Customer_IP_TGB as "Customer IP"
+		Broadcast_IP_TGB as "Broadcast IP"
+		Subnet_Mask_TGB as "Subnet Mask"
+		VLAN_ID_TGB as "VLAN ID"
+		ONU_Brand_TGB as "ONU Brand"
+		ONU_Model_No_TGB as "ONU Model No."
+		ONU_Serial_No_TGB as "ONU Serial No."
+		ONU_ID_No_TGB as "ONU ID No."
+		OLT_Hostname_TGB as "OLT Hostname"
+		OLT_Serial_No_TGB as "OLT Serial No."
+		OLT_Port_No_TGB as "OLT Port No."
+		No_of_Cores_THC as "No. of Cores"
+		Source_Site_A_Location_THC as "Source(Site A) Location"
+		Source_Panel_Name_THC as "Source (Panel Name)"
+		Source_Port_No_X_Y_THC as "Source (Port No. ) - X,Y"
+		Destination_Site_B_Location_THC as "Destination (Site B) Location"
+		Destination_Panel_Name_THC as "Destination (Panel Name)"
+		Destination_Port_No_X_Y_THC as "Destination (Port No. ) - X,Y"
+		Site_ID_THC as "Site ID"
+		Bandwidth_Speed_THC as "Bandwidth Speed"
+		Interface_Type_THC as "Interface Type"
+		SVLAN_ID_THC as "SVLAN ID"
+		CVLAN_ID_THC as "CVLAN ID"
+		CPE_Brand_THC as "CPE Brand"
+		CPE_Model_No_THC as "CPE Model No."
+		CPE_Serial_No_THC as "CPE Serial No."
+		CPE_Mgmt_IP_THC as "CPE Mgmt IP"
+		CPE_Hostname_THC as "CPE Hostname"
+		Controller_Band_TWF as "Controller Band"
+		Controller_Model_No_TWF as "Controller Model No"
+		AP_Brand_TWF as "AP Brand"
+		AP_Model_No_TWF as "AP Model No"
+		AP_Hostname_TWF as "AP Hostname"
+		AP_Serial_No as "AP Serial No."
+		IBC_Site_ID_TDF as "IBC Site ID"
+		Operator_Name_TDF as "Operator Name"
+		IBC_Location_Address_TDF as "IBC Location/Address"
+		Remark_TDF as "Remark"
+		Remark_TBI as "Remark"
+		Remark_TDI as "Remark"
+		Remark_THC as "Remark"
+		Create_Ticket as "Create Ticket?"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Subscription
+					Work_Order_Type as "Work Order Type"
+					Ticket_ID as "Ticket ID"
+					Ticket_Number as "Ticket Number"
+					ID
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Subscription
+					Work_Order_Type as "Work Order Type"
+					Ticket_ID as "Ticket ID"
+					Ticket_Number as "Ticket Number"
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Brand_TAC as "Brand"
+					Model_TAC as "Model"
+					Serial_Number_TAC as "Serial Number"
+					MAC_Address_TAC as "MAC Address"
+					Extension_No_TAC as "Extension No."
+					DID_No_TAC as "DID No."
+					Brand_TIP as "Brand"
+					Model_TIP as "Model"
+					Serial_Number_TIP as "Serial Number"
+					MAC_Address_TIP as "MAC Address"
+					Extension_No_TIP as "Extension No."
+					DID_No_TIP as "DID No."
+					Type_TAS as "Type"
+					Brand_TAS as "Brand"
+					Model_No_TAS as "Model No."
+					Serial_Number_TAS as "Serial Number"
+					Management_IP_Address_TAS as "Management IP Address"
+					Hostname_TAS as "Hostname"
+					Bandwidth_Speed_TBI as "Bandwidth Speed"
+					Interface_Type_TBI as "Interface Type"
+					Network_ID_TBI as "Network ID"
+					Gateway_IP_TBI as "Gateway IP"
+					Customer_IP_TBI as "Customer_IP"
+					Broadcast_IP_TBI as "Broadcast IP"
+					Subnet_Mask_TBI as "Subnet Mask"
+					VLAN_ID_TBI as "VLAN ID"
+					CPE_Brand_TBI as "CPE Brand"
+					CPE_Model_No_TBI as "CPE Model No."
+					CPE_Serial_No_TBI as "CPE Serial No."
+					CPE_Mgmt_IP_TBI as "CPE Mgmt IP"
+					CPE_Hostname_TBI as "CPE Hostname"
+					Bandwidth_Speed_TDI as "Bandwidth Speed"
+					Interface_Type_TDI as "Interface Type"
+					Network_ID_TDI as "Network ID"
+					Gateway_IP_TDI as "Gateway IP"
+					Customer_IP_TDI as "Customer IP"
+					Broadcast_IP_TDI as "Broadcast IP"
+					Subnet_Mask_TDI as "Subnet Mask"
+					VLAN_ID_TDI as "VLAN ID"
+					CPE_Brand_TDI as "CPE Brand"
+					CPE_Model_No_TDI as "CPE Model No."
+					CPE_Serial_No_TDI as "CPE Serial No."
+					CPE_Mgmt_IP_TDI as "CPE Mgmt IP"
+					CPE_Hostname_TDI as "CPE Hostname"
+					No_of_Cores_TCT as "No. of Cores"
+					Source_Site_A_Location_TCT as "Source(Site A) Location"
+					Source_Panel_Name_TCT as "Source (Panel Name)"
+					Source_Port_No_X_Y_TCT as "Source (Port No. ) - X,Y"
+					Destination_Site_B_Location_TCT as "Destination (Site B) Location"
+					Destination_Panel_Name_TCT as "Destination (Panel Name)"
+					Destination_Port_No_X_Y_TCT as "Destination (Port No. ) - X,Y"
+					Site_ID_TCT as "Site ID"
+					Rack_No_TDC as "Rack No."
+					Rack_U_size_TDC as "Rack (U) size"
+					Data_Centre_Address_TDC as "Data Centre Address"
+					Rack_No_TRS as "Rack No."
+					Rack_U_size_TRS as "Rack (U) size"
+					Data_Centre_Address_TRS as "Data Centre Address"
+					Bandwidth_Speed_TGB as "Bandwidth Speed"
+					Network_ID_TGB as "Network ID"
+					Gateway_IP_TGB as "Gateway IP"
+					Customer_IP_TGB as "Customer IP"
+					Broadcast_IP_TGB as "Broadcast IP"
+					Subnet_Mask_TGB as "Subnet Mask"
+					VLAN_ID_TGB as "VLAN ID"
+					ONU_Brand_TGB as "ONU Brand"
+					ONU_Model_No_TGB as "ONU Model No."
+					ONU_Serial_No_TGB as "ONU Serial No."
+					ONU_ID_No_TGB as "ONU ID No."
+					OLT_Hostname_TGB as "OLT Hostname"
+					OLT_Serial_No_TGB as "OLT Serial No."
+					OLT_Port_No_TGB as "OLT Port No."
+					No_of_Cores_THC as "No. of Cores"
+					Source_Site_A_Location_THC as "Source(Site A) Location"
+					Source_Panel_Name_THC as "Source (Panel Name)"
+					Source_Port_No_X_Y_THC as "Source (Port No. ) - X,Y"
+					Destination_Site_B_Location_THC as "Destination (Site B) Location"
+					Destination_Panel_Name_THC as "Destination (Panel Name)"
+					Destination_Port_No_X_Y_THC as "Destination (Port No. ) - X,Y"
+					Site_ID_THC as "Site ID"
+					Bandwidth_Speed_THC as "Bandwidth Speed"
+					Interface_Type_THC as "Interface Type"
+					SVLAN_ID_THC as "SVLAN ID"
+					CVLAN_ID_THC as "CVLAN ID"
+					CPE_Brand_THC as "CPE Brand"
+					CPE_Model_No_THC as "CPE Model No."
+					CPE_Serial_No_THC as "CPE Serial No."
+					CPE_Mgmt_IP_THC as "CPE Mgmt IP"
+					CPE_Hostname_THC as "CPE Hostname"
+					Controller_Band_TWF as "Controller Band"
+					Controller_Model_No_TWF as "Controller Model No"
+					AP_Brand_TWF as "AP Brand"
+					AP_Model_No_TWF as "AP Model No"
+					AP_Hostname_TWF as "AP Hostname"
+					AP_Serial_No as "AP Serial No."
+					IBC_Site_ID_TDF as "IBC Site ID"
+					Operator_Name_TDF as "Operator Name"
+					IBC_Location_Address_TDF as "IBC Location/Address"
+					Remark_TDF as "Remark"
+					Remark_TBI as "Remark"
+					Remark_TDI as "Remark"
+					Remark_THC as "Remark"
+					Create_Ticket as "Create Ticket?"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

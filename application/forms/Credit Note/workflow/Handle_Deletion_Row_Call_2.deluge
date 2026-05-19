@@ -1,0 +1,20 @@
+Handle_Deletion_Row_Call_2 as "Handle Deletion Row Call Charges"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on delete row of Call_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

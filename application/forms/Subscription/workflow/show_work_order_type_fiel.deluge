@@ -1,0 +1,28 @@
+show_work_order_type_fiel as "show work order type field"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Create_Work_Order
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Create_Work_Order == true)
+				{
+					show Work_Order_Type;
+				}
+				else
+				{
+					hide Work_Order_Type;
+					input.Work_Order_Type = null;
+				}
+			)
+		}
+	}
+
+}
+

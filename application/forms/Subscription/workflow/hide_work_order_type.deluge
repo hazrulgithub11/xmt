@@ -1,0 +1,17 @@
+hide_work_order_type as "hide work order type"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions  (Create_Work_Order == false)
+		{
+			hide Work_Order_Type;
+		}
+	}
+
+}
+

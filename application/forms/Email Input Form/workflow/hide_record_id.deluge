@@ -1,0 +1,17 @@
+hide_record_id as "hide record id"
+{
+	type =  form
+	form = Email_Input_Form
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions 
+		{
+			hide Record_ID,Document_Type;
+		}
+	}
+
+}
+

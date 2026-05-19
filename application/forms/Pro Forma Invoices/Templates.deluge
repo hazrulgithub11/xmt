@@ -1,0 +1,169 @@
+list Copy_of_All_Pro_Forma_Invoices
+{
+	displayName = "Templates"
+	template = Proforma_Invoice
+	print template = Proforma_Invoice
+	show all rows from Pro_Forma_Invoices    
+	(
+		Customer_Code as "Customer Code"
+		Customer_Name as "Customer Name"
+		Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+		Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
+		Payment_Method as "Payment Method"
+		Grand_Total as "Grand Total"
+		Status
+		Due_Date as "Due Date"
+		Customer_SST as "Customer SST"
+		Customer_TIN as "Customer TIN"
+		Customer_Email as "Customer Email"
+		Rejection_Reason as "Rejection Reason"
+		Grand_Total_MYR as "Grand Total(MYR)"
+		(
+			display = total	
+		)
+		Customer_Name.Added_Time as "Added Time"
+		Customer_Name.Added_User as "Added User"
+		Customer_Name.Modified_Time as "Modified Time"
+		Customer_Code.Modified_User as "Modified User"
+		Amount_Due as "Amount Due"
+		Amount_Paid as "Amount Paid"
+	)
+	custom actions
+	(
+		"Mark As Sent"
+		(
+	  			workflow = Mark_As_Sent_Invoice
+				show action in view header = true
+				condition = (Status == "Approved")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Mark As Sent\" this Deposit  ${Pro_Forma_Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Refund"
+		(
+	  			workflow = Refund
+				show action in view header = true
+				condition = (Status == "Paid")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Refund\" this Deposit  ${Pro_Forma_Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Record Payment"
+		(
+	  			workflow = Record_Payment_Deposit
+				show action in view header = true
+				condition = (Status == "Sent" || Status == "Partially Paid")
+		)
+		"Send Proforma Invoice"
+		(
+	  			workflow = Send_Proforma_Invoice
+				show action in view header = true
+				condition = (Status != "Draft" && Status != "Pending Approval" && Status != "Rejected" && Status != "Resubmit")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Send Proforma Invoice\" this Deposit  ${Pro_Forma_Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+	)
+	conditional formatting
+	(
+		"Overdue"
+		{
+			condition = (Status == "Approved" || Status == "Sent" || Status == "Partially Paid" && Due_Date < zoho.currentdate)
+			fields = [Due_Date]
+			format = "color:#e64d3b;"
+		}
+		"Reject Reason"
+		{
+			fields = [Rejection_Reason]
+			format = "color:#e64d3b;"
+		}
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Payment_Method as "Payment Method"
+					Status
+					Due_Date as "Due Date"
+					Grand_Total as "Grand Total"
+					Grand_Total_MYR as "Grand Total(MYR)"
+					Customer_Name.Added_Time as "Added Time"
+					Customer_Name.Modified_Time as "Modified Time"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+					Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
+					Due_Date as "Due Date"
+					Status
+					Customer_Name as "Customer Name"
+					Customer_Email as "Customer Email"
+					Customer_TIN as "Customer TIN"
+					Customer_SST as "Customer SST"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+			 	"Send Proforma Invoice"
+			 	"Mark As Sent"
+			 	"Refund"
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

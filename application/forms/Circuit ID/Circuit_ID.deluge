@@ -1,0 +1,12 @@
+// Report/List: Circuit ID
+// Link name: All_Circuit_Ids
+
+		default list All_Circuit_Ids
+		{
+			displayName = "Circuit ID"
+			show all rows from Circuit_ID    
+			(
+				Circuit_ID as "Circuit ID"
+				Circuit_ID_Type as "Circuit ID Type"
+			)
+		}

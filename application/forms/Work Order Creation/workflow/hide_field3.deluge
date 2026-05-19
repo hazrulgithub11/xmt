@@ -1,0 +1,40 @@
+hide_field3 as "hide field"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// for each  line_item in input.Subscription_Line_Items
+				// {
+				// 	item = line_item.Item.Item_Name;
+				// 	alert item ;
+				// 	if(item != null && item.containsIgnoreCase("ATA CONVERTER"))
+				// 	{
+				// 		ataConverter = true;
+				// 	}
+				// 	else 
+				//     {
+				// 		ataConverter = false;
+				//     }
+				// }
+				// if ( ataConverter == true ) 
+				// {
+				// 	hide Brand_TAC;
+				// }
+				hide Subscription;
+				hide Ticket_ID;
+				hide Ticket_Number;
+				hide Create_Ticket;
+			)
+		}
+	}
+
+}
+

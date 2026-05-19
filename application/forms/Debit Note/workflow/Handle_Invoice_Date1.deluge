@@ -1,0 +1,30 @@
+Handle_Invoice_Date1 as "Handle Invoice Date"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on user input of Invoice_Date
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Invoice_Date == null)
+				{
+					input.Due_Date = null;
+				}
+				else
+				{
+					if(input.Payment_Term != null)
+					{
+						input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
+					}
+				}
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,20 @@
+Hide_Fields7 as "Hide Fields"
+{
+	type =  form
+	form = Customer_Profile
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Credit_Available;
+			)
+		}
+	}
+
+}
+

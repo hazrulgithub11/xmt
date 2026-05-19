@@ -1,0 +1,13 @@
+int invoice.get_billing_cycle_months_used(date actualBillingDate, date NexBillingDate, string billEvery)
+{
+	//billEveryDate = toDate(billEvery.removeAllAlpha() + "-" + actualBillingDate.getSuffix("-"),"dd-MM-yyyy");
+	if(actualBillingDate.getMonth() == NexBillingDate.subDay(1).getMonth())
+	{
+		billingCycleMonthsUsed = 0;
+	}
+	else
+	{
+		billingCycleMonthsUsed = (daysBetween(actualBillingDate,NexBillingDate.subDay(1)) / 30).toNumber();
+	}
+	return billingCycleMonthsUsed;
+}

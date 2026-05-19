@@ -1,0 +1,21 @@
+Deletion_of_rows_of_Refun as "Deletion of rows of Refund History"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on delete row of Refund_History
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// Trigger Credit Applied Invoices and Refund calculation
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

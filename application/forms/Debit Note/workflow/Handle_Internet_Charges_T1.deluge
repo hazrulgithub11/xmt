@@ -1,0 +1,22 @@
+Handle_Internet_Charges_T1 as "Handle Internet Charges Tax "
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on user input of Internet_Charges.Tax_Internet_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					row.Tax_Type_Internet_Charges=row.Tax_Internet_Charges.Tax_Type;
+				row.Tax_Pct_Internet_Charges=row.Tax_Internet_Charges.Tax_Percentage;
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

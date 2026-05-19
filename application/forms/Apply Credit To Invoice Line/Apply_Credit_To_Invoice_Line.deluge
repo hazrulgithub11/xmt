@@ -1,0 +1,75 @@
+		form Apply_Credit_To_Invoice_Line
+		{
+			displayname = "Apply Credit To Invoice Line"
+			success message = "Data Added Successfully!"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Invoice
+			(
+				type = picklist	
+				values  = Invoice.ID
+    			displayformat = [Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Credit_Note
+			(
+				type = picklist	
+				displayname = "Credit Note"
+				values  = Credit_Note.ID
+    			displayformat = [Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Amount_Applied_Date
+			(
+    			type = date
+				displayname = "Amount Applied Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Amount_Applied
+			(
+				type = decimal
+				displayname = "Amount Applied"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

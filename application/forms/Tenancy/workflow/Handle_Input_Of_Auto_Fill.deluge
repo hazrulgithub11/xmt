@@ -1,0 +1,38 @@
+Handle_Input_Of_Auto_Fill as "Handle Input Of Auto-Fill with Customer Details"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add or edit
+
+	on user input of Auto_Fill_with_Customer_Details
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Auto_Fill_with_Customer_Details == true)
+				{
+					getCustomerProfile = Customer_Profile[ID == input.Customer_Name];
+					input.Tenant_Name = getCustomerProfile.Customer_Name;
+					input.Street = ifnull(getCustomerProfile.Business_Street,"");
+					input.Postcode = ifnull(getCustomerProfile.Postcode,"");
+					input.City = ifnull(getCustomerProfile.City,"");
+					input.State = ifnull(getCustomerProfile.State,null);
+					input.Country = ifnull(getCustomerProfile.Country,null);
+				}
+				else
+				{
+					input.Tenant_Name = "";
+					input.Street = "";
+					input.Postcode = "";
+					input.City = "";
+					input.State = null;
+					input.Country = null;
+				}
+			)
+		}
+	}
+
+}
+

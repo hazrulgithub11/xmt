@@ -1,0 +1,20 @@
+Handle_Billing_Cycle as "Handle Billing Cycle"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add or edit
+
+	on user input of Billing_Cycle
+	{
+		actions  (Billing_Cycle != "Monthly")
+		{
+			custom deluge script
+			(
+					input.Bill_Every = "";
+			)
+		}
+	}
+
+}
+

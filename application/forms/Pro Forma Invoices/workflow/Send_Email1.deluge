@@ -1,0 +1,28 @@
+Send_Email1 as "Send Email"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on edit
+
+	on success
+	{
+		actions  (Send_Email == true)
+		{
+			sendmail
+			(
+				from : "zoho.adminuserid"
+				to : Customer_Email
+				subject : "Proforma Invoice ${Pro_Forma_Invoice_No} – Please Review"
+				message : "<p class=\"p1\">Dear,<br></p><p class=\"p2\">We hope this message finds you well. Please find attached Proforma Invoice&nbsp;${Pro_Forma_Invoice_No} for your recent transaction with us. We kindly request you to review the details and arrange payment by the due date. Should you have any questions or need clarification regarding the invoice, feel free to reach out to us.<br></p><p class=\"p2\">Thank you for your continued business, and we look forward to your prompt attention to this matter.<br></p><p class=\"p1\">Best regards,<br></p><div>XMT Technologies Sdn Bhd<br></div>"
+				attachments : template : Proforma_Invoice as pdf
+			)
+			custom deluge script
+			(
+					input.Send_Email = false;
+			)
+		}
+	}
+
+}
+

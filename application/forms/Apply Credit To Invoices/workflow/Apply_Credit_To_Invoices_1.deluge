@@ -1,0 +1,46 @@
+Apply_Credit_To_Invoices_1 as "Apply Credit To Invoices Validation"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					number_credit_applied = 0;
+				total_amount_credit_applied = 0;
+				for each  curr_unpaid_invoice in input.Unpaid_Invoices
+				{
+					if(curr_unpaid_invoice.Credits_To_Apply < 0)
+					{
+						alert "Please enter a credit amount for each selected invoice before submitting.";
+						cancel submit;
+					}
+					if(curr_unpaid_invoice.Credits_To_Apply > curr_unpaid_invoice.Amount_Due)
+					{
+						alert "The credit amount cannot exceed the invoice’s outstanding balance.";
+						cancel submit;
+					}
+					number_credit_applied = number_credit_applied + 1;
+					total_amount_credit_applied = total_amount_credit_applied + curr_unpaid_invoice.Credits_To_Apply;
+				}
+				if(number_credit_applied == 0)
+				{
+					alert "Please apply a credit amount to at least one invoice before submitting.";
+					cancel submit;
+				}
+				if(total_amount_credit_applied > input.Credit_Note.Credits_Remaining)
+				{
+					alert "The total credit applied exceeds the remaining available credit on this credit note.";
+					cancel submit;
+				}
+			)
+		}
+	}
+
+}
+

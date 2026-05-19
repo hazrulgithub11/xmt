@@ -1,0 +1,35 @@
+Validation_Based_On_Statu4 as "Validation Based On Status"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on edit
+
+	on validate
+	{
+		actions  (Status == "Rejected")
+		{
+			custom deluge script
+			(
+					if(input.Confirm_resubmission == false)
+				{
+					alert(Confirm_resubmission,"Please check to confirm resubmission");
+					cancel submit;
+				}
+			)
+		}
+		actions  (Status == "Pending Approval")
+		{
+			custom deluge script
+			(
+					if(input.Rejection_Reason == "")
+				{
+					alert(Rejection_Reason,"This field is mandatory. Enter a value.");
+					cancel submit;
+				}
+			)
+		}
+	}
+
+}
+

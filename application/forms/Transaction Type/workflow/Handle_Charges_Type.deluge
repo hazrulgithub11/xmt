@@ -1,0 +1,23 @@
+Handle_Charges_Type as "Handle Charges Type"
+{
+	type =  form
+	form = Transaction_Type
+
+	record event = on add or edit
+
+	on user input of Charges_Type
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Charges_Type == "" || input.Charges_Type == "Call Charges")
+				{
+					input.Circuit_ID_Type = null;
+				}
+			)
+		}
+	}
+
+}
+

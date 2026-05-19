@@ -1,0 +1,118 @@
+list Customer_Statement_Report
+{
+	displayName = "Customer Statement Report"
+	show all rows from Customer_Statement    
+	(
+		Customer_Name as "Customer Name"
+		Organization
+		Opening_Balance as "Opening Balance"
+		Invoiced_Amount as "Invoiced Amount"
+		Amount_Paid as "Amount Paid"
+		Balance_Due as "Balance Due"
+		Start_Date as "Start Date"
+		End_Date as "End Date"
+		Statement_Type as "Statement Type"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Statement_Type as "Statement Type"
+					Organization
+					Opening_Balance as "Opening Balance"
+					Invoiced_Amount as "Invoiced Amount"
+					Amount_Paid as "Amount Paid"
+					Balance_Due as "Balance Due"
+					Start_Date as "Start Date"
+					End_Date as "End Date"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Statement_Type as "Statement Type"
+					Customer_Name as "Customer Name"
+					Start_Date as "Start Date"
+					End_Date as "End Date"
+				)
+			)
+			datablock3
+			(
+		     	title = "Account Summary"
+				fields
+				(
+					Opening_Balance as "Opening Balance"
+					Invoiced_Amount as "Invoiced Amount"
+					Amount_Paid as "Amount Paid"
+					Balance_Due as "Balance Due"
+				)
+			)
+			datablock2
+			(
+		     	title = "Transactions"
+		     	related field = Transactions
+				fields
+				(
+					Tenant_Name as "Tenant Name"
+					Customer_Code as "Customer Code"
+					Date_field as "Date"
+					Transaction
+					Details
+					Amount
+					Payments
+					Balance
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

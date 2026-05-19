@@ -1,0 +1,203 @@
+map work_order_creation.updateTicketNumber(int recId, string ticketType)
+{
+	// Retrieve subscription record based on the given recId
+	subRec = Subscription[ID == recId];
+	contact_name = subRec.Contact;
+	contact_email = subRec.Technical_Email;
+	contact_phone = subRec.Phone_Number;
+	customer_code_id = subRec.Customer_Code;
+	create_work_order = subRec.Create_Work_Order;
+	department_id = "1027140000000006907";
+	mess = Map();
+	try 
+	{
+		// Step 1: Create Work Order in Zoho Creator
+		// 		work_order_data = Map();
+		// 		work_order_data.put("Subscription",recId);
+		// 		work_order_data.put("Customer_Name",subRec.Customer_Name);
+		// 		work_order_data.put("Customer_Code",customer_code_id);
+		// 		work_order_data.put("Work_Order_Type",ticketType);
+		//update by Nik
+		createWo = insert into Work_Order_Creation
+		[
+			Added_User=zoho.loginuser
+			Subscription=recId
+			Customer_Name=subRec.Customer_Name
+			Customer_Code=subRec.Customer_Code
+			Work_Order_Type=ticketType
+		];
+		workOrderId = createWo;
+		woUrl = "https://creatorapp.zohopublic.com/" + zoho.adminuser + "/" + zoho.appname + "/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?ID=" + workOrderId.toString();
+		try 
+		{
+			//create ticket
+			createTicket = thisapp.subscription.createTicketUpdateWo(recId,workOrderId.toLong(),ticketType,woUrl);
+			mess.put("message",createTicket);
+		}
+		catch (errorCreateTicket)
+		{
+			mess.put("message",errorCreateTicket);
+		}
+		//end update by Nik
+		// Call Zoho Creator API to create the work order record
+		// 		add_work_order_response = zoho.creator.createRecord(zoho.adminuser,zoho.appname,"Work_Order_Creation",work_order_data,Map(),"zcreator");
+		//info "Add Work Order Record Response: " + add_work_order_response.toString();
+		// 		if(add_work_order_response.get("code") == 200)
+		// 		{
+		// 			work_order_id = add_work_order_response.get("ID");
+		// 			info "Work Order record added successfully. ID: " + work_order_id;
+		// 			if(ticketType != "")
+		// 			{
+		// 				try 
+		// 				{
+		// 					customer_code_display_value = "";
+		// 					account_id = "";
+		// 					if(customer_code_id != null)
+		// 					{
+		// 						// Step 2: Retrieve Customer Code from the Tenancy module
+		// 						tenancy_record = Tenancy[ID == customer_code_id];
+		// 						if(tenancy_record != null)
+		// 						{
+		// 							customer_code_display_value = tenancy_record.Customer_Code;
+		// 						}
+		// 						// Step 3: Search for the Account in Zoho Desk using Customer Code
+		// 						search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customer_code_display_value;
+		// 						search_account_response = invokeurl
+		// 						[
+		// 							url :search_account_url
+		// 							type :GET
+		// 							connection:"zdesk"
+		// 						];
+		// 						info "Account Search Response: " + search_account_response.toString();
+		// 						// Extract Account ID if found
+		// 						if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+		// 						{
+		// 							account_id = search_account_response.get("data").get(0).get("id");
+		// 							info "Account found: ID = " + account_id;
+		// 						}
+		// 					}
+		// 					contact_id = "";
+		// 					// Step 4: Search for the Contact in Zoho Desk using Email
+		// 					search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?email=" + contact_email;
+		// 					search_contact_response = invokeurl
+		// 					[
+		// 						url :search_contact_url
+		// 						type :GET
+		// 						connection:"zdesk"
+		// 					];
+		// 					info "Search Contact Response: " + search_contact_response.toString();
+		// 					if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+		// 					{
+		// 						// Loop through contacts to find the one associated with the correct account
+		// 						for each  contactRec in search_contact_response.get("data")
+		// 						{
+		// 							if(contactRec.get("accountId") == account_id)
+		// 							{
+		// 								contact_id = search_contact_response.get("data").get(0).get("id");
+		// 								info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
+		// 								info "Associated Account ID: " + account_id;
+		// 							}
+		// 						}
+		// 					}
+		// 					else
+		// 					{
+		// 						info "No contact found with email: " + contact_email;
+		// 						// Step 5: Create a new Contact if not found
+		// 						cf = Map();
+		// 						if(ifnull(account_id,"") != "")
+		// 						{
+		// 							cf.put("accountId",account_id.toLong());
+		// 						}
+		// 						cf.put("cf_technical_contact_name",contact_name);
+		// 						cf.put("cf_technical_email",contact_email);
+		// 						cf.put("cf_technical_phone_number",contact_phone);
+		// 						contact_data = Map();
+		// 						contact_data.put("lastName",contact_name);
+		// 						contact_data.put("email",contact_email);
+		// 						contact_data.put("cf",cf);
+		// 						desk_contact_url = "https://desk.zoho.com/api/v1/contacts";
+		// 						create_contact_response = invokeurl
+		// 						[
+		// 							url :desk_contact_url
+		// 							type :POST
+		// 							parameters:contact_data.toString()
+		// 							connection:"zdesk"
+		// 						];
+		// 						if(create_contact_response.get("id") != null)
+		// 						{
+		// 							contact_id = create_contact_response.get("id");
+		// 							info "New contact created successfully. ID: " + contact_id;
+		// 						}
+		// 					}
+		// 					if(contact_id != "")
+		// 					{
+		// 						// Step 6: Create Ticket in Zoho Desk
+		// 						billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?Subscription=" + recId.toString();
+		// 						cf = Map();
+		// 						cf.put("cf_customer_code",customer_code_display_value);
+		// 						cf.put("cf_contact",contact_name);
+		// 						cf.put("cf_ticket_type",ticketType);
+		// 						cf.put("cf_url_to_subscription_record_in_billing_system",billing_url);
+		// 						cf.put("cf_problem_category","Not Applicable");
+		// 						cf.put("cf_subcategory","Not Applicable");
+		// 						cf.put("cf_maintenance_type","Not Applicable");
+		// 						ticket_data = Map();
+		// 						ticket_data.put("subject","Work Order - " + ticketType);
+		// 						ticket_data.put("description","This ticket is created for " + ticketType);
+		// 						ticket_data.put("departmentId",department_id);
+		// 						ticket_data.put("contactId",contact_id);
+		// 						ticket_data.put("accountId",account_id);
+		// 						ticket_data.put("status","Open");
+		// 						ticket_data.put("cf",cf);
+		// 						ticket_data.put("email",contact_email);
+		// 						ticket_data.put("phone",contact_phone);
+		// 						desk_ticket_url = "https://desk.zoho.com/api/v1/tickets";
+		// 						create_ticket_response = invokeurl
+		// 						[
+		// 							url :desk_ticket_url
+		// 							type :POST
+		// 							parameters:ticket_data.toString()
+		// 							connection:"zdesk"
+		// 						];
+		// 						info "Create Ticket Response: " + create_ticket_response;
+		// 						if(create_ticket_response.get("id") != null)
+		// 						{
+		// 							// Step 7: Update Work Order Record in Zoho Creator with Ticket ID and Ticket Number
+		// 							ticket_id = create_ticket_response.get("id");
+		// 							ticket_number = create_ticket_response.get("ticketNumber");
+		// 							info "Ticket created successfully. Ticket ID: " + ticket_id + ", Ticket Number: " + ticket_number;
+		// 							// 							update_map = Map();
+		// 							// 							update_map.put("Ticket_ID",ticket_id);
+		// 							// 							update_map.put("Ticket_Number",ticket_number);
+		// 							woRec = Work_Order_Creation[ID == work_order_id.toLong()];
+		// 							woRec.Ticket_ID=ticket_id;
+		// 							woRec.Ticket_Number=ticket_number;
+		// 							// 							update_response = zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"All_Work_Order_Creations",recId,update_map,Map(),"zcreator");
+		// 							// 							info "Zoho Creator Record Update Response: " + update_response.toString();
+		// 							mess.put("code",200);
+		// 							mess.put("message","Ticket created successfully. Ticket ID: " + ticket_id + ", Ticket Number: " + ticket_number);
+		// 						}
+		// 						else
+		// 						{
+		// 							mess.put("code",403);
+		// 							mess.put("message","Failed to create ticket. Error: " + create_ticket_response.toString());
+		// 						}
+		// 					}
+		// 				}
+		// 				catch (e)
+		// 				{
+		// 					info "Error occurred while creating ticket: " + e.toString();
+		// 					mess.put("code",500);
+		// 					mess.put("message","An error occurred: " + e.toString());
+		// 				}
+		// 			}
+		// 		}
+	}
+	catch (e)
+	{
+		info "General error: " + e.toString();
+		mess.put("code",500);
+		mess.put("message","An error occurred: " + e.toString());
+	}
+	return mess;
+}

@@ -1,0 +1,21 @@
+Validate_Record_Deletion5 as "Validate Record Deletion"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					alert "Ensure the refund note is deleted from the credit note’s refund history.";
+				cancel delete;
+			)
+		}
+	}
+
+}
+

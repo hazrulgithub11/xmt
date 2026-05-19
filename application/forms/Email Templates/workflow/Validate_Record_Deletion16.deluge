@@ -1,0 +1,24 @@
+Validate_Record_Deletion16 as "Validate Record Deletion"
+{
+	type =  form
+	form = Email_Templates
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Status == "Active")
+				{
+					alert "Deletion failed: Active email templates cannot be deleted. Deactivate the template to proceed.";
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

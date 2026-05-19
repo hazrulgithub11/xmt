@@ -1,0 +1,40 @@
+Hide_Fields10 as "Hide Fields"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Organization;
+				hide Receipt_Sent;
+				hide Invoice;
+				hide Debit_Note;
+				hide Pro_Forma_Invoices;
+				hide Single_Record_Payment;
+				hide Payment_Type_Single_Record;
+				hide Payment_Received_Line_Item.Payment_Received;
+				hide Payment_Received_Line_Item.Customer_Code;
+				hide Payment_Received_Line_Item.Customer_Name;
+				hide Payment_Received_Line_Item.Invoice_No;
+				hide Payment_Received_Line_Item.Debit_Note_No;
+				hide Payment_Received_Line_Item.Pro_Forma_Invoice_No;
+				// if(input.Payment_Type != "Deposit")
+				// {
+				// 	hide Payment_Received_Line_Item.Deposit_No;
+				// }
+				// if(input.Payment_Type != "Invoice/Debit Note")
+				// {
+				// 	hide Payment_Received_Line_Item.Reference_No;
+				// }
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,28 @@
+disable_field as "disable field"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Customer_Name;
+				disable Customer_Code;
+				disable Work_Order_Type;
+				disable Subscription_Line_Items.Item;
+				disable Subscription_Line_Items.Item_Code;
+				disable Subscription_Line_Items.Description;
+				disable Subscription_Line_Items.Business_Segment;
+				disable Subscription_Line_Items.Business_Unit;
+				disable Subscription_Line_Items.Circuit_ID_Type;
+			)
+		}
+	}
+
+}
+

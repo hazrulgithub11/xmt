@@ -1,0 +1,26 @@
+Handle_Internet_Charges_U3 as "Handle Internet Charges Unit Price"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on user input of Internet_Charges.Unit_Price_Internet_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(ifnull(row.Unit_Price_Internet_Charges,0) <= 0)
+				{
+					alert "Please enter a unit price more than 0";
+					row.Unit_Price_Internet_Charges=1;
+					return;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

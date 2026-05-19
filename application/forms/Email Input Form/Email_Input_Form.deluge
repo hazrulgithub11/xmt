@@ -1,0 +1,127 @@
+		form Email_Input_Form
+		{
+			displayname = "Email Input Form"
+			success message = "Email Input Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			Document_Type
+			(
+				type = picklist
+				displayname = "Document Type"
+				maxchar = 100
+				values = {"Invoice","Pro Forma Invoices","Debit Note"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Placeholders
+			(
+				type = list	
+				values = {"Choice 1","Choice 2","Choice 3","Invoice_No","Debit_Note_No","Pro_Forma_Invoice_No","Customer_Name","Subscriptions","Invoice","Customer_Code","Customer_Email","Customer_TIN","Customer_SST","Supplier_TIN","SST_ID"}
+				height = 60px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Selected_Placeholders
+			(
+    			type = textarea
+				displayname = "Selected Placeholders"
+				height = 100px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have To
+			(
+    			type = textarea
+				height = 100px
+    			description
+    			[
+    				type = tooltip
+    			 	message = "Please separate the email addresses with commas, like this: test1@ap.us, test2@ap.us"
+    			]
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			CC
+			(
+    			type = textarea
+				height = 100px
+    			description
+    			[
+    				type = tooltip
+    			 	message = "Please separate the email addresses with commas, like this: test1@ap.us, test2@ap.us"
+    			]
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Subject_field
+			(
+    			type = text
+				displayname = "Subject"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Body
+			(
+    			type = richtext
+				height = 200px
+				toolbar = enable
+				[
+					style, font-color, background-color, alignment, link, table, bullets-and-numbering, 
+					font-size : {1, 2, 3, 4, 5, 6, 7},
+					font-family : {"Serif", "Arimo", "Ptmono", "Heuristica", "OpenSans", "Tinos", "Lato", "DejaVuSans", "ComicNeue", "EBGaramond", "RobotoCondensed", "ArchivoBlack", "Carlito", "Barlow", "Comfortaa", "Montserrat", "Nunito", "Poppins", "Quicksand", "Raleway", "Rubik", "SourceSansPro"}
+				]
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Record_ID
+			(
+				type = number
+				displayname = "Record ID"
+				maxchar = 19
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

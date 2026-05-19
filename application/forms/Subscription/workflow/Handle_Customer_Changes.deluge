@@ -1,0 +1,73 @@
+Handle_Customer_Changes as "Handle Customer Changes"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Customer_Name
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				input.Payment_Term = null;
+				input.Payable_To1 = null;
+				input.Payment_Term = null;
+				input.Contract_Start_Date = null;
+				input.Contract_Period = null;
+				input.Contract_End_Date = null;
+				input.Prorate = false;
+				input.Prorate_Note1 = "";
+				/* grandTotal = 0;
+				 				 				grandTotalMYR = 0; */
+				for each  subLineItem in input.Subcription_Line_Items
+				{
+					unitPrice = ifnull(subLineItem.Item.Unit_Price,0);
+					unitPriceCurrency = unitPrice / ifnull(input.Exchange_Rate,1);
+					subLineItem.Unit_Price=unitPriceCurrency;
+					subLineItem.Item_Code=subLineItem.Item.Item_Code;
+					subLineItem.Description=subLineItem.Item.Description;
+					subLineItem.Quantity=0;
+					subLineItem.Sub_Total=0;
+					subLineItem.Tax=null;
+					subLineItem.Tax_Pct=0;
+					subLineItem.Tax_Amount=0;
+					subLineItem.Total=0;
+					subLineItem.Total_MYR=0;
+					/*if(subLineItem.Item.Tax == null)
+				 				 					{
+				 				 						subLineItem.Tax=null;
+				 				 						subLineItem.Tax_Pct=0;
+				 				 						subLineItem.Tax_Amount=0;
+				 				 					}
+				 				 					else
+				 				 					{
+				 				 						subLineItem.Tax=subLineItem.Item.Tax;
+				 				 						subLineItem.Tax_Pct=subLineItem.Item.Tax.Tax_Percentage;
+				 				 						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Item.Tax.Tax_Percentage / 100;
+				 				 					}
+				 				 					subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
+				 				 					subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Currency.Exchange_Rate_to_MYR,1);
+				 				 					grandTotal = grandTotal + subLineItem.Total;
+				 				 					grandTotalMYR = grandTotalMYR + subLineItem.Total_MYR;*/
+					if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+					{
+						subLineItem.Business_Segment:ui.add(customerInfo.Business_Segment);
+					}
+					else
+					{
+						clear subLineItem.Business_Segment;
+					}
+					clear subLineItem.Business_Unit;
+					subLineItem.Business_Unit=null;
+				}
+				input.Grand_Total = 0;
+				input.Grand_Total_MYR = 0;
+			)
+		}
+	}
+
+}
+

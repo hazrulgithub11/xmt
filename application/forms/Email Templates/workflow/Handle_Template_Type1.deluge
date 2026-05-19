@@ -1,0 +1,57 @@
+Handle_Template_Type1 as "Handle Template Type"
+{
+	type =  form
+	form = Email_Templates
+
+	record event = on add or edit
+
+	on user input of Template_Type
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Template_Type.containsIgnoreCase("invoice"))
+				{
+					if(input.Template_Type == "Pro Forma Invoices")
+					{
+						templateType = input.Template_Type;
+					}
+					else
+					{
+						templateType = "Invoice";
+					}
+				}
+				else
+				{
+					templateType = input.Template_Type;
+				}
+				//Get The Fields API Name
+				getFields = invokeurl
+				[
+					url :"https://www.zohoapis.com/creator/v2.1/meta" + zoho.appuri + "form/" + templateType.replaceAll(" ","_") + "/fields"
+					type :GET
+					connection:"zoho_creator_connection"
+				];
+				//Insert value in placeholders field
+				if(getFields.get("code") == 3000)
+				{
+					fieldsList = list();
+					for each  field in getFields.get("fields")
+					{
+						if(field.get("type") != 21)
+						{
+							//info field.get("link_name");
+							fieldsList.add(field.get("link_name"));
+						}
+					}
+				}
+				clear Placeholders;
+				input.Placeholders:ui.add(fieldsList);
+				input.Selected_Placeholders = "";
+			)
+		}
+	}
+
+}
+

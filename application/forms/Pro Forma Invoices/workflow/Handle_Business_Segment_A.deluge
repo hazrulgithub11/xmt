@@ -1,0 +1,31 @@
+Handle_Business_Segment_A as "Handle Business Segment And Business Unit"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				businessUnitList = list();
+				for each  piLineItem in input.Pro_Forma_Invoice_Line_Item
+				{
+					businessSegment = piLineItem.Business_Segment;
+					piLineItem.Business_Segment=businessSegment;
+					businessUnit = piLineItem.Business_Unit;
+					piLineItem.Business_Segment:ui.add(customerInfo.Business_Segment);
+					getBusinessUnits = Business_Unit[Business_Segment == businessSegment].ID.getAll();
+					piLineItem.Business_Unit:ui.add(getBusinessUnits);
+					piLineItem.Business_Unit=businessUnit;
+				}
+			)
+		}
+	}
+
+}
+

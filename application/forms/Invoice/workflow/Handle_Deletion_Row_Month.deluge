@@ -1,0 +1,35 @@
+Handle_Deletion_Row_Month as "Handle Deletion Row Monthly Rental"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on delete row of Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					newAmountDue = ifnull(input.Amount_Due,0) - ifnull(row.Total_Monthly_Rental,0);
+				if(newAmountDue > 0)
+				{
+					input.Amount_Due = newAmountDue;
+				}
+				else
+				{
+					input.Amount_Due = 0;
+				}
+			)
+		}
+	}
+
+}
+

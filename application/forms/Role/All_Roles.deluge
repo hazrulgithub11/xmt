@@ -1,0 +1,54 @@
+list All_Roles
+{
+	displayName = "Roles"
+	show all rows from Role    
+	(
+		Role
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Role
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+    	 	)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Role
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+    	)
+	)
+}

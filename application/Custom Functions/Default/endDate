@@ -1,0 +1,8 @@
+date endDate(string oriEndDate)
+{
+	info oriEndDate;
+	convertedEndDate = oriEndDate.toDate();
+	info convertedEndDate;
+	modifiedEndDate = convertedEndDate.addDay(1);
+	return modifiedEndDate;
+}

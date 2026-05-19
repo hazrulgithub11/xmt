@@ -1,0 +1,6 @@
+// Record action: Calculate Overdue
+// Link name: Calculate_Overdue
+// Form: Invoice
+// Note: uses direct action (no on click wrapper in export)
+
+thisapp.invoice.recalculate_overdue(Customer_Code,ID);

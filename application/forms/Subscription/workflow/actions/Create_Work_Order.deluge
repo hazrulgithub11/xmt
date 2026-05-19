@@ -1,0 +1,5 @@
+// Record action: Create Work Order
+// Link name: Create_Work_Order
+// Form: Subscription
+
+openUrl("#Form:Work_Order_Creation?Subscription=" + input.ID,"popup");

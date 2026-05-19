@@ -1,0 +1,22 @@
+Disable_Addition_And_Dele3 as "Disable Addition And Deletion Row"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions  (Status == "Approved" || Status == "Overdue" || Status == "Sent" || Status == "Partially Paid" || Status == "Paid")
+		{
+		hide add row of Call_Charges,Internet_Charges,Monthly_Rental;
+		hide delete row of Call_Charges,Internet_Charges,Monthly_Rental;
+		}
+		actions 
+		{
+		hide add row of Credit_Applied_Invoices,Refund_History;
+		}
+	}
+
+}
+

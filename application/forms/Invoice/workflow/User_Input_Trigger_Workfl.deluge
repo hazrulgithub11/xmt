@@ -1,0 +1,133 @@
+User_Input_Trigger_Workfl as "User_Input_Trigger_Workflow"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on user input of User_Input_Trigger
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					////////////////////////////////////////////////////////////////////////////////////////////
+				// Monthly Rental Calculation
+				calculated_sub_total_monthly_rental = 0;
+				calculated_total_tax_monthly_rental = 0;
+				calculated_grand_total_monthly_rental = 0;
+				for each  curr_monthly_rental in input.Monthly_Rental
+				{
+					// Individual Calculation
+					curr_sub_total_monthly_rental = curr_monthly_rental.Quantity_Monthly_Rental * curr_monthly_rental.Unit_Price_Monthly_Rental;
+					curr_total_tax_monthly_rental = curr_sub_total_monthly_rental * curr_monthly_rental.Tax_Pct_Monthly_Rental / 100;
+					curr_grand_total_monthly_rental = curr_sub_total_monthly_rental + curr_total_tax_monthly_rental;
+					curr_monthly_rental.Sub_Total_Monthly_Rental=curr_sub_total_monthly_rental;
+					curr_monthly_rental.Tax_Amount_Monthly_Rental=curr_total_tax_monthly_rental;
+					curr_monthly_rental.Total_Monthly_Rental=curr_grand_total_monthly_rental;
+					// Overall Calculation
+					calculated_sub_total_monthly_rental = calculated_sub_total_monthly_rental + curr_sub_total_monthly_rental;
+					calculated_total_tax_monthly_rental = calculated_total_tax_monthly_rental + curr_total_tax_monthly_rental;
+					calculated_grand_total_monthly_rental = calculated_grand_total_monthly_rental + curr_grand_total_monthly_rental;
+				}
+				input.Sub_Total_Monthly_Rental = calculated_sub_total_monthly_rental;
+				input.Total_Tax_Monthly_Rental = calculated_total_tax_monthly_rental;
+				input.Grand_Total_Monthly_Rental = calculated_grand_total_monthly_rental;
+				// Internet Charges Calculation
+				calculated_sub_total_internet_charges = 0;
+				calculated_total_tax_internet_charges = 0;
+				calculated_grand_total_internet_charges = 0;
+				for each  curr_internet_charges in input.Internet_Charges
+				{
+					// Individual Calculation
+					curr_sub_total_internet_charges = curr_internet_charges.Quantity_Internet_Charges * curr_internet_charges.Unit_Price_Internet_Charges;
+					curr_total_tax_internet_charges = curr_sub_total_internet_charges * curr_internet_charges.Tax_Pct_Internet_Charges / 100;
+					curr_grand_total_internet_charges = curr_sub_total_internet_charges + curr_total_tax_internet_charges;
+					curr_internet_charges.Sub_Total_Internet_Charges=curr_sub_total_internet_charges;
+					curr_internet_charges.Tax_Amount_Internet_Charges=curr_total_tax_internet_charges;
+					curr_internet_charges.Total_Internet_Charges=curr_grand_total_internet_charges;
+					// Overall Calculation
+					calculated_sub_total_internet_charges = calculated_sub_total_internet_charges + curr_sub_total_internet_charges;
+					calculated_total_tax_internet_charges = calculated_total_tax_internet_charges + curr_total_tax_internet_charges;
+					calculated_grand_total_internet_charges = calculated_grand_total_internet_charges + curr_grand_total_internet_charges;
+				}
+				input.Sub_Total_Internet_Charges = calculated_sub_total_internet_charges;
+				input.Total_Tax_Internet_Charges = calculated_total_tax_internet_charges;
+				input.Grand_Total_Internet_Charges = calculated_grand_total_internet_charges;
+				// Call Charges Calculation
+				calculated_sub_total_call_charges = 0;
+				calculated_total_tax_call_charges = 0;
+				calculated_grand_total_call_charges = 0;
+				for each  curr_call_charges in input.Call_Charges
+				{
+					// Individual Calculation
+					curr_sub_total_call_charges = curr_call_charges.Quantity_Call_Charges * curr_call_charges.Unit_Price_Call_Charges;
+					curr_total_tax_call_charges = curr_sub_total_call_charges * curr_call_charges.Tax_Pct_Call_Charges / 100;
+					curr_grand_total_call_charges = curr_sub_total_call_charges + curr_total_tax_call_charges;
+					curr_call_charges.Sub_Total_Call_Charges=curr_sub_total_call_charges;
+					curr_call_charges.Tax_Amount_Call_Charges=curr_total_tax_call_charges;
+					curr_call_charges.Total_Call_Charges=curr_grand_total_call_charges;
+					// Overall Calculation
+					calculated_sub_total_call_charges = calculated_sub_total_call_charges + curr_sub_total_call_charges;
+					calculated_total_tax_call_charges = calculated_total_tax_call_charges + curr_total_tax_call_charges;
+					calculated_grand_total_call_charges = calculated_grand_total_call_charges + curr_grand_total_call_charges;
+				}
+				input.Sub_Total_Call_Charges = calculated_sub_total_call_charges;
+				input.Total_Tax_Call_Charges = calculated_total_tax_call_charges;
+				input.Grand_Total_Call_Charges = calculated_grand_total_call_charges;
+				///////////////////////////////////////////////////////////////////////////////////////////
+				input.Sub_Total = input.Sub_Total_Monthly_Rental + input.Sub_Total_Internet_Charges + input.Sub_Total_Call_Charges;
+				input.Total_Tax = input.Total_Tax_Monthly_Rental + input.Total_Tax_Internet_Charges + input.Total_Tax_Call_Charges;
+				input.Grand_Total = input.Grand_Total_Monthly_Rental + input.Grand_Total_Internet_Charges + input.Grand_Total_Call_Charges;
+				if(input.Exchange_Rate == null)
+				{
+					input.Grand_Total_Base_Currency = 0;
+				}
+				else
+				{
+					input.Grand_Total_Base_Currency = input.Exchange_Rate * input.Grand_Total;
+				}
+				input.Amount_Due = input.Grand_Total;
+				///////////////////////////////////////////////////////////////////////////////////////////
+				// Apply Credit To Invoices Calculation
+				if(input.ID != null)
+				{
+					credits_applied_total = 0;
+					input_invoice = Invoice[ID = input.ID];
+					if(input.Is_Initialization == true)
+					{
+						input.Is_Initialization = false;
+						input_invoice.Credits_Applied=null;
+						clear Credits_Applied;
+						apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Invoice = input.ID];
+						for each  curr_apply_credit_to_invoice_line in apply_credit_to_invoice_line_list
+						{
+							curr_new_credits_applied_row = Invoice.Credits_Applied();
+							curr_new_credits_applied_row.CA_Apply_Credit_To_Invoice_Line_ID=curr_apply_credit_to_invoice_line.ID;
+							curr_new_credits_applied_row.CA_Date=curr_apply_credit_to_invoice_line.Amount_Applied_Date;
+							curr_new_credits_applied_row.CA_Credit_Note=curr_apply_credit_to_invoice_line.Credit_Note;
+							curr_new_credits_applied_row.CA_Total=curr_apply_credit_to_invoice_line.Amount_Applied;
+							credits_applied_total = credits_applied_total + curr_apply_credit_to_invoice_line.Amount_Applied;
+							input_invoice.Credits_Applied.insert(curr_new_credits_applied_row);
+							input.Credits_Applied.insert(curr_new_credits_applied_row);
+						}
+					}
+					else
+					{
+						input_credits_applied = input.Credits_Applied;
+						for each  curr_input_credits_applied in input_credits_applied
+						{
+							credits_applied_total = credits_applied_total + curr_input_credits_applied.CA_Total;
+						}
+					}
+					input_invoice.Credits_Applied_Total=credits_applied_total;
+					input.Credits_Applied_Total = input_invoice.Credits_Applied_Total;
+					input_invoice.Amount_Due=input.Grand_Total - input.Amount_Paid - credits_applied_total;
+					input.Amount_Due = input_invoice.Amount_Due;
+				}
+			)
+		}
+	}
+
+}
+

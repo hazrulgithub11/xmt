@@ -1,0 +1,77 @@
+list All_Taxes
+{
+	displayName = "Taxes"
+	show all rows from Tax    
+	(
+		Tax_Name as "Tax Name"
+		Tax_Percentage as "Tax Percentage"
+		Tax_Type as "Tax Type"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Tax_Name as "Tax Name"
+					Tax_Percentage as "Tax Percentage"
+					Tax_Type as "Tax Type"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Tax_Name as "Tax Name"
+					Tax_Percentage as "Tax Percentage"
+					Tax_Type as "Tax Type"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

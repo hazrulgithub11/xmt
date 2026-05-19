@@ -1,0 +1,20 @@
+Pre_Fill_Fields2 as "Pre Fill Fields"
+{
+	type =  form
+	form = Customer_Statement
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Organization = Organization_Settings[ID != null].ID;
+			)
+		}
+	}
+
+}
+

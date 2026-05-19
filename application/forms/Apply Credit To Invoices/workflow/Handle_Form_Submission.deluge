@@ -1,0 +1,100 @@
+Handle_Form_Submission as "Handle Form Submission"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					for each  curr_unpaid_invoice in input.Unpaid_Invoices
+				{
+					if(curr_unpaid_invoice.Credits_To_Apply > 0)
+					{
+						insert into Apply_Credit_To_Invoice_Line
+						[
+							Invoice=curr_unpaid_invoice.Invoice
+							Credit_Note=input.Credit_Note
+							Amount_Applied_Date=today
+							Amount_Applied=curr_unpaid_invoice.Credits_To_Apply
+							Added_User=zoho.loginuser
+						]
+						// Invoice Credits Applied (Invoice form)
+						curr_input_invoice = Invoice[ID = curr_unpaid_invoice.Invoice];
+						curr_input_invoice.Credits_Applied=null;
+						curr_apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Invoice = curr_unpaid_invoice.Invoice];
+						curr_credits_applied_total = 0;
+						for each  curr_apply_credit_to_invoice_line in curr_apply_credit_to_invoice_line_list
+						{
+							curr_new_credits_applied_row = Invoice.Credits_Applied();
+							curr_new_credits_applied_row.CA_Apply_Credit_To_Invoice_Line_ID=curr_apply_credit_to_invoice_line.ID;
+							curr_new_credits_applied_row.CA_Date=curr_apply_credit_to_invoice_line.Amount_Applied_Date;
+							curr_new_credits_applied_row.CA_Credit_Note=curr_apply_credit_to_invoice_line.Credit_Note;
+							curr_new_credits_applied_row.CA_Total=curr_apply_credit_to_invoice_line.Amount_Applied;
+							curr_credits_applied_total = curr_credits_applied_total + curr_apply_credit_to_invoice_line.Amount_Applied;
+							curr_input_invoice.Credits_Applied.insert(curr_new_credits_applied_row);
+						}
+						curr_input_invoice.Credits_Applied_Total=curr_credits_applied_total;
+						curr_input_invoice.Amount_Due=curr_input_invoice.Grand_Total - curr_input_invoice.Amount_Paid - curr_credits_applied_total;
+					}
+				}
+				// Credit note calculation (Credit note form)
+				input_credit_note = Credit_Note[ID = input.Credit_Note];
+				// Refund Calculation (Credit note form)
+				input_credit_note.Refund_History=null;
+				refund_note_list = Refund_Note[Reference_Credit_Note = input.Credit_Note];
+				refund_total = 0;
+				for each  curr_refund_note in refund_note_list
+				{
+					curr_new_refund_history_row = Credit_Note.Refund_History();
+					curr_new_refund_history_row.Refund_History_Refund_Note=curr_refund_note.ID;
+					curr_new_refund_history_row.Refund_History_Amount_Refunded=curr_refund_note.Grand_Total;
+					curr_new_refund_history_row.Refund_History_Date=curr_refund_note.Invoice_Date;
+					refund_total = refund_total + curr_refund_note.Grand_Total;
+					input_credit_note.Refund_History.insert(curr_new_refund_history_row);
+				}
+				// Apply Credit To Invoices Calculation (Credit note form)
+				input_credit_note.Credit_Applied_Invoices=null;
+				apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note = input.Credit_Note];
+				credits_used_total = 0;
+				for each  curr_apply_credit_to_invoice_line in apply_credit_to_invoice_line_list
+				{
+					curr_new_credit_applied_invoices_row = Credit_Note.Credit_Applied_Invoices();
+					curr_new_credit_applied_invoices_row.CAI_Apply_Credit_To_Invoice_Line_ID=curr_apply_credit_to_invoice_line.ID;
+					curr_new_credit_applied_invoices_row.CAI_Date=curr_apply_credit_to_invoice_line.Amount_Applied_Date;
+					curr_new_credit_applied_invoices_row.CAI_Invoice_No=curr_apply_credit_to_invoice_line.Invoice;
+					curr_new_credit_applied_invoices_row.CAI_Amount_Credited=curr_apply_credit_to_invoice_line.Amount_Applied;
+					credits_used_total = credits_used_total + curr_apply_credit_to_invoice_line.Amount_Applied;
+					input_credit_note.Credit_Applied_Invoices.insert(curr_new_credit_applied_invoices_row);
+				}
+				// All calculation (Credit note form)
+				input_credit_note.Refund=refund_total;
+				input_credit_note.Credits_Used=credits_used_total;
+				input_credit_note.Credits_Remaining=input_credit_note.Grand_Total - refund_total - credits_used_total;
+				if(input_credit_note.Credits_Remaining > 0)
+				{
+					input_credit_note.Status="Open";
+				}
+				if(input_credit_note.Credits_Remaining == 0)
+				{
+					input_credit_note.Status="Closed";
+				}
+				// Clean up
+				delete from Apply_Credit_To_Invoices[ID == input.ID];
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					openUrl("#Report:Credit_Notes","same window");
+			)
+		}
+	}
+
+}
+

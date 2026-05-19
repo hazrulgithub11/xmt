@@ -1,0 +1,20 @@
+Disable_Fields9 as "Disable Fields"
+{
+	type =  form
+	form = Customer_Profile
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Credit_Available;
+			)
+		}
+	}
+
+}
+

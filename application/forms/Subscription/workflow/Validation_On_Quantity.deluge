@@ -1,0 +1,36 @@
+Validation_On_Quantity as "Validation On Quantity"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+		status = inactive
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					isItemQuantityNegative = false;
+				for each  subLineItem in input.Subcription_Line_Items
+				{
+					if(ifnull(subLineItem.Quantity,0) < 1)
+					{
+						isItemQuantityNegative = true;
+					}
+				}
+				if(isItemQuantityNegative == true)
+				{
+					if(isItemQuantityNegative == true)
+					{
+						alert "Please enter the correct values Quantity.";
+					}
+					cancel submit;
+				}
+			)
+		}
+	}
+
+}
+

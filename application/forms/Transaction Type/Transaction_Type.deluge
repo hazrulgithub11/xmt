@@ -1,0 +1,142 @@
+		form Transaction_Type
+		{
+			displayname = "Transaction Type"
+			success message = "Transaction Type Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Item_Name
+			(
+    			type = text
+				displayname = "Item Name"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Item_Code
+			(
+    			type = text
+				displayname = "Item Code"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Classification_Codes
+			(
+				type = list	
+				displayname = "Classification Codes"
+				values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+				height = 60px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Item_Category
+			(
+				type = picklist
+				displayname = "Item Category"
+				maxchar = 100
+				values = {"Deposit Item","Sales Item"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Charges_Type
+			(
+				type = picklist
+				displayname = "Charges Type"
+				maxchar = 100
+				values = {"Monthly Rental","Internet Charges","Call Charges"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Circuit_ID
+			(
+				type = picklist	
+				displayname = "Circuit ID"
+				values  = Circuit_ID.ID
+    			displayformat = [Circuit_ID]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Circuit_ID_Type
+			(
+				type = picklist	
+				displayname = "Circuit ID Type"
+				values  = Circuit_ID_Type.ID
+    			displayformat = [Circuit_ID_Type]
+				allow new entries
+				[
+					displayname = "Add New"
+				]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Description
+			(
+    			type = textarea
+				height = 100px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Unit_Price
+			(
+				type = decimal
+				displayname = "Unit Price"
+				format = commadotwestern
+				initial value = 0
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Tax
+			(
+				type = picklist	
+				values  = Tax.ID
+    			displayformat = [Tax_Name + " - " + Tax_Type + " - " + Tax_Percentage]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

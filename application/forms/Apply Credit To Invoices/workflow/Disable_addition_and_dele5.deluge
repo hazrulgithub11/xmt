@@ -1,0 +1,18 @@
+Disable_addition_and_dele5 as "Disable addition and deletion of Invoice Subform"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions 
+		{
+		hide add row of Unpaid_Invoices;
+		hide delete row of Unpaid_Invoices;
+		}
+	}
+
+}
+

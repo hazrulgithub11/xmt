@@ -1,0 +1,67 @@
+list All_Buildings
+{
+	displayName = "Buildings"
+	show all rows from Building    
+	(
+		Building
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Building
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Building
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

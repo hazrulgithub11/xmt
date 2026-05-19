@@ -1,0 +1,26 @@
+Handle_Monthly_Rental_Qua1 as "Handle Monthly Rental Quantity"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on user input of Monthly_Rental.Quantity_Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(ifnull(row.Quantity_Monthly_Rental,0) <= 0)
+				{
+					alert "Please enter a quantity more than 0";
+					row.Quantity_Monthly_Rental=1;
+					return;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,32 @@
+string deposit.generate_proforma_invoice_no()
+{
+	prefix = "PI";
+	depositInfo = Pro_Forma_Invoices[Pro_Forma_Invoice_No.containsIgnoreCase(prefix) && Pro_Forma_Invoice_No != ""] sort by Pro_Forma_Invoice_No desc;
+	if(depositInfo.ID == null)
+	{
+		count = 0;
+	}
+	else
+	{
+		count = depositInfo.Pro_Forma_Invoice_No.getsuffix(prefix).toLong();
+	}
+	count = count + 1;
+	if(count < 10)
+	{
+		pad = "000";
+	}
+	else if(count < 100)
+	{
+		pad = "00";
+	}
+	else if(count < 1000)
+	{
+		pad = "0";
+	}
+	else
+	{
+		pad = "";
+	}
+	depositNumber = prefix + pad + count;
+	return depositNumber;
+}

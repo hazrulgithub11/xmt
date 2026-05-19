@@ -1,0 +1,88 @@
+list All_Journel_Entry_Line_Items
+{
+	displayName = "All Journel Entry Line Items"
+	show all rows from Journal_Entry_Line_Item    
+	(
+		Description
+		Invoice
+		Deposits
+		Payment_Received as "Payment Received"
+		Credit
+		Debit
+		Account
+		Journal_Entry as "Journal Entry"
+		Credit_Note as "Credit Note"
+		Debit_Note as "Debit Note"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Description
+					Credit
+					Debit
+					Account
+					Journal_Entry as "Journal Entry"
+					Credit_Note as "Credit Note"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Description
+					Invoice
+					Deposits
+					Payment_Received as "Payment Received"
+					Credit
+					Debit
+					Account
+					Journal_Entry as "Journal Entry"
+					Credit_Note as "Credit Note"
+					Debit_Note as "Debit Note"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+    	)
+	)
+}

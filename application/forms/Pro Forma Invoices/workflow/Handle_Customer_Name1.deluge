@@ -1,0 +1,72 @@
+Handle_Customer_Name1 as "Handle Customer Name"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on user input of Customer_Name
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Due_Date = null;
+				input.Payment_Term = null;
+				input.Currency = input.Customer_Name.Currency;
+				input.Payable_To1 = null;
+				input.Customer_Email = ifnull(input.Customer_Name.Email_Address,"");
+				input.Customer_TIN = ifnull(input.Customer_Name.Customer_TIN,"");
+				input.Customer_SST = ifnull(input.Customer_Name.Customer_SST,"");
+				customerInfo = Customer_Profile[ID == input.Customer_Name];
+				subTotal = 0;
+				totalTax = 0;
+				grandTotal = 0;
+				grandTotalMYR = 0;
+				for each  depositLineItem in input.Pro_Forma_Invoice_Line_Item
+				{
+					unitPrice = ifnull(depositLineItem.Item.Unit_Price,0);
+					unitPriceCurrency = unitPrice / ifnull(input.Exchange_Rate,1);
+					depositLineItem.Unit_Price=unitPriceCurrency;
+					depositLineItem.Item_Code=depositLineItem.Item.Item_Code;
+					depositLineItem.Description=depositLineItem.Item.Description;
+					depositLineItem.Sub_Total=depositLineItem.Unit_Price * ifnull(depositLineItem.Quantity,1);
+					if(depositLineItem.Item.Tax == null)
+					{
+						depositLineItem.Tax=null;
+						depositLineItem.Tax_Pct=0;
+						depositLineItem.Tax_Amount=0;
+					}
+					else
+					{
+						depositLineItem.Tax=depositLineItem.Item.Tax;
+						depositLineItem.Tax_Pct=depositLineItem.Item.Tax.Tax_Percentage;
+						depositLineItem.Tax_Amount=depositLineItem.Sub_Total * depositLineItem.Item.Tax.Tax_Percentage / 100;
+					}
+					depositLineItem.Total=depositLineItem.Sub_Total + depositLineItem.Tax_Amount;
+					depositLineItem.Total_MYR=depositLineItem.Total * ifnull(input.Exchange_Rate,1);
+					subTotal = subTotal + depositLineItem.Sub_Total;
+					totalTax = totalTax + depositLineItem.Tax_Amount;
+					grandTotal = grandTotal + depositLineItem.Total;
+					grandTotalMYR = grandTotalMYR + depositLineItem.Total_MYR;
+					if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+					{
+						depositLineItem.Business_Segment:ui.add(customerInfo.Business_Segment);
+					}
+					else
+					{
+						clear depositLineItem.Business_Segment;
+					}
+					depositLineItem.Business_Unit=null;
+				}
+				input.Sub_Total = subTotal;
+				input.Total_Tax = totalTax;
+				input.Grand_Total = grandTotal;
+				input.Amount_Due = input.Grand_Total;
+				input.Grand_Total_MYR = grandTotalMYR;
+			)
+		}
+	}
+
+}
+

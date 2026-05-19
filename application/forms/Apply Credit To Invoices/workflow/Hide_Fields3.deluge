@@ -1,0 +1,20 @@
+Hide_Fields3 as "Hide Fields"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Credit_Note_Selection_Trigger;
+			)
+		}
+	}
+
+}
+

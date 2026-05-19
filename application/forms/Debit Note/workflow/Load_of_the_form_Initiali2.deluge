@@ -1,0 +1,21 @@
+Load_of_the_form_Initiali2 as "Load of the form Initialization"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					/* Customer Name Trigger Initialization*/
+				input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+			)
+		}
+	}
+
+}
+

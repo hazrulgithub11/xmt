@@ -1,0 +1,45 @@
+Validate_Record_Deletion2 as "Validate Record Deletion"
+{
+	type =  form
+	form = Subscription
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					get_invoice_list = Invoice[Subscriptions == input.ID].ID.getAll();
+				get_credit_note_list = Credit_Note[Subscriptions == input.ID].ID.getAll();
+				get_refund_note_list = Refund_Note[Subscriptions == input.ID].ID.getAll();
+				message = "This subscription can’t be deleted because it is used in the following module(s):\n\n";
+				hasDependency = false;
+				if(get_invoice_list.size() > 0)
+				{
+					message = message + "- Invoices: " + get_invoice_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_credit_note_list.size() > 0)
+				{
+					message = message + "- Credit Notes: " + get_credit_note_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_refund_note_list.size() > 0)
+				{
+					message = message + "- Refund Notes: " + get_refund_note_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(hasDependency)
+				{
+					message = message + "\nPlease remove or reassign these records before deleting the subscription.";
+					alert message;
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,21 @@
+Handle_record_deletion as "Handle record deletion"
+{
+	type =  form
+	form = Business_Segment
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					alert "Business Segment cannot be deleted.";
+				cancel delete;
+			)
+		}
+	}
+
+}
+

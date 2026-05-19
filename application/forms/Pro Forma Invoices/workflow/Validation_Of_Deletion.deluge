@@ -1,0 +1,25 @@
+Validation_Of_Deletion as "Validation Of Deletion"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					getPaymentReceivedLineItems = Payment_Received_Line_Item[Pro_Forma_Invoice_No == input.ID].ID.getAll();
+				if(getPaymentReceivedLineItems.size() > 0)
+				{
+					alert "This Pro Forma Invoice has payment applied to it. Hence, it cannot be deleted.";
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

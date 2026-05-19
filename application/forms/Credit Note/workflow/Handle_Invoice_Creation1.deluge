@@ -1,0 +1,24 @@
+Handle_Invoice_Creation1 as "Handle Invoice Creation"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Invoice_No = thisapp.credit_note.generate_credit_note_no();
+			)
+		update Credit_Note[ID == input.ID]
+		[
+			Status = "Draft"
+		]
+		}
+	}
+
+}
+

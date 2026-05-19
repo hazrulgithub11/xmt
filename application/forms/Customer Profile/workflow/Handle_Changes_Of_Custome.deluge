@@ -1,0 +1,33 @@
+Handle_Changes_Of_Custome as "Handle Changes Of Customer Name"
+{
+	type =  form
+	form = Customer_Profile
+
+	record event = on edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(old.Customer_Name != input.Customer_Name)
+				{
+					for each  tenant in Tenancy[Customer_Name == input.ID]
+					{
+						if(tenant.Tenant_Name.toUpperCase() == input.Customer_Name.toUpperCase())
+						{
+							tenant.Display_Name=input.Customer_Name;
+						}
+						else
+						{
+							tenant.Display_Name=input.Customer_Name + " - " + tenant.Tenant_Name;
+						}
+					}
+				}
+			)
+		}
+	}
+
+}
+

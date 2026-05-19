@@ -1,0 +1,5 @@
+// Record action: Recalculate Tenant Overdue Charges
+// Link name: Recalculate_Tenant_Overdu
+// Form: Tenancy
+
+thisapp.invoice.recalculate_overdue(ID,ID);

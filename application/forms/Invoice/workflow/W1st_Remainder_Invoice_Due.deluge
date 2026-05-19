@@ -1,0 +1,75 @@
+W1st_Remainder_Invoice_Due as "1st Remainder Invoice Due Date"
+{
+	type =  schedule
+	form = Invoice[Blueprint.Current_Stage != "paid" && Blueprint.Current_Stage != "Draft"]
+	start = after 1 weeks from Due_Date at "09:00:00"
+	time zone = "Asia/Singapore"
+	on start
+	{
+		actions  (Charge_Category != "Miscellaneous Charges")
+		{
+		on load
+		(
+			getRecordInv = invokeurl
+				[
+					url :"https://www.zohoapis.com/creator/v2.1/data" + zoho.appuri + "report/All_Invoices/" + input.ID
+					type :GET
+					connection:"zoho_creator_connection"
+				];
+				if(getRecordInv.get("code") == 3000)
+				{
+					invData = getRecordInv.get("data");
+				}
+				getEmailTemplate = Email_Templates[Template_Type == "Invoice Reminder" && Reminder_Type == "First" && Status == "Active"];
+				emailSubject = getEmailTemplate.Subject_field;
+				emailBody = getEmailTemplate.Body;
+				for each  placeHolder in getEmailTemplate.Placeholders
+				{
+					emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeHolder + "\}",invData.get(placeHolder));
+					emailBody = emailBody.replaceAllIgnoreCase("\{" + placeHolder + "\}",invData.get(placeHolder));
+				}
+				sendmail
+				[
+					from :zoho.adminuserid
+					to :input.Customer_E_mail
+					subject :emailSubject
+					message :emailBody
+					Attachments :template:Fixed_And_Telephone_Charges_Invoice:Invoice input.ID as PDF
+				]
+		)
+		}
+		actions  (Charge_Category == "Miscellaneous Charges")
+		{
+		on load
+		(
+			getRecordInv = invokeurl
+				[
+					url :"https://www.zohoapis.com/creator/v2.1/data" + zoho.appuri + "report/All_Invoices/" + input.ID
+					type :GET
+					connection:"zoho_creator_connection"
+				];
+				if(getRecordInv.get("code") == 3000)
+				{
+					invData = getRecordInv.get("data");
+				}
+				getEmailTemplate = Email_Templates[Template_Type == "Invoice Reminder" && Reminder_Type == "First" && Status == "Active"];
+				emailSubject = getEmailTemplate.Subject_field;
+				emailBody = getEmailTemplate.Body;
+				for each  placeHolder in getEmailTemplate.Placeholders
+				{
+					emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeHolder + "\}",invData.get(placeHolder));
+					emailBody = emailBody.replaceAllIgnoreCase("\{" + placeHolder + "\}",invData.get(placeHolder));
+				}
+				sendmail
+				[
+					from :zoho.adminuserid
+					to :input.Customer_E_mail
+					subject :emailSubject
+					message :emailBody
+					Attachments :template:Miscellaneous_Invoice:Invoice input.ID as PDF
+				]
+		)
+		}
+	}
+}
+

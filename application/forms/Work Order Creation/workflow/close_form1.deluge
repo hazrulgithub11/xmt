@@ -1,0 +1,20 @@
+close_form1 as "close form"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on add
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					thisapp.close_form();
+			)
+		}
+	}
+
+}
+

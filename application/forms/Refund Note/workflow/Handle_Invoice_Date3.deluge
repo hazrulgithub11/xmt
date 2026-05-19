@@ -1,0 +1,32 @@
+Handle_Invoice_Date3 as "Handle Invoice Date"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on user input of Invoice_Date
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Invoice_Date == null)
+				{
+					input.Invoice_For_Usage = "";
+					input.Due_Date = null;
+				}
+				else
+				{
+					input.Invoice_For_Usage = thisapp.invoice.get_invoice_usage(input.Invoice_Date);
+					if(input.Payment_Term != null)
+					{
+						input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
+					}
+				}
+			)
+		}
+	}
+
+}
+

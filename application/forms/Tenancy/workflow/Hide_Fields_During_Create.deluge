@@ -1,0 +1,24 @@
+Hide_Fields_During_Create as "Hide Fields During Create"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Account_Number;
+				hide Next_Billing_Date;
+				hide Latest_Billing_Date;
+				hide Final_Billing_Date;
+				//hide Overdue_Charges;
+			)
+		}
+	}
+
+}
+

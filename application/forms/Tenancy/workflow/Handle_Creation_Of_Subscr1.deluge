@@ -1,0 +1,18 @@
+Handle_Creation_Of_Subscr1 as "Handle Creation Of Subscription Invoice"
+{
+	type =  schedule
+	form = Tenancy
+	start = before 5 days from Next_Billing_Date at "09:00:00"
+	time zone = "Asia/Singapore"
+	on start
+	{
+		actions  (Billing_Cycle == "Monthly")
+		{
+		on load
+		(
+			thisapp.tenancy.fetch_subscription_and_tenancy_details(input.ID);
+		)
+		}
+	}
+}
+

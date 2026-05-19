@@ -1,0 +1,41 @@
+disable_field_public_repo as "disable field public report"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(!thisapp.permissions.isUserInProfile("Administrator"))
+				{
+					disable Customer_Name;
+					disable Auto_Fill_with_Customer_Details;
+					disable Tenant_Name;
+					disable Customer_Code;
+					disable Project_Location_Telco_Provider;
+					disable Building;
+					disable Account_Type;
+					disable Payable_To1;
+					disable Status;
+					disable Payment_Term;
+					disable Enable_Reminder;
+					disable Contact;
+					disable Technical_Email;
+					disable Phone_Number;
+					disable Street;
+					disable Postcode;
+					disable City;
+					disable State;
+					disable Country;
+				}
+			)
+		}
+	}
+
+}
+

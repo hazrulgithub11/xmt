@@ -1,0 +1,255 @@
+		form Subscription_Line_Item
+		{
+			displayname = "Subscription Line Item"
+			success message = "Sub Line Item Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Item
+			(
+				type = picklist	
+				values  = Transaction_Type[Item_Category == "Sales Item" && Charges_Type != "Call Charges"].ID
+    			displayformat = [Item_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			Item_Code
+			(
+    			type = text
+				displayname = "Item Code"
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Description
+			(
+    			type = textarea
+				height = 100px
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			must have Unit_Price
+			(
+				type = decimal
+				displayname = "Unit Price"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Quantity
+			(
+				type = number
+	 			row = 1
+	 			column = 1   
+				width = 80px
+			)
+			must have Quantity1
+			(
+				type = decimal
+				displayname = "Quantity"
+	 			row = 1
+	 			column = 1   
+				width = 80px
+			)
+			must have Sub_Total
+			(
+				type = decimal
+				displayname = "Sub Total"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Tax
+			(
+				type = picklist	
+				values  = Tax.ID
+    			displayformat = [Tax_Name + " - " + Tax_Percentage]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			Tax_Pct
+			(
+				type = decimal
+				displayname = "Tax Pct"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = 80px
+			)
+			Tax_Amount
+			(
+				type = decimal
+				displayname = "Tax Amount"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = 80px
+			)
+			Total
+			(
+				type = decimal
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Total_MYR
+			(
+				type = decimal
+				displayname = "Total (MYR)"
+				format = commadotwestern
+				private = true
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			must have Business_Segment
+			(
+				type = picklist	
+				displayname = "Business Segment"
+				values  = Business_Segment.ID
+    			displayformat = [Business]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			must have Business_Unit
+			(
+				type = picklist	
+				displayname = "Business Unit"
+				values  = Business_Unit.ID
+    			displayformat = [Business_Unit]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			Circuit_ID_Type
+			(
+				type = picklist	
+				displayname = "Circuit ID Type"
+				values  = Circuit_ID_Type.ID
+    			displayformat = [Circuit_ID_Type]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			Circuit_ID
+			(
+				type = picklist	
+				displayname = "Circuit ID"
+				values  = Circuit_ID.ID
+    			displayformat = [Circuit_ID]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Contract_Start_Date
+			(
+    			type = date
+				displayname = "Contract Start Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Contract_End_Date
+			(
+    			type = date
+				displayname = "Contract End Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Work_Order
+			(
+    			type = upload file
+				displayname = "Work Order"
+				browse = local_drive
+    			description
+    			[
+    				type = tooltip
+    			 	message = "Upload Work Order And Supporting Docs"
+    			]
+	 			row = 1
+	 			column = 1   
+				width = 200px
+			)
+			Customer
+			(
+				type = picklist	
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Tenant_Code
+			(
+				type = picklist	
+				displayname = "Tenant Code"
+				values  = Tenancy.ID
+    			displayformat = [Customer_Code + " - " + Tenant_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+			Subscription
+			(
+				type = picklist	
+				values  = Subscription.ID
+    			bidirectional = Subcription_Line_Items
+    			displayformat = [Customer_PO_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = 100px
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

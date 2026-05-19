@@ -1,0 +1,140 @@
+list Copy_of_All_Invoices_Miscellaneous
+{
+	displayName = "Miscellaneous Template"
+	template = Miscellaneous_Invoice
+	print template = Miscellaneous_Invoice
+	show all rows from Invoice  [Charge_Category == "Miscellaneous Charges"]  
+	(
+		Invoice_No as "Invoice No."
+		Invoice_Date as "Invoice Date"
+		Exchange_Rate as "Exchange Rate"
+		Enable_Reminder as "Enable Reminder ?"
+		Customer.Added_Time as "Added Time"
+		Customer.Modified_User as "Modified User"
+		Customer_Code.Added_User as "Added User"
+		Rejection_Reason as "Rejection Reason"
+		Attachment
+		Customer.Credit_Available as "Credit Available"
+		Grand_Total_Call_Charges as "Grand Total Call Charges (Analog, Domestic & Overseas)"
+		Sub_Total_Monthly_Rental as "Sub Total Monthly Rental"
+		Total_Tax_Monthly_Rental as "Total Tax Monthly Rental"
+		Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
+		Amount_Due as "Amount Due"
+		Amount_Paid as "Amount Paid"
+		Customer_E_mail as "E-mail"
+		Announcement
+		Announcement.Announcement_Image as "Announcement Image"
+		Customer_TIN as "Tax Identification Number(TIN)"
+		Customer_SST_Registration_Number as "SST Registration Number"
+		Supplier_TIN as "Tax Identification Number(TIN)"
+		Sub_Total_Internet_Charges as "Sub Total Internet Charges"
+		Total_Tax_Internet_Charges as "Total Tax Internet Charges"
+		Grand_Total_Internet_Charges as "Grand Total Internet Charges"
+		Supplier_Name as "Customer Name"
+		Due_Date as "Due Date"
+		Charge_Category as "Charge Category"
+		Grand_Total as "Grand Total"
+		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+		Base_Currency as "Base Currency"
+		Invoice_Currency as "Invoice Currency"
+		Status
+		Supplier
+	)
+	custom actions
+	(
+		"Convert To Debit Note"
+		(
+	  			workflow = Convert_To_Debit_Note
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status == "Sent")
+		)
+		"Send Invoice"
+		(
+	  			workflow = Send_Invoice
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status != "Draft" && Status != "Information Filled" && Status != "Rejected" && Status != "Resubmit" && Status != "Pending Approval")
+		)
+		"Mark As Sent"
+		(
+	  			workflow = Mark_As_Sent
+				show action in view header = true
+				condition = (Status == "Approved")
+		)
+		"Record Payment"
+		(
+	  			workflow = Record_Payment_Invoice
+				show action in view header = true
+				condition = (Status == "Sent" || Status == "Partially Paid")
+		)
+		"Bulk Approve"
+		(
+	  			workflow = Bulk_Approve_Invoices
+				show action in view header = true
+				condition = (Status == "Pending Approval" || Status == "Resubmit")
+		)
+	)
+	conditional formatting
+	(
+		"Rejection Reason"
+		{
+			fields = [Rejection_Reason]
+			format = "color:#e64d3b;"
+		}
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Invoice_No as "Invoice No."
+					Status
+					Supplier
+					Supplier_Name as "Customer Name"
+					Invoice_Date as "Invoice Date"
+					Due_Date as "Due Date"
+					Charge_Category as "Charge Category"
+					Grand_Total as "Grand Total"
+					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+					Base_Currency as "Base Currency"
+					Invoice_Currency as "Invoice Currency"
+					Exchange_Rate as "Exchange Rate"
+					Amount_Paid as "Amount Paid"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+    	)
+	)
+}

@@ -1,0 +1,17 @@
+Field_Rule_Billing_Cycle as "Field Rule Billing Cycle"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions  (Billing_Cycle != "Monthly")
+		{
+			hide Bill_Every;
+		}
+	}
+
+}
+

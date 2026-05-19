@@ -1,0 +1,338 @@
+list All_Invoices
+{
+	displayName = "Invoices"
+	print template = Miscellaneous_Invoice
+	show all rows from Invoice    
+	(
+		Invoice_No as "Invoice No."
+		Invoice_Date as "Invoice Date"
+		Due_Date as "Due Date"
+		Enable_Reminder as "Enable Reminder ?"
+		Status
+		Customer.Modified_User as "Modified User"
+		Customer_Code.Added_User as "Added User"
+		Rejection_Reason as "Rejection Reason"
+		Attachment
+		Customer.Credit_Available as "Credit Available"
+		Grand_Total_Call_Charges as "Grand Total Call Charges (Analog, Domestic & Overseas)"
+		Sub_Total_Monthly_Rental as "Sub Total Monthly Rental"
+		Total_Tax_Monthly_Rental as "Total Tax Monthly Rental"
+		Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
+		Customer_E_mail as "E-mail"
+		Announcement.Announcement_Image as "Announcement Image"
+		Customer_TIN as "Tax Identification Number(TIN)"
+		Supplier_TIN as "Tax Identification Number(TIN)"
+		Sub_Total_Internet_Charges as "Sub Total Internet Charges"
+		Total_Tax_Internet_Charges as "Total Tax Internet Charges"
+		Grand_Total_Internet_Charges as "Grand Total Internet Charges"
+		Customer_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+		Customer_Street as "Street"
+		Customer_Postcode as "Postcode"
+		Customer_City as "City"
+		Total_Amount_Due as "Total Amount Due"
+		Previous_Balance as "Previous Balance"
+		Invoice_UUID as "Invoice UUID"
+		Invoice_Public_Link as "Invoice Public Link"
+		Supplier_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+		Supplier_SST_Registration_Number as "SST Registration Number"
+		Supplier_E_mail as "E-mail"
+		Supplier_Telephone_Number as "Telephone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Supplier_Postcode as "Postcode"
+		Supplier_City as "City"
+		Customer_Telephone_Number as "Telephone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Delivery_Street as "Delivery Street"
+		Delivery_City as "Delivery City"
+		Delivery_Postcode as "Delivery Postcode"
+		Supplier_ID_Type as "ID Type"
+		Supplier_Country as "Country"
+		Supplier_Business_Activity_Description as "Business Activity Description"
+		Supplier_State as "State"
+		Customer_ID_Type as "ID Type"
+		Customer_Country as "Country"
+		Customer_State as "State"
+		Delivery_Country as "Delivery Country"
+		Delivery_State as "Delivery State"
+		Invoice_UUID_Link as "Invoice UUID Link"
+		Base_Currency as "Base Currency"
+		Invoice_Currency as "Invoice Currency"
+		Charge_Category as "Charge Category"
+		Sub_Total as "Sub Total"
+		Total_Tax as "Total Tax"
+		Grand_Total as "Grand Total"
+		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+		Credits_Applied.CA_Apply_Credit_To_Invoice_Line_ID as "Credits Applied"
+		Credits_Applied_Trigger
+		Credits_Applied_Total as "Credits Applied Total"
+		Is_Initialization
+		Supplier
+		Customer.Customer_Name as "Customer Name"
+		Exchange_Rate as "Exchange Rate"
+		Amount_Paid as "Amount Paid"
+		Customer
+		Supplier_Name as "Name"
+		Supplier_Street as "Street"
+		Blueprint.Current_Stage as "Status"
+	)
+	sort by
+	(
+		Invoice_No descending
+	)
+	custom actions
+	(
+		"Convert To Debit Note"
+		(
+	  			workflow = Convert_To_Debit_Note
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status == "Approved" || Status == "Sent" || Status == "Partially Paid" || Status == "Paid" || Status == "Overdue")
+				confirmation before execution
+				(
+					message for individual record = "Are sure you want to convert this Invoice  ${Invoice_No} to Debit Note?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Bulk Send For Approval"
+		(
+	  			workflow = Bulk_Send_For_Approval_In
+				show action in view header = true
+				condition = (Status == "Information Filled")
+		)
+		"Calculate Overdue"
+		(
+	  			workflow = Calculate_Overdue
+				show action in view header = true
+				condition = (Status == "Draft" || Status == "Pending Approval" || Status == "Information Filled" || Status == "Approved")
+		)
+		"Send Invoice"
+		(
+	  			workflow = Send_Invoice
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status != "Draft" && Status != "Information Filled" && Status != "Rejected" && Status != "Resubmit" && Status != "Pending Approval")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Send Invoice\" this Invoice ${Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Mark As Sent"
+		(
+	  			workflow = Mark_As_Sent
+				show action in view header = true
+				condition = (Status == "Approved")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Mark As Sent\" this Invoice ${Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Duplicate Invoice"
+		(
+	  			workflow = Duplicate_Invoice
+				show action in view header = true
+				show action in edit record menu = true
+				confirmation before execution
+				(
+					message for individual record = "Execute the Duplicate action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Record Payment"
+		(
+	  			workflow = Record_Payment_Invoice
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status == "Sent" || Status == "Partially Paid" || Status == "Overdue")
+		)
+		"Convert To Credit Note"
+		(
+	  			workflow = Convert_To_Credit_Note
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status == "Approved" || Status == "Sent" || Status == "Partially Paid" || Status == "Overdue")
+				confirmation before execution
+				(
+					message for individual record = "Execute the  action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Bulk Approve"
+		(
+	  			workflow = Bulk_Approve_Invoices
+				show action in view header = true
+				condition = (Status == "Pending Approval" || Status == "Resubmit")
+		)
+		"Send Email"
+		(
+	  			workflow = Send_Email5
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status != "Draft" && Status != "Pending Approval" && Status != "Rejected" && Status != "Information Filled" && Status != "Approved" && Status != "Resubmit")
+				confirmation before execution
+				(
+					message for individual record = "Execute the Send Email action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+	)
+	conditional formatting
+	(
+		"Overdue"
+		{
+			condition = (Status == "Approved" || Status == "Sent" || Status == "Partially Paid" || Status == "Overdue" && Due_Date < zoho.currentdate)
+			fields = [Due_Date]
+			format = "color:#e64d3b;"
+		}
+		"Rejection Reason"
+		{
+			fields = [Rejection_Reason]
+			format = "color:#e64d3b;"
+		}
+		"Draft"
+		{
+			condition = (Status == "Draft")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#818c8e;"
+		}
+		"Overdue"
+		{
+			condition = (Status == "Overdue")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#ef8216;"
+		}
+		"Sent"
+		{
+			condition = (Status == "Sent")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#3598db;"
+		}
+		"Paid"
+		{
+			condition = (Status == "Paid")
+			fields = [Status]
+			format = "color:#000000;background-color:#3fd13d;"
+		}
+		"Rejected"
+		{
+			condition = (Status == "Rejected")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#e84c3d;"
+		}
+		"Resubmit"
+		{
+			condition = (Status == "Resubmit")
+			fields = [Status]
+			format = "color:#333;background-color:#f1c40f;"
+		}
+		"Partially Paid"
+		{
+			condition = (Status == "Partially Paid")
+			fields = [Status]
+			format = "color:#000000;background-color:#92d191;"
+		}
+		"Approved"
+		{
+			condition = (Status == "Approved")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#1d508e;"
+		}
+		"Pending Approval"
+		{
+			condition = (Status == "Pending Approval")
+			fields = [Status]
+			format = "color:#000000;background-color:#f5e507;"
+		}
+		"Information Filled"
+		{
+			condition = (Status == "Information Filled")
+			fields = [Status]
+			format = "color:#000000;background-color:#4db8b3;"
+		}
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Invoice_No as "Invoice No."
+					Blueprint.Current_Stage as "Status"
+					Supplier
+					Customer.Customer_Name as "Customer Name"
+					Invoice_Date as "Invoice Date"
+					Due_Date as "Due Date"
+					Charge_Category as "Charge Category"
+					Grand_Total as "Grand Total"
+					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+					Base_Currency as "Base Currency"
+					Invoice_Currency as "Invoice Currency"
+					Exchange_Rate as "Exchange Rate"
+					Amount_Paid as "Amount Paid"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Invoice_No as "Invoice No."
+					Status
+					Supplier
+					Customer.Customer_Name as "Customer Name"
+					Invoice_Date as "Invoice Date"
+					Due_Date as "Due Date"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+			 	"Send Invoice"
+			 	"Mark As Sent"
+			 	"Convert To Credit Note"
+			 	"Convert To Debit Note"
+			 	"Record Payment"
+			 	"Send Email"
+			 	"Duplicate Invoice"
+    	 	)
+    	)
+	)
+}

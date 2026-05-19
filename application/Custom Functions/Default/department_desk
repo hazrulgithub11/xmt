@@ -1,0 +1,70 @@
+string department_desk()
+{
+	// 	desk_api_url = "https://desk.zoho.com/api/v1/departments";
+	// 	response = invokeurl
+	// 	[
+	//     	url : desk_api_url
+	//     	type : GET
+	//     	connection : "zdesk"
+	// 	];
+	// 	return response;
+	// ticket_id = "1027140000000626001"; // Replace with your actual ticket ID
+	// cf = "TEST : 002"; // The value you want to set for 'cf_customer_code'
+	// update_ticket_url = "https://desk.zoho.com/api/v1/tickets/" + ticket_id;
+	// ticket_update_data = Map();
+	// ticket_update_data.put("cf_customer_code", custom_field_value);
+	// update_ticket_response = invokeurl
+	// [
+	//     url : update_ticket_url
+	//     type : PUT
+	//     parameters : ticket_update_data.toString()
+	//     connection : "zdesk"
+	// ];
+	// Define new values for the ticket fields
+	new_customer_code = "NEW : 123";
+	// Customer Code
+	new_email = "newemail@example.com";
+	// Email address
+	new_phone = "1234567890";
+	// Phone number
+	new_contact = "John Doe";
+	// Contact name
+	subject = "Work Order - WO - Service Activation";
+	// Ticket subject
+	description = "This ticket is created for WO - Service Activation";
+	// Ticket description
+	department_id = "1027140000000006907";
+	// Department ID for the ticket
+	// Step 1: Prepare the cf map for custom fields
+	cf = Map();
+	cf.put("cf_customer_code",new_customer_code);
+	// Add the customer code to custom fields
+	cf.put("cf_contact",new_contact);
+	// Add the contact name to custom fields
+	// Step 2: Prepare the API request data
+	ticket_data = Map();
+	ticket_data.put("subject",subject);
+	// Ticket subject
+	ticket_data.put("description",description);
+	// Ticket description
+	ticket_data.put("departmentId",department_id);
+	// Department ID
+	ticket_data.put("email",new_email);
+	// Email field
+	ticket_data.put("phone",new_phone);
+	// Phone field
+	ticket_data.put("cf",cf);
+	// Add the custom fields
+	// Step 3: Define the API URL
+	create_ticket_url = "https://desk.zoho.com/api/v1/tickets";
+	// Step 4: Send the API request
+	create_ticket_response = invokeurl
+	[
+		url :create_ticket_url
+		type :POST
+		parameters:ticket_data.toString()
+		connection:"zdesk"
+	];
+	// Step 5: Log the response
+	return create_ticket_response;
+}

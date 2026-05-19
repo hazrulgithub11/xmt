@@ -1,0 +1,24 @@
+Handle_End_Date as "Handle End Date"
+{
+	type =  form
+	form = Customer_Statement
+
+	record event = on add or edit
+
+	on user input of End_Date
+	{
+		actions  (Start_Date is not null && End_Date is not null)
+		{
+			custom deluge script
+			(
+					if(input.End_Date < input.Start_Date)
+				{
+					alert "End Date must be later than Start Date. Please select a valid End Date.";
+					input.End_Date = null;
+				}
+			)
+		}
+	}
+
+}
+

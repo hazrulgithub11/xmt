@@ -1,0 +1,235 @@
+Handle_Submission as "Handle Submission"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					thisapp.close_form();
+				openUrl("#Report:Payment_Received_Report","same window");
+				totalStillOwing = 0;
+				for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+				{
+					stillOwing = paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
+					paymentReceivedLineItem.Still_Owing=stillOwing;
+					totalStillOwing = totalStillOwing + stillOwing;
+				}
+				input.Total_Still_Owing = totalStillOwing;
+			)
+			custom deluge script
+			(
+					if(input.Payment_Type == "Invoice/Debit Note")
+				{
+					input.Payment_Received_No = thisapp.payment_received.generate_payment_received_no_invoiceDb();
+				}
+				else
+				{
+					input.Payment_Received_No = thisapp.payment_received.generate_payment_received_no_deposit();
+				}
+				journalEntryLineItem = Collection();
+				row1 = Journal_Entry.Journal_Entry_Line_Item();
+				row1.Account=input.Paid_To;
+				row1.Description="Payment Received " + input.Payment_Received_No + " to " + input.Paid_To.Account + "-" + input.Paid_To.Bank_Account_Number;
+				row1.Debit=ifnull(input.Amount_Received,0);
+				row1.Credit=0;
+				row1.Payment_Received=input.ID;
+				row2 = Journal_Entry.Journal_Entry_Line_Item();
+				row2.Account=4662372000000941747;
+				row2.Description="Payment Received " + input.Payment_Received_No + " Trade and Other Receivables";
+				row2.Debit=0;
+				row2.Credit=ifnull(input.Amount_Received,0);
+				row2.Payment_Received=input.ID;
+				journalEntryLineItem.insert(row1,row2);
+				newJournalEntryRecord = insert into Journal_Entry
+				[
+					Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+					Document_No=input.Payment_Received_No
+					Added_User=zoho.loginuser
+					Payment_Received=input.ID
+					Date_field=zoho.currentdate
+					Journal_Entry_Line_Item=journalEntryLineItem
+					Sub_Total_Debit=0
+					Sub_Total_Credit=0
+					Total_Debit=ifnull(input.Amount_Received,0)
+					Total_Credit=ifnull(input.Amount_Received,0)
+					Difference=ifnull(input.Amount_Received,0) - ifnull(input.Amount_Received,0)
+					Created_By_The_System=true
+				];
+			)
+		}
+		actions  (Payment_Type == "Invoice/Debit Note")
+		{
+			custom deluge script
+			(
+					for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+				{
+					paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
+					if(paymentReceivedLineItem.Allocation > 0)
+					{
+						if(paymentReceivedLineItem.Invoice_No != null)
+						{
+							getInvoice = Invoice[ID == paymentReceivedLineItem.Invoice_No];
+							newAmountDue = getInvoice.Amount_Due - paymentReceivedLineItem.Allocation;
+							if(newAmountDue > 0)
+							{
+								getInvoice.Amount_Due=newAmountDue;
+								if(getInvoice.Due_Date > zoho.currentdate)
+								{
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",getInvoice.ID);
+								}
+								else if(getInvoice.Due_Date < zoho.currentdate)
+								{
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
+								}
+							}
+							else
+							{
+								getInvoice.Amount_Due=0;
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",getInvoice.ID);
+							}
+							newAmountPaidInv = getInvoice.Amount_Paid + paymentReceivedLineItem.Allocation;
+							if(newAmountPaidInv >= getInvoice.Grand_Total)
+							{
+								getInvoice.Amount_Paid=getInvoice.Grand_Total;
+							}
+							else if(newAmountPaidInv < getInvoice.Grand_Total)
+							{
+								getInvoice.Amount_Paid=newAmountPaidInv;
+							}
+							previoustotalAmountDue = 0;
+							for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && Customer_Code == getInvoice.Customer_Code]
+							{
+								previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+							}
+							getInvoice.Previous_Balance=previoustotalAmountDue;
+							getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
+							for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && Customer_Code == getInvoice.Customer_Code]
+							{
+								thisapp.invoice.invoice_balance_updates(inv.ID);
+							}
+						}
+						else if(paymentReceivedLineItem.Debit_Note_No != null)
+						{
+							getDbNote = Debit_Note[ID == paymentReceivedLineItem.Debit_Note_No];
+							newAmountDue = getDbNote.Amount_Due - paymentReceivedLineItem.Allocation;
+							if(newAmountDue > 0)
+							{
+								getDbNote.Amount_Due=newAmountDue;
+								if(getDbNote.Due_Date > zoho.currentdate)
+								{
+									getDbNote.Status="Partially Paid";
+								}
+								else if(getDbNote.Due_Date < zoho.currentdate)
+								{
+									getDbNote.Status="Overdue";
+								}
+							}
+							else
+							{
+								getDbNote.Amount_Due=0;
+								getDbNote.Status="Paid";
+							}
+							newAmountPaidDB = getDbNote.Amount_Paid + paymentReceivedLineItem.Allocation;
+							if(newAmountPaidDB >= getDbNote.Grand_Total)
+							{
+								getDbNote.Amount_Paid=getDbNote.Grand_Total;
+							}
+							else if(newAmountPaidDB < getDbNote.Grand_Total)
+							{
+								getDbNote.Amount_Paid=newAmountPaidDB;
+							}
+						}
+					}
+					else
+					{
+						delete from Payment_Received_Line_Item[ID == paymentReceivedLineItem.ID];
+					}
+					paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
+				}
+				//thisapp.invoice.recalculate_overdue(input.Customer_Code);
+			)
+		}
+		actions  (Payment_Type == "Deposit")
+		{
+			custom deluge script
+			(
+					for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+				{
+					paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
+					if(paymentReceivedLineItem.Allocation > 0)
+					{
+						getDeposit = Pro_Forma_Invoices[ID == paymentReceivedLineItem.Pro_Forma_Invoice_No];
+						newAmountDue = getDeposit.Amount_Due - paymentReceivedLineItem.Allocation;
+						if(newAmountDue > 0)
+						{
+							getDeposit.Amount_Due=newAmountDue;
+							if(getDeposit.Due_Date > zoho.currentdate)
+							{
+								getDeposit.Status="Partially Paid";
+							}
+							else if(getDeposit.Due_Date < zoho.currentdate)
+							{
+								getDeposit.Status="Overdue";
+							}
+						}
+						else
+						{
+							getDeposit.Amount_Due=0;
+							getDeposit.Status="Paid";
+							journalEntryLineItem = Collection();
+							row1 = Journal_Entry.Journal_Entry_Line_Item();
+							row1.Account=input.Paid_To;
+							row1.Description="Pro Forma Invoice " + getDeposit.Pro_Forma_Invoice_No + " To " + input.Paid_To.Account + "-" + input.Paid_To.Bank_Account_Number;
+							row1.Debit=ifnull(getDeposit.Grand_Total,0);
+							row1.Credit=0;
+							row1.Deposits=getDeposit.ID;
+							row2 = Journal_Entry.Journal_Entry_Line_Item();
+							row2.Account=4662372000000087213;
+							row2.Description="Pro Forma Invoice " + getDeposit.Pro_Forma_Invoice_No + " Xkomm Security Deposit";
+							row2.Debit=0;
+							row2.Credit=ifnull(getDeposit.Grand_Total,0);
+							row2.Deposits=getDeposit.ID;
+							journalEntryLineItem.insert(row1,row2);
+							newJournalEntryRecord = insert into Journal_Entry
+							[
+								Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+								Document_No=getDeposit.Pro_Forma_Invoice_No
+								Added_User=zoho.loginuser
+								Deposits=getDeposit.ID
+								Date_field=zoho.currentdate
+								Journal_Entry_Line_Item=journalEntryLineItem
+								Sub_Total_Debit=ifnull(getDeposit.Sub_Total,0)
+								Sub_Total_Credit=ifnull(getDeposit.Grand_Total,0) - ifnull(getDeposit.Total_Tax,0)
+								Total_Debit=ifnull(getDeposit.Grand_Total,0)
+								Total_Credit=ifnull(getDeposit.Grand_Total,0)
+								Difference=ifnull(getDeposit.Grand_Total,0) - ifnull(getDeposit.Grand_Total,0)
+								Created_By_The_System=true
+							];
+						}
+						newAmountPaid = getDeposit.Amount_Paid + paymentReceivedLineItem.Allocation;
+						if(newAmountPaid >= getDeposit.Grand_Total)
+						{
+							getDeposit.Amount_Paid=getDeposit.Grand_Total;
+						}
+						else if(newAmountPaid < getDeposit.Grand_Total)
+						{
+							getDeposit.Amount_Paid=newAmountPaid;
+						}
+					}
+					else
+					{
+						delete from Payment_Received_Line_Item[ID == paymentReceivedLineItem.ID];
+					}
+				}
+			)
+		}
+	}
+
+}
+

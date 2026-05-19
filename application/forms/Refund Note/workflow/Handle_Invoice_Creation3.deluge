@@ -1,0 +1,20 @@
+Handle_Invoice_Creation3 as "Handle Invoice Creation"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Invoice_No = thisapp.refund_note.generate_refund_note_no();
+			)
+		}
+	}
+
+}
+

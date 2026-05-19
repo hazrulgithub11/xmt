@@ -1,0 +1,45 @@
+Validate_Active_Template as "Validate Active Template"
+{
+	type =  form
+	form = Email_Templates
+
+	record event = on add
+		status = inactive
+
+	on validate
+	{
+		actions  (Template_Type != "Invoice Reminder" && Status == "Active")
+		{
+			custom deluge script
+			(
+					getReminderTemplates = Email_Templates[Template_Type == input.Template_Type && Status == "Active"].ID.getAll();
+				if(getReminderTemplates.size() > 0)
+				{
+					alert "An active template already exists for this template type " + input.Template_Type + ". Please deactivate it before activating a new one.";
+					cancel submit;
+				}
+			)
+		}
+		actions  (Template_Type == "Invoice Reminder")
+		{
+			custom deluge script
+			(
+					if(input.Reminder_Type == null || input.Reminder_Type == "")
+				{
+					alert(Reminder_Type,"This field is mandatory.Select a value.");
+				}
+				if(input.Status == "Active")
+				{
+					getReminderTemplates = Email_Templates[Reminder_Type == input.Reminder_Type && Status == "Active"].ID.getAll();
+					if(getReminderTemplates.size() > 0)
+					{
+						alert "An active template already exists for this reminder type " + input.Reminder_Type + ". Please deactivate it before activating a new one.";
+						cancel submit;
+					}
+				}
+			)
+		}
+	}
+
+}
+

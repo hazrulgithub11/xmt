@@ -1,0 +1,6 @@
+date startDate(string oriStartDate)
+{
+	convertedStartDate = oriStartDate.toDate();
+	modifiedStartDate = convertedStartDate.subDay(1);
+	return convertedStartDate;
+}

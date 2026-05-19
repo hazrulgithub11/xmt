@@ -1,0 +1,247 @@
+list All_Tenancies
+{
+	displayName = "All Tenancies"
+	show all rows from Tenancy    
+	(
+		Customer_Code as "Customer Code"
+		Customer_Name as "Customer Name"
+		(
+			view = All_Customers_Profile
+		)
+		Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+		Building
+		Account_Type as "Account Type"
+		Account_Number as "Account Number"
+		Bill_Every as "Bill Every"
+		Bill_For as "Bill For"
+		Billing_Cycle as "Billing Cycle"
+		Next_Billing_Date as "Next Billing Date"
+		Latest_Billing_Date as "Latest Billing Date"
+		Tenant_Name as "Tenant Name"
+		Street
+		Postcode
+		City
+		Enable_Reminder as "Enable Reminder ?"
+		Status
+		Final_Billing_Date as "Final Billing Date"
+		Modified_Time as "Modified Time"
+		Payment_Term as "Payment Term"
+		ID
+		Record_ID as "Record ID"
+		Contact as "Technical Contact Name"
+		Technical_Email as "Technical Email"
+		Phone_Number as "Technical Phone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Payable_To1 as "Payable To"
+		Display_Name as "Display Name"
+	)
+	sort by
+	(
+		Customer_Code ascending
+	)
+	custom actions
+	(
+		"Create Account"
+		(
+	  			workflow = Create_Account_in_Desk1
+				show action in view header = true
+				show action in edit record menu = true
+				confirmation before execution
+				(
+					message for multiple records = "Execute the Create Account action for the selected ${record_count} records?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Recalculate Overdue Charges"
+		(
+	  			workflow = Recalculate_Tenant_Overdu
+				show action in view header = true
+		)
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Tenant_Name as "Tenant Name"
+					Customer_Code as "Customer Code"
+					Customer_Name as "Customer Name"
+					Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+					Building
+					Bill_Every as "Bill Every"
+					Account_Type as "Account Type"
+					Account_Number as "Account Number"
+					Latest_Billing_Date as "Latest Billing Date"
+					Next_Billing_Date as "Next Billing Date"
+					Final_Billing_Date as "Final Billing Date"
+					Modified_Time as "Modified Time"
+					ID
+					Record_ID as "Record ID"
+					Contact as "Technical Contact Name"
+					Technical_Email as "Technical Email"
+					Phone_Number as "Technical Phone Number"
+					Payment_Term as "Payment Term"
+					Billing_Cycle as "Billing Cycle"
+					Bill_For as "Bill For"
+					Enable_Reminder as "Enable Reminder ?"
+					Payable_To1 as "Payable To"
+					Street
+					Postcode
+					City
+					Display_Name as "Display Name"
+					Status
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+			 	"Create Account"
+    		 	Duplicate 
+    		 	Delete 
+    		 	Edit 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Customer_Code as "Customer Code"
+					Customer_Name as "Customer Name"
+					Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+					Building
+					Account_Type as "Account Type"
+					Account_Number as "Account Number"
+					Bill_Every as "Bill Every"
+					Bill_For as "Bill For"
+					Billing_Cycle as "Billing Cycle"
+					Payment_Term as "Payment Term"
+					Latest_Billing_Date as "Latest Billing Date"
+					Next_Billing_Date as "Next Billing Date"
+					Tenant_Name as "Tenant Name"
+					Street
+					Postcode
+					City
+					Enable_Reminder as "Enable Reminder ?"
+					Status
+				)
+			)
+			datablock2
+			(
+		     	title = "Bill Information"
+				fields
+				(
+					Bill_Every as "Bill Every"
+					Bill_For as "Bill For"
+					Billing_Cycle as "Billing Cycle"
+					Next_Billing_Date as "Next Billing Date"
+					Latest_Billing_Date as "Latest Billing Date"
+					Final_Billing_Date as "Final Billing Date"
+				)
+			)
+			datablock3
+			(
+		     	title = "Subscription"
+		     	related field = Subscription.Customer_Code
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Contract_Start_Date as "Contract Start Date"
+					Contract_Period as "Contract Period (Month)"
+					Contract_End_Date as "Contract End Date"
+					Next_Billing_Date as "Next Billing Date"
+					Latest_Billing_Date as "Latest Billing Date"
+					Final_Billing_Date as "Final Billing Date"
+				)
+			)
+			datablock6
+			(
+		     	title = "Subscription Line Item"
+		     	related field = Subscription_Line_Item.Tenant_Code
+				fields
+				(
+					Subscription.Customer_PO_No as "Customer PO No."
+					Item
+					Item_Code as "Item Code"
+					Description
+					Unit_Price as "Unit Price"
+					Quantity
+					Sub_Total as "Sub Total"
+					Tax
+					Total
+				)
+			)
+			datablock4
+			(
+		     	title = "Invoice"
+		     	related field = Invoice.Customer_Code
+				fields
+				(
+					Invoice_No as "Invoice No."
+					Customer_Code as "Customer Code"
+					Customer
+					Subscriptions
+				)
+			)
+			datablock5
+			(
+		     	title = "Payment Received"
+		     	related field = Payment_Received.Customer_Code
+				fields
+				(
+					Payment_Type as "Payment Type"
+					Payment_Received_No as "Payment Received No."
+					Customer_Code as "Customer Code"
+					Customer_Name as "Customer Name"
+					Payment_Date as "Payment Date"
+					Payment_Method as "Payment Method"
+					Paid_To as "Paid To"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

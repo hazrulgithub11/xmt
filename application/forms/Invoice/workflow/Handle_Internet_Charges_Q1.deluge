@@ -1,0 +1,26 @@
+Handle_Internet_Charges_Q1 as "Handle Internet Charges Quantity"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on user input of Internet_Charges.Quantity_Internet_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(ifnull(row.Quantity_Internet_Charges,0) <= 0)
+				{
+					alert "Please enter a quantity more than 0";
+					row.Quantity_Internet_Charges=1;
+					return;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

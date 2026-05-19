@@ -1,0 +1,33 @@
+Handle_Placeholders1 as "Handle Placeholders"
+{
+	type =  form
+	form = Email_Input_Form
+
+	record event = on add or edit
+
+	on user input of Placeholders
+	{
+		actions  (Placeholders is not null)
+		{
+			custom deluge script
+			(
+					newline = hexToText("0A");
+				seletectedPlaceholders = "";
+				for each  selectedPlaceholder in input.Placeholders
+				{
+					seletectedPlaceholders = seletectedPlaceholders + "{" + selectedPlaceholder + "}" + newline;
+				}
+				input.Selected_Placeholders = seletectedPlaceholders;
+			)
+		}
+		actions  (Placeholders is null)
+		{
+			custom deluge script
+			(
+					input.Selected_Placeholders = "";
+			)
+		}
+	}
+
+}
+

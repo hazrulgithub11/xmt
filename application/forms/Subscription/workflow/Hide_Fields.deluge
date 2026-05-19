@@ -1,0 +1,26 @@
+Hide_Fields as "Hide Fields"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Subcription_Line_Items.Contract_Start_Date;
+				hide Subcription_Line_Items.Contract_End_Date;
+				hide Subcription_Line_Items.Customer;
+				hide Subcription_Line_Items.Tenant_Code;
+				hide Subcription_Line_Items.Circuit_ID;
+				hide Subcription_Line_Items.Quantity;
+				//hide Subcription_Line_Items.Total_MYR;
+			)
+		}
+	}
+
+}
+

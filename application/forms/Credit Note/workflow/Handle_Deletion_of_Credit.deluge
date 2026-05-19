@@ -1,0 +1,21 @@
+Handle_Deletion_of_Credit as "Handle Deletion of Credit Applied Invoices"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on delete row of Credit_Applied_Invoices
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// Trigger Credit Applied Invoices and Refund calculation
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

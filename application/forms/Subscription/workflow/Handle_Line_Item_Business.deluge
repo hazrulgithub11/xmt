@@ -1,0 +1,30 @@
+Handle_Line_Item_Business as "Handle Line Item Business Segment"
+{
+	type =  form
+	form = Subscription
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				for each  subLineItem in input.Subcription_Line_Items
+				{
+					businessSegment = subLineItem.Business_Segment;
+					subLineItem.Business_Segment=businessSegment;
+					businessUnit = subLineItem.Business_Unit;
+					subLineItem.Business_Segment:ui.add(customerInfo.Business_Segment);
+					getBusinessUnits = Business_Unit[Business_Segment == businessSegment].ID.getAll();
+					subLineItem.Business_Unit:ui.add(getBusinessUnits);
+					subLineItem.Business_Unit=businessUnit;
+				}
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,344 @@
+list All_Pro_Forma_Invoices
+{
+	displayName = "Pro Forma Invoices"
+	show all rows from Pro_Forma_Invoices    
+	(
+		Customer_Code as "Customer Code"
+		Customer_Name as "Customer Name"
+		Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+		Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
+		Payment_Method as "Payment Method"
+		Grand_Total as "Grand Total"
+		(
+			display = total	
+		)
+		Status
+		Due_Date as "Due Date"
+		Customer_SST as "Customer SST"
+		Customer_TIN as "Customer TIN"
+		Customer_Email as "Customer Email"
+		Rejection_Reason as "Rejection Reason"
+		Grand_Total_MYR as "Grand Total(MYR)"
+		(
+			display = total	
+		)
+		Customer_Name.Added_Time as "Added Time"
+		Customer_Name.Added_User as "Added User"
+		Customer_Name.Modified_Time as "Modified Time"
+		Customer_Code.Modified_User as "Modified User"
+		Amount_Due as "Amount Due"
+		Amount_Paid as "Amount Paid"
+		Payment_Term as "Payment Term"
+	)
+	custom actions
+	(
+		"Mark As Sent"
+		(
+	  			workflow = Mark_As_Sent_Invoice
+				show action in view header = true
+				condition = (Status == "Approved")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Mark As Sent\" this Deposit  ${Pro_Forma_Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Refund"
+		(
+	  			workflow = Refund
+				show action in view header = true
+				condition = (Status == "Paid")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Refund\" this Deposit  ${Pro_Forma_Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Record Payment"
+		(
+	  			workflow = Record_Payment_Deposit
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status == "Sent" || Status == "Partially Paid" || Status == "Overdue")
+		)
+		"Send Proforma Invoice"
+		(
+	  			workflow = Send_Proforma_Invoice
+				show action in view header = true
+				condition = (Status != "Draft" && Status != "Pending Approval" && Status != "Rejected" && Status != "Resubmit")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Send Proforma Invoice\" this Deposit  ${Pro_Forma_Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Bulk Approve"
+		(
+	  			workflow = Bulk_Approve
+				show action in view header = true
+				condition = (Status == "Pending Approval" || Status == "Resubmit")
+				confirmation before execution
+				(
+					message for multiple records = "Execute the Bulk Approve action for the selected ${record_count} records?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Send Email"
+		(
+	  			workflow = Send_Email6
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Status != "Draft" && Status != "Pending Approval" && Status != "Rejected" && Status != "Approved" && Status != "Resubmit")
+				confirmation before execution
+				(
+					message for individual record = "Execute the Send Email action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+	)
+	conditional formatting
+	(
+		"Overdue"
+		{
+			condition = (Status == "Approved" || Status == "Sent" || Status == "Partially Paid" || Status == "Overdue" && Due_Date < zoho.currentdate)
+			fields = [Due_Date]
+			format = "color:#e64d3b;"
+		}
+		"Reject Reason"
+		{
+			fields = [Rejection_Reason]
+			format = "color:#e64d3b;"
+		}
+		"Draft"
+		{
+			condition = (Status == "Draft")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#818c8e;"
+		}
+		"Overdue"
+		{
+			condition = (Status == "Overdue")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#ef8216;"
+		}
+		"Approved"
+		{
+			condition = (Status == "Approved")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#1d508e;"
+		}
+		"Sent"
+		{
+			condition = (Status == "Sent")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#3598db;"
+		}
+		"Rejected"
+		{
+			condition = (Status == "Rejected")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#e84c3d;"
+		}
+		"Partially Paid"
+		{
+			condition = (Status == "Partially Paid")
+			fields = [Status]
+			format = "color:#000000;background-color:#92d191;"
+		}
+		"Paid"
+		{
+			condition = (Status == "Paid")
+			fields = [Status]
+			format = "color:#000000;background-color:#3fd13d;"
+		}
+		"Drawn"
+		{
+			condition = (Status == "Drawn")
+			fields = [Status]
+			format = "color:#ffffff;background-color:#337131;"
+		}
+		"Resubmit"
+		{
+			condition = (Status == "Resubmit")
+			fields = [Status]
+			format = "color:#333;background-color:#f1c408;"
+		}
+		"Pending Approval"
+		{
+			condition = (Status == "Pending Approval")
+			fields = [Status]
+			format = "color:#333;background-color:#f5e507;"
+		}
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Payment_Method as "Payment Method"
+					Status
+					Payment_Term as "Payment Term"
+					Due_Date as "Due Date"
+					Grand_Total as "Grand Total"
+					Grand_Total_MYR as "Grand Total(MYR)"
+					Customer_Name.Added_Time as "Added Time"
+					Customer_Name.Modified_Time as "Modified Time"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+			 	"Bulk Approve"
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+				"Send Email"
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+					Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
+					Payment_Term as "Payment Term"
+					Due_Date as "Due Date"
+					Status
+					Customer_Name as "Customer Name"
+					Customer_Email as "Customer Email"
+					Customer_TIN as "Customer TIN"
+					Customer_SST as "Customer SST"
+					Customer_Code as "Customer Code"
+				)
+			)
+			datablock2
+			(
+				fields
+				(
+					Rejection_Reason as "Rejection Reason"
+				)
+			)
+			datablock3
+			(
+		     	title = "Bill Information"
+				fields
+				(
+					Grand_Total as "Grand Total"
+					Grand_Total_MYR as "Grand Total(MYR)"
+				)
+			)
+			datablock4
+			(
+		     	title = "Deposits Line Item"
+		     	related field = Pro_Forma_Invoice_Line_Item
+				fields
+				(
+					Item as "nvoic"
+					Item_Code as "Item Code"
+					Description
+					Unit_Price as "Unit Price"
+					Quantity
+					Total
+				)
+			)
+			datablock8
+			(
+		     	title = "Payment Received"
+		     	related field = Payment_Received_Line_Item.Pro_Forma_Invoice_No
+				fields
+				(
+					Payment_Received as "Payment Received"
+					Allocation
+				)
+			)
+			datablock9
+			(
+				fields
+				(
+					Amount_Due as "Amount Due"
+					Amount_Paid as "Amount Paid"
+				)
+			)
+			datablock5
+			(
+		     	title = "Journal Entry"
+		     	related field = Journal_Entry_Line_Item.Deposits
+				fields
+				(
+					Account
+					Debit
+					Credit
+				)
+			)
+			datablock6
+			(
+		     	related field = Journal_Entry.Deposits
+				fields
+				(
+					Total_Debit as "Total Debit"
+					Total_Credit as "Total Credit"
+				)
+			)
+			datablock7
+			(
+		     	title = "System Information"
+				fields
+				(
+					Customer_Name.Added_Time as "Added Time"
+					Customer_Name.Added_User as "Added User"
+					Customer_Name.Modified_Time as "Modified Time"
+					Customer_Code.Modified_User as "Modified User"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+			 	"Send Proforma Invoice"
+			 	"Mark As Sent"
+			 	"Record Payment"
+			 	"Refund"
+			 	"Send Email"
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

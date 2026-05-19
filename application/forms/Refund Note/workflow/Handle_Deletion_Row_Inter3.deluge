@@ -1,0 +1,20 @@
+Handle_Deletion_Row_Inter3 as "Handle Deletion Row Internet Charges"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on delete row of Internet_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

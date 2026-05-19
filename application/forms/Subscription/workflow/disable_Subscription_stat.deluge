@@ -1,0 +1,27 @@
+disable_Subscription_stat as "disable Subscription status"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Subscription_Status;
+				if(input.ID == null)
+				{
+					clear Work_Order_Type;
+					// Add only the required options
+					input.Work_Order_Type:ui.append("WO - Service Activation");
+					input.Work_Order_Type:ui.append("WO - Service Change Request");
+				}
+			)
+		}
+	}
+
+}
+

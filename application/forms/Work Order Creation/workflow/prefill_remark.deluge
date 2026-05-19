@@ -1,0 +1,23 @@
+prefill_remark as "prefill remark"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Remark_TBI = "For Product:\n1. DIA\n2. ME-BB\n3. Private Link";
+				input.Remark_TDI = "For Product:\n1. DIA\n2. ME-BB\n3. Private Link";
+				input.Remark_THC = "For Product:\n1. Dark Fibre(Passive)\n2. Leased Line(Active)";
+				input.Remark_TDF = "For Product:IBC Facility";
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,210 @@
+list Refund_Note_Report1
+{
+	displayName = "Refund Note Report"
+	show all rows from Refund_Note    
+	(
+		Supplier
+		Customer
+		Supplier_Name as "Name"
+		Supplier_ID_Type as "ID Type"
+		Supplier_SST_Registration_Number as "SST Registration Number"
+		Supplier_E_mail as "E-mail"
+		Supplier_Street as "Street"
+		Supplier_Postcode as "Postcode"
+		Supplier_State as "State"
+		Supplier_TIN as "Tax Identification Number(TIN)"
+		Supplier_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+		Supplier_Business_Activity_Description as "Business Activity Description"
+		Supplier_Telephone_Number as "Telephone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Supplier_City as "City"
+		Supplier_Country as "Country"
+		Customer_Name as "Name"
+		Customer_ID_Type as "ID Type"
+		Customer_SST_Registration_Number as "SST Registration Number"
+		Customer_E_mail as "E-mail"
+		Customer_Street as "Street"
+		Customer_Postcode as "Postcode"
+		Customer_State as "State"
+		Customer_TIN as "Tax Identification Number(TIN)"
+		Customer_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+		Customer_Code as "Customer Code"
+		Customer_Telephone_Number as "Telephone Number"
+		(
+			displayformat = plainnumber 
+			linktodial = enable
+		)
+		Customer_City as "City"
+		Customer_Country as "Country"
+		Delivery_Street as "Delivery Street"
+		Delivery_Postcode as "Delivery Postcode"
+		Delivery_State as "Delivery State"
+		Delivery_City as "Delivery City"
+		Delivery_Country as "Delivery Country"
+		Invoice_No as "Invoice No."
+		Invoice_UUID as "Invoice UUID"
+		Invoice_UUID_Link as "Invoice UUID Link"
+		Invoice_Public_Link as "Invoice Public Link"
+		QR_Invoice_Public_Link as "QR Invoice Public Link"
+		Subscriptions
+		Invoice_Date as "Invoice Date"
+		Invoice_For_Usage as "Invoice For Usage"
+		Payment_Term as "Payment Term"
+		Due_Date as "Due Date"
+		Enable_Reminder as "Enable Reminder ?"
+		Charge_Category as "Charge Category"
+		Announcement
+		Attachment
+		Send_Email as "Send Email"
+		Base_Currency as "Base Currency"
+		Invoice_Currency as "Invoice Currency"
+		Exchange_Rate as "Exchange Rate"
+		Sub_Total_Monthly_Rental as "Sub Total Monthly Rental"
+		Total_Tax_Monthly_Rental as "Total Tax Monthly Rental"
+		Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
+		Sub_Total_Internet_Charges as "Sub Total Internet Charges"
+		Total_Tax_Internet_Charges as "Total Tax Internet Charges"
+		Grand_Total_Internet_Charges as "Grand Total Internet Charges"
+		Sub_Total_Call_Charges as "Sub Total Call Charges (Analog, Domestic & Overseas)"
+		Total_Tax_Call_Charges as "Total Tax Call Charges (Analog, Domestic & Overseas)"
+		Grand_Total_Call_Charges as "Grand Total Call Charges (Analog, Domestic & Overseas)"
+		Sub_Total as "Sub Total"
+		Total_Tax as "Total Tax"
+		Grand_Total as "Grand Total"
+		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+		User_Input_Trigger
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Supplier
+					Customer
+					Supplier_Name as "Name"
+					Supplier_ID_Type as "ID Type"
+					Supplier_SST_Registration_Number as "SST Registration Number"
+					Supplier_E_mail as "E-mail"
+					Supplier_Street as "Street"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Supplier
+					Customer
+					Supplier_Name as "Name"
+					Supplier_ID_Type as "ID Type"
+					Supplier_SST_Registration_Number as "SST Registration Number"
+					Supplier_E_mail as "E-mail"
+					Supplier_Street as "Street"
+					Supplier_Postcode as "Postcode"
+					Supplier_State as "State"
+					Supplier_TIN as "Tax Identification Number(TIN)"
+					Supplier_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+					Supplier_Business_Activity_Description as "Business Activity Description"
+					Supplier_Telephone_Number as "Telephone Number"
+					Supplier_City as "City"
+					Supplier_Country as "Country"
+					Customer_Name as "Name"
+					Customer_ID_Type as "ID Type"
+					Customer_SST_Registration_Number as "SST Registration Number"
+					Customer_E_mail as "E-mail"
+					Customer_Street as "Street"
+					Customer_Postcode as "Postcode"
+					Customer_State as "State"
+					Customer_TIN as "Tax Identification Number(TIN)"
+					Customer_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+					Customer_Code as "Customer Code"
+					Customer_Telephone_Number as "Telephone Number"
+					Customer_City as "City"
+					Customer_Country as "Country"
+					Delivery_Street as "Delivery Street"
+					Delivery_Postcode as "Delivery Postcode"
+					Delivery_State as "Delivery State"
+					Delivery_City as "Delivery City"
+					Delivery_Country as "Delivery Country"
+					Invoice_No as "Invoice No."
+					Invoice_UUID as "Invoice UUID"
+					Invoice_UUID_Link as "Invoice UUID Link"
+					Invoice_Public_Link as "Invoice Public Link"
+					QR_Invoice_Public_Link as "QR Invoice Public Link"
+					Subscriptions
+					Invoice_Date as "Invoice Date"
+					Invoice_For_Usage as "Invoice For Usage"
+					Payment_Term as "Payment Term"
+					Due_Date as "Due Date"
+					Enable_Reminder as "Enable Reminder ?"
+					Charge_Category as "Charge Category"
+					Announcement
+					Attachment
+					Send_Email as "Send Email"
+					Base_Currency as "Base Currency"
+					Invoice_Currency as "Invoice Currency"
+					Exchange_Rate as "Exchange Rate"
+					Sub_Total_Monthly_Rental as "Sub Total Monthly Rental"
+					Total_Tax_Monthly_Rental as "Total Tax Monthly Rental"
+					Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
+					Sub_Total_Internet_Charges as "Sub Total Internet Charges"
+					Total_Tax_Internet_Charges as "Total Tax Internet Charges"
+					Grand_Total_Internet_Charges as "Grand Total Internet Charges"
+					Sub_Total_Call_Charges as "Sub Total Call Charges (Analog, Domestic & Overseas)"
+					Total_Tax_Call_Charges as "Total Tax Call Charges (Analog, Domestic & Overseas)"
+					Grand_Total_Call_Charges as "Grand Total Call Charges (Analog, Domestic & Overseas)"
+					Sub_Total as "Sub Total"
+					Total_Tax as "Total Tax"
+					Grand_Total as "Grand Total"
+					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+					User_Input_Trigger
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

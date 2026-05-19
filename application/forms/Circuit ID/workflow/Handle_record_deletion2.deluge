@@ -1,0 +1,172 @@
+Handle_record_deletion2 as "Handle record deletion"
+{
+	type =  form
+	form = Circuit_ID
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					Circuit_ID_id = input.ID;
+				// Lists
+				all_invoice_list = Invoice[ID != null];
+				all_credit_note_list = Credit_Note[ID != null];
+				all_debit_note_list = Debit_Note[ID != null];
+				all_refund_note_list = Refund_Note[ID != null];
+				// ---------------- COUNT INVOICE ----------------
+				invoice_count_match = 0;
+				for each  curr_invoice in all_invoice_list
+				{
+					found_match = false;
+					for each  curr_invoice_monthly_rental in curr_invoice.Monthly_Rental
+					{
+						if(curr_invoice_monthly_rental.Circuit_ID_Monthly_Rental == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_invoice_internet_charges in curr_invoice.Internet_Charges
+					{
+						if(curr_invoice_internet_charges.Circuit_ID_Internet_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_invoice_call_charges in curr_invoice.Call_Charges
+					{
+						if(curr_invoice_call_charges.Circuit_ID_Type_Call_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					if(found_match == true)
+					{
+						invoice_count_match = invoice_count_match + 1;
+					}
+				}
+				// ---------------- COUNT CREDIT NOTE ----------------
+				credit_note_count_match = 0;
+				for each  curr_credit_note in all_credit_note_list
+				{
+					found_match = false;
+					for each  curr_credit_note_monthly_rental in curr_credit_note.Monthly_Rental
+					{
+						if(curr_credit_note_monthly_rental.Circuit_ID_Monthly_Rental == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_credit_note_internet_charges in curr_credit_note.Internet_Charges
+					{
+						if(curr_credit_note_internet_charges.Circuit_ID_Internet_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_credit_note_call_charges in curr_credit_note.Call_Charges
+					{
+						if(curr_credit_note_call_charges.Circuit_ID_Type_Call_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					if(found_match == true)
+					{
+						credit_note_count_match = credit_note_count_match + 1;
+					}
+				}
+				// ---------------- COUNT DEBIT NOTE ----------------
+				debit_note_count_match = 0;
+				for each  curr_debit_note in all_debit_note_list
+				{
+					found_match = false;
+					for each  curr_debit_note_monthly_rental in curr_debit_note.Monthly_Rental
+					{
+						if(curr_debit_note_monthly_rental.Circuit_ID_Monthly_Rental == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_debit_note_internet_charges in curr_debit_note.Internet_Charges
+					{
+						if(curr_debit_note_internet_charges.Circuit_ID_Internet_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_debit_note_call_charges in curr_debit_note.Call_Charges
+					{
+						if(curr_debit_note_call_charges.Circuit_ID_Type_Call_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					if(found_match == true)
+					{
+						debit_note_count_match = debit_note_count_match + 1;
+					}
+				}
+				// ---------------- COUNT REFUND NOTE ----------------
+				refund_note_count_match = 0;
+				for each  curr_refund_note in all_refund_note_list
+				{
+					found_match = false;
+					for each  curr_refund_note_monthly_rental in curr_refund_note.Monthly_Rental
+					{
+						if(curr_refund_note_monthly_rental.Circuit_ID_Monthly_Rental == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_refund_note_internet_charges in curr_refund_note.Internet_Charges
+					{
+						if(curr_refund_note_internet_charges.Circuit_ID_Internet_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					for each  curr_refund_note_call_charges in curr_refund_note.Call_Charges
+					{
+						if(curr_refund_note_call_charges.Circuit_ID_Type_Call_Charges == Circuit_ID_id)
+						{
+							found_match = true;
+						}
+					}
+					if(found_match == true)
+					{
+						refund_note_count_match = refund_note_count_match + 1;
+					}
+				}
+				// ---------------- FINAL CHECK + MESSAGE ----------------
+				if(invoice_count_match > 0 || credit_note_count_match > 0 || debit_note_count_match > 0 || refund_note_count_match > 0)
+				{
+					all_message = "Cannot delete this Circuit ID because it is used in:";
+					if(invoice_count_match > 0)
+					{
+						all_message = all_message + "\n- Invoice: " + invoice_count_match;
+					}
+					if(credit_note_count_match > 0)
+					{
+						all_message = all_message + "\n- Credit Note: " + credit_note_count_match;
+					}
+					if(debit_note_count_match > 0)
+					{
+						all_message = all_message + "\n- Debit Note: " + debit_note_count_match;
+					}
+					if(refund_note_count_match > 0)
+					{
+						all_message = all_message + "\n- Refund Note: " + refund_note_count_match;
+					}
+					alert all_message;
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

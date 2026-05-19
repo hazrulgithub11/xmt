@@ -1,0 +1,118 @@
+map tenancy.CreateAccountDesk(int tenantID)
+{
+	tenantRec = Tenancy[ID == tenantID];
+	tenant_name = tenantRec.Tenant_Name;
+	customer_code = tenantRec.Customer_Code;
+	contact_name = tenantRec.Contact;
+	contact_email = tenantRec.Technical_Email;
+	contact_phone = tenantRec.Phone_Number;
+	info customer_code;
+	// Step 1: Check if Account Exists
+	search_account_url = "https://desk.zoho.com/api/v1/accounts/search?accountName=" + tenant_name;
+	search_account_response = invokeurl
+	[
+		url :search_account_url
+		type :GET
+		connection:"zdesk"
+	];
+	account_id = "";
+	if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+	{
+		// Account exists, retrieve its ID
+		account_id = search_account_response.get("data").get(0).get("id");
+		//info "Account with Tenant Name '" + tenant_name + "' already exists in Zoho Desk. Account ID: " + account_id;
+		// Step 1.1: Update Account with Billing URL
+		billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Tenancies/ACSbAKFqeBVrnpJx9wWxHxHH57T8fBbWP85vU06myb4p87QSRjjVaGmt10qGvuPXEXJZ71T5mX2zfbBEJXwk9GsUfMtZY2hzyJzD?Customer_Code=" + customer_code;
+		update_account_data = Map();
+		update_cf = Map();
+		update_cf.put("cf_url_to_billing_system",billing_url);
+		update_account_data.put("cf",update_cf);
+		update_account_response = invokeurl
+		[
+			url :"https://desk.zoho.com/api/v1/accounts/" + account_id
+			type :PATCH
+			parameters:update_account_data.toString()
+			connection:"zdesk"
+		];
+		if(update_account_response.get("id") != null)
+		{
+			//info "Account updated successfully with Billing URL.";
+		}
+		else
+		{
+			//info "Failed to update Account with Billing URL: " + update_account_response.toString();
+		}
+	}
+	else
+	{
+		// Step 2: Create Account
+		desk_account_data = Map();
+		desk_account_data.put("accountName",tenant_name);
+		cf = Map();
+		cf.put("cf_single_line_1",customer_code);
+		cf.put("cf_technical_contact",contact_name);
+		cf.put("cf_technical_email",contact_email);
+		cf.put("cf_technical_phone_number",contact_phone);
+		// Add the Billing URL during account creation
+		billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Tenancies/ACSbAKFqeBVrnpJx9wWxHxHH57T8fBbWP85vU06myb4p87QSRjjVaGmt10qGvuPXEXJZ71T5mX2zfbBEJXwk9GsUfMtZY2hzyJzD?Customer_Code=" + customer_code;
+		cf.put("cf_url_to_billing_system",billing_url);
+		desk_account_data.put("cf",cf);
+		desk_api_url = "https://desk.zoho.com/api/v1/accounts";
+		response = invokeurl
+		[
+			url :desk_api_url
+			type :POST
+			parameters:desk_account_data.toString()
+			connection:"zdesk"
+		];
+		if(response.get("id") != null)
+		{
+			account_id = response.get("id");
+			//info "Account created successfully in Zoho Desk. Account ID: " + account_id;
+		}
+		else
+		{
+			//info "Failed to create account in Zoho Desk. Error: " + response.toString();
+		}
+	}
+	// Step 3: Update the Tenancy module with the Desk Account ID
+	if(account_id != "")
+	{
+		// Update the Record_ID field in the Tenancy module
+		tenantRec.Record_ID=account_id;
+		//info "Record_ID field in the Tenancy module updated with Account ID: " + account_id;
+		// Optional: Create Contact Associated with the Account
+		cf = Map();
+		cf.put("cf_customer_code",customer_code);
+		cf.put("cf_technical_contact_name",contact_name);
+		cf.put("cf_technical_email",contact_email);
+		cf.put("cf_technical_phone_number",contact_phone);
+		contact_data = Map();
+		contact_data.put("lastName",contact_name);
+		contact_data.put("email",contact_email);
+		contact_data.put("phone",contact_phone);
+		contact_data.put("accountId",account_id);
+		contact_data.put("cf",cf);
+		desk_contact_url = "https://desk.zoho.com/api/v1/contacts";
+		create_contact_response = invokeurl
+		[
+			url :desk_contact_url
+			type :POST
+			parameters:contact_data.toString()
+			connection:"zdesk"
+		];
+		if(create_contact_response.get("id") != null)
+		{
+			//info "Contact created successfully in Zoho Desk. Contact ID: " + create_contact_response.get("id");
+		}
+		else
+		{
+			//info "Failed to create contact in Zoho Desk. Error: " + create_contact_response.toString();
+		}
+	}
+	else
+	{
+		//info "No valid account ID. Contact creation and Record_ID update aborted.";
+	}
+	return create_contact_response;
+}

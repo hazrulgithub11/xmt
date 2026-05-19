@@ -1,0 +1,17 @@
+Payment_Received_Line_Ite as "Payment Received Line Item Field Rules"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions 
+		{
+		hide add row of Payment_Received_Line_Item;
+		}
+	}
+
+}
+

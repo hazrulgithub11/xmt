@@ -1,0 +1,23 @@
+Handle_Payment_Term2 as "Handle Payment Term"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on user input of Payment_Term
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Pro_Forma_Invoice_Date != null && input.Payment_Term != null)
+				{
+					input.Due_Date = input.Pro_Forma_Invoice_Date.addDay(input.Payment_Term.Days);
+				}
+			)
+		}
+	}
+
+}
+

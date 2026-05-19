@@ -1,0 +1,5 @@
+int invoice.get_billing_cycle_months_used_final_billing_date(date startDate, date endDate, string billEvery)
+{
+	billingCycleMonthsUsed = monthsBetween(startDate,endDate);
+	return billingCycleMonthsUsed;
+}

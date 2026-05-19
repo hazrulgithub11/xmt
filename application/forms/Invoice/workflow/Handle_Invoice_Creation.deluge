@@ -1,0 +1,23 @@
+Handle_Invoice_Creation as "Handle Invoice Creation"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Invoice_No = thisapp.invoice.generate_invoice_number();
+				thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",input.ID);
+				//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
+				//input.Delivery_Order_No = thisapp.generate_delivery_order_no();
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,48 @@
+Disable_Fields11 as "Disable Fields"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Customer_TIN;
+				disable Customer_SST;
+				disable Payment_Received_No;
+				disable Organization;
+				disable Amount_Received;
+				disable Currency;
+				disable Exchange_Rate;
+				disable Amount_Received_MYR;
+				disable Invoice;
+				disable Debit_Note;
+				disable Pro_Forma_Invoices;
+				disable Single_Record_Payment;
+				disable Total_Still_Owing;
+				disable Payment_Type_Single_Record;
+				disable Payment_Received_Line_Item.Reference_No;
+				disable Payment_Received_Line_Item.Pro_Forma_Invoice_No;
+				disable Payment_Received_Line_Item.Invoice_No;
+				disable Payment_Received_Line_Item.Document_Date;
+				disable Payment_Received_Line_Item.Amount;
+				disable Payment_Received_Line_Item.Outstanding_Balance;
+				disable Payment_Received_Line_Item.Allocation_MYR;
+				disable Payment_Received_Line_Item.Payment_Received;
+				disable Payment_Received_Line_Item.Customer_Code;
+				disable Payment_Received_Line_Item.Customer_Name;
+				disable Payment_Received_Line_Item.Still_Owing;
+				if(input.Payment_Type == "Deposit")
+				{
+					disable Payment_Received_Line_Item.Allocation;
+				}
+			)
+		}
+	}
+
+}
+

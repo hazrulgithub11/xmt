@@ -1,0 +1,24 @@
+Handle_Item_Category as "Handle Item Category"
+{
+	type =  form
+	form = Transaction_Type
+
+	record event = on add or edit
+
+	on user input of Item_Category
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Item_Category == "" || input.Item_Category == "Deposit Item")
+				{
+					input.Circuit_ID_Type = null;
+					input.Charges_Type = "";
+				}
+			)
+		}
+	}
+
+}
+

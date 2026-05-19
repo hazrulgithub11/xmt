@@ -1,0 +1,18 @@
+Disable_Addition_And_Dele2 as "Disable Addition And Deletion Row"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions  (Status == "Approved" || Status == "Overdue" || Status == "Sent" || Status == "Partially Paid" || Status == "Paid")
+		{
+		hide add row of Call_Charges,Internet_Charges,Monthly_Rental;
+		hide delete row of Call_Charges,Internet_Charges,Monthly_Rental;
+		}
+	}
+
+}
+

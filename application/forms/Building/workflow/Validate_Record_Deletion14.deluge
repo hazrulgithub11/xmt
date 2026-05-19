@@ -1,0 +1,25 @@
+Validate_Record_Deletion14 as "Validate Record Deletion"
+{
+	type =  form
+	form = Building
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					getTenants = Tenancy[Building == input.ID].ID.getAll();
+				if(getTenants.size() > 0)
+				{
+					alert "This building can’t be deleted because it’s used in tenancies module.";
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

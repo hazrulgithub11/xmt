@@ -1,0 +1,80 @@
+list Apply_Credit_To_Invoice_Line_Report
+{
+	displayName = "Apply Credit To Invoice Line Report"
+	show all rows from Apply_Credit_To_Invoice_Line    
+	(
+		Invoice
+		Credit_Note as "Credit Note"
+		Amount_Applied as "Amount Applied"
+		Amount_Applied_Date as "Amount Applied Date"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Invoice
+					Credit_Note as "Credit Note"
+					Amount_Applied as "Amount Applied"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Invoice
+					Credit_Note as "Credit Note"
+					Amount_Applied as "Amount Applied"
+					Amount_Applied_Date as "Amount Applied Date"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

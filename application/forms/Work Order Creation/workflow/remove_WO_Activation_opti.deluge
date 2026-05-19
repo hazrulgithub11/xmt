@@ -1,0 +1,31 @@
+remove_WO_Activation_opti as "remove WO-Activation option"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Subscription != null)
+				{
+					subscriptionRecord = Subscription[ID == input.Subscription];
+					if(subscriptionRecord.Work_Order_Type == "WO - Service Activation")
+					{
+						// Clear existing dropdown options
+						clear Work_Order_Type;
+						// Append only the required options
+						input.Work_Order_Type:ui.append("WO - Service Change Request");
+						input.Work_Order_Type:ui.append("WO - Service Termination");
+					}
+				}
+			)
+		}
+	}
+
+}
+

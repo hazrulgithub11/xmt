@@ -1,0 +1,28 @@
+Handle_Customer_PO_No_Cha as "Handle Customer PO No. Changes"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Customer_PO_No
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Customer_PO_No != "")
+				{
+					subscriptionList = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No.contains(input.Customer_PO_No)].ID.getAll();
+					if(subscriptionList.size() > 0)
+					{
+						alert "The Customer PO No. " + input.Customer_PO_No + " already exists for this tenant. Please enter a different PO No.";
+						input.Customer_PO_No = "";
+					}
+				}
+			)
+		}
+	}
+
+}
+

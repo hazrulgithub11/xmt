@@ -1,0 +1,267 @@
+<zml>
+  <layout>
+    <row>
+      <column width='100%'>
+        <form elementName='Form' appLinkName='thisapp' linkName='Date_form' heightType='auto' searchString='End_Date=${endDate}|Start_Date=${startDate}|Prefix_Date_Duration=${prefixDateDuration}' urlType='none' zc_Header='false' /> </column>
+    </row>
+    <row>
+      <column width='34%'>
+        <row>
+          <column width='100%'>
+            <panel elementName='Panel' title='Invoices' titleColor='#444444'>
+              <pr width='fill' height='fill'>
+                <pc padding='20px' bgColor='#FFFFFF' action='OpenReport' parameters='Status=Draft&amp;Status_op=19' componentLinkName='All_Invoices' target='same-window' width='100%' hAlign='center' vAlign='middle'>
+                  <pr width='auto' height='auto'>
+                    <pc padding='5px'>
+                      <pr>
+                        <pc>
+                          <image marginRight='3px' color='#FFFFFF' width='52px' height='52px' type='gallery' value='money.png' cornerRadius='0px' /> </pc>
+                      </pr>
+                      <pr>
+                        <pc>
+                          <pr>
+                            <pc>
+                              <text marginLeft='0px' marginRight='3px' marginTop='0px' color='#0ABB51' size='28px' type='Text' value='Count:'> </text>
+                            </pc>
+                            <pc>
+                              <text marginLeft='10px' marginBottom='0px' marginTop='3px' color='#0ABB51' size='28px' bold='true' type='Form Data' displayType='actual' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Invoice.ID.count'> </text>
+                            </pc>
+                          </pr>
+                          <pr>
+                            <pc>
+                              <text marginLeft='0px' marginRight='3px' marginTop='10px' color='#0ABB51' size='28px' type='Text' value='Amount:'> </text>
+                            </pc>
+                            <pc>
+                              <text marginLeft='10px' marginRight='0px' marginTop='10px' color='#0ABB51' size='24px' bold='true' type='Form Data' displayType='actual' decimalPlaces='2' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Invoice.Grand_Total_Base_Currency.sum'>
+                                <prefix size='24px' color='#0ABB51' bold='true' value='RM ' /> </text>
+                            </pc>
+                          </pr>
+                        </pc>
+                      </pr>
+                      <pr>
+                        <pc>
+                          <text marginTop='10px' color='#0ABB51' size='16px' type='Text' value='Total Receivables'> </text>
+                        </pc>
+                      </pr>
+                    </pc>
+                  </pr>
+                </pc>
+              </pr>
+            </panel>
+          </column>
+        </row>
+        <row>
+          <column width='100%'>
+            <panel elementName='Panel 8'>
+              <pr width='fill' height='fill'>
+                <pc padding='20px' bgColor='#FFFFFF' width='100%' vAlign='middle'>
+                  <pr width='auto' height='auto'>
+                    <pc>
+                      <text size='20px' type='Text' value='Refund Note'> </text>
+                    </pc>
+                  </pr>
+                </pc>
+              </pr>
+            </panel>
+          </column>
+        </row>
+      </column>
+      <column width='34%'>
+        <panel elementName='Panel 1'>
+          <pr width='fill' height='fill'>
+            <pc padding='20px' bgColor='#FFFFFF' action='ExecuteFunction' parameters='All_Invoices' functionName='FilterOverdueRec' width='100%' hAlign='center' vAlign='middle'>
+              <pr width='auto' height='auto'>
+                <pc padding='5px'>
+                  <pr>
+                    <pc>
+                      <image marginRight='3px' color='#FFFFFF' width='52px' height='52px' type='gallery' value='overdue.png' cornerRadius='0px' /> </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' color='#D4181D' size='28px' type='Text' value='Count:'> </text>
+                    </pc>
+                    <pc>
+                      <text marginLeft='10px' marginBottom='0px' marginTop='3px' color='#D4181D' size='28px' bold='true' type='Form Data' displayType='actual' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Invoice.ID.count'> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' marginTop='10px' color='#D4181D' size='28px' type='Text' value='Amount:'> </text>
+                    </pc>
+                    <pc>
+                      <text marginLeft='10px' marginBottom='0px' marginTop='10px' color='#D4181D' size='24px' bold='true' type='Form Data' displayType='actual' decimalPlaces='2' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Invoice.Grand_Total_Base_Currency.sum'>
+                        <prefix size='24px' color='#D4181D' bold='true' value='RM ' /> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginTop='3px' color='#D4181D' size='16px' type='Text' value='Overdue Invoices'> </text>
+                    </pc>
+                  </pr>
+                </pc>
+              </pr>
+            </pc>
+          </pr>
+        </panel>
+      </column>
+      <column width='32%'>
+        <panel elementName='Panel 2'>
+          <pr width='fill' height='fill'>
+            <pc padding='20px' bgColor='#FFFFFF' action='OpenReport' parameters='Status=Pending+Approval' componentLinkName='All_Invoices' target='same-window' width='100%' hAlign='center' vAlign='middle'>
+              <pr width='auto' height='auto'>
+                <pc padding='5px'>
+                  <pr>
+                    <pc>
+                      <image marginRight='3px' color='#FFFFFF' width='52px' height='52px' type='gallery' value='976438.png' cornerRadius='0px' /> </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <pr>
+                        <pc>
+                          <text marginLeft='0px' marginRight='3px' marginTop='0px' color='#FF8318' size='28px' type='Text' value='Count:'> </text>
+                        </pc>
+                        <pc>
+                          <text marginLeft='10px' marginBottom='0px' marginTop='3px' color='#FF8318' size='28px' bold='true' type='Form Data' displayType='actual' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Invoice.ID.count'> </text>
+                        </pc>
+                      </pr>
+                      <pr>
+                        <pc>
+                          <text marginLeft='0px' marginRight='3px' marginTop='10px' color='#FF8318' size='28px' type='Text' value='Amount:'> </text>
+                        </pc>
+                        <pc>
+                          <text marginLeft='10px' marginBottom='0px' marginTop='10px' color='#FF8318' size='24px' bold='true' type='Form Data' displayType='actual' decimalPlaces='2' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Invoice.Grand_Total_Base_Currency.sum'>
+                            <prefix size='24px' color='#FF8318' bold='true' value='RM ' /> </text>
+                        </pc>
+                      </pr>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginTop='3px' color='#FF8318' size='16px' type='Text' value='Pending Approval Invoices'> </text>
+                    </pc>
+                  </pr>
+                </pc>
+              </pr>
+            </pc>
+          </pr>
+        </panel>
+      </column>
+    </row>
+    <row>
+      <column width='33%'>
+        <panel elementName='Panel 3' title='Deposits' titleColor='#444444'>
+          <pr width='fill' height='fill'>
+            <pc padding='20px' bgColor='#FFFFFF' action='OpenReport' parameters='Status=Draft&amp;Status_op=19' componentLinkName='All_Pro_Forma_Invoices' target='same-window' width='100%' hAlign='center' vAlign='middle'>
+              <pr width='auto' height='auto'>
+                <pc padding='5px'>
+                  <pr>
+                    <pc>
+                      <image marginRight='3px' color='#FFFFFF' width='52px' height='52px' type='gallery' value='deposits.png' cornerRadius='0px' /> </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' marginTop='0px' color='#0ABB51' size='28px' type='Text' value='Count:'> </text>
+                    </pc>
+                    <pc>
+                      <text action='OpenReport' componentLinkName='All_Pro_Forma_Invoices' target='new-window' marginLeft='10px' marginBottom='0px' marginTop='3px' color='#0ABB51' size='28px' bold='true' type='Form Data' displayType='actual' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Pro_Forma_Invoices.ID.count'> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' marginTop='10px' color='#0ABB51' size='28px' type='Text' value='Amount:'> </text>
+                    </pc>
+                    <pc>
+                      <text marginLeft='10px' marginBottom='0px' marginTop='10px' color='#0ABB51' size='24px' bold='true' type='Form Data' displayType='actual' decimalPlaces='2' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Pro_Forma_Invoices.Grand_Total_MYR.sum'>
+                        <prefix size='24px' color='#0ABB51' bold='true' value='RM ' /> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginTop='10px' color='#0ABB51' size='16px' type='Text' value='Total Deposits'> </text>
+                    </pc>
+                  </pr>
+                </pc>
+              </pr>
+            </pc>
+          </pr>
+        </panel>
+      </column>
+      <column width='33%'>
+        <panel elementName='Panel 4'>
+          <pr width='fill' height='fill'>
+            <pc padding='20px' bgColor='#FFFFFF' action='ExecuteFunction' parameters='All_Deposits' functionName='FilterOverdueRec' width='100%' hAlign='center' vAlign='middle'>
+              <pr width='auto' height='auto'>
+                <pc padding='5px'>
+                  <pr>
+                    <pc>
+                      <image marginRight='3px' color='#FFFFFF' width='52px' height='52px' type='gallery' value='overdue_deposit.png' cornerRadius='0px' /> </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' color='#D4181D' size='28px' type='Text' value='Count:'> </text>
+                    </pc>
+                    <pc>
+                      <text marginLeft='10px' marginBottom='0px' marginTop='3px' color='#D4181D' size='28px' bold='true' type='Form Data' displayType='actual' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Pro_Forma_Invoices.ID.count'> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' marginTop='10px' color='#D4181D' size='28px' type='Text' value='Amount:'> </text>
+                    </pc>
+                    <pc>
+                      <text marginLeft='10px' marginBottom='0px' marginTop='10px' color='#D4181D' size='24px' bold='true' type='Form Data' displayType='actual' decimalPlaces='2' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Pro_Forma_Invoices.Grand_Total_MYR.sum'>
+                        <prefix size='24px' color='#D4181D' bold='true' value='RM ' /> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginTop='3px' color='#D4181D' size='16px' type='Text' value='Overdue Deposits'> </text>
+                    </pc>
+                  </pr>
+                </pc>
+              </pr>
+            </pc>
+          </pr>
+        </panel>
+      </column>
+      <column width='34%'>
+        <panel elementName='Panel 5'>
+          <pr width='fill' height='fill'>
+            <pc padding='20px' bgColor='#FFFFFF' action='OpenReport' parameters='Status=Pending+Approval' componentLinkName='All_Pro_Forma_Invoices' target='same-window' width='100%' hAlign='center' vAlign='middle'>
+              <pr width='auto' height='auto'>
+                <pc padding='5px'>
+                  <pr>
+                    <pc>
+                      <image marginRight='3px' color='#FFFFFF' width='52px' height='52px' type='gallery' value='pending_deposit.jpg' cornerRadius='0px' /> </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' marginTop='0px' color='#FF8318' size='28px' type='Text' value='Count:'> </text>
+                    </pc>
+                    <pc>
+                      <text marginLeft='10px' marginBottom='0px' marginTop='3px' color='#FF8318' size='28px' bold='true' type='Form Data' displayType='actual' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)' value='thisapp.Pro_Forma_Invoices.ID.count'> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginLeft='0px' marginRight='3px' marginTop='10px' color='#FF8318' size='28px' type='Text' value='Amount:'> </text>
+                    </pc>
+                    <pc>
+                      <text marginLeft='10px' marginBottom='0px' marginTop='10px' color='#FF8318' size='24px' bold='true' type='Form Data' displayType='actual' decimalPlaces='2' thousandsSeperator='LOCALE' decimalSeperator='DOT' numberScale='none' criteria='Status == &quot;Pending Approval&quot;' value='thisapp.Pro_Forma_Invoices.Grand_Total_MYR.sum'>
+                        <prefix size='24px' color='#FF8318' bold='true' value='RM ' /> </text>
+                    </pc>
+                  </pr>
+                  <pr>
+                    <pc>
+                      <text marginTop='3px' color='#FF8318' size='16px' type='Text' value='Pending Approval Deposits'> </text>
+                    </pc>
+                  </pr>
+                </pc>
+              </pr>
+            </pc>
+          </pr>
+        </panel>
+      </column>
+    </row>
+  </layout>
+</zml>

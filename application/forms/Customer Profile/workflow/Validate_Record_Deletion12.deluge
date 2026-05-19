@@ -1,0 +1,69 @@
+Validate_Record_Deletion12 as "Validate Record Deletion"
+{
+	type =  form
+	form = Customer_Profile
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					get_subscription_list = Subscription[Customer_Name == input.ID].ID.getAll();
+				get_invoice_list = Invoice[Customer == input.ID].ID.getAll();
+				get_credit_note_list = Credit_Note[Customer == input.ID].ID.getAll();
+				get_debit_note_list = Debit_Note[Customer == input.ID].ID.getAll();
+				get_refund_note_list = Refund_Note[Customer == input.ID].ID.getAll();
+				get_pro_forma_invoices_list = Pro_Forma_Invoices[Customer_Name == input.ID].ID.getAll();
+				get_payment_received_list = Payment_Received[Customer_Name == input.ID].ID.getAll();
+				message = "This Customer Profile can’t be deleted because it is used in the following module(s):\n\n";
+				hasDependency = false;
+				if(get_subscription_list.size() > 0)
+				{
+					message = message + "- Subscriptions: " + get_subscription_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_invoice_list.size() > 0)
+				{
+					message = message + "- Invoices: " + get_invoice_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_credit_note_list.size() > 0)
+				{
+					message = message + "- Credit Notes: " + get_credit_note_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_debit_note_list.size() > 0)
+				{
+					message = message + "- Debit Notes: " + get_debit_note_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_refund_note_list.size() > 0)
+				{
+					message = message + "- Refund Notes: " + get_refund_note_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_pro_forma_invoices_list.size() > 0)
+				{
+					message = message + "- Pro Forma Invoices: " + get_pro_forma_invoices_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_payment_received_list.size() > 0)
+				{
+					message = message + "- Payments Received: " + get_payment_received_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(hasDependency)
+				{
+					message = message + "\nPlease remove or reassign these records before deleting the customer.";
+					alert message;
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

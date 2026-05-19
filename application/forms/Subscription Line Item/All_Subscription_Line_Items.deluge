@@ -1,0 +1,115 @@
+list All_Sub_Line_Items
+{
+	displayName = "All Subscription Line Items"
+	show all rows from Subscription_Line_Item    
+	(
+		Item
+		Unit_Price as "Unit Price"
+		Quantity
+		Sub_Total as "Sub Total"
+		Tax
+		Total
+		Customer
+		Tenant_Code as "Tenant Code"
+		Subscription
+		Contract_Start_Date as "Contract Start Date"
+		Contract_End_Date as "Contract End Date"
+		Description
+		Tax_Pct as "Tax Pct"
+		Tax_Amount as "Tax Amount"
+		Circuit_ID as "Circuit ID"
+		Circuit_ID_Type as "Circuit ID Type"
+		Item_Code as "Item Code"
+		Work_Order as "Work Order"
+		Business_Segment as "Business Segment"
+		Business_Unit as "Business Unit"
+		Total_MYR as "Total (MYR)"
+		Subscription.Customer_PO_No as "Customer PO No."
+		Quantity1 as "Quantity"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Subscription.Customer_PO_No as "Customer PO No."
+					Item
+					Unit_Price as "Unit Price"
+					Quantity
+					Sub_Total as "Sub Total"
+					Tax
+					Customer
+					Tenant_Code as "Tenant Code"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+			record
+			(
+				Edit   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Subscription.Customer_PO_No as "Customer PO No."
+					Item
+					Unit_Price as "Unit Price"
+					Quantity
+					Sub_Total as "Sub Total"
+					Tax
+					Total
+					Total_MYR as "Total (MYR)"
+					Customer
+					Tenant_Code as "Tenant Code"
+					Subscription
+					Contract_Start_Date as "Contract Start Date"
+					Contract_End_Date as "Contract End Date"
+					Description
+					Tax_Pct as "Tax Pct"
+					Tax_Amount as "Tax Amount"
+					Circuit_ID as "Circuit ID"
+					Circuit_ID_Type as "Circuit ID Type"
+					Item_Code as "Item Code"
+					Work_Order as "Work Order"
+					Business_Segment as "Business Segment"
+					Business_Unit as "Business Unit"
+					Quantity1 as "Quantity"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+    	)
+	)
+}

@@ -1,0 +1,19 @@
+Disable_Add_And_Delete_Ro2 as "Disable Add And Delete Row, Pending Approval"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on edit
+		status = inactive
+
+	field rules
+	{
+		actions 
+		{
+		hide add row of Pro_Forma_Invoice_Line_Item;
+		hide delete row of Pro_Forma_Invoice_Line_Item;
+		}
+	}
+
+}
+

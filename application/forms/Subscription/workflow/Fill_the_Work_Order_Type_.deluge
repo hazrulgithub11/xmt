@@ -1,0 +1,24 @@
+Fill_the_Work_Order_Type_ as "Fill the Work Order Type field"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Create_Work_Order == true && input.Work_Order_Type == null || input.Work_Order_Type.isEmpty())
+				{
+					alert "Please select a Work Order Type before submitting";
+					cancel submit;
+				}
+			)
+		}
+	}
+
+}
+

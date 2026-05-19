@@ -1,0 +1,32 @@
+Handle_Payment_Type as "Handle Payment Type"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on user input of Payment_Type
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Customer_Name = null;
+				input.Customer_TIN = "";
+				input.Customer_SST = "";
+				input.Customer_Email = "";
+				input.Customer_Code = null;
+				input.Payment_Method = "";
+				input.Paid_To = null;
+				input.Reference = "";
+				input.Payment_Received_Line_Item.clear();
+				input.Amount_Received = null;
+				input.Currency = null;
+				input.Exchange_Rate = null;
+				input.Amount_Received_MYR = null;
+			)
+		}
+	}
+
+}
+

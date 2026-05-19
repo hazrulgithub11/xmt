@@ -1,0 +1,21 @@
+Handle_on_record_deletion as "Handle on record deletion"
+{
+	type =  form
+	form = Organization_Settings
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					alert "Organization settings cannot be deleted.";
+				cancel delete;
+			)
+		}
+	}
+
+}
+

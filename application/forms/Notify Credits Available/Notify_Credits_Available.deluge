@@ -1,0 +1,94 @@
+		form Notify_Credits_Available
+		{
+			displayname = "Notify Credits Available"
+			store data in zc = false
+			success message = ""
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			message
+			(
+    			type = plaintext
+				value = "Add your Note here ..."
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Type_Of_Action
+			(
+				type = picklist
+				displayname = "Type Of Action"
+				maxchar = 100
+				values = {"Mark As Sent","Send Invoice"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Invoice
+			(
+				type = picklist	
+				values  = Invoice.ID
+    			displayformat = [Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Invoice_No
+			(
+    			type = text
+				displayname = "Invoice No."
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Name
+			(
+				type = picklist	
+				displayname = "Customer Name"
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Code
+			(
+				type = picklist	
+				displayname = "Customer Code"
+				values  = Tenancy.ID
+    			displayformat = [Tenant_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Email
+			(
+    			type = email
+				displayname = "Customer Email"
+				maxchar = 80
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				Yes
+				(
+   					type = submit
+   					displayname = "Yes"
+				)
+				No
+				(
+   					type = button
+   					displayname = "No"
+				)
+			}
+		}

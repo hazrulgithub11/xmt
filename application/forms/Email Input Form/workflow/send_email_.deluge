@@ -1,0 +1,214 @@
+send_email_ as "send email "
+{
+	type =  form
+	form = Email_Input_Form
+
+	record event = on add or edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					toAddresses = input.To.toList(",");
+				ccAddresses = input.CC.toList(",");
+				emailSubject = input.Subject_field;
+				emailBody = input.Body;
+				recId = input.Record_ID;
+				docType = input.Document_Type;
+				placeholders = input.Placeholders;
+				if(docType == "Pro Forma Invoices")
+				{
+					/* 	getRecordPI = invokeurl
+				 				 					[
+				 				 						url :"https://www.zohoapis.com/creator/v2.1/data" + zoho.appuri + "report/All_Pro_Forma_Invoices/" + recId
+				 				 						type :GET
+				 				 						connection:"zoho_creator_connection"
+				 				 					]; */
+					getRecordPI = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Pro_Forma_Invoices",recId,"zoho_creator_connection");
+					if(getRecordPI.get("code") == 3000)
+					{
+						piData = getRecordPI.get("data");
+					}
+					for each  placeholder in placeholders
+					{
+						if(piData.get(placeholder).size() != null)
+						{
+							listData = piData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
+							placeHolderValue = "";
+							idx = 0;
+							for each  data in listData
+							{
+								if(data.contains("display_value:"))
+								{
+									if(idx > 0)
+									{
+										placeHolderValue = placeHolderValue + ",";
+									}
+									placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
+									idx = idx + 1;
+								}
+							}
+							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+						}
+						else
+						{
+							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
+							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
+						}
+					}
+					getPI = Pro_Forma_Invoices[ID == recId];
+					downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + getPI.ID + "/" + getPI.Pro_Forma_Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
+					piFile = invokeurl
+					[
+						url :downloadPITempUrl
+						type :GET
+					];
+					piFile.setparamname("file");
+					sendmail
+					[
+						from :zoho.adminuserid
+						to :toAddresses
+						cc:ccAddresses
+						subject :emailSubject
+						message :emailBody
+						Attachments :file:piFile
+					]
+				}
+				else if(docType == "Invoice")
+				{
+					getRecordInv = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Invoices",recId,"zoho_creator_connection");
+					if(getRecordInv.get("code") == 3000)
+					{
+						invData = getRecordInv.get("data");
+					}
+					for each  placeholder in placeholders
+					{
+						if(invData.get(placeholder).size() != null)
+						{
+							listData = invData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
+							placeHolderValue = "";
+							idx = 0;
+							for each  data in listData
+							{
+								if(data.contains("display_value:"))
+								{
+									if(idx > 0)
+									{
+										placeHolderValue = placeHolderValue + ",";
+									}
+									placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
+									idx = idx + 1;
+								}
+							}
+							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+						}
+						else
+						{
+							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
+							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
+						}
+					}
+					invRec = Invoice[ID == recId.toLong()];
+					if(invRec.Charge_Category == "Miscellaneous Charges")
+					{
+						downloadMiscInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices_Miscellaneous/" + invRec.ID + "/" + invRec.Invoice_No + "/eJwAxwnzTyqvYzDYbM1rhs6uEM6p9W5M2vR2HwQNwZA2AQJym6P9BVDB2WpRgmnNXgx7P8fjxKGpaYmgM334Vsx22wCKN0tgn0qW";
+						miscInvFile = invokeurl
+						[
+							url :downloadMiscInvTempUrl
+							type :GET
+						];
+						miscInvFile.setparamname("file");
+						sendmail
+						[
+							from :zoho.adminuserid
+							to :toAddresses
+							cc:ccAddresses
+							subject :emailSubject
+							message :emailBody
+							Attachments :file:miscInvFile
+						]
+					}
+					else
+					{
+						downloadFixInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices/" + invRec.ID + "/" + invRec.Invoice_No + "/pbRFqPOxMz2gJjH1YjYdfpNgB21gTOaGfNhCffKKn4KOMA7Ag0NHJub4jWXTggKVYuHSuPB7dBSFPseK4WR5vNfQGz7Gj3XbZAZx";
+						fixInvFile = invokeurl
+						[
+							url :downloadFixInvTempUrl
+							type :GET
+						];
+						fixInvFile.setparamname("file");
+						sendmail
+						[
+							from :zoho.adminuserid
+							to :toAddresses
+							cc:ccAddresses
+							subject :emailSubject
+							message :emailBody
+							Attachments :file:fixInvFile
+						]
+					}
+				}
+				else if(docType == "Debit Note")
+				{
+					getRecordDN = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"Debit_Note_Report",recId,"zoho_creator_connection");
+					if(getRecordDN.get("code") == 3000)
+					{
+						dnData = getRecordDN.get("data");
+					}
+					for each  placeholder in placeholders
+					{
+						if(dnData.get(placeholder).size() != null)
+						{
+							listData = dnData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
+							placeHolderValue = "";
+							idx = 0;
+							for each  data in listData
+							{
+								if(data.contains("display_value:"))
+								{
+									if(idx > 0)
+									{
+										placeHolderValue = placeHolderValue + ",";
+									}
+									placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
+									idx = idx + 1;
+								}
+							}
+							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+						}
+						else
+						{
+							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",dnData.get(placeholder));
+							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",dnData.get(placeholder));
+						}
+					}
+					getDN = Debit_Note[ID == recId];
+					downloadDNTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Debit_Note_Template/" + getDN.ID + "/" + getDN.Invoice_No + "/YugXk4u6GuyO7xVgdd57XQS6Crvwt02D9h599sj6jzf3ZWT5tdUkkq56kOWpjNCRuep0D4qGPu6nFW6fyOhKwJSKpj6tjKtnZJJA";
+					dnFile = invokeurl
+					[
+						url :downloadDNTempUrl
+						type :GET
+					];
+					dnFile.setparamname("file");
+					sendmail
+					[
+						from :zoho.adminuserid
+						to :toAddresses
+						cc:ccAddresses
+						subject :emailSubject
+						message :emailBody
+						Attachments :file:dnFile
+					]
+				}
+				openUrl("#Script:page.parent.refresh ","parent window");
+			)
+		}
+	}
+
+}
+

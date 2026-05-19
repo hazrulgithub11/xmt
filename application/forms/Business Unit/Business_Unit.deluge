@@ -1,0 +1,61 @@
+		form Business_Unit
+		{
+			displayname = "Business Unit"
+			success message = "Business Unit Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Business_Segment
+			(
+				type = picklist	
+				displayname = "Business Segment"
+				values  = Business_Segment.ID
+    			displayformat = [Business]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Business_Unit
+			(
+    			type = text
+				displayname = "Business Unit"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

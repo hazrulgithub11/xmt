@@ -1,0 +1,1236 @@
+		form Work_Order_Creation
+		{
+			displayname = "Work Order Creation"
+			success message = "Work Order Creation Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			Subscription
+			(
+				type = picklist	
+				values  = Subscription.ID
+    			displayformat = [ID]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Name
+			(
+				type = picklist	
+				displayname = "Customer Name"
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Code
+			(
+				type = picklist	
+				displayname = "Customer Code"
+				values  = Tenancy.ID
+    			displayformat = [Customer_Code]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Work_Order_Type
+			(
+				type = picklist
+				displayname = "Work Order Type"
+				maxchar = 100
+				values = {"WO - Service Activation","WO - Service Change Request","WO - Service Termination"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Ticket_ID
+			(
+    			type = text
+				displayname = "Ticket ID"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Ticket_Number
+			(
+    			type = text
+				displayname = "Ticket Number"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Create_Ticket
+			(
+    			type = checkbox
+				displayname = "Create Ticket?"
+				initial value = false
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Subscription_Line_Items
+			(
+				type = grid
+				displayname = "Subscription Line Items"
+				Item
+				(
+					type = picklist	
+					values  = Transaction_Type[Item_Category == "Sales Item"].ID
+    				displayformat = [Item_Name]
+					sortorder = ascending
+					width = medium
+				)
+				Item_Code
+				(
+    				type = text
+					displayname = "Item Code"
+					width = medium
+				)
+				Description
+				(
+    				type = textarea
+					height = 100px
+					width = medium
+				)
+				Business_Segment
+				(
+					type = picklist	
+					displayname = "Business Segment"
+					values  = Business_Segment.ID
+    				displayformat = [Business]
+					sortorder = ascending
+					width = medium
+				)
+				Business_Unit
+				(
+					type = picklist	
+					displayname = "Business Unit"
+					values  = Business_Unit.ID
+    				displayformat = [Business_Unit]
+					sortorder = ascending
+					width = medium
+				)
+				Circuit_ID_Type
+				(
+					type = picklist	
+					displayname = "Circuit ID Type"
+					values  = Circuit_ID_Type.ID
+    				displayformat = [Circuit_ID_Type]
+					sortorder = ascending
+					width = 200px
+				)
+				Circuit_ID_Pseudo
+				(
+    				type = text
+					displayname = "Circuit ID"
+    				description
+    				[
+    					type = tooltip
+    				 	message = "EG: BBXXX, GBBXXX, FRXXX, IPTXXX"
+    				]
+					width = 200px
+				)
+				Work_Order
+				(
+    				type = upload file
+					displayname = "Work Order"
+				browse = local_drive
+    				description
+    				[
+    					type = tooltip
+    				 	message = "Upload Work Order And Supporting Docs"
+    				]
+					width = 200px
+				)
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			TAC_ATA_CONVERTER
+			(
+				type = section
+				displayname = "TAC - ATA CONVERTER"
+				visibility = true
+	 			row = 3
+	 			column = 0   
+				width = medium
+			)
+			Brand_TAC
+			(
+				type = picklist
+				displayname = "Brand"
+				maxchar = 100
+				values = {"Cisco"}
+				others option = true
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Model_TAC
+			(
+				type = picklist
+				displayname = "Model"
+				maxchar = 100
+				values = {"Cisco"}
+				others option = true
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Serial_Number_TAC
+			(
+    			type = text
+				displayname = "Serial Number"
+				maxchar = 100
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			MAC_Address_TAC
+			(
+    			type = text
+				displayname = "MAC Address"
+				maxchar = 100
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Extension_No_TAC
+			(
+    			type = text
+				displayname = "Extension No."
+				maxchar = 100
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			DID_No_TAC
+			(
+    			type = text
+				displayname = "DID No."
+				maxchar = 100
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			TIP_IP_PHONE
+			(
+				type = section
+				displayname = "TIP - IP PHONE"
+				visibility = true
+	 			row = 4
+	 			column = 0   
+				width = medium
+			)
+			Brand_TIP
+			(
+				type = picklist
+				displayname = "Brand"
+				maxchar = 100
+				values = {"Cisco"}
+				others option = true
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+			Model_TIP
+			(
+				type = picklist
+				displayname = "Model"
+				maxchar = 100
+				values = {"Cisco"}
+				others option = true
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+			Serial_Number_TIP
+			(
+    			type = text
+				displayname = "Serial Number"
+				maxchar = 100
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+			MAC_Address_TIP
+			(
+    			type = text
+				displayname = "MAC Address"
+				maxchar = 100
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+			Extension_No_TIP
+			(
+    			type = text
+				displayname = "Extension No."
+				maxchar = 100
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+			DID_No_TIP
+			(
+    			type = text
+				displayname = "DID No."
+				maxchar = 100
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+			TAS_ACCESS_SWITCH
+			(
+				type = section
+				displayname = "TAS - ACCESS SWITCH"
+				visibility = true
+	 			row = 5
+	 			column = 0   
+				width = medium
+			)
+			Type_TAS
+			(
+				type = picklist
+				displayname = "Type"
+				maxchar = 100
+				values = {"POE","Non-POE"}
+	 			row = 5
+	 			column = 1   
+				width = medium
+			)
+			Brand_TAS
+			(
+				type = picklist
+				displayname = "Brand"
+				maxchar = 100
+				values = {"Cisco","Mikrotik","Huawei","Trendnet","Edgecore","Ubiquiti"}
+				others option = true
+	 			row = 5
+	 			column = 1   
+				width = medium
+			)
+			Model_No_TAS
+			(
+    			type = text
+				displayname = "Model No."
+				maxchar = 100
+	 			row = 5
+	 			column = 1   
+				width = medium
+			)
+			Serial_Number_TAS
+			(
+    			type = text
+				displayname = "Serial Number"
+				maxchar = 100
+	 			row = 5
+	 			column = 1   
+				width = medium
+			)
+			Management_IP_Address_TAS
+			(
+    			type = text
+				displayname = "Management IP Address"
+				maxchar = 100
+	 			row = 5
+	 			column = 1   
+				width = medium
+			)
+			Hostname_TAS
+			(
+    			type = text
+				displayname = "Hostname"
+				maxchar = 100
+	 			row = 5
+	 			column = 1   
+				width = medium
+			)
+			TBI_BROADBAND_INTERNET_ACCESS
+			(
+				type = section
+				displayname = "TBI - BROADBAND INTERNET ACCESS"
+				visibility = true
+	 			row = 6
+	 			column = 0   
+				width = medium
+			)
+			Bandwidth_Speed_TBI
+			(
+    			type = text
+				displayname = "Bandwidth Speed"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			Interface_Type_TBI
+			(
+				type = picklist
+				displayname = "Interface Type"
+				maxchar = 100
+				values = {"1G","10G","40G","100G"}
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			Network_ID_TBI
+			(
+    			type = text
+				displayname = "Network ID"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			Gateway_IP_TBI
+			(
+    			type = text
+				displayname = "Gateway IP"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			Customer_IP_TBI
+			(
+    			type = text
+				displayname = "Customer_IP"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			Broadcast_IP_TBI
+			(
+    			type = text
+				displayname = "Broadcast IP"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			Subnet_Mask_TBI
+			(
+				type = picklist
+				displayname = "Subnet Mask"
+				maxchar = 100
+				values = {"255.255.255.255/32","255.255.255.254/31","255.255.255.252/30","255.255.255.248/29","255.255.255.240/28","255.255.255.224/27","255.255.255.192/26","255.255.255.128/25","255.255.255.0/24","255.255.254.0/23","255.255.252.0/22","255.255.248.0/21","255.255.240.0/20","255.255.224.0/19","255.255.192.0/18","255.255.128.0/17","255.255.0.0/16","255.254.0.0/15","255.252.0.0/14","255.248.0.0/13","255.240.0.0/12","255.224.0.0/11","255.192.0.0/10","255.128.0.0/9","255.0.0.0/8"}
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			VLAN_ID_TBI
+			(
+    			type = text
+				displayname = "VLAN ID"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			CPE_Brand_TBI
+			(
+				type = picklist
+				displayname = "CPE Brand"
+				maxchar = 100
+				values = {"Cisco","Mikrotik","Huawei","Trendnet","Edgecore","Ubiquiti"}
+				others option = true
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			CPE_Model_No_TBI
+			(
+    			type = text
+				displayname = "CPE Model No."
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			CPE_Serial_No_TBI
+			(
+    			type = text
+				displayname = "CPE Serial No."
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			CPE_Mgmt_IP_TBI
+			(
+    			type = text
+				displayname = "CPE Mgmt IP"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			CPE_Hostname_TBI
+			(
+    			type = text
+				displayname = "CPE Hostname"
+				maxchar = 100
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			Remark_TBI
+			(
+    			type = textarea
+				displayname = "Remark"
+				height = 100px
+	 			row = 6
+	 			column = 1   
+				width = medium
+			)
+			TDI_DEDICATED_INTERNET_ACCESS
+			(
+				type = section
+				displayname = "TDI - DEDICATED INTERNET ACCESS"
+				visibility = true
+	 			row = 7
+	 			column = 0   
+				width = medium
+			)
+			Bandwidth_Speed_TDI
+			(
+    			type = text
+				displayname = "Bandwidth Speed"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			Interface_Type_TDI
+			(
+				type = picklist
+				displayname = "Interface Type"
+				maxchar = 100
+				values = {"1G","10G","40G","100G"}
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			Network_ID_TDI
+			(
+    			type = text
+				displayname = "Network ID"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			Gateway_IP_TDI
+			(
+    			type = text
+				displayname = "Gateway IP"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			Customer_IP_TDI
+			(
+    			type = text
+				displayname = "Customer IP"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			Broadcast_IP_TDI
+			(
+    			type = text
+				displayname = "Broadcast IP"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			Subnet_Mask_TDI
+			(
+				type = picklist
+				displayname = "Subnet Mask"
+				maxchar = 100
+				values = {"255.255.255.255/32","255.255.255.254/31","255.255.255.252/30","255.255.255.248/29","255.255.255.240/28","255.255.255.224/27","255.255.255.192/26","255.255.255.128/25","255.255.255.0/24","255.255.254.0/23","255.255.252.0/22","255.255.248.0/21","255.255.240.0/20","255.255.224.0/19","255.255.192.0/18","255.255.128.0/17","255.255.0.0/16","255.254.0.0/15","255.252.0.0/14","255.248.0.0/13","255.240.0.0/12","255.224.0.0/11","255.192.0.0/10","255.128.0.0/9","255.0.0.0/8"}
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			VLAN_ID_TDI
+			(
+    			type = text
+				displayname = "VLAN ID"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			CPE_Brand_TDI
+			(
+				type = picklist
+				displayname = "CPE Brand"
+				maxchar = 100
+				values = {"Cisco","Mikrotik","Huawei","Trendnet","Edgecore","Ubiquiti"}
+				others option = true
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			CPE_Model_No_TDI
+			(
+    			type = text
+				displayname = "CPE Model No."
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			CPE_Serial_No_TDI
+			(
+    			type = text
+				displayname = "CPE Serial No."
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			CPE_Mgmt_IP_TDI
+			(
+    			type = text
+				displayname = "CPE Mgmt IP"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			CPE_Hostname_TDI
+			(
+    			type = text
+				displayname = "CPE Hostname"
+				maxchar = 100
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			Remark_TDI
+			(
+    			type = textarea
+				displayname = "Remark"
+				height = 100px
+	 			row = 7
+	 			column = 1   
+				width = medium
+			)
+			TCT_CABLE_TRAY
+			(
+				type = section
+				displayname = "TCT - CABLE TRAY"
+				visibility = true
+	 			row = 8
+	 			column = 0   
+				width = medium
+			)
+			No_of_Cores_TCT
+			(
+				type = number
+				displayname = "No. of Cores"
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			Source_Site_A_Location_TCT
+			(
+    			type = text
+				displayname = "Source(Site A) Location"
+				maxchar = 100
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			Source_Panel_Name_TCT
+			(
+    			type = text
+				displayname = "Source (Panel Name)"
+				maxchar = 100
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			Source_Port_No_X_Y_TCT
+			(
+    			type = text
+				displayname = "Source (Port No. ) - X,Y"
+				maxchar = 100
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			Destination_Site_B_Location_TCT
+			(
+    			type = text
+				displayname = "Destination (Site B) Location"
+				maxchar = 100
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			Destination_Panel_Name_TCT
+			(
+    			type = text
+				displayname = "Destination (Panel Name)"
+				maxchar = 100
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			Destination_Port_No_X_Y_TCT
+			(
+    			type = text
+				displayname = "Destination (Port No. ) - X,Y"
+				maxchar = 100
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			Site_ID_TCT
+			(
+    			type = text
+				displayname = "Site ID"
+				maxchar = 100
+	 			row = 8
+	 			column = 1   
+				width = medium
+			)
+			TDC_DATA_CENTRE
+			(
+				type = section
+				displayname = "TDC - DATA CENTRE"
+				visibility = true
+	 			row = 9
+	 			column = 0   
+				width = medium
+			)
+			Rack_No_TDC
+			(
+    			type = text
+				displayname = "Rack No."
+				maxchar = 100
+	 			row = 9
+	 			column = 1   
+				width = medium
+			)
+			Rack_U_size_TDC
+			(
+				type = number
+				displayname = "Rack (U) size"
+	 			row = 9
+	 			column = 1   
+				width = medium
+			)
+			Data_Centre_Address_TDC
+			(
+    			type = text
+				displayname = "Data Centre Address"
+				maxchar = 100
+	 			row = 9
+	 			column = 1   
+				width = medium
+			)
+			TRS_RACK_SPACE
+			(
+				type = section
+				displayname = "TRS - RACK SPACE"
+				visibility = true
+	 			row = 10
+	 			column = 0   
+				width = medium
+			)
+			Rack_No_TRS
+			(
+    			type = text
+				displayname = "Rack No."
+				maxchar = 100
+	 			row = 10
+	 			column = 1   
+				width = medium
+			)
+			Rack_U_size_TRS
+			(
+				type = number
+				displayname = "Rack (U) size"
+	 			row = 10
+	 			column = 1   
+				width = medium
+			)
+			Data_Centre_Address_TRS
+			(
+    			type = text
+				displayname = "Data Centre Address"
+				maxchar = 100
+	 			row = 10
+	 			column = 1   
+				width = medium
+			)
+			TGB_GPON_BROADBAND
+			(
+				type = section
+				displayname = "TGB - GPON BROADBAND"
+				visibility = true
+	 			row = 11
+	 			column = 0   
+				width = medium
+			)
+			Bandwidth_Speed_TGB
+			(
+    			type = text
+				displayname = "Bandwidth Speed"
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			Network_ID_TGB
+			(
+    			type = text
+				displayname = "Network ID"
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			Gateway_IP_TGB
+			(
+    			type = text
+				displayname = "Gateway IP"
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			Customer_IP_TGB
+			(
+    			type = text
+				displayname = "Customer IP"
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			Broadcast_IP_TGB
+			(
+    			type = text
+				displayname = "Broadcast IP"
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			Subnet_Mask_TGB
+			(
+				type = picklist
+				displayname = "Subnet Mask"
+				maxchar = 100
+				values = {"255.255.255.255/32","255.255.255.254/31","255.255.255.252/30","255.255.255.248/29","255.255.255.240/28","255.255.255.224/27","255.255.255.192/26","255.255.255.128/25","255.255.255.0/24","255.255.254.0/23","255.255.252.0/22","255.255.248.0/21","255.255.240.0/20","255.255.224.0/19","255.255.192.0/18","255.255.128.0/17","255.255.0.0/16","255.254.0.0/15","255.252.0.0/14","255.248.0.0/13","255.240.0.0/12","255.224.0.0/11","255.192.0.0/10","255.128.0.0/9","255.0.0.0/8"}
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			VLAN_ID_TGB
+			(
+    			type = text
+				displayname = "VLAN ID"
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			ONU_Brand_TGB
+			(
+				type = picklist
+				displayname = "ONU Brand"
+				maxchar = 100
+				values = {"Huawei"}
+				others option = true
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			ONU_Model_No_TGB
+			(
+				type = picklist
+				displayname = "ONU Model No."
+				maxchar = 100
+				values = {"ECHOLIFE HG8504M","ECHOLIFE HG8240"}
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			ONU_Serial_No_TGB
+			(
+    			type = text
+				displayname = "ONU Serial No."
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			ONU_ID_No_TGB
+			(
+    			type = text
+				displayname = "ONU ID No."
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			OLT_Hostname_TGB
+			(
+    			type = text
+				displayname = "OLT Hostname"
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			OLT_Serial_No_TGB
+			(
+    			type = text
+				displayname = "OLT Serial No."
+				maxchar = 100
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			OLT_Port_No_TGB
+			(
+    			type = text
+				displayname = "OLT Port No."
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
+			THC_HALF_CIRCUIT
+			(
+				type = section
+				displayname = "THC - HALF CIRCUIT"
+				visibility = true
+	 			row = 12
+	 			column = 0   
+				width = medium
+			)
+			No_of_Cores_THC
+			(
+				type = number
+				displayname = "No. of Cores"
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Source_Site_A_Location_THC
+			(
+    			type = text
+				displayname = "Source(Site A) Location"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Source_Panel_Name_THC
+			(
+    			type = text
+				displayname = "Source (Panel Name)"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Source_Port_No_X_Y_THC
+			(
+    			type = text
+				displayname = "Source (Port No. ) - X,Y"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Destination_Site_B_Location_THC
+			(
+    			type = text
+				displayname = "Destination (Site B) Location"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Destination_Panel_Name_THC
+			(
+    			type = text
+				displayname = "Destination (Panel Name)"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Destination_Port_No_X_Y_THC
+			(
+    			type = text
+				displayname = "Destination (Port No. ) - X,Y"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Site_ID_THC
+			(
+    			type = text
+				displayname = "Site ID"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Bandwidth_Speed_THC
+			(
+    			type = text
+				displayname = "Bandwidth Speed"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Interface_Type_THC
+			(
+				type = picklist
+				displayname = "Interface Type"
+				maxchar = 100
+				values = {"1G","10G","40G","100G"}
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			SVLAN_ID_THC
+			(
+    			type = text
+				displayname = "SVLAN ID"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			CVLAN_ID_THC
+			(
+    			type = text
+				displayname = "CVLAN ID"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			CPE_Brand_THC
+			(
+				type = picklist
+				displayname = "CPE Brand"
+				maxchar = 100
+				values = {"Cisco","Mikrotik","Huawei","Trendnet","Edgecore","Ubiquiti"}
+				others option = true
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			CPE_Model_No_THC
+			(
+    			type = text
+				displayname = "CPE Model No."
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			CPE_Serial_No_THC
+			(
+    			type = text
+				displayname = "CPE Serial No."
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			CPE_Mgmt_IP_THC
+			(
+    			type = text
+				displayname = "CPE Mgmt IP"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			CPE_Hostname_THC
+			(
+    			type = text
+				displayname = "CPE Hostname"
+				maxchar = 100
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			Remark_THC
+			(
+    			type = textarea
+				displayname = "Remark"
+				height = 100px
+	 			row = 12
+	 			column = 1   
+				width = medium
+			)
+			TWF_WIFI
+			(
+				type = section
+				displayname = "TWF - WIFI"
+				visibility = true
+	 			row = 13
+	 			column = 0   
+				width = medium
+			)
+			Controller_Band_TWF
+			(
+				type = picklist
+				displayname = "Controller Band"
+				maxchar = 100
+				values = {"Ubiquiti","Tplink","Cisco"}
+				others option = true
+	 			row = 13
+	 			column = 1   
+				width = medium
+			)
+			Controller_Model_No_TWF
+			(
+    			type = text
+				displayname = "Controller Model No"
+				maxchar = 100
+	 			row = 13
+	 			column = 1   
+				width = medium
+			)
+			AP_Brand_TWF
+			(
+				type = picklist
+				displayname = "AP Brand"
+				maxchar = 100
+				values = {"Ubiquiti","Tplink","Cisco"}
+				others option = true
+	 			row = 13
+	 			column = 1   
+				width = medium
+			)
+			AP_Model_No_TWF
+			(
+    			type = text
+				displayname = "AP Model No"
+				maxchar = 100
+	 			row = 13
+	 			column = 1   
+				width = medium
+			)
+			AP_Hostname_TWF
+			(
+    			type = text
+				displayname = "AP Hostname"
+				maxchar = 100
+	 			row = 13
+	 			column = 1   
+				width = medium
+			)
+			AP_Serial_No
+			(
+    			type = text
+				displayname = "AP Serial No."
+				maxchar = 100
+	 			row = 13
+	 			column = 1   
+				width = medium
+			)
+			TDF_DEFAULT
+			(
+				type = section
+				displayname = "TDF - DEFAULT"
+				visibility = true
+	 			row = 14
+	 			column = 0   
+				width = medium
+			)
+			IBC_Site_ID_TDF
+			(
+    			type = text
+				displayname = "IBC Site ID"
+				maxchar = 100
+	 			row = 14
+	 			column = 1   
+				width = medium
+			)
+			Operator_Name_TDF
+			(
+    			type = text
+				displayname = "Operator Name"
+				maxchar = 100
+	 			row = 14
+	 			column = 1   
+				width = medium
+			)
+			IBC_Location_Address_TDF
+			(
+    			type = text
+				displayname = "IBC Location/Address"
+	 			row = 14
+	 			column = 1   
+				width = medium
+			)
+			Remark_TDF
+			(
+    			type = text
+				displayname = "Remark"
+	 			row = 14
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

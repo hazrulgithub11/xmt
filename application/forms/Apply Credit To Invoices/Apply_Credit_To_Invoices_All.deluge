@@ -1,0 +1,62 @@
+list Apply_Credit_To_Invoices_All
+{
+	displayName = "Apply Credit To Invoices"
+	show all rows from Apply_Credit_To_Invoices    
+	(
+		Unpaid_Invoices.Invoice as "Unpaid Invoices"
+		Credit_Note as "Credit Note"
+		Credits_Remaining as "Credits Remaining"
+		Credit_Note_Selection_Trigger
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Unpaid_Invoices.Invoice as "Unpaid Invoices"
+					Credit_Note as "Credit Note"
+					Credits_Remaining as "Credits Remaining"
+					Credit_Note_Selection_Trigger
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Unpaid_Invoices.Invoice as "Unpaid Invoices"
+					Credit_Note as "Credit Note"
+					Credits_Remaining as "Credits Remaining"
+					Credit_Note_Selection_Trigger
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+    	)
+	)
+}

@@ -1,0 +1,28 @@
+Handle_Business_Segment_M3 as "Handle Business Segment Monthly Rental"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on user input of Monthly_Rental.Business_Segment_Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(row.Business_Segment_Monthly_Rental != null)
+				{
+					getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Monthly_Rental].ID.getAll();
+					row.Business_Unit_Monthly_Rental:ui.add(getBusinessUnitIDs);
+				}
+				else
+				{
+					clear row.Business_Unit_Monthly_Rental;
+				}
+			)
+		}
+	}
+
+}
+

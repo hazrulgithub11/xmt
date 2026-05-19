@@ -1,0 +1,24 @@
+Delete_Sub_Line_Item_and_ as "Delete Sub Line Item and Circuit ID Record"
+{
+	type =  form
+	form = Subscription
+
+	record event = on edit
+
+	on delete row of Subcription_Line_Items
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					//delete from Subscription_Line_Item[ID == row.ID];
+				// if(row.Circuit_ID != null)
+				// {
+				// 	delete from Circuit_ID[ID == row.Circuit_ID];
+				// }
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,12 @@
+// Record action: Record Payment Invoice
+// Link name: Record_Payment_Invoice
+// Form: Invoice
+
+paymentType = "Payment_Type=Invoice/Debit+Note";
+				customerName = "&Customer_Name=" + input.Customer;
+				customerCode = "&Customer_Code=" + input.Customer_Code;
+				singlePaymentRecord = "&Single_Record_Payment=true";
+				paymentTypeSingleRecord = "&Payment_Type_Single_Record=Invoice";
+				invoice = "&Invoice=" + input.ID;
+				url = "#Form:Payment_Received?" + paymentType + customerName + customerCode + singlePaymentRecord + paymentTypeSingleRecord + invoice;
+				openUrl(url,"popup window","height=100%,width=100%");

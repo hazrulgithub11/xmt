@@ -1,0 +1,5 @@
+// Record action: Bulk Approve Invoices
+// Link name: Bulk_Approve_Invoices
+// Form: Invoice
+
+thisapp.blueprint.executeTransition("Invoice","Invoice_Blueprint","Approve",input.ID);

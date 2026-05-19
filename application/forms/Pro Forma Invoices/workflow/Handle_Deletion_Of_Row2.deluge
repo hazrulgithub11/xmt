@@ -1,0 +1,20 @@
+Handle_Deletion_Of_Row2 as "Handle Deletion Of Row"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					delete from Pro_Forma_Invoices_Line_Item[Pro_Forma_Invoice == null];
+			)
+		}
+	}
+
+}
+

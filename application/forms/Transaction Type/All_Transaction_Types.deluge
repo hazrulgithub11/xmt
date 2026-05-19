@@ -1,0 +1,99 @@
+list All_Transaction_Types
+{
+	displayName = "Transaction Types"
+	show all rows from Transaction_Type    
+	(
+		Item_Name as "Item Name"
+		Unit_Price as "Unit Price"
+		Tax
+		Item_Code as "Item Code"
+		Item_Category as "Item Category"
+		Circuit_ID_Type as "Circuit ID Type"
+		Description
+		Charges_Type as "Charges Type"
+		Tax.Tax_Type as "Tax Type"
+		Classification_Codes as "Classification Codes"
+		Circuit_ID as "Circuit ID"
+	)
+	group by
+	(
+		Item_Category ascending
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Item_Category as "Item Category"
+					Item_Name as "Item Name"
+					Unit_Price as "Unit Price"
+					Tax
+					Tax.Tax_Type as "Tax Type"
+					Charges_Type as "Charges Type"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Item_Name as "Item Name"
+					Unit_Price as "Unit Price"
+					Tax
+					Description
+					Item_Code as "Item Code"
+					Item_Category as "Item Category"
+					Charges_Type as "Charges Type"
+					Circuit_ID_Type as "Circuit ID Type"
+					Classification_Codes as "Classification Codes"
+					Circuit_ID as "Circuit ID"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

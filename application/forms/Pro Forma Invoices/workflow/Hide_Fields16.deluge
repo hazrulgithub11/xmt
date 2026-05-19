@@ -1,0 +1,17 @@
+Hide_Fields16 as "Hide Fields"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions 
+		{
+			hide System_Section;
+		}
+	}
+
+}
+

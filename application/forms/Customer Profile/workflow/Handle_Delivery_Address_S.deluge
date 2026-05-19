@@ -1,0 +1,39 @@
+Handle_Delivery_Address_S as "Handle Delivery Address Same as Business Address"
+{
+	type =  form
+	form = Customer_Profile
+
+	record event = on add or edit
+
+	on user input of Delivery_Address_same_as_Business_Address
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Delivery_Address_same_as_Business_Address == true)
+				{
+					input.Delivery_Street = input.Business_Street;
+					input.Delivery_Postcode = input.Postcode;
+					input.Delivery_City = input.City;
+					input.Delivery_State = input.State;
+					input.Delivery_Country = input.Country;
+					input.Delivery_Email_Address = input.Email_Address;
+					input.Delivery_Phone_Number = input.Phone_Number;
+				}
+				else
+				{
+					input.Delivery_Street = "";
+					input.Delivery_Postcode = "";
+					input.Delivery_City = "";
+					input.Delivery_State = null;
+					input.Delivery_Country = null;
+					input.Delivery_Email_Address = "";
+					input.Delivery_Phone_Number = "";
+				}
+			)
+		}
+	}
+
+}
+

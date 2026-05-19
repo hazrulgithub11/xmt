@@ -1,0 +1,284 @@
+form Customer_Profile
+{
+	displayname = "Customer Profile"
+	success message = "Company Profile Added Successfully"
+	Section
+	(
+		type = section
+	 	row = 1
+	 	column = 0   
+		width = medium
+	)
+	must have Customer_Name
+	(
+    	type = text
+		displayname = "Customer Name"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Registration_Number
+	(
+    	type = text
+		displayname = "Customer Registration Number"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Registration_Number_Scheme
+	(
+		type = picklist
+		displayname = "Customer Registration Number Scheme"
+		maxchar = 100
+		values = {"NRIC","BRN","PASSPORT","ARMY"}
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_TIN
+	(
+    	type = text
+		displayname = "Customer TIN"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_SST
+	(
+    	type = text
+		displayname = "Customer SST"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Business_Street
+	(
+    	type = textarea
+		displayname = "Business Address"
+		height = 100px
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have City
+	(
+    	type = text
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Postcode
+	(
+    	type = text
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Country
+	(
+		type = picklist
+		maxchar = 100
+		values = {"ARUBA","AFGHANISTAN","ANGOLA","ANGUILLA","ALAND ISLANDS","ALBANIA","ANDORA","NETHERLANDS ANTILLE","UNITED ARAB EMIRATES","ARGENTINA","ARMENIA","AMERICAN SAMOA","ANTARCTICA","FRENCH SOUTHERN TERRITORIES","ANTIGUA AND BARBUDA","AUSTRALIA","AUSTRIA","AZERBAIDJAN","BURUNDI","BELGIUM","BENIN","BONAIRE, SINT EUSTATIUS AND SABA","BURKINA FASO","BANGLADESH","BULGARIA","BAHRAIN","BAHAMAS","BOSNIA AND HERZEGOVINA","SAINT BARTHELEMY","BELARUS","BELIZE","BERMUDA","BOLIVIA","BRAZIL","BARBADOS","BRUNEI DARUSSALAM","BHUTAN","BOUVET ISLAND","BOTSWANA","CENTRAL AFRICAN REPUBLIC","CANADA","COCOS ISLAND","SWITZERLAND","CHILE","CHINA","COTE D'IVOIRE","CAMEROON","CONGO, THE DEMOCRATIC REPUBLIC","CONGO","COOK ISLANDS","COLOMBIA","COMOROS","CABO VERDE","COSTA RICA","CRIMEA","CUBA","CURACAO","CHRISTMAS ISLANDS","CAYMAN ISLANDS","CYPRUS","CZECH REPUBLIC","GERMANY","DJIBOUTI","DOMINICA","DENMARK","DOMINICAN REPUBLIC","ALGERIA","ECUADOR","EGYPT","ERITREA","WESTERN SAHARA","SPAIN","ESTONIA","ETHIOPIA","FINLAND","FIJI","FALKLAND ISLANDS (MALVINAS)","FRANCE","FAEROE ISLANDS","MICRONESIA, FEDERATED STATES OF","GABON","UNITED KINGDOM","GEORGIA","GUERNSEY","GHANA","GIBRALTAR","GUINEA","GUADELOUPE","GAMBIA","GUINEA-BISSAU","EQUATORIAL GUINEA","GREECE","GRENADA","GREENLAND","GUATEMALA","FRENCH GUIANA","GUAM","GUYANA","HONG KONG","HEARD AND MCDONALD ISLANDS","HONDURAS","CROATIA","HAITI","HUNGARY","INDONESIA","ISLE OF MAN","INDIA","BRITISH INDIAN OCEAN TERRITORY","IRELAND","IRAN","IRAQ","ICELAND","ISRAEL","ITALY","JAMAICA","JERSEY (CHANNEL ISLANDS)","JORDAN","JAPAN","KAZAKHSTAN","KENYA","KYRGYZSTAN","CAMBODIA","KIRIBATI","ST.KITTS AND NEVIS","THE REPUBLIC OF KOREA","KUWAIT","LAOS","LEBANON","LIBERIA","LIBYAN ARAB JAMAHIRIYA","SAINT LUCIA","LIECHTENSTEIN","SRI LANKA","LESOTHO","LITHUANIA","LUXEMBOURG","LATVIA","MACAO","SAINT MARTIN (FRENCH PART)","MOROCCO","MONACO","MOLDOVA, REPUBLIC OF","MADAGASCAR","MALDIVES","MEXICO","MARSHALL ISLANDS","MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF","MALI","MALTA","MYANMAR","MONTENEGRO","MONGOLIA","NORTHERN MARIANA ISLANDS","MOZAMBIQUE","MAURITANIA","MONTSERRAT","MARTINIQUE","MAURITIUS","MALAWI","MALAYSIA","MAYOTTE","NAMIBIA","NEW CALEDONIA","NIGER","NORFOLK ISLAND","NIGERIA","NICARAGUA","NIUE","NETHERLANDS","NORWAY","NEPAL","NAURU","NEW ZEALAND","OMAN","PAKISTAN","PANAMA","PITCAIRN","PERU","PHILIPPINES","PALAU","PAPUA NEW GUINEA","POLAND","PUERTO RICO","DEMOC.PEOPLES REP.OF KOREA","PORTUGAL","PARAGUAY","PALESTINIAN TERRITORY, OCCUPIED","FRENCH POLYNESIA","QATAR","REUNION","ROMANIA","RUSSIAN FEDERATION (USSR)","RWANDA","SAUDI ARABIA","SCOTLAND","SUDAN","SENEGAL","SINGAPORE","SOUTH GEORGIA AND THE SOUTH SANDWICH ISLAND","ST. HELENA","SVALBARD AND JAN MAYEN ISLANDS","SOLOMON ISLANDS","SIERRA LEONE","EL SALVADOR","SAN MARINO","SOMALIA","ST. PIERRE AND MIQUELON","SERBIA & MONTENEGRO","SOUTH SUDAN","SAO TOME AND PRINCIPE","SURINAME","SLOVAK REPUBLIC","SLOVENIA","SWEDEN","ESWATINI, KINGDOM OF (SWAZILAND)","SINT MAARTEN","SEYCHELLES","SYRIAN ARAB REPUBLIC","TURKS AND CAICOS ISLANDS","CHAD","TOGO","THAILAND","TAJIKISTAN","TOKELAU","TURKMENISTAN","TIMOR-LESTE","TONGA","TRINIDAD AND TOBAGO","TUNISIA","TURKIYE","TUVALU","TAIWAN","TANZANIA UNITED REPUBLIC","UGANDA","UKRAINE","UNITED STATES MINOR OUTLYING ISLANDS","URUGUAY","UNITED STATES OF AMERICA","UZBEKISTAN","VATICAN CITY STATE (HOLY SEE)","SAINT VINCENT AND GRENADINES","VENEZUELA","VIRGIN ISLANDS(BRITISH)","VIRGIN ISLANDS(US)","VIETNAM","VANUATU","WALLIS AND FUTUNA ISLANDS","SAMOA","KOSOVO","YEMEN","SOUTH AFRICA","ZAMBIA","ZIMBABWE"}
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have State
+	(
+		type = picklist
+		maxchar = 100
+		values = {"Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Pulau Pinang","Perak","Perlis","Selangor","Terengganu","Sabah","Sarawak","Wilayah Persekutuan Kuala Lumpur","Wilayah Persekutuan Labuan","Wilayah Persekutuan Putrajaya","Not Applicable"}
+		others option = true
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Email_Address
+	(
+    	type = email
+		displayname = "Email Address"
+		maxchar = 80
+	 	row = 1
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Phone_Number
+	(
+    	type = phonenumber
+		displayname = "Phone Number"
+    	defaultcountry="my"
+	 	row = 1
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Currency
+	(
+		type = picklist
+		maxchar = 100
+		values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Business_Segment
+	(
+		type = list	
+		displayname = "Business Segment"
+		values  = Business_Segment.ID
+    	displayformat = [Business]
+		allow new entries
+		[
+			displayname = "Add New"
+		]
+		sortorder = ascending
+		height = 60px
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Status
+	(
+		type = picklist
+		maxchar = 100
+		values = {"Active","Inactive","Terminated"}
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Determine whether customers are active or terminated / stop billing customers."
+    	]
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Attachment
+	(
+    	type = upload file
+				browse = local_drive
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Upload Relevant Docs (Application Form/SCR Form/PO/Agreement)"
+    	]
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Credit_Available
+	(
+		type = decimal
+		displayname = "Credit Available"
+		format = commadotwestern
+		initial value = 0
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Delivery_Address_same_as_Business_Address
+	(
+    	type = checkbox
+		displayname = "Delivery Address same as Business Address"
+		initial value = false
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Delivery_Street
+	(
+    	type = textarea
+		displayname = "Delivery Street"
+		height = 100px
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Delivery_City
+	(
+    	type = text
+		displayname = "Delivery City"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Delivery_Postcode
+	(
+    	type = text
+		displayname = "Delivery Postcode"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Delivery_Country
+	(
+		type = picklist
+		displayname = "Delivery Country"
+		maxchar = 100
+		values = {"ARUBA","AFGHANISTAN","ANGOLA","ANGUILLA","ALAND ISLANDS","ALBANIA","ANDORA","NETHERLANDS ANTILLE","UNITED ARAB EMIRATES","ARGENTINA","ARMENIA","AMERICAN SAMOA","ANTARCTICA","FRENCH SOUTHERN TERRITORIES","ANTIGUA AND BARBUDA","AUSTRALIA","AUSTRIA","AZERBAIDJAN","BURUNDI","BELGIUM","BENIN","BONAIRE, SINT EUSTATIUS AND SABA","BURKINA FASO","BANGLADESH","BULGARIA","BAHRAIN","BAHAMAS","BOSNIA AND HERZEGOVINA","SAINT BARTHELEMY","BELARUS","BELIZE","BERMUDA","BOLIVIA","BRAZIL","BARBADOS","BRUNEI DARUSSALAM","BHUTAN","BOUVET ISLAND","BOTSWANA","CENTRAL AFRICAN REPUBLIC","CANADA","COCOS ISLAND","SWITZERLAND","CHILE","CHINA","COTE D'IVOIRE","CAMEROON","CONGO, THE DEMOCRATIC REPUBLIC","CONGO","COOK ISLANDS","COLOMBIA","COMOROS","CABO VERDE","COSTA RICA","CRIMEA","CUBA","CURACAO","CHRISTMAS ISLANDS","CAYMAN ISLANDS","CYPRUS","CZECH REPUBLIC","GERMANY","DJIBOUTI","DOMINICA","DENMARK","DOMINICAN REPUBLIC","ALGERIA","ECUADOR","EGYPT","ERITREA","WESTERN SAHARA","SPAIN","ESTONIA","ETHIOPIA","FINLAND","FIJI","FALKLAND ISLANDS (MALVINAS)","FRANCE","FAEROE ISLANDS","MICRONESIA, FEDERATED STATES OF","GABON","UNITED KINGDOM","GEORGIA","GUERNSEY","GHANA","GIBRALTAR","GUINEA","GUADELOUPE","GAMBIA","GUINEA-BISSAU","EQUATORIAL GUINEA","GREECE","GRENADA","GREENLAND","GUATEMALA","FRENCH GUIANA","GUAM","GUYANA","HONG KONG","HEARD AND MCDONALD ISLANDS","HONDURAS","CROATIA","HAITI","HUNGARY","INDONESIA","ISLE OF MAN","INDIA","BRITISH INDIAN OCEAN TERRITORY","IRELAND","IRAN","IRAQ","ICELAND","ISRAEL","ITALY","JAMAICA","JERSEY (CHANNEL ISLANDS)","JORDAN","JAPAN","KAZAKHSTAN","KENYA","KYRGYZSTAN","CAMBODIA","KIRIBATI","ST.KITTS AND NEVIS","THE REPUBLIC OF KOREA","KUWAIT","LAOS","LEBANON","LIBERIA","LIBYAN ARAB JAMAHIRIYA","SAINT LUCIA","LIECHTENSTEIN","SRI LANKA","LESOTHO","LITHUANIA","LUXEMBOURG","LATVIA","MACAO","SAINT MARTIN (FRENCH PART)","MOROCCO","MONACO","MOLDOVA, REPUBLIC OF","MADAGASCAR","MALDIVES","MEXICO","MARSHALL ISLANDS","MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF","MALI","MALTA","MYANMAR","MONTENEGRO","MONGOLIA","NORTHERN MARIANA ISLANDS","MOZAMBIQUE","MAURITANIA","MONTSERRAT","MARTINIQUE","MAURITIUS","MALAWI","MALAYSIA","MAYOTTE","NAMIBIA","NEW CALEDONIA","NIGER","NORFOLK ISLAND","NIGERIA","NICARAGUA","NIUE","NETHERLANDS","NORWAY","NEPAL","NAURU","NEW ZEALAND","OMAN","PAKISTAN","PANAMA","PITCAIRN","PERU","PHILIPPINES","PALAU","PAPUA NEW GUINEA","POLAND","PUERTO RICO","DEMOC.PEOPLES REP.OF KOREA","PORTUGAL","PARAGUAY","PALESTINIAN TERRITORY, OCCUPIED","FRENCH POLYNESIA","QATAR","REUNION","ROMANIA","RUSSIAN FEDERATION (USSR)","RWANDA","SAUDI ARABIA","SCOTLAND","SUDAN","SENEGAL","SINGAPORE","SOUTH GEORGIA AND THE SOUTH SANDWICH ISLAND","ST. HELENA","SVALBARD AND JAN MAYEN ISLANDS","SOLOMON ISLANDS","SIERRA LEONE","EL SALVADOR","SAN MARINO","SOMALIA","ST. PIERRE AND MIQUELON","SERBIA & MONTENEGRO","SOUTH SUDAN","SAO TOME AND PRINCIPE","SURINAME","SLOVAK REPUBLIC","SLOVENIA","SWEDEN","ESWATINI, KINGDOM OF (SWAZILAND)","SINT MAARTEN","SEYCHELLES","SYRIAN ARAB REPUBLIC","TURKS AND CAICOS ISLANDS","CHAD","TOGO","THAILAND","TAJIKISTAN","TOKELAU","TURKMENISTAN","TIMOR-LESTE","TONGA","TRINIDAD AND TOBAGO","TUNISIA","TURKIYE","TUVALU","TAIWAN","TANZANIA UNITED REPUBLIC","UGANDA","UKRAINE","UNITED STATES MINOR OUTLYING ISLANDS","URUGUAY","UNITED STATES OF AMERICA","UZBEKISTAN","VATICAN CITY STATE (HOLY SEE)","SAINT VINCENT AND GRENADINES","VENEZUELA","VIRGIN ISLANDS(BRITISH)","VIRGIN ISLANDS(US)","VIETNAM","VANUATU","WALLIS AND FUTUNA ISLANDS","SAMOA","KOSOVO","YEMEN","SOUTH AFRICA","ZAMBIA","ZIMBABWE"}
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Delivery_State
+	(
+		type = picklist
+		displayname = "Delivery State"
+		maxchar = 100
+		values = {"Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Pulau Pinang","Perak","Perlis","Selangor","Terengganu","Sabah","Sarawak","Wilayah Persekutuan Kuala Lumpur","Wilayah Persekutuan Labuan","Wilayah Persekutuan Putrajaya","Not Applicable"}
+		others option = true
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Delivery_Email_Address
+	(
+    	type = email
+		displayname = "Delivery Email Address"
+		maxchar = 80
+	 	row = 1
+	 	column = 2   
+		width = medium
+		personal data = true
+	)
+	Delivery_Phone_Number
+	(
+    	type = phonenumber
+		displayname = "Delivery Phone Number"
+    	defaultcountry="my"
+	 	row = 1
+	 	column = 2   
+		width = medium
+		personal data = true
+	)
+	
+	actions
+	{
+		on add
+		{
+			submit
+			(
+   				type = submit
+   				displayname = "Submit"
+			)
+			reset
+			(
+   				type = reset
+   				displayname = "Reset"
+			)
+		}
+		on edit
+		{
+			update
+			(
+   				type = submit
+   				displayname = "Update"
+			)
+			cancel
+			(
+   				type = cancel
+   				displayname = "Cancel"
+			)
+		}
+	}
+}

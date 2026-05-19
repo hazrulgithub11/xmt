@@ -1,0 +1,760 @@
+Handle_Subscription_Submi as "Handle Subscription Submission And Edit"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on success
+	{
+		actions  (Customer_Code.Bill_For == "Current Duration" && Customer_Code.Billing_Cycle == "Monthly")
+		{
+			custom deluge script
+			(
+					getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
+				if(getInvoices.size() == 0)
+				{
+					tenancyInfo = Tenancy[ID == input.Customer_Code];
+					tenantNextBilligDate = tenancyInfo.Next_Billing_Date;
+					tenantLastBillingDate = tenancyInfo.Latest_Billing_Date;
+					tenantFinalBillingDate = tenancyInfo.Final_Billing_Date;
+					billFor = tenancyInfo.Bill_For;
+					billEvery = tenancyInfo.Bill_Every;
+					//info billEvery;
+					billCycle = tenancyInfo.Billing_Cycle;
+					contractStartDate = input.Contract_Start_Date;
+					contractEndDate = input.Contract_End_Date;
+					contractPeriod = input.Contract_Period;
+					billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billCycle);
+					//Determine The Current Billing Date
+					if(billEvery == "Last Day Of Month" || (billEvery == "29" && today.getMonth() == 2 && !thisapp.is_leap_year(today.getYear())))
+					{
+						currentBillingEveryDate = toDate("01-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy").eomonth(0);
+					}
+					else
+					{
+						currentBillingEveryDate = toDate(billEvery + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
+					}
+					//Determine Start Billing Current Date
+					if(billEvery == "Last Day Of Month" || (billEvery == "29" && contractStartDate.getMonth() == 2 && !thisapp.is_leap_year(contractStartDate.getYear())))
+					{
+						startBillingEveryDate = toDate("01-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy").eomonth(0);
+					}
+					else
+					{
+						startBillingEveryDate = toDate(billEvery + "-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy");
+					}
+					/* Handle Latest Billing Date, Next Billing Date and Final Billing For Subscription And Tenant Based On Bill For */
+					/*Determine To Create Invoice Now Or Later */
+					if(contractStartDate < today.toStartOfMonth())
+					{
+						/* Determine Subscription Final Billing Date*/
+						contractPeriodLeft = monthsBetween(currentBillingEveryDate,contractEndDate);
+						//info "contractPeriodLeft:" + contractPeriodLeft;
+						if(contractPeriodLeft > 0)
+						{
+							input.Latest_Billing_Date = today;
+							nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt);
+							subFinalBillingDate = currentBillingEveryDate.addMonth(contractPeriodLeft);
+							//Final billing Date
+							if(billEvery == "Last Day Of Month" && subFinalBillingDate.getDay() != subFinalBillingDate.eomonth(0).getDay() && subFinalBillingDate.getMonth() != 2)
+							{
+								subFinalBillingDate = toDate(subFinalBillingDate.eomonth(0).getDay() + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							else if(billEvery == "29" && subFinalBillingDate.getDay() != 29 && subFinalBillingDate.getMonth() != 2)
+							{
+								subFinalBillingDate = toDate("29" + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							//Next Billing Date
+							if(billEvery == "Last Day Of Month" && nextBillingDate.getDay() != nextBillingDate.eomonth(0).getDay() && nextBillingDate.getMonth() != 2)
+							{
+								nextBillingDate = toDate(nextBillingDate.eomonth(0).getDay() + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							else if(billEvery == "29" && nextBillingDate.getDay() != 29 && nextBillingDate.getMonth() != 2)
+							{
+								nextBillingDate = toDate("29" + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							input.Next_Billing_Date = nextBillingDate;
+							//Update tenant next billing date if tenant last billing date null
+							if(tenantNextBilligDate == null)
+							{
+								tenancyInfo.Next_Billing_Date=nextBillingDate;
+							}
+							input.Final_Billing_Date = subFinalBillingDate;
+							subsListId = List();
+							subsListId.add(input.ID);
+							//info "daysBetween today and next billing date:" + daysBetween(today,nextBillingDate);
+							if(daysBetween(today,nextBillingDate) <= 5)
+							{
+								thisapp.invoice.create_invoice_current_monthly(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate,true,nextBillingDate,nextBillingDate,true);
+								if(tenantNextBilligDate == null)
+								{
+									tenancyInfo.Next_Billing_Date=nextBillingDate.addMonth(1);
+								}
+							}
+							else
+							{
+								thisapp.invoice.create_invoice_current_monthly(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate,false,null,null,true);
+							}
+						}
+						/*else
+				 				 						{
+				 				 							input.Latest_Billing_Date = input.Contract_End_Date;
+				 				 							subFinalBillingDate = input.Contract_End_Date;
+				 				 						}*/
+						//Update tenant last billing date if tenant last billing date null
+						if(tenantLastBillingDate == null)
+						{
+							tenancyInfo.Latest_Billing_Date=input.Latest_Billing_Date;
+						}
+					}
+					else if(contractStartDate >= today.toStartOfMonth() && contractStartDate <= today.eomonth(0) && contractStartDate < today || (daysBetween(today,currentBillingEveryDate) <= 5 && contractStartDate >= currentBillingEveryDate))
+					{
+						//info "daysBetween Contract Start Date And currentBillingEveryDate:" + daysBetween(contractStartDate,currentBillingEveryDate);
+						//Contract Start Date Is The Same As Current Month And Year.
+						input.Latest_Billing_Date = today;
+						//Update tenant last billing date if tenant last billing date null
+						if(tenantLastBillingDate == null)
+						{
+							tenancyInfo.Latest_Billing_Date=contractStartDate;
+						}
+						/* Determine Subscription Final Billing Date*/
+						if(billEvery == "Last Day Of Month")
+						{
+							billEveryInt = contractEndDate.eomonth(0).getDay();
+						}
+						else
+						{
+							billEveryInt = billEvery.toLong();
+						}
+						//subFinalBillingDate = currentBillingEveryDate.addMonth(contractPeriodLeft);
+						//info "nextBillingDate:" + currentBillingEveryDate.addMonth(billCycleInt);
+						if(monthsBetween(currentBillingEveryDate.addMonth(billCycleInt),contractEndDate) > 0)
+						{
+							nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt);
+							if(contractEndDate.getDay() == billEveryInt.toLong() || contractEndDate.getDay() == 1)
+							{
+								subFinalBillingDate = currentBillingEveryDate.addMonth(contractPeriod - billCycleInt);
+							}
+							else
+							{
+								subFinalBillingDate = currentBillingEveryDate.addMonth(contractPeriod);
+							}
+							//Final billing Date
+							//info "subFinalBillingDate:" + subFinalBillingDate;
+							//info "billEvery:" + billEvery;
+							//info subFinalBillingDate.getDay();
+							//info subFinalBillingDate.eomonth(0).getDay();
+							//info billEvery == "Last Day Of Month" && subFinalBillingDate.getDay() != subFinalBillingDate.eomonth(0).getDay();
+							if(billEvery == "Last Day Of Month" && subFinalBillingDate.getDay() != subFinalBillingDate.eomonth(0).getDay() && subFinalBillingDate.getMonth() != 2)
+							{
+								info "Last Day Of Month";
+								subFinalBillingDate = toDate(subFinalBillingDate.eomonth(0).getDay() + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							else if(billEvery == "29" && subFinalBillingDate.getDay() != 29 && subFinalBillingDate.getMonth() != 2)
+							{
+								subFinalBillingDate = toDate("29" + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							//Next Billing Date
+							if(billEvery == "Last Day Of Month" && nextBillingDate.getDay() != nextBillingDate.eomonth(0).getDay() && nextBillingDate.getMonth() != 2)
+							{
+								nextBillingDate = toDate(nextBillingDate.eomonth(0).getDay() + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							else if(billEvery == "29" && nextBillingDate.getDay() != 29 && nextBillingDate.getMonth() != 2)
+							{
+								nextBillingDate = toDate("29" + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							input.Next_Billing_Date = nextBillingDate;
+							//Update tenant next billing date if tenant last billing date null
+							if(tenantNextBilligDate == null)
+							{
+								tenancyInfo.Next_Billing_Date=currentBillingEveryDate.addMonth(billCycleInt);
+							}
+						}
+						else
+						{
+							subFinalBillingDate = today;
+						}
+						input.Next_Billing_Date = nextBillingDate;
+						input.Final_Billing_Date = subFinalBillingDate;
+						//info nextBillingDate;
+						subsListId = List();
+						subsListId.add(input.ID);
+						if(input.Next_Billing_Date == null)
+						{
+							thisapp.invoice.create_invoice_current_monthly(subsListId,billCycleInt,input.Customer_Code,subFinalBillingDate,subFinalBillingDate,false,null,null,true);
+						}
+						else
+						{
+							if(daysBetween(today,nextBillingDate) <= 5)
+							{
+								thisapp.invoice.create_invoice_current_monthly(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate,true,nextBillingDate,nextBillingDate,true);
+								if(tenantNextBilligDate == null)
+								{
+									tenancyInfo.Next_Billing_Date=nextBillingDate.addMonth(billCycleInt);
+								}
+								if(tenantLastBillingDate == null)
+								{
+									tenancyInfo.Latest_Billing_Date=nextBillingDate;
+								}
+							}
+							else
+							{
+								thisapp.invoice.create_invoice_current_monthly(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate,false,null,null,true);
+							}
+						}
+					}
+					else
+					{
+						//Update tenant next billing date if tenant last billing date null
+						/* Determine Subscription Final Billing Date*/
+						if(billEvery == "Last Day Of Month")
+						{
+							billEvery = contractEndDate.eomonth(0);
+						}
+						if(tenantNextBilligDate == null)
+						{
+							tenancyInfo.Next_Billing_Date=startBillingEveryDate;
+						}
+						input.Next_Billing_Date = startBillingEveryDate;
+						if(contractEndDate.getDay() == billEvery.toLong() || contractEndDate.getDay() == 1)
+						{
+							subFinalBillingDate = startBillingEveryDate.addMonth(contractPeriod - billCycleInt);
+						}
+						else
+						{
+							subFinalBillingDate = startBillingEveryDate.addMonth(contractPeriod);
+						}
+						//Final billing Date
+						if(billEvery == "Last Day Of Month" && subFinalBillingDate.getDay() != subFinalBillingDate.eomonth(0).getDay() && subFinalBillingDate.getMonth() != 2)
+						{
+							subFinalBillingDate = toDate(subFinalBillingDate.eomonth(0).getDay() + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+						}
+						else if(billEvery == "29" && subFinalBillingDate.getDay() != 29 && subFinalBillingDate.getMonth() != 2)
+						{
+							subFinalBillingDate = toDate("29" + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+						}
+						input.Final_Billing_Date = subFinalBillingDate;
+						if(daysBetween(today,startBillingEveryDate) <= 5)
+						{
+							subsListId = List();
+							subsListId.add(input.ID);
+							input.Latest_Billing_Date = today;
+							input.Next_Billing_Date = startBillingEveryDate.addMonth(billCycleInt);
+							if(tenantNextBilligDate == null)
+							{
+								tenancyInfo.Next_Billing_Date=startBillingEveryDate.addMonth(billCycleInt);
+							}
+							if(tenantLastBillingDate == null)
+							{
+								tenancyInfo.Latest_Billing_Date=today;
+							}
+							thisapp.invoice.create_invoice_current_monthly(subsListId,billCycleInt,input.Customer_Code,startBillingEveryDate,contractStartDate,false,null,null,true);
+						}
+					}
+					if(subFinalBillingDate > tenantFinalBillingDate || tenantFinalBillingDate == null)
+					{
+						tenancyInfo.Final_Billing_Date=subFinalBillingDate;
+					}
+				}
+			)
+		}
+		actions  (Customer_Code.Bill_For == "Previous Duration" && Customer_Code.Billing_Cycle == "Monthly")
+		{
+			custom deluge script
+			(
+					getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
+				if(getInvoices.size() == 0)
+				{
+					tenancyInfo = Tenancy[ID == input.Customer_Code];
+					tenantNextBilligDate = tenancyInfo.Next_Billing_Date;
+					tenantLastBillingDate = tenancyInfo.Latest_Billing_Date;
+					tenantFinalBillingDate = tenancyInfo.Final_Billing_Date;
+					billFor = tenancyInfo.Bill_For;
+					billEvery = tenancyInfo.Bill_Every;
+					billCycle = tenancyInfo.Billing_Cycle;
+					contractStartDate = input.Contract_Start_Date;
+					contractEndDate = input.Contract_End_Date;
+					contractPeriod = input.Contract_Period;
+					billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billCycle);
+					//info "billCycleInt:" + billCycleInt;
+					//Determine The Current Billing Date
+					if(billEvery == "Last Day Of Month" || (billEvery == "29" && today.getMonth() == 2 && !thisapp.is_leap_year(today.getYear())))
+					{
+						currentBillingEveryDate = toDate("01-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy").eomonth(0);
+					}
+					else
+					{
+						currentBillingEveryDate = toDate(billEvery + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
+					}
+					//Determine Start Billing Every Date
+					if(billEvery == "Last Day Of Month" || (billEvery == "29" && contractStartDate.getMonth() == 2 && !thisapp.is_leap_year(contractStartDate.getYear())))
+					{
+						startBillingEveryDate = toDate("01-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy").eomonth(0);
+					}
+					else
+					{
+						startBillingEveryDate = toDate(billEvery + "-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy");
+					}
+					/*Determine Next Billing And Final Billing Date */
+					if(contractStartDate < today.toStartOfMonth())
+					{
+						nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt);
+						contractPeriodLeft = monthsBetween(nextBillingDate,contractEndDate);
+						//info "contractPeriodLeft:" + contractPeriodLeft;
+						if(contractPeriodLeft >= 0)
+						{
+							if(contractEndDate < nextBillingDate)
+							{
+								subFinalBillingDate = nextBillingDate.addMonth(contractPeriodLeft);
+							}
+							else
+							{
+								subFinalBillingDate = nextBillingDate.addMonth(contractPeriodLeft + billCycleInt);
+							}
+							//info "nextBillingDate:" + nextBillingDate;
+							//Final billing Date
+							if(billEvery == "Last Day Of Month" && subFinalBillingDate.getDay() != subFinalBillingDate.eomonth(0).getDay() && subFinalBillingDate.getMonth() != 2)
+							{
+								subFinalBillingDate = toDate(subFinalBillingDate.eomonth(0).getDay() + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							else if(billEvery == "29" && subFinalBillingDate.getDay() != 29 && subFinalBillingDate.getMonth() != 2)
+							{
+								subFinalBillingDate = toDate("29" + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							//Next Billing Date
+							if(billEvery == "Last Day Of Month" && nextBillingDate.getDay() != nextBillingDate.eomonth(0).getDay() && nextBillingDate.getMonth() != 2)
+							{
+								nextBillingDate = toDate(nextBillingDate.eomonth(0).getDay() + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							else if(billEvery == "29" && nextBillingDate.getDay() != 29 && nextBillingDate.getMonth() != 2)
+							{
+								nextBillingDate = toDate("29" + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+							}
+							input.Next_Billing_Date = nextBillingDate;
+							input.Final_Billing_Date = subFinalBillingDate;
+							subsListId = List();
+							subsListId.add(input.ID);
+							if(daysBetween(today,nextBillingDate) <= 5)
+							{
+								//info "invoice create twice";
+								thisapp.invoice.create_invoice_previous_monthly(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate,true,nextBillingDate,nextBillingDate,true);
+								input.Next_Billing_Date = nextBillingDate.addMonth(1);
+							}
+							else
+							{
+								//info "invoice create once";
+								thisapp.invoice.create_invoice_previous_monthly(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate,false,null,null,true);
+							}
+						}
+						/*else
+				 				 						{
+				 				 							tenantNextBillingDate = null;
+				 				 							if(input.Prorate == true)
+				 				 							{
+				 				 								subFinalBillingDate = today;
+				 				 								input.Latest_Billing_Date = today;
+				 				 								input.Next_Billing_Date = null;
+				 				 								input.Final_Billing_Date = today;
+				 				 								subsListId = List();
+				 				 								subsListId.add(input.ID);
+				 				 								thisapp.invoice.create_invoice_previous_monthly(subsListId,billCycleInt,input.Customer_Code,today,today);
+				 				 							}
+				 				 						}*/
+					}
+					else
+					{
+						//info "contract start date same month of today or later date";
+						nextBillingDate = startBillingEveryDate.addMonth(billCycleInt);
+						subFinalBillingDate = startBillingEveryDate.addMonth(contractPeriod + billCycleInt);
+						//Final billing Date
+						if(billEvery == "Last Day Of Month" && subFinalBillingDate.getDay() != subFinalBillingDate.eomonth(0).getDay() && subFinalBillingDate.getMonth() != 2)
+						{
+							subFinalBillingDate = toDate(subFinalBillingDate.eomonth(0).getDay() + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+						}
+						else if(billEvery == "29" && subFinalBillingDate.getDay() != 29 && subFinalBillingDate.getMonth() != 2)
+						{
+							subFinalBillingDate = toDate("29" + "-" + subFinalBillingDate.getMonth() + "-" + subFinalBillingDate.getYear(),"dd-MM-yyyy");
+						}
+						//Next Billing Date
+						if(billEvery == "Last Day Of Month" && nextBillingDate.getDay() != nextBillingDate.eomonth(0).getDay() && nextBillingDate.getMonth() != 2)
+						{
+							nextBillingDate = toDate(nextBillingDate.eomonth(0).getDay() + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+						}
+						else if(billEvery == "29" && nextBillingDate.getDay() != 29 && nextBillingDate.getMonth() != 2)
+						{
+							nextBillingDate = toDate("29" + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+						}
+						//info "nextBillingDate:" + nextBillingDate;
+						input.Next_Billing_Date = nextBillingDate;
+						input.Final_Billing_Date = subFinalBillingDate;
+						subsListId = List();
+						subsListId.add(input.ID);
+						if(daysBetween(today,nextBillingDate) <= 5)
+						{
+							thisapp.invoice.create_invoice_previous_monthly(subsListId,billCycleInt,input.Customer_Code,nextBillingDate,nextBillingDate,false,null,null,true);
+							input.Next_Billing_Date = nextBillingDate.addMonth(1);
+							input.Latest_Billing_Date = nextBillingDate;
+						}
+					}
+					if(tenantLastBillingDate == null)
+					{
+						tenancyInfo.Latest_Billing_Date=input.Latest_Billing_Date;
+					}
+					if(tenantNextBilligDate == null)
+					{
+						tenancyInfo.Next_Billing_Date=input.Next_Billing_Date;
+					}
+					if(subFinalBillingDate > tenantFinalBillingDate || tenantFinalBillingDate == null)
+					{
+						tenancyInfo.Final_Billing_Date=input.Final_Billing_Date;
+					}
+				}
+			)
+		}
+		actions  (Customer_Code.Bill_For == "Current Duration" && Customer_Code.Billing_Cycle != "Monthly")
+		{
+			custom deluge script
+			(
+					getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
+				if(getInvoices.size() == 0)
+				{
+					tenancyInfo = Tenancy[ID == input.Customer_Code];
+					tenantNextBilligDate = tenancyInfo.Next_Billing_Date;
+					tenantLastBillingDate = tenancyInfo.Latest_Billing_Date;
+					tenantFinalBillingDate = tenancyInfo.Final_Billing_Date;
+					billFor = tenancyInfo.Bill_For;
+					billEvery = tenancyInfo.Bill_Every;
+					billCycle = tenancyInfo.Billing_Cycle;
+					contractStartDate = input.Contract_Start_Date;
+					contractEndDate = input.Contract_End_Date;
+					contractPeriod = input.Contract_Period;
+					billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billCycle);
+					//info "contractPeriod:" + contractPeriod;
+					//info "billCycleInt:" + billCycleInt;
+					//info contractPeriod != billCycleInt;
+					//Determine The Current Billing Date
+					currentBillingEveryDate = toDate(contractStartDate.getDay() + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
+					//Determine Start Billing Every Date
+					startBillingEveryDate = toDate(contractStartDate.getDay() + "-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy");
+					/* Handle Latest Billing Date, Next Billing Date and Final Billing For Subscription And Tenant Based On Bill For */
+					/*Determine To Create Invoice Now Or Later */
+					if(contractStartDate < today.toStartOfMonth())
+					{
+						//Contract Start Date If Before Today Date
+						/* Determine Subscription Final Billing Date*/
+						/*contractPeriodLeft = monthsBetween(currentBillingEveryDate,contractEndDate);
+				 				 						info "contractPeriodLeft:" + contractPeriodLeft;
+				 				 						addMonthValue = (contractPeriodLeft / billCycleInt).toNumber() * billCycleInt;
+				 				 						info "addMonthValue:" + addMonthValue;
+				 				 						if(addMonthValue <= 0)
+				 				 						{
+				 				 							//subFinalBillingDate = contractEndDate;
+				 				 							if(input.Prorate)
+				 				 							{
+				 				 								input.Latest_Billing_Date = today;
+				 				 								subFinalBillingDate = today;
+				 				 							}
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							input.Latest_Billing_Date = today;
+				 				 							subFinalBillingDate = currentBillingEveryDate.addMonth(addMonthValue);
+				 				 							input.Next_Billing_Date = currentBillingEveryDate.addMonth(billCycleInt);
+				 				 						}
+				 				 						info "subFinalBillingDate:" + subFinalBillingDate;*/
+						//info "Contract start date less than the current month";
+						contractPeriodLeft = monthsBetween(currentBillingEveryDate,contractEndDate);
+						addMonthValue = (contractPeriodLeft / billCycleInt).toNumber() * billCycleInt;
+						//info "contractPeriodLeft:" + contractPeriodLeft;
+						//info "addMonthValue:" + addMonthValue;
+						//Previous Code
+						if(addMonthValue > 0)
+						{
+							addValue = ((monthsBetween(contractStartDate,currentBillingEveryDate) / billCycleInt).toNumber() + 1) * billCycleInt;
+							nextBillingDate = contractStartDate.addMonth(addValue);
+							previousBillingDate = nextBillingDate.subMonth(billCycleInt);
+							if(contractPeriod % billCycleInt == 0)
+							{
+								subFinalBillingDate = contractStartDate.addMonth(contractPeriod - billCycleInt);
+							}
+							else
+							{
+								subFinalBillingDate = contractStartDate.addMonth((contractPeriod / billCycleInt).toNumber() * billCycleInt);
+							}
+							if(contractStartDate.eomonth(0).getDay() == contractStartDate.getDay())
+							{
+								nextBillingDate = nextBillingDate.eomonth(0);
+								subFinalBillingDate = subFinalBillingDate.eomonth(0);
+								previousBillingDate = previousBillingDate.eomonth(0);
+							}
+							//info "nextBillingDate:" + nextBillingDate;
+							//info "subFinalBillingDate:" + subFinalBillingDate;
+							//info "previousBillingDate:" + previousBillingDate;
+							//info "daysBetween Today And Next Billing Date:" + daysBetween(today,nextBillingDate);
+							input.Final_Billing_Date = subFinalBillingDate;
+							if(daysBetween(today,nextBillingDate) <= 5)
+							{
+								//create single invoice
+								thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,nextBillingDate,nextBillingDate,false,null,null);
+							}
+							else
+							{
+								//create two invoice
+								thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,false,null,null);
+							}
+						}
+						/*New code
+				 				 						if(contractEndDate >= today.toStartOfMonth())
+				 				 						{
+				 				 							addValue = ((monthsBetween(contractStartDate,currentBillingEveryDate) / billCycleInt).toNumber() + 1) * billCycleInt;
+				 				 							info "addValue:"+addValue;
+				 				 							nextBillingDate = contractStartDate.addMonth(addValue);
+				 				 							previousBillingDate = nextBillingDate.subMonth(billCycleInt);
+				 				 							if(contractPeriod % billCycleInt == 0)
+				 				 							{
+				 				 								subFinalBillingDate = contractStartDate.addMonth(contractPeriod - billCycleInt);
+				 				 							}
+				 				 							else
+				 				 							{
+				 				 								contractBillingPeriod=(contractPeriod/billCycleInt).toNumber() * billCycleInt;
+				 				 								if ( contractBillingPeriod < 1 ) 
+				 				 				                {
+				 				 									subFinalBillingDate = contractStartDate;
+				 				 				                }
+				 				 								else 
+				 				 				                {
+				 				 									subFinalBillingDate = contractStartDate.addMonth(contractBillingPeriod);
+				 				 				                }
+				 				 								
+				 				 							}
+				 				 							if(contractStartDate.eomonth(0).getDay() == contractStartDate.getDay())
+				 				 							{
+				 				 								nextBillingDate = nextBillingDate.eomonth(0);
+				 				 								subFinalBillingDate = subFinalBillingDate.eomonth(0);
+				 				 								previousBillingDate = previousBillingDate.eomonth(0);
+				 				 							}
+				 				 							info "nextBillingDate:" + nextBillingDate;
+				 				 							info "subFinalBillingDate:" + subFinalBillingDate;
+				 				 							info "previousBillingDate:" + previousBillingDate;
+				 				 							info "daysBetween Today And Next Billing Date:" + daysBetween(today,nextBillingDate);
+				 				 							if ( monthsBetween(nextBillingDate,subFinalBillingDate) < billCycleInt ) 
+				 				 				            {
+				 				 								subFinalBillingDate = nextBillingDate;
+				 				 				            }
+				 				 							input.Final_Billing_Date = subFinalBillingDate;
+				 				 							info "daysBetween Today and Next Billing Date:"+daysBetween(today,nextBillingDate);
+				 				 							if ( subFinalBillingDate <= nextBillingDate ) 
+				 				 				            {
+				 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,false,null,null);
+				 				 				            }
+				 				 							else if(daysBetween(today,nextBillingDate) <= 5 )
+				 				 							{
+				 				 								//create single invoice
+				 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,nextBillingDate,nextBillingDate,false,null,null);
+				 				 							}
+				 				 							else
+				 				 							{
+				 				 								//create two invoice
+				 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,true,nextBillingDate,nextBillingDate);
+				 				 							}
+				 				 						}*/
+						//Create Invoice 
+						//subsListId = List();
+						//subsListId.add(input.ID);
+						//thisapp.invoice.create_invoice(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate);
+						//thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate);
+					}
+					else if(contractStartDate >= today.toStartOfMonth() && contractStartDate <= today.eomonth(0) && contractStartDate <= today)
+					{
+						//info "Contract Start Date Is The Same As Current Month And Year.";
+						input.Latest_Billing_Date = contractStartDate;
+						/* Determine Subscription Final Billing Date*/
+						addMonthValue = (contractPeriod / billCycleInt).toNumber() * billCycleInt;
+						//info "addMonthValue:" + addMonthValue;
+						if(contractPeriod % billCycleInt == 0)
+						{
+							subFinalBillingDate = contractStartDate.addMonth(contractPeriod - billCycleInt);
+						}
+						else
+						{
+							subFinalBillingDate = contractStartDate.addMonth((contractPeriod / billCycleInt).toNumber() * billCycleInt);
+						}
+						if(contractStartDate.eomonth(0).getDay() == contractStartDate.getDay())
+						{
+							subFinalBillingDate = subFinalBillingDate.eomonth(0);
+						}
+						if(monthsBetween(currentBillingEveryDate.addMonth(billCycleInt),contractEndDate) > 0)
+						{
+							input.Next_Billing_Date = contractStartDate.addMonth(billCycleInt);
+						}
+						else
+						{
+							subFinalBillingDate = today;
+						}
+						//subsListId = List();
+						//subsListId.add(input.ID);
+						//thisapp.invoice.create_invoice(subsListId,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate);
+						input.Final_Billing_Date = subFinalBillingDate;
+						thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,currentBillingEveryDate,contractStartDate,false,null,null);
+					}
+					else
+					{
+						//info "startBillingEveryDate:" + startBillingEveryDate;
+						input.Next_Billing_Date = contractStartDate;
+						/* 		if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay() || (contractStartDate.getDay() >= 29 && contractEndDate.getMonth() == 2 && !thisapp.is_leap_year(contractEndDate.getYear())))
+				 				 						{
+				 				 							endDay = contractEndDate.eomonth(0).getDay();
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							endDay = contractStartDate.getDay();
+				 				 						}
+				 				 						info "endDay:" + endDay; */
+						if(contractPeriod % billCycleInt == 0)
+						{
+							if(contractPeriod < billCycleInt)
+							{
+								subFinalBillingDate = startBillingEveryDate;
+							}
+							else
+							{
+								subFinalBillingDate = startBillingEveryDate.addMonth((contractPeriod / billCycleInt).toNumber() * billCycleInt - billCycleInt);
+							}
+						}
+						else
+						{
+							subFinalBillingDate = startBillingEveryDate.addMonth((contractPeriod / billCycleInt).toNumber() * billCycleInt);
+						}
+						if(contractStartDate.eomonth(0).getDay() == contractStartDate.getDay())
+						{
+							subFinalBillingDate = subFinalBillingDate.eomonth(0);
+						}
+						input.Final_Billing_Date = subFinalBillingDate;
+						if(daysBetween(today,contractStartDate) <= 5)
+						{
+							thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,startBillingEveryDate,startBillingEveryDate,false,null,null);
+						}
+					}
+				}
+			)
+		}
+		actions  (Customer_Code.Bill_For == "Previous Duration" && Customer_Code.Billing_Cycle != "Monthly")
+		{
+			custom deluge script
+			(
+					getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
+				if(getInvoices.size() == 0)
+				{
+					tenancyInfo = Tenancy[ID == input.Customer_Code];
+					tenantNextBilligDate = tenancyInfo.Next_Billing_Date;
+					tenantLastBillingDate = tenancyInfo.Latest_Billing_Date;
+					tenantFinalBillingDate = tenancyInfo.Final_Billing_Date;
+					billFor = tenancyInfo.Bill_For;
+					billCycle = tenancyInfo.Billing_Cycle;
+					contractStartDate = input.Contract_Start_Date;
+					contractEndDate = input.Contract_End_Date;
+					contractPeriod = input.Contract_Period;
+					billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billCycle);
+					//info "billCycleInt:" + billCycleInt;
+					//Determine The Current Billing Date
+					currentBillingEveryDate = toDate(contractStartDate.getDay() + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
+					/*Determine Next Billing And Final Billing Date */
+					if(contractStartDate < today.toStartOfMonth())
+					{
+						//info "contract start date before today date";
+						//periodBetweenStartDateAndCurrentDate = monthsBetween(contractStartDate,currentBillingEveryDate);
+						//info "currentBillingEveryDate:" + currentBillingEveryDate;
+						//info "periodBetweenStartDateAndCurrentDate:" + periodBetweenStartDateAndCurrentDate;
+						//addMonthValue = billCycleInt * (1 + (periodBetweenStartDateAndCurrentDate / billCycleInt).toNumber());
+						//info 1 + (periodBetweenStartDateAndCurrentDate / billCycleInt).toNumber();
+						//info "addMonthValue:" + addMonthValue;
+						addValue = ((monthsBetween(contractStartDate,today) / billCycleInt).toNumber() + 1) * billCycleInt;
+						//info "addValue:" + addValue;
+						nextBillingDate = contractStartDate.addMonth(addValue);
+						previousBillingDate = nextBillingDate.subMonth(billCycleInt);
+						//info "nextBillingDate:" + nextBillingDate;
+						//info "previousBillingDate:" + previousBillingDate;
+						//info "daysBetween today and nextBillingDate :" + daysBetween(today,nextBillingDate);
+						if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay())
+						{
+							nextBillingDate = nextBillingDate.eomonth(0);
+						}
+						//info "nextBillingDate:" + nextBillingDate;
+						contractPeriodLeft = monthsBetween(nextBillingDate,contractEndDate);
+						//info "contractPeriodLeft:" + contractPeriodLeft;
+						if(contractPeriodLeft > 0)
+						{
+							//finalBillingDate = nextBillingDate.addMonth((contractPeriodLeft / billCycleInt).toNumber() * billCycleInt + billCycleInt);
+							finalBillingDate = nextBillingDate.addMonth((contractPeriodLeft / billCycleInt).toNumber() * billCycleInt);
+							//info "finalBillingDate:" + finalBillingDate;
+							if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay())
+							{
+								finalBillingDate = finalBillingDate.eomonth(0);
+							}
+							else
+							{
+								finalBillingDate = finalBillingDate;
+							}
+							if(contractPeriodLeft > 0)
+							{
+								//info "contractEndDate:" + contractEndDate;
+								if(nextBillingDate.addMonth(billCycleInt) > contractEndDate)
+								{
+									input.Latest_Billing_Date = nextBillingDate;
+									input.Final_Billing_Date = nextBillingDate;
+								}
+								else
+								{
+									input.Next_Billing_Date = nextBillingDate;
+									input.Final_Billing_Date = finalBillingDate;
+								}
+							}
+							else if(contractPeriodLeft == 0)
+							{
+								input.Next_Billing_Date = nextBillingDate;
+								input.Final_Billing_Date = nextBillingDate;
+							}
+							if(daysBetween(today,nextBillingDate) <= 5)
+							{
+								thisapp.invoice.create_invoice_previous_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,true,nextBillingDate,nextBillingDate);
+								//thisapp.invoice.create_invoice_previous_not_monthly(input.ID,billCycleInt,input.Customer_Code,nextBillingDate,nextBillingDate,false,null,null);
+							}
+							else if(daysBetween(today,nextBillingDate) > 5)
+							{
+								thisapp.invoice.create_invoice_previous_not_monthly(input.ID,billCycleInt,input.Customer_Code,nextBillingDate,nextBillingDate,false,null,null);
+							}
+						}
+					}
+					else
+					{
+						//info "contract start date same month of today or later date";
+						input.Next_Billing_Date = contractStartDate.addMonth(billCycleInt);
+						if(contractPeriod % billCycleInt == 0)
+						{
+							finalBillingDate = contractStartDate.addMonth(contractPeriod);
+						}
+						else
+						{
+							finalBillingDate = contractStartDate.addMonth((1 + (contractPeriod / billCycleInt).toNumber()) * billCycleInt);
+						}
+						if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay())
+						{
+							input.Final_Billing_Date = finalBillingDate.eomonth(0);
+						}
+						else
+						{
+							input.Final_Billing_Date = finalBillingDate;
+						}
+						if(daysBetween(today,input.Next_Billing_Date) <= 5)
+						{
+							thisapp.invoice.create_invoice_previous_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,false,null,null);
+						}
+					}
+				}
+			)
+		}
+	}
+
+}
+

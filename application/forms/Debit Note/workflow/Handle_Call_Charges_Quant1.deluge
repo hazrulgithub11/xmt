@@ -1,0 +1,26 @@
+Handle_Call_Charges_Quant1 as "Handle Call Charges Quantity"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on user input of Call_Charges.Quantity_Call_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(ifnull(row.Quantity_Call_Charges,0) <= 0)
+				{
+					alert "Please enter a quantity more than 0";
+					row.Quantity_Call_Charges=1;
+					return;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

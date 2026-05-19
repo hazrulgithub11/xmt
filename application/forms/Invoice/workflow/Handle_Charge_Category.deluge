@@ -1,0 +1,40 @@
+Handle_Charge_Category as "Handle Charge Category"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on user input of Charge_Category
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Charge_Category == "Miscellaneous Charges")
+				{
+					hide Call_Charges;
+					clear Call_Charges;
+				}
+				else if(input.Charge_Category == "Fixed Charges")
+				{
+					hide Call_Charges;
+					clear Call_Charges;
+				}
+				else
+				{
+					show Call_Charges;
+				}
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

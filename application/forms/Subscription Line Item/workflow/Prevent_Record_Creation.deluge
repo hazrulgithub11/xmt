@@ -1,0 +1,21 @@
+Prevent_Record_Creation as "Prevent Record Creation"
+{
+	type =  form
+	form = Subscription_Line_Item
+
+	record event = on add
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					alert "Subscription Line Item cannot be created on its own.";
+				cancel submit;
+			)
+		}
+	}
+
+}
+

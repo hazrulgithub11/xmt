@@ -1,0 +1,22 @@
+Handle_Monthly_Rental_Tax3 as "Handle Monthly Rental Tax"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on user input of Monthly_Rental.Tax_Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					row.Tax_Type_Monthly_Rental=row.Tax_Monthly_Rental.Tax_Type;
+				row.Tax_Pct_Monthly_Rental=row.Tax_Monthly_Rental.Tax_Percentage;
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

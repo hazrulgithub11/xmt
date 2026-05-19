@@ -1,0 +1,187 @@
+Handle_Edit_Form_Submissi as "Handle Edit Form Submission"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					/*
+				for each  paymentReceived in input.Payment_Received_Line_Item
+				{
+					if(paymentReceived.Allocation == 0)
+					{
+						delete from Payment_Received_Line_Item[ID == paymentReceived.ID];
+					}
+				}
+				*/
+				//thisapp.invoice.recalculate_overdue(input.Customer_Code);
+			)
+		}
+		actions  (Payment_Type == "Invoice/Debit Note")
+		{
+			custom deluge script
+			(
+					for each  paymentReceived in input.Payment_Received_Line_Item
+				{
+					getPaymentReceivedLineItem = Payment_Received_Line_Item[ID == paymentReceived.ID];
+					if(getPaymentReceivedLineItem.Allocation != paymentReceived.Allocation)
+					{
+						if(paymentReceived.Invoice_No != null)
+						{
+							getInvoice = Invoice[ID == paymentReceived.Invoice_No];
+							getInvoice.Amount_Due=getInvoice.Amount_Due + getPaymentReceivedLineItem.Allocation - paymentReceived.Allocation;
+							getInvoice.Amount_Paid=getInvoice.Amount_Paid - getPaymentReceivedLineItem.Allocation + paymentReceived.Allocation;
+							if(getInvoice.Amount_Paid == 0)
+							{
+								if(getInvoice.Due_Date > zoho.currentdate)
+								{
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",getInvoice.ID);
+								}
+								else if(getInvoice.Due_Date < zoho.currentdate)
+								{
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
+								}
+							}
+							else if(getInvoice.Amount_Paid == getInvoice.Grand_Total)
+							{
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",getInvoice.ID);
+							}
+							else if(getInvoice.Amount_Paid < getInvoice.Grand_Total)
+							{
+								if(getInvoice.Due_Date > zoho.currentdate)
+								{
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",getInvoice.ID);
+								}
+								else if(getInvoice.Due_Date < zoho.currentdate)
+								{
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
+								}
+							}
+						}
+						else if(paymentReceived.Debit_Note_No != null)
+						{
+							getDbNote = Debit_Note[ID == paymentReceived.Debit_Note_No];
+							getDbNote.Amount_Due=getDbNote.Amount_Due + getPaymentReceivedLineItem.Allocation - paymentReceived.Allocation;
+							getDbNote.Amount_Paid=getDbNote.Amount_Paid - getPaymentReceivedLineItem.Allocation + paymentReceived.Allocation;
+							if(getDbNote.Amount_Paid == 0)
+							{
+								if(getDbNote.Due_Date > zoho.currentdate)
+								{
+									getDbNote.Status="Sent";
+								}
+								else if(getDbNote.Due_Date < zoho.currentdate)
+								{
+									getDbNote.Status="Overdue";
+								}
+							}
+							else if(getDbNote.Amount_Paid == getDbNote.Grand_Total)
+							{
+								getDbNote.Status="Paid";
+								getJournalEntry = Journal_Entry[Debit_Note == getDbNote.ID];
+								if(getJournalEntry.ID != null)
+								{
+									journalEntryLineItem = Collection();
+									row1 = Journal_Entry.Journal_Entry_Line_Item();
+									row1.Account=4662372000000087205;
+									row1.Description="Debit Note " + getDbNote.Invoice_No + " Subtotal & Subtotal Call Charges";
+									row1.Debit=0;
+									row1.Credit=ifnull(getDbNote.Sub_Total,0) + ifnull(getDbNote.Sub_Total_Call_Charges,0);
+									row1.Debit_Note=getDbNote.ID;
+									row2 = Journal_Entry.Journal_Entry_Line_Item();
+									row2.Account=4662372000000092003;
+									row2.Description="Debit Note " + getDbNote.Invoice_No + " Total Tax & Total Tax Call Charges";
+									row2.Debit=0;
+									row2.Credit=ifnull(getDbNote.Total_Tax,0) + ifnull(getDbNote.Total_Tax_Call_Charges,0);
+									row1.Debit_Note=getDbNote.ID;
+									row3 = Journal_Entry.Journal_Entry_Line_Item();
+									row3.Account=4662372000000087209;
+									row3.Description="Debit Note " + getDbNote.Invoice_No + " Grand Total";
+									row3.Debit=ifnull(getDbNote.Grand_Total,0);
+									row3.Credit=0;
+									row1.Debit_Note=getDbNote.ID;
+									journalEntryLineItem.insert(row1,row2,row3);
+									newJournalEntryRecord = insert into Journal_Entry
+									[
+										Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+										Document_No=getDbNote.Invoice_No
+										Added_User=zoho.loginuser
+										Debit_Note=input.ID
+										Date_field=zoho.currentdate
+										Journal_Entry_Line_Item=journalEntryLineItem
+										Sub_Total_Debit=ifnull(getDbNote.Grand_Total,0)
+										Sub_Total_Credit=ifnull(getDbNote.Sub_Total,0)
+										Total_Debit=ifnull(getDbNote.Grand_Total,0)
+										Total_Credit=ifnull(getDbNote.Sub_Total,0) + ifnull(getDbNote.Total_Tax,0)
+										Difference=ifnull(getDbNote.Grand_Total,0) - (ifnull(getDbNote.Sub_Total,0) + ifnull(getDbNote.Total_Tax,0))
+										Created_By_The_System=true
+									];
+								}
+							}
+							else if(getDbNote.Amount_Paid < getDbNote.Grand_Total)
+							{
+								if(getDbNote.Due_Date > zoho.currentdate)
+								{
+									getDbNote.Status="Partially Paid";
+								}
+								else if(getDbNote.Due_Date < zoho.currentdate)
+								{
+									getDbNote.Status="Overdue";
+								}
+							}
+						}
+					}
+				}
+			)
+		}
+		actions  (Payment_Type == "Deposit")
+		{
+			custom deluge script
+			(
+					for each  paymentReceived in input.Payment_Received_Line_Item
+				{
+					getPaymentReceivedLineItem = Payment_Received_Line_Item[ID == paymentReceived.ID];
+					if(getPaymentReceivedLineItem.Allocation != paymentReceived.Allocation)
+					{
+						getDeposit = Pro_Forma_Invoices[ID == paymentReceived.Pro_Forma_Invoice_No];
+						getDeposit.Amount_Due=getDeposit.Amount_Due + getPaymentReceivedLineItem.Allocation - paymentReceived.Allocation;
+						getDeposit.Amount_Paid=getDeposit.Amount_Paid - getPaymentReceivedLineItem.Allocation + paymentReceived.Allocation;
+						if(getDeposit.Amount_Paid == 0)
+						{
+							if(getDeposit.Due_Date > zoho.currentdate)
+							{
+								getDeposit.Status="Sent";
+							}
+							else if(getDeposit.Due_Date < zoho.currentdate)
+							{
+								getDeposit.Status="Overdue";
+							}
+						}
+						else if(getDeposit.Amount_Paid == getDeposit.Grand_Total)
+						{
+							getDeposit.Status="Paid";
+						}
+						else if(getDeposit.Amount_Paid < getDeposit.Grand_Total)
+						{
+							if(getDeposit.Due_Date > zoho.currentdate)
+							{
+								getDeposit.Status="Partially Paid";
+							}
+							else if(getDeposit.Due_Date < zoho.currentdate)
+							{
+								getDeposit.Status="Overdue";
+							}
+						}
+					}
+				}
+			)
+		}
+	}
+
+}
+

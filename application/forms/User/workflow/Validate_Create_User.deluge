@@ -1,0 +1,37 @@
+Validate_Create_User as "Validate Create User"
+{
+	type =  form
+	form = User
+
+	record event = on add
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					try 
+				{
+					resp = thisapp.permissions.assignUserInProfile(input.Email,input.Role.Role,true);
+					input.users.email = resp.get("emailId").toLowerCase();
+				}
+				catch (error)
+				{
+					if(error.contains("Failed to add user") == true)
+					{
+						alert "Failed to add user. Adding user, with secondary email address is not allowed. Contact the user for their primary email address.";
+						cancel submit;
+					}
+					else if(error.contains("Usage Limit Reached") == true)
+					{
+						alert error;
+						cancel submit;
+					}
+				}
+			)
+		}
+	}
+
+}
+

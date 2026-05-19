@@ -1,0 +1,103 @@
+list Copy_of_Statement_Of_Account_Report
+{
+	displayName = "Statement Of Account"
+	template = Statement_Of_Accounts
+	print template = Statement_Of_Accounts
+	show all rows from Customer_Statement    
+	(
+		Customer_Name as "Customer Name"
+		Organization
+		Opening_Balance as "Opening Balance"
+		Invoiced_Amount as "Invoiced Amount"
+		(
+			display = total	
+		)
+		Amount_Paid as "Amount Paid"
+		(
+			display = total	
+		)
+		Balance_Due as "Balance Due"
+		(
+			display = total	
+		)
+		Start_Date as "Start Date"
+		End_Date as "End Date"
+		Customer_Code as "Customer Code"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Opening_Balance as "Opening Balance"
+					Invoiced_Amount as "Invoiced Amount"
+					Amount_Paid as "Amount Paid"
+					Balance_Due as "Balance Due"
+					Start_Date as "Start Date"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Organization
+					Opening_Balance as "Opening Balance"
+					Invoiced_Amount as "Invoiced Amount"
+					Amount_Paid as "Amount Paid"
+					Balance_Due as "Balance Due"
+					Start_Date as "Start Date"
+					End_Date as "End Date"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

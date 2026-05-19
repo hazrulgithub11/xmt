@@ -1,0 +1,67 @@
+list All_Circuit_Ids
+{
+	displayName = "Circuit ID"
+	show all rows from Circuit_ID    
+	(
+		Circuit_ID as "Circuit ID"
+		Circuit_ID_Type as "Circuit ID Type"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Circuit_ID as "Circuit ID"
+					Circuit_ID_Type as "Circuit ID Type"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Circuit_ID as "Circuit ID"
+					Circuit_ID_Type as "Circuit ID Type"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+    	)
+	)
+}

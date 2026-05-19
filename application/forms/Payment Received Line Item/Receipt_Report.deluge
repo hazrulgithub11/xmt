@@ -1,0 +1,116 @@
+list Receipt_Report1
+{
+	displayName = "Receipt Report"
+	show all rows from Payment_Received_Line_Item    
+	(
+		Invoice_No as "Invoice No."
+		Document_Date as "Document Date"
+		Amount
+		(
+			display = total	
+		)
+		Outstanding_Balance as "Outstanding Balance"
+		(
+			display = total	
+		)
+		Allocation
+		(
+			display = total	
+		)
+		Payment_Received as "Payment Received"
+		Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+		Customer_Name as "Customer Name"
+		Description
+		Customer_Code.Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+		Customer_Code as "Customer Code"
+		Payment_Received.Paid_To as "Paid To"
+	)
+	filters
+	(
+		Customer_Name
+		Customer_Code
+	)
+	group by
+	(
+		Customer_Code.Project_Location_Telco_Provider ascending
+		Customer_Name descending
+		Customer_Code descending
+	)
+	sort by
+	(
+		Customer_Code.Project_Location_Telco_Provider ascending
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Document_Date as "Document Date"
+					Payment_Received as "Payment Received"
+					Description
+					Allocation
+					Payment_Received.Paid_To as "Paid To"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Invoice_No as "Invoice No."
+					Document_Date as "Document Date"
+					Amount
+					Outstanding_Balance as "Outstanding Balance"
+					Allocation
+					Payment_Received as "Payment Received"
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

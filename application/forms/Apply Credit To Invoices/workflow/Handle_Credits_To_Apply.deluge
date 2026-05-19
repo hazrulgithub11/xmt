@@ -1,0 +1,24 @@
+Handle_Credits_To_Apply as "Handle Credits To Apply"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on user input of Unpaid_Invoices.Credits_To_Apply
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(row.Credits_To_Apply > row.Amount_Due)
+				{
+					alert "The credit amount cannot exceed the invoice’s outstanding balance.";
+					row.Credits_To_Apply=0;
+				}
+			)
+		}
+	}
+
+}
+

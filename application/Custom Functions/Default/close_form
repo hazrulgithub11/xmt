@@ -1,0 +1,4 @@
+void close_form()
+{
+	openUrl("#Script:page.parent.refresh","parent window");
+}

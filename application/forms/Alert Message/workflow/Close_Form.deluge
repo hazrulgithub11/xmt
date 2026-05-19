@@ -1,0 +1,17 @@
+Close_Form as "Close Form"
+{
+	type =  form
+	form = Alert_Message
+	button = Close
+	on click
+	{
+		actions 
+		{
+		on click
+		(
+			thisapp.close_form();
+		)
+		}
+	}
+}
+

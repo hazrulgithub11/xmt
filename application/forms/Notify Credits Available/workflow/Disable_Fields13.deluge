@@ -1,0 +1,25 @@
+Disable_Fields13 as "Disable Fields"
+{
+	type =  form
+	form = Notify_Credits_Available
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Invoice;
+				disable Customer_Code;
+				disable Customer_Name;
+				disable Customer_Email;
+				disable Type_Of_Action;
+				disable Invoice_No;
+			)
+		}
+	}
+
+}
+

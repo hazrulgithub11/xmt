@@ -1,0 +1,22 @@
+list sort_list(list unsortedList, string sortKey)
+{
+	keyList = List();
+	for each  u in unsortedList
+	{
+		keyList.add(u.get(sortKey));
+	}
+	keyList = keyList.distinct().sort();
+	// Iterate over unsortedList in order of the sorted keyList to create the sortedList
+	sortedList = list();
+	for each  k in keyList
+	{
+		for each  u in unsortedList
+		{
+			if(u.get(sortKey) == k)
+			{
+				sortedList.add(u);
+			}
+		}
+	}
+	return sortedList;
+}

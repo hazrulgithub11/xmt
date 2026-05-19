@@ -1,0 +1,18 @@
+hide_add_delete_subform_e as "hide add delete subform entry"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on edit
+
+	field rules
+	{
+		actions 
+		{
+		hide add row of Subscription_Line_Items;
+		hide delete row of Subscription_Line_Items;
+		}
+	}
+
+}
+

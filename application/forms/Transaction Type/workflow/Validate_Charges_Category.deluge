@@ -1,0 +1,40 @@
+Validate_Charges_Category as "Validate Charges Category"
+{
+	type =  form
+	form = Transaction_Type
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Item_Category == "Sales Item")
+				{
+					if(input.Charges_Type == null || input.Charges_Type == "")
+					{
+						alert(Charges_Type,"This field is mandatory. Enter a value.");
+						cancel submit;
+					}
+					if(input.Circuit_ID_Type == null && input.Charges_Type != "Call Charges")
+					{
+						alert(Circuit_ID_Type,"This field is mandatory. Enter a value.");
+						cancel submit;
+					}
+					// 	if(input.Charges_Type != "Call Charges")
+					// 	{
+					// 		if(input.Tax == null)
+					// 		{
+					// 			alert(Tax,"This field is mandatory. Enter a value.");
+					// 			cancel submit;
+					// 		}
+					// 	}
+				}
+			)
+		}
+	}
+
+}
+

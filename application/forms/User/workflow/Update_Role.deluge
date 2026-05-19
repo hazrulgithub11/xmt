@@ -1,0 +1,20 @@
+Update_Role as "Update Role"
+{
+	type =  form
+	form = User
+
+	record event = on edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					resp = thisapp.permissions.assignUserInProfile(input.Email,input.Role.Role,true);
+			)
+		}
+	}
+
+}
+

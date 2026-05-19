@@ -1,0 +1,111 @@
+		form Email_Templates
+		{
+			displayname = "Email Templates"
+			success message = "Reminder Template Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			Template_Type
+			(
+				type = picklist
+				displayname = "Template Type"
+				maxchar = 100
+				values = {"Invoice","Pro Forma Invoices","Invoice Reminder","Debit Note","Credit Note","Payment Received"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Placeholders
+			(
+				type = list	
+				values = {"None","Invoice_No","Due_Date","Debit_Note_No","Credit_Note_No","Pro_Forma_Invoice_No","Customer_Name","Subscriptions","Invoice","Customer_Code","Customer_Email","Customer_TIN","Customer_SST","Payment_Received_No","Supplier_TIN","SST_ID"}
+				height = 60px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Selected_Placeholders
+			(
+    			type = textarea
+				displayname = "Selected Placeholders"
+				height = 100px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Reminder_Type
+			(
+				type = picklist
+				displayname = "Reminder Type"
+				maxchar = 100
+				values = {"First","Final"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Status
+			(
+				type = picklist
+				maxchar = 100
+				values = {"Active","Inactive"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Subject_field
+			(
+    			type = text
+				displayname = "Subject"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Body
+			(
+    			type = richtext
+				height = 200px
+				toolbar = enable
+				[
+					style, font-color, background-color, alignment, link, table, bullets-and-numbering, 
+					font-size : {1, 2, 3, 4, 5, 6, 7},
+					font-family : {"Serif", "Arimo", "Ptmono", "Heuristica", "OpenSans", "Tinos", "Lato", "DejaVuSans", "ComicNeue", "EBGaramond", "RobotoCondensed", "ArchivoBlack", "Carlito", "Barlow", "Comfortaa", "Montserrat", "Nunito", "Poppins", "Quicksand", "Raleway", "Rubik", "SourceSansPro"}
+				]
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

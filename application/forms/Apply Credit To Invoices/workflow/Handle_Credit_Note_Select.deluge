@@ -1,0 +1,20 @@
+Handle_Credit_Note_Select as "Handle Credit Note Selection"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on user input of Credit_Note
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Credit_Note_Selection_Trigger = !Credit_Note_Selection_Trigger;
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,20 @@
+Generate_Account_Number as "Generate Account Number"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Account_Number = thisapp.tenancy.generate_account_number(input.Account_Type);
+			)
+		}
+	}
+
+}
+

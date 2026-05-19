@@ -1,0 +1,21 @@
+Hide_Fields18 as "Hide Fields"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Display_Name;
+				hide Record_ID;
+			)
+		}
+	}
+
+}
+

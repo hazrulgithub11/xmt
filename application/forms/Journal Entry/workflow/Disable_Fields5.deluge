@@ -1,0 +1,49 @@
+Disable_Fields5 as "Disable Fields"
+{
+	type =  form
+	form = Journal_Entry
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Journal_Entry_No;
+				disable Document_No;
+				disable Invoice;
+				disable Debit_Note;
+				disable Credit_Note;
+				disable Payment_Received;
+				disable Deposits;
+				disable Sub_Total_Credit;
+				disable Sub_Total_Debit;
+				disable Total_Credit;
+				disable Total_Debit;
+				disable Difference;
+				disable Journal_Entry_Line_Item.Invoice;
+				disable Journal_Entry_Line_Item.Credit_Note;
+				disable Journal_Entry_Line_Item.Debit_Note;
+				disable Journal_Entry_Line_Item.Deposits;
+				disable Journal_Entry_Line_Item.Journal_Entry;
+				disable Journal_Entry_Line_Item.Payment_Received;
+				disable Created_By_The_System;
+			)
+		}
+		actions  (Created_By_The_System == true)
+		{
+			custom deluge script
+			(
+					disable Date_field;
+				disable Journal_Entry_Line_Item.Account;
+				disable Journal_Entry_Line_Item.Description;
+				disable Journal_Entry_Line_Item.Credit;
+				disable Journal_Entry_Line_Item.Debit;
+			)
+		}
+	}
+
+}
+

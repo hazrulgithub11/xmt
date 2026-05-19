@@ -1,0 +1,171 @@
+Disable_Fields2 as "Disable Fields"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// Supplier
+				disable Supplier;
+				disable Supplier_Name;
+				disable Supplier_Business_Activity_Description;
+				disable Supplier_TIN;
+				disable Supplier_ID_Type;
+				disable Supplier_Registration_Identification_Passport_Number;
+				disable Supplier_SST_Registration_Number;
+				disable Supplier_Telephone_Number;
+				disable Supplier_E_mail;
+				disable Supplier_Street;
+				disable Supplier_Postcode;
+				disable Supplier_City;
+				disable Supplier_State;
+				disable Supplier_Country;
+				// Customer
+				disable Customer_Name;
+				disable Customer_TIN;
+				disable Customer_ID_Type;
+				disable Customer_Registration_Identification_Passport_Number;
+				disable Customer_SST_Registration_Number;
+				disable Customer_Telephone_Number;
+				disable Customer_E_mail;
+				disable Customer_Street;
+				disable Customer_Postcode;
+				disable Customer_City;
+				disable Customer_State;
+				disable Customer_Country;
+				disable Delivery_Street;
+				disable Delivery_Postcode;
+				disable Delivery_City;
+				disable Delivery_State;
+				disable Delivery_Country;
+				// Invoice Info
+				disable Invoice_No;
+				disable Status;
+				disable Amount_Paid;
+				disable Amount_Due;
+				disable Base_Currency;
+				disable Invoice_Currency;
+				disable Sub_Total_Monthly_Rental;
+				disable Total_Tax_Monthly_Rental;
+				disable Grand_Total_Monthly_Rental;
+				disable Sub_Total_Internet_Charges;
+				disable Total_Tax_Internet_Charges;
+				disable Grand_Total_Internet_Charges;
+				disable Sub_Total_Call_Charges;
+				disable Total_Tax_Call_Charges;
+				disable Grand_Total_Call_Charges;
+				// Line Item - Monthly Rental
+				disable Monthly_Rental.Item_Code_Monthly_Rental;
+				disable Monthly_Rental.Classification_Codes_Monthly_Rental;
+				disable Monthly_Rental.Sub_Total_Monthly_Rental;
+				disable Monthly_Rental.Tax_Type_Monthly_Rental;
+				disable Monthly_Rental.Tax_Pct_Monthly_Rental;
+				disable Monthly_Rental.Tax_Amount_Monthly_Rental;
+				disable Monthly_Rental.Total_Monthly_Rental;
+				// Line Item - Internet Charges
+				disable Internet_Charges.Item_Code_Internet_Charges;
+				disable Internet_Charges.Classification_Codes_Internet_Charges;
+				disable Internet_Charges.Sub_Total_Internet_Charges;
+				disable Internet_Charges.Tax_Type_Internet_Charges;
+				disable Internet_Charges.Tax_Pct_Internet_Charges;
+				disable Internet_Charges.Tax_Amount_Internet_Charges;
+				disable Internet_Charges.Total_Internet_Charges;
+				// Line Item - Call Charges
+				disable Call_Charges.Item_Code_Call_Charges;
+				disable Call_Charges.Classification_Codes_Call_Charges;
+				disable Call_Charges.Sub_Total_Call_Charges;
+				disable Call_Charges.Tax_Type_Call_Charges;
+				disable Call_Charges.Tax_Pct_Call_Charges;
+				disable Call_Charges.Tax_Amount_Call_Charges;
+				disable Call_Charges.Total_Call_Charges;
+				// Invoice Info
+				disable Sub_Total;
+				disable Total_Tax;
+				disable Grand_Total;
+				disable Grand_Total_Base_Currency;
+				if(input.Status != "Pending Approval" && input.Status != "Resubmit")
+				{
+					disable Rejection_Reason;
+				}
+				// Related List
+				disable Invoice_Related_List.USERNAME;
+				disable Invoice_Related_List.INVOICE_NUMBER;
+				disable Invoice_Related_List.Related_List_Date;
+				disable Invoice_Related_List.Related_List_Time;
+				disable Invoice_Related_List.SUBMISSION_ID;
+				disable Invoice_Related_List.UUID;
+				disable Invoice_Related_List.PUBLIC_LINK;
+				disable Invoice_Related_List.STATUS;
+				disable Invoice_Related_List.MESSAGE;
+				disable User_Input_Trigger;
+			)
+		}
+		actions  (Status == "Approved" || Status == "Rejected" || Status == "Sent" || Status == "Partially Paid" || Status == "Paid" || Status == "Overdue")
+		{
+			custom deluge script
+			(
+					/*
+				 				 														// Customer info
+				 				 														disable Customer;
+				 				 														disable Customer_Code;
+				 				 														disable Invoice_Date;
+				 				 														disable Due_Date;
+				 				 														disable Payment_Term;
+				 				 														// Invoice info
+				 				 														disable Charge_Category;
+				 				 														disable Attachment;
+				 				 														disable Exchange_Rate;
+				 				 														disable Payable_To;
+				 				 														disable Reference_Invoice;
+				 				 														// Monthly Rental
+				 				 														disable Monthly_Rental.Item_Monthly_Rental;
+				 				 														disable Monthly_Rental.Classification_Codes_Monthly_Rental;
+				 				 														disable Monthly_Rental.Description_Monthly_Rental;
+				 				 														disable Monthly_Rental.Quantity_Monthly_Rental;
+				 				 														disable Monthly_Rental.Unit_Price_Monthly_Rental;
+				 				 														disable Monthly_Rental.Tax_Monthly_Rental;
+				 				 														disable Monthly_Rental.Customer_PO_No_Monthly_Rental;
+				 				 														disable Monthly_Rental.Business_Segment_Monthly_Rental;
+				 				 														disable Monthly_Rental.Business_Unit_Monthly_Rental;
+				 				 														disable Monthly_Rental.Circuit_ID_Monthly_Rental;
+				 				 														disable Monthly_Rental.Circuit_ID_Type_Monthly_Rental;
+				 				 														disable Monthly_Rental.Sub_Line_Item_Monthly_Rental;
+				 				 														// Internet Charges
+				 				 														disable Internet_Charges.Item_Internet_Charges;
+				 				 														disable Internet_Charges.Classification_Codes_Internet_Charges;
+				 				 														disable Internet_Charges.Description_Internet_Charges;
+				 				 														disable Internet_Charges.Quantity_Internet_Charges;
+				 				 														disable Internet_Charges.Unit_Price_Internet_Charges;
+				 				 														disable Internet_Charges.Tax_Internet_Charges;
+				 				 														disable Internet_Charges.Customer_PO_No_Internet_Charges;
+				 				 														disable Internet_Charges.Business_Segment_Internet_Charges;
+				 				 														disable Internet_Charges.Business_Unit_Internet_Charges;
+				 				 														disable Internet_Charges.Circuit_ID_Internet_Charges;
+				 				 														disable Internet_Charges.Circuit_ID_Type_Internet_Charges;
+				 				 														disable Internet_Charges.Sub_Line_Item_Internet_Charges;
+				 				 														// Call Charges
+				 				 														disable Call_Charges.Item_Call_Charges;
+				 				 														disable Call_Charges.Classification_Codes_Call_Charges;
+				 				 														disable Call_Charges.Description_Call_Charges;
+				 				 														disable Call_Charges.Quantity_Call_Charges;
+				 				 														disable Call_Charges.Unit_Price_Call_Charges;
+				 				 														disable Call_Charges.Tax_Call_Charges;
+				 				 														disable Call_Charges.Customer_PO_No_Call_Charges;
+				 				 														disable Call_Charges.Business_Segment_Call_Charges;
+				 				 														disable Call_Charges.Business_Unit_Call_Charges;
+				 				 														disable Call_Charges.Circuit_ID_Call_Charges;
+				 				 														disable Call_Charges.Circuit_ID_Type_Call_Charges;
+				 				 														disable Call_Charges.Sub_Line_Item_Call_Charges;
+				 				 														*/
+			)
+		}
+	}
+
+}
+

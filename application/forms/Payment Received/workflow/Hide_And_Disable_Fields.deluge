@@ -1,0 +1,27 @@
+Hide_And_Disable_Fields as "Hide And Disable Fields"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Payment_Received_No;
+				disable Payment_Received_No;
+				hide Payment_Received_Line_Item.Still_Owing;
+				hide Total_Still_Owing;
+				if(input.Payment_Type == "Deposit")
+				{
+					disable Payment_Received_Line_Item.Allocation;
+				}
+			)
+		}
+	}
+
+}
+

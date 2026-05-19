@@ -1,0 +1,30 @@
+form Alert_Message
+{
+	displayname = "Alert Message"
+	store data in zc = false
+	success message = ""
+	Section
+	(
+		type = section
+	 	row = 1
+	 	column = 0   
+		width = medium
+	)
+	Error_Message
+	(
+    	type = plaintext
+		value = "Add your Note here ..."
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	
+		actions
+		{
+			Close
+			(
+   				type = submit
+   				displayname = "Close"
+			)
+		}
+}

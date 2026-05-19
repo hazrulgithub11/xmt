@@ -1,0 +1,24 @@
+Disable_Fields7 as "Disable Fields"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Credits_Remaining;
+				disable Unpaid_Invoices.Invoice;
+				disable Unpaid_Invoices.Invoice_Date;
+				disable Unpaid_Invoices.Grand_Total;
+				disable Unpaid_Invoices.Amount_Due;
+			)
+		}
+	}
+
+}
+

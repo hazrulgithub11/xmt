@@ -1,0 +1,32 @@
+Validate_Record_Deletion7 as "Validate Record Deletion"
+{
+	type =  form
+	form = Chart_Of_Account
+
+	record event = on delete
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					getJournalEntryLineItems = Journal_Entry_Line_Item[Account == input.ID].ID.getAll();
+				getTenants = Tenancy[Payable_To1.contains(input.ID)].ID.getAll();
+				getSubs = Subscription[Payable_To1.contains(input.ID)].ID.getAll();
+				getPIs = Pro_Forma_Invoices[Payable_To1.contains(input.ID)].ID.getAll();
+				getPRs = Payment_Received[Paid_To == input.ID].ID.getAll();
+				get_invoice_list = Invoice[Payable_To == input.ID].ID.getAll();
+				get_credit_note_list = Credit_Note[Payable_To == input.ID].ID.getAll();
+				get_debit_note_list = Debit_Note[Payable_To == input.ID].ID.getAll();
+				if(getJournalEntryLineItems.size() > 0 || getTenants.size() > 0 || getSubs.size() > 0 || getPIs.size() > 0 || getPRs.size() > 0 || get_invoice_list.size() > 0 || get_credit_note_list.size() > 0 || get_debit_note_list.size() > 0)
+				{
+					alert "This account can’t be deleted because it’s used in another module.";
+					cancel delete;
+				}
+			)
+		}
+	}
+
+}
+

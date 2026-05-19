@@ -1,0 +1,5 @@
+// Record action: Create Account in Desk
+// Link name: Create_Account_in_Desk1
+// Form: Tenancy
+
+thisapp.tenancy.CreateAccountDesk(ID);

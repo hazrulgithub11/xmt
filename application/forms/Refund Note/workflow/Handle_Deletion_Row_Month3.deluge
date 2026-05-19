@@ -1,0 +1,20 @@
+Handle_Deletion_Row_Month3 as "Handle Deletion Row Monthly Rental"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on delete row of Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

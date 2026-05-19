@@ -1,0 +1,49 @@
+Validation_Line_Item as "Validation Line Item"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					isItemQuantityNegative = false;
+				isItemUnitPriceNegative = false;
+				countItems = 0;
+				for each  depositLineItem in input.Pro_Forma_Invoice_Line_Item
+				{
+					if(ifnull(depositLineItem.Quantity,0) < 1)
+					{
+						isItemQuantityNegative = true;
+					}
+					if(ifnull(depositLineItem.Unit_Price,0) < 1)
+					{
+						isItemUnitPriceNegative = true;
+					}
+					countItems = countItems + 1;
+				}
+				if(isItemQuantityNegative == true)
+				{
+					alert "Please enter Quantity values more than 0 .";
+					cancel submit;
+				}
+				if(isItemUnitPriceNegative == true)
+				{
+					alert "Please enter Unit Price values more than 0 Unit Price.";
+					cancel submit;
+				}
+				if(countItems == 0)
+				{
+					alert "Add at least one item need to be added";
+					cancel submit;
+				}
+			)
+		}
+	}
+
+}
+

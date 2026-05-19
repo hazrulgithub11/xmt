@@ -1,0 +1,17 @@
+Field_Rule_Template_Type as "Field Rule Template Type"
+{
+	type =  form
+	form = Email_Templates
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions  (Template_Type != "Invoice Reminder")
+		{
+			hide Reminder_Type;
+		}
+	}
+
+}
+

@@ -1,0 +1,17 @@
+Field_Rules_Template_Type as "Field Rules Template Type Created"
+{
+	type =  form
+	form = Email_Templates
+
+	record event = on add
+
+	field rules
+	{
+		actions  (Template_Type is null)
+		{
+			hide Placeholders,Selected_Placeholders,Status,Subject_field,Body;
+		}
+	}
+
+}
+

@@ -1,0 +1,33 @@
+Disable_Fields1 as "Disable Fields"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Account_Number;
+				disable Next_Billing_Date;
+				disable Latest_Billing_Date;
+				disable Final_Billing_Date;
+				disable Display_Name;
+				disable Record_ID;
+				//disable Overdue_Charges;
+				getSubs = Subscription[Subscription_Status == "Active" && Customer_Code == input.ID].ID.getAll();
+				if(getSubs.size() > 0)
+				{
+					disable Bill_Every;
+					disable Bill_For;
+					disable Billing_Cycle;
+				}
+			)
+		}
+	}
+
+}
+

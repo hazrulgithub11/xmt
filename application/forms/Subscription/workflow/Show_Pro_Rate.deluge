@@ -1,0 +1,24 @@
+Show_Pro_Rate as "Show Pro Rate"
+{
+	type =  form
+	form = Subscription
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Prorate_Note1 == "")
+				{
+					hide Prorate;
+					hide Prorate_Note1;
+				}
+			)
+		}
+	}
+
+}
+

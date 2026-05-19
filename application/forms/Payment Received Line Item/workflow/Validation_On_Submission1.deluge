@@ -1,0 +1,21 @@
+Validation_On_Submission1 as "Validation On Submission"
+{
+	type =  form
+	form = Payment_Received_Line_Item
+
+	record event = on add
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					alert "Receipt cannot be created on its own.";
+				cancel submit;
+			)
+		}
+	}
+
+}
+

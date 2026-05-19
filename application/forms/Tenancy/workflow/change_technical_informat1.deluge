@@ -1,0 +1,177 @@
+change_technical_informat1 as "change technical information in desk"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					technical_email = input.Technical_Email;
+				old_technical_email = old.Technical_Email;
+				// Get the old email before the change
+				contact_name = input.Contact;
+				phone_number = input.Phone_Number;
+				customerCode = input.Customer_Code;
+				// Fetch old values from Zoho Creator
+				old_contact_name = old.Contact;
+				old_phone_number = old.Phone_Number;
+				// Step 1: Check if a contact with the new email already exists in Zoho Desk
+				fetch_contacts_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technical_email;
+				contact_check_response = invokeurl
+				[
+					url :fetch_contacts_url
+					type :GET
+					connection:"zdesk"
+				];
+				//info "Contact Check Response: " + contact_check_response.toString();
+				contact_exists = false;
+				if(contact_check_response.contains("data") && contact_check_response.get("data").size() > 0)
+				{
+					contact_exists = true;
+					contact_id = contact_check_response.get("data").get(0).get("id");
+					//info "Contact already exists in Zoho Desk with ID: " + contact_id;
+				}
+				//info "contact_exists" + contact_exists;
+				// Step 2: If the Technical Email has changed and the new email does not exist in Zoho Desk, create a new contact
+				// ADD CODE 06/11/2025 - add new conditional statement "contact_check_response.toString().containsIgnoreCase("error")" to prevent from create contact when technical email is null
+				if(technical_email != old_technical_email && !contact_exists && !contact_check_response.toString().containsIgnoreCase("error"))
+				{
+					//info "Technical Email changed. Creating new contact in Zoho Desk.";
+					// Fetch the accountId from Tenancy module using the old email
+					//ADD CODE 06/11/2025 - to prevent get the wrong zoho desk account id due to old technical email is null 
+					if(old_technical_email != "" && old_technical_email != null)
+					{
+						tenancy_record = Tenancy[Technical_Email == old_technical_email];
+						if(tenancy_record.count() > 0)
+						{
+							account_id = tenancy_record.Record_ID;
+							info account_id;
+							// Get the Record_ID from Tenancy
+						}
+						else
+						{
+							account_id = null;
+							// Set to null if no record is found
+						}
+					}
+					else
+					{
+						account_id = input.Record_ID;
+					}
+					//info "Fetched Account ID: " + account_id;
+					// Create a new contact in Zoho Desk
+					create_contact_data = Map();
+					create_contact_cf = Map();
+					create_contact_data.put("email",technical_email);
+					// Use the new email
+					create_contact_data.put("lastName",contact_name);
+					create_contact_data.put("accountId",account_id);
+					// Assign the retrieved Account ID
+					create_contact_cf.put("cf_technical_contact_name",contact_name);
+					create_contact_cf.put("cf_technical_email",technical_email);
+					create_contact_cf.put("cf_technical_phone_number",phone_number);
+					create_contact_data.put("cf",create_contact_cf);
+					create_contact_url = "https://desk.zoho.com/api/v1/contacts";
+					create_contact_response = invokeurl
+					[
+						url :create_contact_url
+						type :POST
+						parameters:create_contact_data.toString()
+						connection:"zdesk"
+					];
+					//info "New Contact Creation Response: " + create_contact_response.toString();
+					// After creating a contact, update the Account to reflect the new email
+					if(account_id != null)
+					{
+						update_account_data = Map();
+						update_account_cf = Map();
+						update_account_cf.put("cf_technical_email",technical_email);
+						// Update the technical email
+						update_account_data.put("cf",update_account_cf);
+						update_account_url = "https://desk.zoho.com/api/v1/accounts/" + account_id;
+						update_account_response = invokeurl
+						[
+							url :update_account_url
+							type :PATCH
+							parameters:update_account_data.toString()
+							connection:"zdesk"
+						];
+						//info "Account Email Update Response: " + update_account_response.toString();
+					}
+				}
+				else
+				{
+					//info "Contact already exists or Technical Email has not changed, skipping creation.";
+				}
+				// Step 3: Fetch existing tenancy records for the updated email
+				// ADD CODE 06/11/2025 - add the conditional statement below in checking technical email aim to prevent looping which consume around 500 external call
+				if(technical_email != null && technical_email != "")
+				{
+					existing_tenancy = Tenancy[Technical_Email == technical_email];
+					if(existing_tenancy.count() > 0)
+					{
+						for each  tenant in existing_tenancy
+						{
+							// Fetch previous values of Contact and Phone_Number
+							old_contact_name = tenant.get("Contact");
+							old_phone_number = tenant.get("Phone_Number");
+							if(old_contact_name != contact_name || old_phone_number != phone_number)
+							{
+								//info "Matching tenant found with different contact or phone number.";
+								// Get Account ID directly from 'Tenancy' module's Record_ID
+								desk_account_id = tenant.Record_ID;
+								//info "Found Zoho Desk Account ID from Tenancy: " + desk_account_id;
+								// Step 4: Update Account Information
+								update_data = Map();
+								update_cf = Map();
+								update_cf.put("cf_technical_contact",contact_name);
+								update_cf.put("cf_technical_phone_number",phone_number);
+								update_data.put("cf",update_cf);
+								update_account_url = "https://desk.zoho.com/api/v1/accounts/" + desk_account_id;
+								update_response = invokeurl
+								[
+									url :update_account_url
+									type :PATCH
+									parameters:update_data.toString()
+									connection:"zdesk"
+								];
+								//info "Account Update Response: " + update_response.toString();
+								// Step 5: If a contact exists, update it
+								if(contact_exists)
+								{
+									//info "Updating existing contact in Zoho Desk.";
+									update_contact_data = Map();
+									update_contact_cf = Map();
+									update_contact_data.put("lastName",contact_name);
+									update_contact_cf.put("cf_technical_contact_name",contact_name);
+									update_contact_cf.put("cf_technical_phone_number",phone_number);
+									update_contact_data.put("cf",update_contact_cf);
+									update_contact_url = "https://desk.zoho.com/api/v1/contacts/" + contact_id;
+									update_contact_response = invokeurl
+									[
+										url :update_contact_url
+										type :PATCH
+										parameters:update_contact_data.toString()
+										connection:"zdesk"
+									];
+									//info "Contact Update Response: " + update_contact_response.toString();
+								}
+								else
+								{
+									//info "No associated contact found for the account.";
+								}
+							}
+						}
+					}
+				}
+			)
+		}
+	}
+
+}
+

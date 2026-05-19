@@ -1,0 +1,18 @@
+Disable_Addition_And_Dele1 as "Disable Addition And Deletion Row"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions  (Status != "Draft" && Status != "Pending Approval" && Status != "Rejected" && Status != "Resubmit")
+		{
+		hide add row of Pro_Forma_Invoice_Line_Item;
+		hide delete row of Pro_Forma_Invoice_Line_Item;
+		}
+	}
+
+}
+

@@ -1,0 +1,154 @@
+Customer_Name_Trigger_Wor1 as "Customer Name Trigger Workflow"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on user input of Customer_Name_Trigger
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Customer == null)
+				{
+					// Customer information
+					input.Customer_Name = null;
+					input.Customer_TIN = null;
+					input.Customer_ID_Type = null;
+					input.Customer_Registration_Identification_Passport_Number = null;
+					input.Customer_SST_Registration_Number = null;
+					input.Customer_E_mail = null;
+					input.Customer_Telephone_Number = null;
+					input.Customer_Street = null;
+					input.Customer_City = null;
+					input.Customer_Postcode = null;
+					input.Customer_State = null;
+					input.Customer_Country = null;
+					// Shipping information
+					input.Delivery_Street = null;
+					input.Delivery_City = null;
+					input.Delivery_Postcode = null;
+					input.Delivery_Country = null;
+					input.Delivery_State = null;
+					// Transaction information
+					input.Invoice_Currency = null;
+					input.Exchange_Rate = null;
+					// Clear dropdown options for business segment and business units
+					for each  curr_monthly_rental in input.Monthly_Rental
+					{
+						clear curr_monthly_rental.Business_Segment_Monthly_Rental;
+						clear curr_monthly_rental.Business_Unit_Monthly_Rental;
+						curr_monthly_rental.Business_Segment_Monthly_Rental:ui.add({});
+						curr_monthly_rental.Business_Unit_Monthly_Rental:ui.add({});
+					}
+					for each  curr_internet_charges in input.Internet_Charges
+					{
+						clear curr_internet_charges.Business_Segment_Internet_Charges;
+						clear curr_internet_charges.Business_Unit_Internet_Charges;
+						curr_internet_charges.Business_Segment_Internet_Charges:ui.add({});
+						curr_internet_charges.Business_Unit_Internet_Charges:ui.add({});
+					}
+					for each  curr_call_charges in input.Call_Charges
+					{
+						clear curr_call_charges.Business_Segment_Call_Charges;
+						clear curr_call_charges.Business_Unit_Call_Charges;
+						curr_call_charges.Business_Segment_Call_Charges:ui.add({});
+						curr_call_charges.Business_Unit_Call_Charges:ui.add({});
+					}
+					return;
+				}
+				else
+				{
+					customer_info = Customer_Profile[ID == input.Customer];
+					// Customer information
+					input.Customer_Name = input.Customer.Customer_Name;
+					input.Customer_TIN = input.Customer.Customer_TIN;
+					input.Customer_ID_Type = input.Customer.Customer_Registration_Number_Scheme;
+					input.Customer_Registration_Identification_Passport_Number = input.Customer.Customer_Registration_Number;
+					input.Customer_SST_Registration_Number = input.Customer.Customer_SST;
+					input.Customer_E_mail = input.Customer.Email_Address;
+					input.Customer_Telephone_Number = input.Customer.Phone_Number;
+					input.Customer_Street = input.Customer.Business_Street;
+					input.Customer_City = input.Customer.City;
+					input.Customer_Postcode = input.Customer.Postcode;
+					input.Customer_State = input.Customer.State;
+					input.Customer_Country = input.Customer.Country;
+					// Shipping information
+					input.Delivery_Street = input.Customer.Delivery_Street;
+					input.Delivery_City = input.Customer.Delivery_City;
+					input.Delivery_Postcode = input.Customer.Delivery_Postcode;
+					input.Delivery_Country = input.Customer.Delivery_Country;
+					input.Delivery_State = input.Customer.Delivery_State;
+					// Transaction information
+					input.Invoice_Currency = input.Customer.Currency;
+					if(input.Invoice_Currency == input.Base_Currency)
+					{
+						input.Exchange_Rate = 1;
+					}
+					else
+					{
+						try 
+						{
+							exchange_rate_get_response = invokeurl
+							[
+								url :"https://api.frankfurter.app/latest?from=" + input.Invoice_Currency + "&to=" + input.Base_Currency
+								type :GET
+							];
+							exchange_rate = exchange_rate_get_response.get("rates").get(input.Base_Currency);
+							input.Exchange_Rate = exchange_rate;
+						}
+						catch (e)
+						{
+							info e;
+							input.Exchange_Rate = "";
+						}
+					}
+					customer_info = Customer_Profile[ID == input.Customer];
+					for each  curr_monthly_rental in input.Monthly_Rental
+					{
+						curr_bussiness_segment_monthly_rental = ifnull(curr_monthly_rental.Business_Segment_Monthly_Rental,null);
+						curr_bussiness_unit_monthly_rental = ifnull(curr_monthly_rental.Business_Unit_Monthly_Rental,null);
+						curr_monthly_rental.Business_Segment_Monthly_Rental:ui.add(customer_info.Business_Segment);
+						if(curr_monthly_rental.Business_Segment_Monthly_Rental != null)
+						{
+							curr_get_business_units = Business_Unit[Business_Segment == curr_monthly_rental.Business_Segment_Monthly_Rental].ID.getAll();
+							curr_monthly_rental.Business_Unit_Monthly_Rental:ui.add(curr_get_business_units);
+						}
+						curr_monthly_rental.Business_Segment_Monthly_Rental=curr_bussiness_segment_monthly_rental;
+						curr_monthly_rental.Business_Unit_Monthly_Rental=curr_bussiness_unit_monthly_rental;
+					}
+					for each  curr_internet_charges in input.Internet_Charges
+					{
+						curr_bussiness_segment_internet_charges = ifnull(curr_internet_charges.Business_Segment_Internet_Charges,null);
+						curr_bussiness_unit_internet_charges = ifnull(curr_internet_charges.Business_Unit_Internet_Charges,null);
+						curr_internet_charges.Business_Segment_Internet_Charges:ui.add(customer_info.Business_Segment);
+						if(curr_internet_charges.Business_Segment_Internet_Charges != null)
+						{
+							curr_get_business_units = Business_Unit[Business_Segment == curr_internet_charges.Business_Segment_Internet_Charges].ID.getAll();
+							Internet_Charges.Business_Unit_Internet_Charges:ui.add(curr_get_business_units);
+						}
+						curr_internet_charges.Business_Segment_Internet_Charges=curr_bussiness_segment_internet_charges;
+						curr_internet_charges.Business_Unit_Internet_Charges=curr_bussiness_unit_internet_charges;
+					}
+					for each  curr_call_charges in input.Call_Charges
+					{
+						curr_bussiness_segment_call_charges = ifnull(curr_call_charges.Business_Segment_Call_Charges,null);
+						curr_bussiness_unit_call_charges = ifnull(curr_call_charges.Business_Unit_Call_Charges,null);
+						curr_call_charges.Business_Segment_Call_Charges:ui.add(customer_info.Business_Segment);
+						if(curr_call_charges.Business_Segment_Call_Charges != null)
+						{
+							curr_get_business_units = Business_Unit[Business_Segment == curr_call_charges.Business_Segment_Call_Charges].ID.getAll();
+							Call_Charges.Business_Unit_Call_Charges:ui.add(curr_get_business_units);
+						}
+						curr_call_charges.Business_Segment_Call_Charges=curr_bussiness_segment_call_charges;
+						curr_call_charges.Business_Unit_Call_Charges=curr_bussiness_unit_call_charges;
+					}
+				}
+			)
+		}
+	}
+
+}
+

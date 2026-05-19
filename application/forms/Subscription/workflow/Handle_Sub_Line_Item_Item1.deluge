@@ -1,0 +1,60 @@
+Handle_Sub_Line_Item_Item1 as "Handle Sub Line Item Item Field"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add
+		status = inactive
+
+	on user input of Subcription_Line_Items.Item
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(row.Item == null)
+				{
+					row.Unit_Price=null;
+					row.Quantity=null;
+					row.Subscription=null;
+					row.Tax=null;
+					row.Tax_Pct=null;
+					row.Tax_Amount=null;
+					row.Circuit_ID_Type=null;
+				}
+				else
+				{
+					unitPrice = ifnull(row.Item.Unit_Price,0);
+					unitPriceCurrency = unitPrice / ifnull(input.Exchange_Rate,1);
+					row.Unit_Price=unitPriceCurrency;
+					row.Item_Code=row.Item.Item_Code;
+					row.Description=row.Item.Description;
+					row.Quantity=1;
+					row.Sub_Total=row.Unit_Price;
+					if(row.Item.Tax == null)
+					{
+						row.Tax=null;
+						row.Tax_Pct=0;
+						row.Tax_Amount=0;
+					}
+					else
+					{
+						row.Tax=row.Item.Tax;
+						row.Tax_Pct=row.Item.Tax.Tax_Percentage;
+						row.Tax_Amount=row.Unit_Price * row.Item.Tax.Tax_Percentage / 100;
+					}
+					row.Total=row.Unit_Price + row.Tax_Amount;
+					row.Circuit_ID_Type=row.Item.Circuit_ID_Type;
+				}
+				grandTotal = 0;
+				for each  subLineItem in input.Subcription_Line_Items
+				{
+					grandTotal = grandTotal + ifnull(subLineItem.Total,0);
+				}
+				input.Grand_Total = grandTotal;
+			)
+		}
+	}
+
+}
+

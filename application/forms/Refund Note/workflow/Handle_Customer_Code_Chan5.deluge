@@ -1,0 +1,31 @@
+Handle_Customer_Code_Chan5 as "Handle Customer Code Changes"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on user input of Customer_Code
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					tenancyInfo = Tenancy[ID == input.Customer_Code];
+				input.Enable_Reminder = ifnull(tenancyInfo.Enable_Reminder,null);
+				input.Payment_Term = ifnull(tenancyInfo.Payment_Term,null);
+				if(input.Invoice_Date != null && input.Customer_Code != null && input.Payment_Term != null)
+				{
+					input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
+				}
+				if(input.Customer_Code == null)
+				{
+					input.Due_Date = null;
+					input.Enable_Reminder = "";
+				}
+			)
+		}
+	}
+
+}
+

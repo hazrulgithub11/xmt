@@ -1,0 +1,186 @@
+list All_Subscriptions
+{
+	displayName = "All Subscriptions"
+	show all rows from Subscription    
+	(
+		Customer_Code as "Customer Code"
+		(
+			view = All_Tenancies
+		)
+		Contract_Start_Date as "Contract Start Date"
+		Contract_End_Date as "Contract End Date"
+		Contract_Period as "Contract Period (Month)"
+		Customer_PO_No as "Customer PO No."
+		Grand_Total as "Grand Total"
+		Attachment
+		Customer_Name as "Customer Name"
+		(
+			view = All_Customers_Profile
+		)
+		Next_Billing_Date as "Next Billing Date"
+		Latest_Billing_Date as "Latest Billing Date"
+		Customer_Code.Bill_For as "Bill For"
+		Customer_Code.Billing_Cycle as "Billing Cycle"
+		Customer_Code.Bill_Every as "Bill Every"
+		Final_Billing_Date as "Final Billing Date"
+		Customer_Name.Modified_Time as "Modified Time"
+		Customer_Name.Added_Time as "Added Time"
+		Customer_Name.Modified_User as "Modified User"
+		Customer_Name.Added_User as "Added User"
+		Payment_Term as "Payment Term"
+		Grand_Total_MYR as "Grand Total MYR"
+		ID
+	)
+	filters
+	(
+		Customer_Code
+	)
+	custom actions
+	(
+		"Create Work Order"
+		(
+	  			workflow = Create_Work_Order
+				show action in view header = true
+				show action in edit record menu = true
+				condition = (Subscription_Status != "Terminated")
+				confirmation before execution
+				(
+					message for individual record = "Execute the Create Work Order action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Customer_PO_No as "Customer PO No."
+					Contract_Start_Date as "Contract Start Date"
+					Contract_End_Date as "Contract End Date"
+					Contract_Period as "Contract Period (Month)"
+					Latest_Billing_Date as "Latest Billing Date"
+					Next_Billing_Date as "Next Billing Date"
+					Final_Billing_Date as "Final Billing Date"
+					Customer_Name.Modified_Time as "Modified Time"
+					ID
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Customer_Name as "Customer Name"
+					Customer_Code as "Customer Code"
+					Contract_Start_Date as "Contract Start Date"
+					Contract_End_Date as "Contract End Date"
+					Contract_Period as "Contract Period (Month)"
+					Customer_PO_No as "Customer PO No."
+					Attachment
+				)
+			)
+			datablock2
+			(
+		     	title = "Bill Information"
+				fields
+				(
+					Latest_Billing_Date as "Latest Billing Date"
+					Next_Billing_Date as "Next Billing Date"
+					Final_Billing_Date as "Final Billing Date"
+					Payment_Term as "Payment Term"
+					Customer_Code.Bill_For as "Bill For"
+					Customer_Code.Bill_Every as "Bill Every"
+					Customer_Code.Billing_Cycle as "Billing Cycle"
+					Grand_Total as "Grand Total"
+					Grand_Total_MYR as "Grand Total MYR"
+				)
+			)
+			datablock3
+			(
+		     	title = "Subcription Line Items"
+		     	related field = Subcription_Line_Items
+				fields
+				(
+					Item
+					Item_Code as "Item Code"
+					Description
+					Unit_Price as "Unit Price"
+					Quantity1 as "Quantity"
+					Sub_Total as "Sub Total"
+					Tax
+					Tax_Amount as "Tax Amount"
+					Total
+				)
+			)
+			datablock4
+			(
+		     	title = "System Information"
+				fields
+				(
+					Customer_Name.Added_Time as "Added Time"
+					Customer_Name.Added_User as "Added User"
+					Customer_Name.Modified_Time as "Modified Time"
+					Customer_Name.Modified_User as "Modified User"
+				)
+			)
+			datablock5
+			(
+		     	title = "Work Order Creation"
+		     	related field = Work_Order_Creation.Subscription
+				fields
+				(
+					Work_Order_Type as "Work Order Type"
+					Ticket_Number as "Ticket Number"
+					Added_Time as "Added Time"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+			 	"Create Work Order"
+    	 	)
+    	)
+	)
+}

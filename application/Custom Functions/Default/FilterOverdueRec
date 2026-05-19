@@ -1,0 +1,5 @@
+void FilterOverdueRec(string report_name)
+{
+	url = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:" + report_name + "?Status=Sent&Due_Date_op=22&Due_Date=" + zoho.currentdate;
+	openUrl(url,"same window");
+}

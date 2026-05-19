@@ -1,0 +1,75 @@
+list statement_of_account.collect_payment_received_info(date startDate, date endDate, int customerProfile, list customerCodes)
+{
+	newline = hextoText("0A");
+	pmList = list();
+	if(customerCodes.size() > 0)
+	{
+		for each  customerCode in customerCodes
+		{
+			for each  pm in Payment_Received[Payment_Date >= startDate && Payment_Date <= endDate && Customer_Name == customerProfile && Customer_Code == customerCode]
+			{
+				getTenant = Tenancy[ID == pm.Customer_Code];
+				pmMap = Map();
+				pmMap.put("Tenant_Name",getTenant.Tenant_Name);
+				pmMap.put("Customer_Code",getTenant.Customer_Code);
+				pmMap.put("Date",pm.Payment_Date);
+				currency = pm.Currency;
+				details = pm.Payment_Received_No + newline;
+				for each  pmLineItem in pm.Payment_Received_Line_Item
+				{
+					if(pmLineItem.Invoice_No != null)
+					{
+						details = details + " " + currency + pmLineItem.Allocation + " for payment of Invoice " + pmLineItem.Reference_No + newline;
+					}
+					else if(pmLineItem.Debit_Note_No != null)
+					{
+						details = details + " " + currency + pmLineItem.Allocation + " for payment of Debit Note " + pmLineItem.Reference_No + newline;
+					}
+					else if(pmLineItem.Pro_Forma_Invoice_No != null)
+					{
+						details = details + " " + currency + pmLineItem.Allocation + " for payment of Pro Forma Invoice " + pmLineItem.Reference_No + newline;
+					}
+				}
+				pmMap.put("Details",details);
+				pmMap.put("Transaction","Payment Received");
+				pmMap.put("Amount",null);
+				pmMap.put("Payment",pm.Amount_Received);
+				pmList.add(pmMap);
+			}
+		}
+	}
+	else
+	{
+		for each  pm in Payment_Received[Payment_Date >= startDate && Payment_Date <= endDate && Customer_Name == customerProfile]
+		{
+			getTenant = Tenancy[ID == pm.Customer_Code];
+			pmMap = Map();
+			pmMap.put("Tenant_Name",getTenant.Tenant_Name);
+			pmMap.put("Customer_Code",getTenant.Customer_Code);
+			pmMap.put("Date",pm.Payment_Date);
+			currency = pm.Currency;
+			details = pm.Payment_Received_No + newline;
+			for each  pmLineItem in pm.Payment_Received_Line_Item
+			{
+				if(pmLineItem.Invoice_No != null)
+				{
+					details = details + " " + currency + pmLineItem.Allocation + " for payment of Invoice " + pmLineItem.Reference_No + newline;
+				}
+				else if(pmLineItem.Debit_Note_No != null)
+				{
+					details = details + " " + currency + pmLineItem.Allocation + " for payment of Debit Note " + pmLineItem.Reference_No + newline;
+				}
+				else if(pmLineItem.Pro_Forma_Invoice_No != null)
+				{
+					details = details + " " + currency + pmLineItem.Allocation + " for payment of Pro Forma Invoice " + pmLineItem.Reference_No + newline;
+				}
+			}
+			pmMap.put("Details",details);
+			pmMap.put("Transaction","Payment Received");
+			pmMap.put("Amount",null);
+			pmMap.put("Payment",pm.Amount_Received);
+			pmList.add(pmMap);
+		}
+	}
+	return pmList;
+}

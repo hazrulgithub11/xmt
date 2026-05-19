@@ -1,0 +1,31 @@
+Handle_Creation_Of_Invoic as "Handle Creation Of Invoice Other Than Monthly"
+{
+	type =  schedule
+	form = Subscription[Customer_Code.Billing_Cycle != "Monthly" && Subscription_Status == "Active"]
+	start = before 5 days from Next_Billing_Date at "09:00:00"
+	time zone = "Asia/Singapore"
+	on start
+	{
+		actions 
+		{
+		on load
+		(
+			tenantInfo = Tenancy[ID == input.Customer_Code];
+				billingCycle = tenantInfo.Billing_Cycle;
+				billFor = tenantInfo.Bill_For;
+				billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billingCycle);
+				subsListId = List();
+				subsListId.add(input.ID);
+				if(billFor == "Current Duration")
+				{
+					thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,input.Next_Billing_Date,input.Next_Billing_Date,false,null,null);
+				}
+				else
+				{
+					thisapp.invoice.create_invoice_previous_not_monthly(input.ID,billCycleInt,input.Customer_Code,input.Next_Billing_Date,input.Next_Billing_Date,false,null,null);
+				}
+		)
+		}
+	}
+}
+

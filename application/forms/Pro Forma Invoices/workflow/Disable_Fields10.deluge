@@ -1,0 +1,70 @@
+Disable_Fields10 as "Disable Fields"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Pro_Forma_Invoice_No;
+				disable SST_ID;
+				disable Supplier_TIN;
+				disable Customer_TIN;
+				disable Customer_SST;
+				disable Status;
+				disable Sub_Total;
+				disable Total_Tax;
+				disable Grand_Total;
+				disable Currency;
+				disable Exchange_Rate;
+				disable Grand_Total_MYR;
+				disable Amount_Due;
+				disable Amount_Paid;
+				disable Organization;
+				disable Pro_Forma_Invoice_Line_Item.Item_Code;
+				disable Pro_Forma_Invoice_Line_Item.Sub_Total;
+				disable Pro_Forma_Invoice_Line_Item.Tax;
+				disable Pro_Forma_Invoice_Line_Item.Tax_Pct;
+				disable Pro_Forma_Invoice_Line_Item.Tax_Amount;
+				disable Pro_Forma_Invoice_Line_Item.Total;
+				disable Pro_Forma_Invoice_Line_Item.Total_MYR;
+				disable Pro_Forma_Invoice_Line_Item.Customer_Name;
+				disable Pro_Forma_Invoice_Line_Item.Customer_Code;
+				if(input.Status != "Pending Approval" && input.Status != "Resubmit")
+				{
+					disable Rejection_Reason;
+				}
+			)
+		}
+		actions  (Status == "Approved" || Status == "Sent" || Status == "Partially Paid" || Status == "Overdue" || Status == "Paid" || Status == "Drawn" || Status == "Pending Approval")
+		{
+			custom deluge script
+			(
+					disable Customer_Name;
+				disable Customer_Code;
+				disable Pro_Forma_Invoice_Date;
+				disable Payment_Term;
+				disable Due_Date;
+				disable Payment_Method;
+				disable Payable_To1;
+				disable Pro_Forma_Invoice_Line_Item.Item;
+				disable Pro_Forma_Invoice_Line_Item.Description;
+				disable Pro_Forma_Invoice_Line_Item.Unit_Price;
+				disable Pro_Forma_Invoice_Line_Item.Quantity;
+				disable Pro_Forma_Invoice_Line_Item.Business_Segment;
+				disable Pro_Forma_Invoice_Line_Item.Business_Unit;
+				if(input.Status == "Pending Approval")
+				{
+					disable Customer_Email;
+				}
+			)
+		}
+	}
+
+}
+

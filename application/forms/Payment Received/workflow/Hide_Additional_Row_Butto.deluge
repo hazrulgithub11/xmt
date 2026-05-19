@@ -1,0 +1,17 @@
+Hide_Additional_Row_Butto as "Hide Additional Row Button"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions 
+		{
+		hide add row of Payment_Received_Line_Item;
+		}
+	}
+
+}
+

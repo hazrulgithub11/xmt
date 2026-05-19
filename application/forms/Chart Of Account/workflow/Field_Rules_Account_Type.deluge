@@ -1,0 +1,17 @@
+Field_Rules_Account_Type as "Field Rules Account Type"
+{
+	type =  form
+	form = Chart_Of_Account
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions  (Account_Type != "Bank")
+		{
+			hide Bank_Account_Number;
+		}
+	}
+
+}
+

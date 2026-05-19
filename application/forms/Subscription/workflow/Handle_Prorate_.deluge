@@ -1,0 +1,238 @@
+Handle_Prorate_ as "Handle Prorate?"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Prorate
+	{
+		actions  (Contract_Start_Date is not null && Contract_End_Date is not null && Contract_Period is not null)
+		{
+			custom deluge script
+			(
+					getTenant = Tenancy[ID == input.Customer_Code];
+				billCycle = getTenant.Billing_Cycle;
+				billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billCycle);
+				billFor = getTenant.Bill_For;
+				billEvery = getTenant.Bill_Every;
+				prorate = input.Prorate;
+				prorateNote = "";
+				contractStartDate = input.Contract_Start_Date;
+				contractEndDate = input.Contract_End_Date;
+				if(billCycle == "Monthly")
+				{
+					if(billFor == "Current Duration" && contractStartDate > today.toStartOfMonth() && contractStartDate <= today.eomonth(0))
+					{
+						if(prorate)
+						{
+							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date + " to " + input.Contract_Start_Date.eomonth(0) + ".";
+						}
+						else
+						{
+							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date.toStartOfMonth() + " to " + input.Contract_Start_Date.eomonth(0) + ".";
+						}
+					}
+					else if(billFor == "Previous Duration" && contractStartDate > today.subMonth(1).toStartOfMonth() && contractStartDate <= today.eomonth(0) && contractStartDate.getDay() != 1)
+					{
+						if(prorate)
+						{
+							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date + " to " + input.Contract_Start_Date.eomonth(0) + ".";
+						}
+						else
+						{
+							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date.toStartOfMonth() + " to " + input.Contract_Start_Date.eomonth(0) + ".";
+						}
+					}
+					input.Prorate_Note1 = prorateNote;
+				}
+				/*if(input.Contract_Start_Date < today.toStartOfMonth())
+				 				 				{
+				 				 					getTenant = Tenancy[ID == input.Customer_Code];
+				 				 					billCycle = getTenant.Billing_Cycle;
+				 				 					billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billCycle);
+				 				 					billFor = getTenant.Bill_For;
+				 				 					billEvery = getTenant.Bill_Every;
+				 				 					prorate = input.Prorate;
+				 				 					prorateNote = "";
+				 				 					contractStartDate = input.Contract_Start_Date;
+				 				 					contractEndDate = input.Contract_End_Date;
+				 				 					if(billCycle == "Monthly")
+				 				 					{
+				 				 						billEvery = getTenant.Bill_Every;
+				 				 						//Determine The Current Billing Date
+				 				 						if(billEvery == "Last Day Of Month" || (billEvery == "29" && today.getMonth() == 2 && !thisapp.is_leap_year(today.getYear())))
+				 				 						{
+				 				 							currentBillingEveryDate = toDate("01-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy").eomonth(0);
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							currentBillingEveryDate = toDate(billEvery + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
+				 				 						}
+				 				 						//Determine Start Billing Current Date
+				 				 						if(billEvery == "Last Day Of Month" || (billEvery == "29" && contractStartDate.getMonth() == 2 && !thisapp.is_leap_year(contractStartDate.getYear())))
+				 				 						{
+				 				 							startBillingEveryDate = toDate("01-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy").eomonth(0);
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							startBillingEveryDate = toDate(billEvery + "-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy");
+				 				 						}
+				 				 						nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt);
+				 				 						if(billFor == "Current Duration")
+				 				 						{
+				 				 							contractPeriodLeft = monthsBetween(currentBillingEveryDate,contractEndDate);
+				 				 							nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt);
+				 				 							if(prorate)
+				 				 							{
+				 				 								if(contractPeriodLeft > 0)
+				 				 								{
+				 				 									prorateNote = "This invoice will include backdated charges from " + input.Contract_Start_Date + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "This invoice will include backdated charges from " + input.Contract_Start_Date + " to the contract end date " + input.Contract_End_Date + ".";
+				 				 								}
+				 				 							}
+				 				 							else
+				 				 							{
+				 				 								if(contractPeriodLeft > 0)
+				 				 								{
+				 				 									prorateNote = "This invoice will only cover the current billing period from " + currentBillingEveryDate + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "No invoice will be created, as the contract period has ended.";
+				 				 								}
+				 				 							}
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt);
+				 				 							contractPeriodLeft = monthsBetween(nextBillingDate,contractEndDate);
+				 				 							if(billEvery == "Last Day Of Month" && nextBillingDate.getDay() != nextBillingDate.eomonth(0).getDay() && nextBillingDate.getMonth() != 2)
+				 				 							{
+				 				 								nextBillingDate = toDate(nextBillingDate.eomonth(0).getDay() + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+				 				 							}
+				 				 							else if(billEvery == "29" && nextBillingDate.getDay() != 29 && nextBillingDate.getMonth() != 2)
+				 				 							{
+				 				 								nextBillingDate = toDate("29" + "-" + nextBillingDate.getMonth() + "-" + nextBillingDate.getYear(),"dd-MM-yyyy");
+				 				 							}
+				 				 							if(prorate)
+				 				 							{
+				 				 								if(contractPeriodLeft >= 0)
+				 				 								{
+				 				 									prorateNote = "The first invoice will include backdated charges from " + input.Contract_Start_Date + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "This invoice will include backdated charges from " + input.Contract_Start_Date + " to the contract end date " + input.Contract_End_Date + ".";
+				 				 								}
+				 				 							}
+				 				 							else
+				 				 							{
+				 				 								if(contractPeriodLeft >= 0)
+				 				 								{
+				 				 									prorateNote = "The first invoice will only cover the current billing period from " + currentBillingEveryDate + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "No invoice will be created, as the contract period has ended.";
+				 				 								}
+				 				 							}
+				 				 						}
+				 				 						if(prorate)
+				 				 						{
+				 				 							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date + " to " + input.Contract_Start_Date.eomonth(0) + ".";
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date.toStartOfMonth() + " to " + input.Contract_Start_Date.eomonth(0) + ".";
+				 				 						}
+				 				 						input.Prorate_Note1 = prorateNote;
+				 				 					}
+				 				 					else
+				 				 					{
+				 				 						//Determine The Current Billing Date
+				 				 						//currentBillingEveryDate = toDate(contractStartDate.getDay() + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
+				 				 						if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay())
+				 				 						{
+				 				 							currentBillingEveryDate = today.eomonth(0);
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							currentBillingEveryDate = toDate(contractStartDate.getDay() + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
+				 				 						}
+				 				 						if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay())
+				 				 						{
+				 				 							nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt).eomonth(0);
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							nextBillingDate = currentBillingEveryDate.addMonth(billCycleInt);
+				 				 						}
+				 				 						//Determine Start Billing Every Date
+				 				 						startBillingEveryDate = toDate(contractStartDate.getDay() + "-" + contractStartDate.getMonth() + "-" + contractStartDate.getYear(),"dd-MM-yyyy");
+				 				 						if(billFor == "Current Duration")
+				 				 						{
+				 				 							contractPeriodLeft = monthsBetween(currentBillingEveryDate,contractEndDate);
+				 				 							addMonthValue = (contractPeriodLeft / billCycleInt).toNumber() * billCycleInt;
+				 				 							if(prorate)
+				 				 							{
+				 				 								if(addMonthValue <= 0)
+				 				 								{
+				 				 									prorateNote = "The first invoice will include backdated charges from " + input.Contract_Start_Date + " to the contract end date " + input.Contract_End_Date + ".";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "This invoice will include backdated charges from " + input.Contract_Start_Date + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 							}
+				 				 							else
+				 				 							{
+				 				 								if(addMonthValue <= 0)
+				 				 								{
+				 				 									prorateNote = "No invoice will be created, as the contract period has ended.";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "The first invoice will only cover the current billing period from " + currentBillingEveryDate + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 							}
+				 				 						}
+				 				 						else
+				 				 						{
+				 				 							//periodBetweenStartDateAndCurrentDate = monthsBetween(contractStartDate,currentBillingEveryDate);
+				 				 							//addMonthValue = billCycleInt * (1 + (periodBetweenStartDateAndCurrentDate / billCycleInt).toNumber());
+				 				 							contractPeriodLeft = monthsBetween(nextBillingDate,contractEndDate);
+				 				 							if(prorate)
+				 				 							{
+				 				 								if(contractPeriodLeft > 0)
+				 				 								{
+				 				 									prorateNote = "This invoice will include backdated charges from " + input.Contract_Start_Date + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "The first invoice will include backdated charges from " + input.Contract_Start_Date + " to the contract end date " + input.Contract_End_Date + ".";
+				 				 								}
+				 				 							}
+				 				 							else
+				 				 							{
+				 				 								if(contractPeriodLeft > 0)
+				 				 								{
+				 				 									prorateNote = "The first invoice will only cover the current billing period from " + currentBillingEveryDate + " to " + nextBillingDate + ".";
+				 				 								}
+				 				 								else
+				 				 								{
+				 				 									prorateNote = "No invoice will be created, as the contract period has ended.";
+				 				 								}
+				 				 							}
+				 				 						}
+				 				 					}
+				 				 				}*/
+			)
+		}
+	}
+
+}
+

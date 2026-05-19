@@ -1,0 +1,28 @@
+Handle_Deletion_Of_Row3 as "Handle Deletion Of Row"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on delete row of Payment_Received_Line_Item
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// totalPaymentReceived = 0;
+				// totalPaymentReceivedMYR = 0;
+				// for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+				// {
+				// 	totalPaymentReceived = totalPaymentReceived + ifnull(paymentReceivedLineItem.Allocation,0);
+				// 	totalPaymentReceivedMYR = totalPaymentReceivedMYR + ifnull(paymentReceivedLineItem.Allocation_MYR,0);
+				// }
+				input.Amount_Received = input.Amount_Received - ifnull(row.Allocation,0);
+				input.Amount_Received_MYR = input.Amount_Received_MYR - ifnull(row.Allocation_MYR,0);
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,20 @@
+Disable_Fields4 as "Disable Fields"
+{
+	type =  form
+	form = Apply_Credit_To_Invoices
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Credit_Note;
+			)
+		}
+	}
+
+}
+

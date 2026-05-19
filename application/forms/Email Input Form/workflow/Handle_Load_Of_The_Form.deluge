@@ -1,0 +1,46 @@
+Handle_Load_Of_The_Form as "Handle Load Of The Form"
+{
+	type =  form
+	form = Email_Input_Form
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					getEmailTemplate = Email_Templates[Template_Type == input.Document_Type && Status == "Active"];
+				//Get The Fields API Name
+				getFields = invokeurl
+				[
+					url :"https://www.zohoapis.com/creator/v2.1/meta" + zoho.appuri + "form/" + input.Document_Type.replaceAll(" ","_") + "/fields"
+					type :GET
+					connection:"zoho_creator_connection"
+				];
+				//Insert value in placeholders field
+				if(getFields.get("code") == 3000)
+				{
+					fieldsList = list();
+					for each  field in getFields.get("fields")
+					{
+						if(field.get("type") != 21)
+						{
+							//info field.get("link_name");
+							fieldsList.add(field.get("link_name"));
+						}
+					}
+				}
+				clear Placeholders;
+				input.Placeholders:ui.add(fieldsList);
+				input.Placeholders = getEmailTemplate.Placeholders;
+				input.Selected_Placeholders = getEmailTemplate.Selected_Placeholders;
+				input.Subject_field = getEmailTemplate.Subject_field;
+				input.Body = getEmailTemplate.Body;
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,37 @@
+void tenancy.fetch_subscription_and_tenancy_details(int tenantID)
+{
+	tenantInfo = Tenancy[ID == tenantID];
+	actualBillingDate = tenantInfo.Next_Billing_Date;
+	billFor = tenantInfo.Bill_For;
+	billingCycle = tenantInfo.Billing_Cycle;
+	billEvery = tenantInfo.Bill_Every;
+	subsListId = Subscription[Customer_Code = tenantID && Next_Billing_Date = actualBillingDate && Subscription_Status == "Active"].ID.getAll();
+	//info "subsListId:" + subsListId;
+	billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billingCycle);
+	if(subsListId.size() > 0)
+	{
+		if(billEvery.toLong() == 1)
+		{
+			monthlyBillingDate = actualBillingDate.toStartOfMonth();
+		}
+		else
+		{
+			if(billEvery == "Last Day Of Month")
+			{
+				monthlyBillingDate = toDate("01" + "-" + actualBillingDate.getMonth() + "-" + actualBillingDate.getYear(),"dd-MM-yyyy").eomonth(0);
+			}
+			else
+			{
+				monthlyBillingDate = toDate(billEvery + "-" + actualBillingDate.getMonth() + "-" + actualBillingDate.getYear(),"dd-MM-yyyy");
+			}
+		}
+		if(billFor == "Current Duration")
+		{
+			thisapp.invoice.create_invoice_current_monthly(subsListId,billCycleInt,tenantID,monthlyBillingDate,actualBillingDate,false,null,null,false);
+		}
+		else
+		{
+			thisapp.invoice.create_invoice_previous_monthly(subsListId,billCycleInt,tenantID,monthlyBillingDate,actualBillingDate,false,null,null,false);
+		}
+	}
+}

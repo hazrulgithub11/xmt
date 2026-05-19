@@ -1,0 +1,20 @@
+Handle_Submission_Form_an3 as "Handle Submission Form and Submit Invoice to LHDN"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					openUrl("#Report:Debit_Notes","same window");
+			)
+		}
+	}
+
+}
+

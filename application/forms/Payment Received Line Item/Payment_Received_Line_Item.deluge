@@ -1,0 +1,178 @@
+		form Payment_Received_Line_Item
+		{
+			displayname = "Payment Received Line Item"
+			success message = "Data Added Successfully!"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			Document_Date
+			(
+    			type = date
+				displayname = "Document Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Reference_No
+			(
+    			type = text
+				displayname = "Reference No."
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Description
+			(
+    			type = textarea
+				height = 100px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Invoice_No
+			(
+				type = picklist	
+				displayname = "Invoice No."
+				values  = Invoice.ID
+    			displayformat = [Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Debit_Note_No
+			(
+				type = picklist	
+				displayname = "Debit Note No."
+				values  = Debit_Note.ID
+    			displayformat = [Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Pro_Forma_Invoice_No
+			(
+				type = picklist	
+				displayname = "Pro Forma Invoice No."
+				values  = Pro_Forma_Invoices.ID
+    			displayformat = [Pro_Forma_Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Amount
+			(
+				type = decimal
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Outstanding_Balance
+			(
+				type = decimal
+				displayname = "Outstanding Balance"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Allocation
+			(
+				type = decimal
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Allocation_MYR
+			(
+				type = decimal
+				displayname = "Allocation (MYR)"
+				format = commadotwestern
+				private = true
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Still_Owing
+			(
+				type = decimal
+				displayname = "Still Owing"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Payment_Received
+			(
+				type = picklist	
+				displayname = "Payment Received"
+				values  = Payment_Received.ID
+    			bidirectional = Payment_Received_Line_Item
+    			displayformat = [Payment_Received_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Code
+			(
+				type = picklist	
+				displayname = "Customer Code"
+				values  = Tenancy.ID
+    			displayformat = [Tenant_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Name
+			(
+				type = picklist	
+				displayname = "Customer Name"
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

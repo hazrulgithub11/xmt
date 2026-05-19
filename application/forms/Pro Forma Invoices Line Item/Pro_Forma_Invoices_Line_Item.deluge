@@ -1,0 +1,196 @@
+		form Pro_Forma_Invoices_Line_Item
+		{
+			displayname = "Pro Forma Invoices Line Item"
+			success message = "Data Added Successfully!"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Item
+			(
+				type = picklist	
+				displayname = "nvoic"
+				values  = Transaction_Type[Item_Category == "Deposit Item"].ID
+    			displayformat = [Item_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Item_Code
+			(
+    			type = text
+				displayname = "Item Code"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Description
+			(
+    			type = textarea
+				height = 100px
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Unit_Price
+			(
+				type = decimal
+				displayname = "Unit Price"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Quantity
+			(
+				type = number
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Sub_Total
+			(
+				type = decimal
+				displayname = "Sub Total"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Tax
+			(
+				type = picklist	
+				values  = Tax.ID
+    			displayformat = [Tax_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Tax_Pct
+			(
+				type = decimal
+				displayname = "Tax Pct"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Tax_Amount
+			(
+				type = decimal
+				displayname = "Tax Amount"
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Total
+			(
+				type = decimal
+				format = commadotwestern
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Total_MYR
+			(
+				type = decimal
+				displayname = "Total (MYR)"
+				format = commadotwestern
+				private = true
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Business_Segment
+			(
+				type = picklist	
+				displayname = "Business Segment"
+				values  = Business_Segment.ID
+    			displayformat = [Business]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Business_Unit
+			(
+				type = picklist	
+				displayname = "Business Unit"
+				values  = Business_Unit.ID
+    			displayformat = [Business_Unit]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Name
+			(
+				type = picklist	
+				displayname = "Customer Name"
+				values  = Customer_Profile.ID
+    			displayformat = [Customer_Name]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Customer_Code
+			(
+				type = picklist	
+				displayname = "Customer Code"
+				values  = Tenancy.ID
+    			displayformat = [Customer_Code]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Pro_Forma_Invoice
+			(
+				type = picklist	
+				displayname = "Pro Forma Invoice"
+				values  = Pro_Forma_Invoices.ID
+    			bidirectional = Pro_Forma_Invoice_Line_Item
+    			displayformat = [Pro_Forma_Invoice_No]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

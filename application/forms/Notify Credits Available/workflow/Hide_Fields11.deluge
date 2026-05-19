@@ -1,0 +1,25 @@
+Hide_Fields11 as "Hide Fields"
+{
+	type =  form
+	form = Notify_Credits_Available
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Invoice;
+				hide Customer_Code;
+				hide Customer_Name;
+				hide Customer_Email;
+				hide Type_Of_Action;
+				hide Invoice_No;
+			)
+		}
+	}
+
+}
+

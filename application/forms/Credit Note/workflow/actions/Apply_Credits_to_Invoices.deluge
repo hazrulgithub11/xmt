@@ -1,0 +1,6 @@
+// Record action: Apply Credits to Invoices
+// Link name: Apply_Credits_to_Invoices
+// Form: Credit_Note
+
+openURL("#Form:Apply_Credit_To_Invoices?Credit_Note=" + input.ID,"popup","height=800,width=1500");
+

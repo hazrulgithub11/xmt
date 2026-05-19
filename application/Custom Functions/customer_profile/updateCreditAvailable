@@ -1,0 +1,4 @@
+void customer_profile.updateCreditAvailable(int customerNameID)
+{
+	info "kcw";
+}

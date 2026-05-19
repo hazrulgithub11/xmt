@@ -1,0 +1,23 @@
+Creation_Of_Invoice_For_B1 as "Creation Of Invoice For Bill Every 1st"
+{
+	type =  schedule
+		status = inactive
+	start = "2024-09-01 09:00:00"
+	frequency = monthly
+	time zone = "Asia/Singapore"
+	on start
+	{
+		actions 
+		{
+		on load
+		(
+			tenanciesId = Tenancy[Next_Billing_Date == toDate("10-01-2024")].ID.getAll();
+				for each  tenantID in tenanciesId
+				{
+					thisapp.tenancy.fetch_subscription_and_tenancy_details(tenantID);
+				}
+		)
+		}
+	}
+}
+

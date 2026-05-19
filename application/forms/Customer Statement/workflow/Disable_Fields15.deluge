@@ -1,0 +1,29 @@
+Disable_Fields15 as "Disable Fields"
+{
+	type =  form
+	form = Customer_Statement
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					disable Opening_Balance;
+				disable Invoiced_Amount;
+				disable Amount_Paid;
+				disable Balance_Due;
+				disable Transactions.Date_field;
+				disable Transactions.Transaction;
+				disable Transactions.Details;
+				disable Transactions.Amount;
+				disable Transactions.Payments;
+				disable Transactions.Balance;
+			)
+		}
+	}
+
+}
+

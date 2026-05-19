@@ -1,0 +1,36 @@
+Handle_Customer_Name_Chan4 as "Handle Customer Name Changes"
+{
+	type =  form
+	form = Refund_Note
+
+	record event = on add or edit
+
+	on user input of Customer
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+			)
+		}
+		actions 
+		{
+			custom deluge script
+			(
+					credit_note_id_list = Credit_Note[Customer == input.Customer && Credits_Remaining > 0].ID.getAll();
+				if(credit_note_id_list.size() == 0)
+				{
+					input.Reference_Credit_Note:ui.add({});
+					alert "No credit notes found for this customer. Refund note must have an credit note reference.";
+				}
+				else
+				{
+					input.Reference_Credit_Note:ui.add(credit_note_id_list);
+				}
+			)
+		}
+	}
+
+}
+

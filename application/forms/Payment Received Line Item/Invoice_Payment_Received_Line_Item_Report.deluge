@@ -1,0 +1,86 @@
+list Invoice_Payment_Received_Line_Item_Report
+{
+	displayName = "Invoice Payment Received Line Item Report"
+	show all rows from Payment_Received_Line_Item  [Payment_Received.Payment_Type == "Invoice/Debit Note"]  
+	(
+		Invoice_No as "Invoice No."
+		Document_Date as "Document Date"
+		Amount
+		Outstanding_Balance as "Outstanding Balance"
+		Allocation
+		Payment_Received as "Payment Received"
+		Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Invoice_No as "Invoice No."
+					Document_Date as "Document Date"
+					Amount
+					Outstanding_Balance as "Outstanding Balance"
+					Allocation
+					Payment_Received as "Payment Received"
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Invoice_No as "Invoice No."
+					Document_Date as "Document Date"
+					Amount
+					Outstanding_Balance as "Outstanding Balance"
+					Allocation
+					Payment_Received as "Payment Received"
+					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

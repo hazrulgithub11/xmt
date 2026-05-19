@@ -1,0 +1,20 @@
+Handle_Deletion_of_Credit1 as "Handle Deletion of Credits Applied"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	on delete row of Credits_Applied
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

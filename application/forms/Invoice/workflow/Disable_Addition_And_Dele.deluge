@@ -1,0 +1,17 @@
+Disable_Addition_And_Dele as "Disable Addition And Deletion Row"
+{
+	type =  form
+	form = Invoice
+
+	record event = on add or edit
+
+	field rules
+	{
+		actions 
+		{
+		hide add row of Credits_Applied;
+		}
+	}
+
+}
+

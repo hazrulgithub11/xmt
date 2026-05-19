@@ -1,0 +1,24 @@
+Load_of_the_form_Initiali1 as "Load of the form Initialization"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add or edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					/* Apply Credit To Invoices And Refund Initialization */
+				input.Is_Initialization = true;
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+				/* Customer Name Trigger Initialization*/
+				input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+			)
+		}
+	}
+
+}
+

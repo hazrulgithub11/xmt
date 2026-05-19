@@ -1,0 +1,32 @@
+Handle_Customer_Name2 as "Handle Customer Name"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on user input of Customer_Name
+	{
+		actions  (Customer_Name.ID is not null)
+		{
+			custom deluge script
+			(
+					input.Currency = ifnull(input.Customer_Name.Currency,null);
+				input.Customer_Code = null;
+				input.Payment_Method = null;
+				input.Reference = "";
+				input.Customer_Email = ifnull(input.Customer_Name.Email_Address,"");
+				input.Customer_TIN = ifnull(input.Customer_Name.Customer_TIN,"");
+				input.Customer_SST = ifnull(input.Customer_Name.Customer_SST,"");
+				input.Paid_To = null;
+				totalAmountReceived = 0;
+				customerInfo = Customer_Profile[ID == input.Customer_Name];
+				input.Payment_Received_Line_Item.clear();
+				input.Amount_Received = 0;
+				input.Amount_Received_MYR = ifnull(input.Amount_Received,0) * ifnull(input.Exchange_Rate,1);
+			)
+		}
+	}
+
+}
+

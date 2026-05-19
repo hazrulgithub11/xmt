@@ -1,0 +1,352 @@
+prefill_Customer_Name_Cus as "prefill Customer Name, Customer Code"
+{
+	type =  form
+	form = Work_Order_Creation
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					hide Brand_TAC;
+				hide Model_TAC;
+				hide Serial_Number_TAC;
+				hide MAC_Address_TAC;
+				hide Extension_No_TAC;
+				hide DID_No_TAC;
+				hide Brand_TIP;
+				hide Model_TIP;
+				hide Serial_Number_TIP;
+				hide MAC_Address_TIP;
+				hide Extension_No_TIP;
+				hide DID_No_TIP;
+				hide Type_TAS;
+				hide Brand_TAS;
+				hide Model_No_TAS;
+				hide Serial_Number_TAS;
+				hide Management_IP_Address_TAS;
+				hide Hostname_TAS;
+				hide Bandwidth_Speed_TBI;
+				hide Interface_Type_TBI;
+				hide Network_ID_TBI;
+				hide Gateway_IP_TBI;
+				hide Customer_IP_TBI;
+				hide Broadcast_IP_TBI;
+				hide Subnet_Mask_TBI;
+				hide VLAN_ID_TBI;
+				hide CPE_Brand_TBI;
+				hide CPE_Model_No_TBI;
+				hide CPE_Serial_No_TBI;
+				hide CPE_Mgmt_IP_TBI;
+				hide CPE_Hostname_TBI;
+				hide Remark_TBI;
+				hide Bandwidth_Speed_TDI;
+				hide Interface_Type_TDI;
+				hide Network_ID_TDI;
+				hide Gateway_IP_TDI;
+				hide Customer_IP_TDI;
+				hide Broadcast_IP_TDI;
+				hide Subnet_Mask_TDI;
+				hide VLAN_ID_TDI;
+				hide CPE_Brand_TDI;
+				hide CPE_Model_No_TDI;
+				hide CPE_Serial_No_TDI;
+				hide CPE_Mgmt_IP_TDI;
+				hide CPE_Hostname_TDI;
+				hide Remark_TDI;
+				hide No_of_Cores_TCT;
+				hide Source_Site_A_Location_TCT;
+				hide Source_Panel_Name_TCT;
+				hide Source_Port_No_X_Y_TCT;
+				hide Destination_Site_B_Location_TCT;
+				hide Destination_Panel_Name_TCT;
+				hide Destination_Port_No_X_Y_TCT;
+				hide Site_ID_TCT;
+				hide Rack_No_TDC;
+				hide Rack_U_size_TDC;
+				hide Data_Centre_Address_TDC;
+				hide Rack_No_TRS;
+				hide Rack_U_size_TRS;
+				hide Data_Centre_Address_TRS;
+				hide Bandwidth_Speed_TGB;
+				hide Network_ID_TGB;
+				hide Gateway_IP_TGB;
+				hide Customer_IP_TGB;
+				hide Broadcast_IP_TGB;
+				hide Subnet_Mask_TGB;
+				hide VLAN_ID_TGB;
+				hide ONU_Brand_TGB;
+				hide ONU_Model_No_TGB;
+				hide ONU_Serial_No_TGB;
+				hide ONU_ID_No_TGB;
+				hide OLT_Serial_No_TGB;
+				hide OLT_Port_No_TGB;
+				hide OLT_Hostname_TGB;
+				hide No_of_Cores_THC;
+				hide Source_Site_A_Location_THC;
+				hide Source_Panel_Name_THC;
+				hide Source_Port_No_X_Y_THC;
+				hide Destination_Site_B_Location_TCT;
+				hide Destination_Panel_Name_THC;
+				hide Destination_Port_No_X_Y_THC;
+				hide Site_ID_THC;
+				hide Bandwidth_Speed_THC;
+				hide Interface_Type_THC;
+				hide SVLAN_ID_THC;
+				hide CVLAN_ID_THC;
+				hide CPE_Brand_THC;
+				hide CPE_Model_No_THC;
+				hide CPE_Serial_No_THC;
+				hide CPE_Mgmt_IP_THC;
+				hide CPE_Hostname_THC;
+				hide Remark_THC;
+				hide Destination_Site_B_Location_THC;
+				hide Controller_Band_TWF;
+				hide Controller_Model_No_TWF;
+				hide AP_Brand_TWF;
+				hide AP_Model_No_TWF;
+				hide AP_Hostname_TWF;
+				hide AP_Serial_No;
+				hide IBC_Site_ID_TDF;
+				hide Operator_Name_TDF;
+				hide IBC_Location_Address_TDF;
+				hide Remark_TDF;
+				if(input.Subscription != null)
+				{
+					subRec = Subscription[ID == input.Subscription];
+					if(subRec != null)
+					{
+						// Prefill Customer Name
+						if(subRec.Customer_Name != null)
+						{
+							customerProfile = Customer_Profile[ID == subRec.Customer_Name];
+							if(customerProfile != null)
+							{
+								input.Customer_Name = customerProfile.ID;
+							}
+						}
+						// Prefill Customer Code
+						if(subRec.Customer_Code != null)
+						{
+							tenancyRecord = Tenancy[ID == subRec.Customer_Code];
+							if(tenancyRecord != null)
+							{
+								input.Customer_Code = tenancyRecord.ID;
+							}
+						}
+						// Clear existing subform data
+						input.Subscription_Line_Items.clear();
+						subLineItems = subRec.Subcription_Line_Items;
+						rowData = Collection();
+						for each  line in subLineItems
+						{
+							item = line.Item;
+							itemName = line.Item.Item_Name;
+							itemCode = line.Item_Code;
+							description = line.Description;
+							businessSegment = line.Business_Segment;
+							businessUnit = line.Business_Unit;
+							circuitIdType = line.Circuit_ID_Type;
+							row1 = Work_Order_Creation.Subscription_Line_Items();
+							row1.Item=item;
+							row1.Item_Code=itemCode;
+							row1.Description=description;
+							// 			row1.Description=itemName;
+							row1.Business_Segment=businessSegment;
+							row1.Business_Unit=businessUnit;
+							row1.Circuit_ID_Type=circuitIdType;
+							rowData.insert(row1);
+							if(itemName.containsIgnoreCase("ATA CONVERTER") == true)
+							{
+								ataConverter = 1;
+							}
+							if(itemName.containsIgnoreCase("IP PHONE") == true)
+							{
+								ipPhone = 1;
+							}
+							if(itemName.containsIgnoreCase("ACCESS SWITCH") == true)
+							{
+								accessSwitch = 1;
+							}
+							if(itemName.containsIgnoreCase("BROADBAND INTERNET ACCESS") == true)
+							{
+								broadbandInternet = 1;
+							}
+							if(itemName.containsIgnoreCase("DEDICATED INTERNET ACCESS") == true)
+							{
+								dedicatedInternet = 1;
+							}
+							if(itemName.containsIgnoreCase("CABLE TRAY") == true)
+							{
+								cableTray = 1;
+							}
+							if(itemName.containsIgnoreCase("DATA CENTRE") == true)
+							{
+								dataCentre = 1;
+							}
+							if(itemName.containsIgnoreCase("RACK SPACE") == true)
+							{
+								rackSpace = 1;
+							}
+							if(itemName.containsIgnoreCase("GPON BROADBAND") == true)
+							{
+								gponBroadband = 1;
+							}
+							if(itemName.containsIgnoreCase("HALF CIRCUIT") == true)
+							{
+								halfCircuit = 1;
+							}
+							if(itemName.containsIgnoreCase("WIFI") == true)
+							{
+								wifi = 1;
+							}
+							if(itemName.containsIgnoreCase("DEFAULT") == true)
+							{
+								default = 1;
+							}
+						}
+						input.Subscription_Line_Items.insert(rowData);
+						if(ataConverter == 1)
+						{
+							show Brand_TAC;
+							show Model_TAC;
+							show Serial_Number_TAC;
+							show MAC_Address_TAC;
+							show Extension_No_TAC;
+							show DID_No_TAC;
+						}
+						if(ipPhone == 1)
+						{
+							show Brand_TIP;
+							show Model_TIP;
+							show Serial_Number_TIP;
+							show MAC_Address_TIP;
+							show Extension_No_TIP;
+							show DID_No_TIP;
+						}
+						if(accessSwitch == 1)
+						{
+							show Type_TAS;
+							show Brand_TAS;
+							show Model_No_TAS;
+							show Serial_Number_TAS;
+							show Management_IP_Address_TAS;
+							show Hostname_TAS;
+						}
+						if(broadbandInternet == 1)
+						{
+							show Bandwidth_Speed_TBI;
+							show Interface_Type_TBI;
+							show Network_ID_TBI;
+							show Gateway_IP_TBI;
+							show Customer_IP_TBI;
+							show Broadcast_IP_TBI;
+							show Subnet_Mask_TBI;
+							show VLAN_ID_TBI;
+							show CPE_Brand_TBI;
+							show CPE_Model_No_TBI;
+							show CPE_Serial_No_TBI;
+							show CPE_Mgmt_IP_TBI;
+							show CPE_Hostname_TBI;
+							show Remark_TBI;
+						}
+						if(dedicatedInternet == 1)
+						{
+							show Bandwidth_Speed_TDI;
+							show Interface_Type_TDI;
+							show Network_ID_TDI;
+							show Gateway_IP_TDI;
+							show Customer_IP_TDI;
+							show Broadcast_IP_TDI;
+							show Subnet_Mask_TDI;
+							show VLAN_ID_TDI;
+							show CPE_Brand_TDI;
+							show CPE_Model_No_TDI;
+							show CPE_Serial_No_TDI;
+							show CPE_Mgmt_IP_TDI;
+							show CPE_Hostname_TDI;
+							show Remark_TDI;
+						}
+						if(cableTray == 1)
+						{
+							show No_of_Cores_TCT;
+							show Source_Site_A_Location_TCT;
+							show Source_Panel_Name_TCT;
+							show Source_Port_No_X_Y_TCT;
+							show Destination_Site_B_Location_TCT;
+							show Destination_Panel_Name_TCT;
+							show Destination_Port_No_X_Y_TCT;
+							show Site_ID_TCT;
+						}
+						if(dataCentre == 1)
+						{
+							show Rack_No_TDC;
+							show Rack_U_size_TDC;
+							show Data_Centre_Address_TDC;
+						}
+						if(rackSpace == 1)
+						{
+							show Rack_No_TRS;
+							show Rack_U_size_TRS;
+							show Data_Centre_Address_TRS;
+						}
+						if(gponBroadband == 1)
+						{
+							show Bandwidth_Speed_TGB;
+							show Network_ID_TGB;
+							show Gateway_IP_TGB;
+							show Customer_IP_TGB;
+							show Broadcast_IP_TGB;
+							show Subnet_Mask_TGB;
+							show VLAN_ID_TGB;
+							show ONU_Brand_TGB;
+							show ONU_Model_No_TGB;
+							show ONU_Serial_No_TGB;
+							show ONU_ID_No_TGB;
+							show OLT_Serial_No_TGB;
+							show OLT_Port_No_TGB;
+							show OLT_Hostname_TGB;
+						}
+						if(halfCircuit == 1)
+						{
+							show Destination_Panel_Name_THC;
+							show Destination_Port_No_X_Y_THC;
+							show Site_ID_THC;
+							show Bandwidth_Speed_THC;
+							show Interface_Type_THC;
+							show SVLAN_ID_THC;
+							show CVLAN_ID_THC;
+							show CPE_Brand_THC;
+							show CPE_Model_No_THC;
+							show CPE_Serial_No_THC;
+							show CPE_Mgmt_IP_THC;
+							show CPE_Hostname_THC;
+							show Remark_THC;
+						}
+						if(wifi == 1)
+						{
+							show Controller_Band_TWF;
+							show Controller_Model_No_TWF;
+							show AP_Brand_TWF;
+							show AP_Model_No_TWF;
+							show AP_Hostname_TWF;
+							show AP_Serial_No;
+						}
+						if(default == 1)
+						{
+							show IBC_Site_ID_TDF;
+							show Operator_Name_TDF;
+							show IBC_Location_Address_TDF;
+							show Remark_TDF;
+						}
+					}
+				}
+			)
+		}
+	}
+
+}
+

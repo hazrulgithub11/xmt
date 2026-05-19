@@ -1,0 +1,75 @@
+		form Chart_Of_Account
+		{
+			displayname = "Chart Of Account"
+			success message = "Data Added Successfully!"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Account
+			(
+    			type = text
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Account_Type
+			(
+				type = picklist
+				displayname = "Account Type"
+				maxchar = 100
+				values = {"Sales","Current Asset","Other Liability","Bank"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			unique Bank_Account_Number
+			(
+    			type = text
+				displayname = "Bank Account Number"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have unique Account_Code
+			(
+    			type = text
+				displayname = "Account Code"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}

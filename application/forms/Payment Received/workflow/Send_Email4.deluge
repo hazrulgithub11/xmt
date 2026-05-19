@@ -1,0 +1,44 @@
+Send_Email4 as "Send Email"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on edit
+		status = inactive
+
+	on success
+	{
+		actions  (Payment_Type == "Invoice/Debit Note")
+		{
+			sendmail
+			(
+				from : "zoho.adminuserid"
+				to : Customer_Email
+				subject : "Payment Received ${Payment_Received_No}"
+				message : "<div>Dear,<br></div><div><br></div><div>Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!<br></div><div><br></div><div>Regards,<br></div><div>XMT Technologies Sdn Bhd<br></div>"
+				attachments : template : Official_Receipt as pdf
+			)
+			custom deluge script
+			(
+					input.Send_Email = false;
+			)
+		}
+		actions  (Payment_Type == "Deposit")
+		{
+			sendmail
+			(
+				from : "zoho.adminuserid"
+				to : Customer_Email
+				subject : "Payment Received ${Payment_Received_No}"
+				message : "<div>Dear,<br></div><div><br></div><div>Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!<br></div><div><br></div><div>Regards,<br></div><div>XMT Technologies Sdn Bhd<br></div>"
+				attachments : template : Deposit_Receipt as pdf
+			)
+			custom deluge script
+			(
+					input.Send_Email = false;
+			)
+		}
+	}
+
+}
+

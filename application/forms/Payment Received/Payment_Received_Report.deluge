@@ -1,0 +1,212 @@
+list Payment_Received_Report
+{
+	displayName = "Payments Received"
+	show all rows from Payment_Received    
+	(
+		Customer_Code as "Customer Code"
+		Customer_Name as "Customer Name"
+		Payment_Date as "Payment Date"
+		Payment_Method as "Payment Method"
+		Amount_Received as "Amount Received"
+		(
+			display = total	
+		)
+		Reference
+		Payment_Received_No as "Payment Received No."
+		Paid_To as "Paid To"
+		Customer_TIN as "Customer TIN"
+		Customer_SST as "Customer SST"
+		Customer_Email as "Customer Email"
+		Receipt_Sent as "Receipt Sent"
+		(
+				displaytrue = "Yes"
+				displayfalse = "No"
+		)
+		Amount_Received_MYR as "Amount Received (MYR)"
+		(
+			display = total	
+		)
+		Customer_Name.Added_Time as "Added Time"
+		Customer_Name.Added_User as "Added User"
+		Customer_Name.Modified_Time as "Modified Time"
+		Customer_Code.Modified_User as "Modified User"
+		Total_Still_Owing as "Total Still Owing"
+		Payment_Type as "Payment Type"
+		Modified_Time as "Modified Time"
+	)
+	sort by
+	(
+		Modified_Time descending
+	)
+	custom actions
+	(
+		"Mark As Sent"
+		(
+	  			workflow = Mark_As_Sent_Payment_Rece
+				show action in view header = true
+				condition = (Receipt_Sent == false)
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Mark As Sent\" this Payment Received   ${Payment_Received_No} ?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+		"Send Payment Received"
+		(
+	  			workflow = Send_Payment_Receveid_Dep
+				show action in view header = true
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Send Payment Received \" this Payment Received   ${Payment_Received_No} ?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+		)
+	)
+	conditional formatting
+	(
+		"Yes"
+		{
+			condition = (Receipt_Sent == true)
+			fields = [Receipt_Sent]
+			format = "color:#000000;background-color:#1bbc9b;"
+		}
+		"No"
+		{
+			condition = (Receipt_Sent == false)
+			fields = [Receipt_Sent]
+			format = "color:#ffffff;background-color:#e84c3d;"
+		}
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Payment_Received_No as "Payment Received No."
+					Payment_Type as "Payment Type"
+					Customer_Code as "Customer Code"
+					Customer_Name as "Customer Name"
+					Payment_Date as "Payment Date"
+					Payment_Method as "Payment Method"
+					Amount_Received as "Amount Received"
+					Amount_Received_MYR as "Amount Received (MYR)"
+					Reference
+					Paid_To as "Paid To"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Payment_Received_No as "Payment Received No."
+					Payment_Type as "Payment Type"
+					Payment_Date as "Payment Date"
+					Customer_Name as "Customer Name"
+					Customer_Email as "Customer Email"
+					Customer_TIN as "Customer TIN"
+					Customer_SST as "Customer SST"
+					Customer_Code as "Customer Code"
+					Payment_Method as "Payment Method"
+					Reference
+					Paid_To as "Paid To"
+					Amount_Received as "Amount Received"
+					Amount_Received_MYR as "Amount Received (MYR)"
+					Total_Still_Owing as "Total Still Owing"
+					Receipt_Sent as "Receipt Sent"
+				)
+			)
+			datablock2
+			(
+		     	title = "Payment Received Line Item"
+		     	related field = Payment_Received_Line_Item.Payment_Received
+				fields
+				(
+					Reference_No as "Reference No."
+					Document_Date as "Document Date"
+					Amount
+					Outstanding_Balance as "Outstanding Balance"
+					Allocation
+					Still_Owing as "Still Owing"
+				)
+			)
+			datablock3
+			(
+		     	title = "Journal Entry"
+		     	related field = Journal_Entry_Line_Item.Payment_Received
+				fields
+				(
+					Account
+					Debit
+					Credit
+				)
+			)
+			datablock4
+			(
+		     	related field = Journal_Entry.Payment_Received
+				fields
+				(
+					Total_Debit as "Total Debit"
+					Total_Credit as "Total Credit"
+				)
+			)
+			datablock5
+			(
+		     	title = "System Information"
+				fields
+				(
+					Customer_Name.Added_Time as "Added Time"
+					Customer_Name.Added_User as "Added User"
+					Customer_Name.Modified_Time as "Modified Time"
+					Customer_Code.Modified_User as "Modified User"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+			 	"Send Payment Received"
+			 	"Mark As Sent"
+    		 	Delete 
+    	 	)
+    	)
+	)
+}

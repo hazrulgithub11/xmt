@@ -1,0 +1,31 @@
+Handle_Addition_PI_Line_I as "Handle Addition PI Line Item"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on add or edit
+
+	on add row of Pro_Forma_Invoice_Line_Item
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					clear row.Business_Segment;
+				clear row.Business_Unit;
+				customerInfo = Customer_Profile[ID == input.Customer_Name];
+				if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+				{
+					row.Business_Segment:ui.add(customerInfo.Business_Segment);
+				}
+				else
+				{
+					clear row.Business_Segment;
+					clear row.Business_Unit;
+				}
+			)
+		}
+	}
+
+}
+

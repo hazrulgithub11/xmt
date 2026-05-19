@@ -1,0 +1,12 @@
+int subscription.checker_public_user()
+{
+	if(thisapp.permissions.isUserInProfile("Administrator") || thisapp.permissions.isUserInProfile("Finance Executive") || thisapp.permissions.isUserInProfile("Finance Manager"))
+	{
+		result = 0;
+	}
+	else
+	{
+		result = 1;
+	}
+	return result;
+}

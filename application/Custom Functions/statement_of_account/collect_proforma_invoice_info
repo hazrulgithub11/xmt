@@ -1,0 +1,81 @@
+list statement_of_account.collect_proforma_invoice_info(date startDate, date endDate, int customerProfile, string statementType, list customerCodes)
+{
+	piList = list();
+	if(statementType == "Statement Of Account")
+	{
+		if(customerCodes.size() > 0)
+		{
+			for each  customerCode in customerCodes
+			{
+				for each  pi in Pro_Forma_Invoices[Pro_Forma_Invoice_Date >= startDate && Pro_Forma_Invoice_Date <= endDate && Customer_Name == customerProfile && Customer_Code == customerCode]
+				{
+					getTenant = Tenancy[ID == pi.Customer_Code];
+					piMp = Map();
+					piMp.put("Tenant_Name",getTenant.Tenant_Name);
+					piMp.put("Customer_Code",getTenant.Customer_Code);
+					piMp.put("Date",pi.Pro_Forma_Invoice_Date);
+					piMp.put("Details",pi.Pro_Forma_Invoice_No + "- due on " + pi.Due_Date);
+					piMp.put("Transaction","Pro Forma Invoice");
+					piMp.put("Amount",pi.Grand_Total);
+					piMp.put("Payment",null);
+					piList.add(piMp);
+				}
+			}
+		}
+		else
+		{
+			for each  pi in Pro_Forma_Invoices[Pro_Forma_Invoice_Date >= startDate && Pro_Forma_Invoice_Date <= endDate && Customer_Name == customerProfile]
+			{
+				getTenant = Tenancy[ID == pi.Customer_Code];
+				piMp = Map();
+				piMp.put("Tenant_Name",getTenant.Tenant_Name);
+				piMp.put("Customer_Code",getTenant.Customer_Code);
+				piMp.put("Date",pi.Pro_Forma_Invoice_Date);
+				piMp.put("Details",pi.Pro_Forma_Invoice_No + "- due on " + pi.Due_Date);
+				piMp.put("Transaction","Pro Forma Invoice");
+				piMp.put("Amount",pi.Grand_Total);
+				piMp.put("Payment",null);
+				piList.add(piMp);
+			}
+		}
+	}
+	else if(statementType == "Statement Of Outstanding")
+	{
+		if(customerCodes.size() > 0)
+		{
+			for each  customerCode in customerCodes
+			{
+				for each  pi in Pro_Forma_Invoices[Pro_Forma_Invoice_Date >= startDate && Pro_Forma_Invoice_Date <= endDate && Customer_Name == customerProfile && Customer_Code == customerCode && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"]
+				{
+					getTenant = Tenancy[ID == pi.Customer_Code];
+					piMp = Map();
+					piMp.put("Tenant_Name",getTenant.Tenant_Name);
+					piMp.put("Customer_Code",getTenant.Customer_Code);
+					piMp.put("Date",pi.Pro_Forma_Invoice_Date);
+					piMp.put("Details",pi.Pro_Forma_Invoice_No + "- due on " + pi.Due_Date);
+					piMp.put("Transaction","Pro Forma Invoice");
+					piMp.put("Amount",pi.Amount_Due);
+					piMp.put("Payment",null);
+					piList.add(piMp);
+				}
+			}
+		}
+		else
+		{
+			for each  pi in Pro_Forma_Invoices[Pro_Forma_Invoice_Date >= startDate && Pro_Forma_Invoice_Date <= endDate && Customer_Name == customerProfile && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"]
+			{
+				getTenant = Tenancy[ID == pi.Customer_Code];
+				piMp = Map();
+				piMp.put("Tenant_Name",getTenant.Tenant_Name);
+				piMp.put("Customer_Code",getTenant.Customer_Code);
+				piMp.put("Date",pi.Pro_Forma_Invoice_Date);
+				piMp.put("Details",pi.Pro_Forma_Invoice_No + "- due on " + pi.Due_Date);
+				piMp.put("Transaction","Pro Forma Invoice");
+				piMp.put("Amount",pi.Amount_Due);
+				piMp.put("Payment",null);
+				piList.add(piMp);
+			}
+		}
+	}
+	return piList;
+}

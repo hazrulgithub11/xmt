@@ -1,0 +1,121 @@
+list All_Journal_Entries
+{
+	displayName = "All Journal Entries"
+	show all rows from Journal_Entry    
+	(
+		Journal_Entry_No as "Journal Entry No."
+		Total_Debit as "Total Debit"
+		(
+			display = total	
+		)
+		Total_Credit as "Total Credit"
+		(
+			display = total	
+		)
+		Sub_Total_Debit as "Sub Total Debit"
+		(
+			display = total	
+		)
+		Sub_Total_Credit as "Sub Total Credit"
+		(
+			display = total	
+		)
+		Difference
+		Date_field as "Date"
+		Document_No as "Document No."
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Journal_Entry_No as "Journal Entry No."
+					Date_field as "Date"
+					Document_No as "Document No."
+					Sub_Total_Debit as "Sub Total Debit"
+					Sub_Total_Credit as "Sub Total Credit"
+					Total_Debit as "Total Debit"
+					Total_Credit as "Total Credit"
+					Difference
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+		     	title = "Overview"
+				fields
+				(
+					Journal_Entry_No as "Journal Entry No."
+					Date_field as "Date"
+					Document_No as "Document No."
+					Sub_Total_Debit as "Sub Total Debit"
+					Sub_Total_Credit as "Sub Total Credit"
+					Total_Debit as "Total Debit"
+					Total_Credit as "Total Credit"
+					Difference
+				)
+			)
+			datablock2
+			(
+		     	title = "Journal Entry Line Item"
+		     	related field = Journal_Entry_Line_Item
+				fields
+				(
+					Account
+					Description
+					Debit
+					Credit
+				)
+			)
+			datablock3
+			(
+				fields
+				(
+					Sub_Total_Debit as "Sub Total Debit"
+					Sub_Total_Credit as "Sub Total Credit"
+					Total_Debit as "Total Debit"
+					Total_Credit as "Total Credit"
+					Difference
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    	 	)
+    	)
+	)
+}

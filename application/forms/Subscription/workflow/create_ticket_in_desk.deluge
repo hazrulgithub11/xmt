@@ -1,0 +1,210 @@
+create_ticket_in_desk as "create ticket in desk"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add
+
+	on success
+	{
+		actions  (Create_Work_Order == true)
+		{
+			custom deluge script
+			(
+					createTicket = thisapp.work_order_creation.updateTicketNumber(input.ID,input.Work_Order_Type);
+				// if(createTicket.get("code") == 200)
+				// {
+				// 	success message createTicket.get("message");
+				// }
+				//info createTicket;
+				// contact_name = input.Contact;
+				// contact_email = input.Technical_Email;
+				// contact_phone = input.Phone_Number;
+				// customer_code_id = input.Customer_Code;
+				// work_order_type = input.Work_Order_Type;
+				// create_work_order = input.Create_Work_Order;
+				// department_id = "1027140000000006907";
+				// ticket_type = "";
+				// if(create_work_order == true)
+				// {
+				// 	ticket_type = work_order_type;
+				// }
+				// if(ticket_type != "")
+				// {
+				// 	customer_code_display_value = "";
+				// 	account_id = "";
+				// 	// Fetch the customer code if available
+				// 	if(customer_code_id != null)
+				// 	{
+				// 		tenancy_record = Tenancy[ID == customer_code_id];
+				// 		if(tenancy_record != null)
+				// 		{
+				// 			customer_code_display_value = tenancy_record.Customer_Code;
+				// 		}
+				// 		//info "Customer Code: " + customer_code_display_value;
+				// 		// Search for account by customer code
+				// 		search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customer_code_display_value;
+				// 		// 				search_account_url = "https://desk.zoho.com/api/v1/accounts/search?cf_single_line_1=" + customer_code_display_value;
+				// 		search_account_response = invokeurl
+				// 		[
+				// 			url :search_account_url
+				// 			type :GET
+				// 			connection:"zdesk"
+				// 		];
+				// 		info "Account Search Response: " + search_account_response.toString();
+				// 		// Check if account is found
+				// 		if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+				// 		{
+				// 			account_id = search_account_response.get("data").get(0).get("id");
+				// 			info "Account found: ID = " + account_id;
+				// 		}
+				// 		else
+				// 		{
+				// 			info "No matching account found for Customer Code: " + customer_code_display_value;
+				// 		}
+				// 	}
+				// 	// Search for contact by custom field email (cf_technical_email)
+				// 	contact_id = "";
+				// 	search_contact_url = "https://desk.zoho.com/api/v1/contacts/search";
+				// 	search_contact_params = Map();
+				// 	search_contact_params.put("email",contact_email);
+				// 	search_contact_response = invokeurl
+				// 	[
+				// 		url :search_contact_url
+				// 		type :GET
+				// 		parameters:search_contact_params.toString()
+				// 		connection:"zdesk"
+				// 	];
+				// 	info "Search Contact Response: " + search_contact_response.toString();
+				// 	// Check if contact is found
+				// 	if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+				// 	{
+				// 		for each  contactRec in search_contact_response.get("data")
+				// 		{
+				// 			if(contactRec.get("accountId") == account_id)
+				// 			{
+				// 				contact_id = search_contact_response.get("data").get(0).get("id");
+				// 				info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
+				// 				info "Associated Account ID: " + account_id;
+				// 			}
+				// 		}
+				// 		// 		contact_id = search_contact_response.get("data").get(0).get("id");
+				// 		// 		account_id = search_contact_response.get("data").get(0).get("accountId");
+				// 		// Retrieve accountId from contact data
+				// 		// 		info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
+				// 		// 		info "Associated Account ID: " + account_id;
+				// 	}
+				// 	else
+				// 	{
+				// 		info "No contact found with email: " + contact_email;
+				// 		// Create a new contact if not found
+				// 		cf = Map();
+				// 		cf.put("cf_technical_contact_name",contact_name);
+				// 		cf.put("cf_technical_email",contact_email);
+				// 		cf.put("cf_technical_phone_number",contact_phone);
+				// 		contact_data = Map();
+				// 		contact_data.put("lastName",contact_name);
+				// 		contact_data.put("email",contact_email);
+				// 		contact_data.put("cf",cf);
+				// 		desk_contact_url = "https://desk.zoho.com/api/v1/contacts";
+				// 		create_contact_response = invokeurl
+				// 		[
+				// 			url :desk_contact_url
+				// 			type :POST
+				// 			parameters:contact_data.toString()
+				// 			connection:"zdesk"
+				// 		];
+				// 		//info "Create Contact Response: " + create_contact_response.toString();
+				// 		if(create_contact_response.get("id") != null)
+				// 		{
+				// 			contact_id = create_contact_response.get("id");
+				// 			info "New contact created successfully. ID: " + contact_id;
+				// 		}
+				// 		else
+				// 		{
+				// 			info "Failed to create contact. Response: " + create_contact_response.toString();
+				// 			return;
+				// 		}
+				// 	}
+				// 	if(account_id != "")
+				// 	{
+				// 		// Fetch account details by account_id
+				// 		search_account_url = "https://desk.zoho.com/api/v1/accounts/" + account_id;
+				// 		search_account_response = invokeurl
+				// 		[
+				// 			url :search_account_url
+				// 			type :GET
+				// 			connection:"zdesk"
+				// 		];
+				// 		//info "Account Search Response: " + search_account_response.toString();
+				// 		if(search_account_response.get("data") != null)
+				// 		{
+				// 			account_name = search_account_response.get("data").get("accountName");
+				// 			// Get the account name
+				// 			info "Account Name: " + account_name;
+				// 		}
+				// 		else
+				// 		{
+				// 			info "No account found with ID: " + account_id;
+				// 		}
+				// 	}
+				// 	else
+				// 	{
+				// 		info "No account associated with the contact.";
+				// 	}
+				// 	// Proceed to create ticket
+				// 	if(contact_id != "")
+				// 	{
+				// 		record_id = input.ID;
+				// 		// Construct the billing URL using the record ID
+				// 		billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Subscriptions/tx4ySnHU1HYjQ89uUMrdV9syzmgYnVTpb4QZTJdY24QnQBSV89m3OWsTq0f6vWwnaa2sVa2rwNhYdbYZJqhNaAEuhbAr9E4xEGvG?ID=" + record_id.toString();
+				// 		cf = Map();
+				// 		cf.put("cf_customer_code",customer_code_display_value);
+				// 		cf.put("cf_contact",contact_name);
+				// 		cf.put("cf_ticket_type",ticket_type);
+				// 		cf.put("cf_url_to_subscription_record_in_billing_system",billing_url);
+				// 		cf.put("cf_problem_category","Not Applicable");
+				// 		cf.put("cf_subcategory","Not Applicable");
+				// 		cf.put("cf_maintenance_type","Not Applicable");
+				// 		ticket_data = Map();
+				// 		ticket_data.put("subject","Work Order - " + ticket_type);
+				// 		ticket_data.put("description","This ticket is created for " + ticket_type);
+				// 		ticket_data.put("departmentId",department_id);
+				// 		ticket_data.put("contactId",contact_id);
+				// 		ticket_data.put("accountId",account_id);
+				// 		ticket_data.put("status","Open");
+				// 		ticket_data.put("cf",cf);
+				// 		ticket_data.put("email",contact_email);
+				// 		ticket_data.put("phone",contact_phone);
+				// 		desk_ticket_url = "https://desk.zoho.com/api/v1/tickets";
+				// 		create_ticket_response = invokeurl
+				// 		[
+				// 			url :desk_ticket_url
+				// 			type :POST
+				// 			parameters:ticket_data.toString()
+				// 			connection:"zdesk"
+				// 		];
+				// 		if(create_ticket_response.get("id") != null)
+				// 		{
+				// 			info "Ticket created successfully. Ticket ID: " + create_ticket_response.get("id");
+				// 		}
+				// 		else
+				// 		{
+				// 			info "Failed to create ticket. Error: " + create_ticket_response.toString();
+				// 		}
+				// 	}
+				// 	else
+				// 	{
+				// 		info "Invalid Contact ID. Ticket creation aborted.";
+				// 	}
+				// }
+				// else
+				// {
+				// 	info "No ticket created. Either 'Create Work Order' or 'Create Work-Order Service Termination' must be true.";
+				// }
+			)
+		}
+	}
+
+}
+

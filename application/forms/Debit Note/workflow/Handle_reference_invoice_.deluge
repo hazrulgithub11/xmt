@@ -1,0 +1,71 @@
+Handle_reference_invoice_ as "Handle reference invoice selection"
+{
+	type =  form
+	form = Debit_Note
+
+	record event = on add or edit
+
+	on user input of Reference_Invoice
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Reference_Invoice != null)
+				{
+					if(input.Reference_Invoice.Invoice_UUID == null || input.Reference_Invoice.Invoice_UUID == "" || input.Reference_Invoice.Invoice_Public_Link == null || input.Reference_Invoice.Invoice_Public_Link == "")
+					{
+						invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
+						clear Reference_Invoice;
+						input.Reference_Invoice:ui.add(invoice_id_list);
+						alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
+					}
+					else
+					{
+						// Access token checking
+						client_id = input.Supplier.Client_ID;
+						client_secret = input.Supplier.Client_Secret;
+						organization_environment = input.Supplier.LHDN_Portal_Environment;
+						if(organization_environment == "SANDBOX")
+						{
+							invoicing_portal_url = "https://preprod.myinvois.hasil.gov.my/";
+							system_api_url = "https://preprod-api.myinvois.hasil.gov.my/";
+						}
+						else
+						{
+							invoicing_portal_url = "https://myinvois.hasil.gov.my/";
+							system_api_url = "https://api.myinvois.hasil.gov.my/";
+						}
+						access_token_response = invokeurl
+						[
+							url :system_api_url + "connect/token"
+							type :POST
+							parameters:{"client_id":client_id,"client_secret":client_secret,"grant_type":"client_credentials","scope":"InvoicingAPI"}
+							headers:{"Content-Type":"application/x-www-form-urlencoded"}
+						];
+						access_token = access_token_response.get("access_token");
+						// Get all invoice
+						global_headers = Map();
+						global_headers.put("Content-Type","application/json");
+						global_headers.put("Authorization",access_token);
+						reference_invoice_invoice_uuid = input.Reference_Invoice.Invoice_UUID;
+						get_document_url = system_api_url + "api/v1.0/documents/" + reference_invoice_invoice_uuid + "/raw";
+						get_document_response = invokeurl
+						[
+							url :get_document_url
+							type :GET
+							headers:global_headers
+						];
+						invoice_status = get_document_response.get("status");
+						if(invoice_status != "Valid")
+						{
+							alert "The selected invoice cannot be used as a reference. Please ensure the invoice has a valid UUID, Public Link, and has been successfully submitted to LHDN.";
+						}
+					}
+				}
+			)
+		}
+	}
+
+}
+

@@ -1,0 +1,29 @@
+Handle_Validation_Change_ as "Handle Validation Change Currency"
+{
+	type =  form
+	form = Customer_Profile
+
+	record event = on edit
+		status = inactive
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					getInvoices = Invoice[Customer == input.ID].ID.getAll();
+				getPIs = Pro_Forma_Invoices[Customer_Name == input.ID].ID.getAll();
+				getDNs = Debit_Note[Customer == input.ID].ID.getAll();
+				getPRs = Payment_Received[Customer_Name == input.ID].ID.getAll();
+				getCNs = Credit_Note[Customer == input.ID].ID.getAll();
+				if(getInvoices.size() > 0 || getPIs.size() > 0 || getDNs.size() > 0 || getPRs.size() > 0 || getCNs.size() > 0 && old.Currency != input.Currency)
+				{
+					input.Currency = old.Currency;
+				}
+			)
+		}
+	}
+
+}
+

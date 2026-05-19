@@ -1,0 +1,92 @@
+list All_Email_Inputs
+{
+	displayName = "All Email Inputs"
+	show all rows from Email_Input_Form    
+	(
+		Record_ID as "Record ID"
+		To
+		CC
+		Body
+		Subject_field as "Subject"
+		Document_Type as "Document Type"
+		Placeholders
+		Selected_Placeholders as "Selected Placeholders"
+	)
+	quickview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Record_ID as "Record ID"
+					To
+					CC
+					Body
+					Subject_field as "Subject"
+					Document_Type as "Document Type"
+					Placeholders
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+			record
+			(
+				Edit   	   
+				Duplicate   	   
+				Delete   	   
+    		)
+    	)
+    	action
+    	(
+			on click
+			(
+				View Record   	   
+    		)
+			on right click
+			(
+				Edit   	   
+				Delete   	   
+				Duplicate   	   
+				View Record   	   
+    		)
+     	)
+	)
+	detailview
+	(
+		layout
+		(
+			datablock1
+			(
+				fields
+				(
+					Record_ID as "Record ID"
+					To
+					CC
+					Body
+					Subject_field as "Subject"
+					Document_Type as "Document Type"
+					Placeholders
+					Selected_Placeholders as "Selected Placeholders"
+				)
+			)
+		)
+		menu
+    	(
+    	 	header
+    	 	(
+    		 	Edit 
+    		 	Duplicate 
+    		 	Delete 
+    	 	)
+    	)
+	)
+}
