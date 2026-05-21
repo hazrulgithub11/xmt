@@ -11,16 +11,43 @@ Handle_Customer_Name2 as "Handle Customer Name"
 		{
 			custom deluge script
 			(
-					input.Currency = ifnull(input.Customer_Name.Currency,null);
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				input.Currency = ifnull(customerInfo.Currency,null);
+				getOrganization = Organization_Settings[ID != null];
+				baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+				if(input.Currency == null || input.Currency == "")
+				{
+					input.Exchange_Rate = null;
+				}
+				else if(input.Currency == baseCurrency)
+				{
+					input.Exchange_Rate = 1;
+				}
+				else
+				{
+					try 
+					{
+						exchange_rate_get_response = invokeurl
+						[
+							url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+							type :GET
+						];
+						exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+						input.Exchange_Rate = exchange_rate;
+					}
+					catch (e)
+					{
+						info e;
+						input.Exchange_Rate = "";
+					}
+				}
 				input.Customer_Code = null;
 				input.Payment_Method = null;
 				input.Reference = "";
-				input.Customer_Email = ifnull(input.Customer_Name.Email_Address,"");
-				input.Customer_TIN = ifnull(input.Customer_Name.Customer_TIN,"");
-				input.Customer_SST = ifnull(input.Customer_Name.Customer_SST,"");
+				input.Customer_Email = ifnull(customerInfo.Email_Address,"");
+				input.Customer_TIN = ifnull(customerInfo.Customer_TIN,"");
+				input.Customer_SST = ifnull(customerInfo.Customer_SST,"");
 				input.Paid_To = null;
-				totalAmountReceived = 0;
-				customerInfo = Customer_Profile[ID == input.Customer_Name];
 				input.Payment_Received_Line_Item.clear();
 				input.Amount_Received = 0;
 				input.Amount_Received_MYR = ifnull(input.Amount_Received,0) * ifnull(input.Exchange_Rate,1);

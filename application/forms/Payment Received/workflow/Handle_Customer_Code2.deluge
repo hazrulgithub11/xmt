@@ -11,7 +11,37 @@ Handle_Customer_Code2 as "Handle Customer Code"
 		{
 			custom deluge script
 			(
-					tenancyInfo = Tenancy[ID == input.Customer_Code];
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				input.Currency = ifnull(customerInfo.Currency,null);
+				getOrganization = Organization_Settings[ID != null];
+				baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+				if(input.Currency == null || input.Currency == "")
+				{
+					input.Exchange_Rate = null;
+				}
+				else if(input.Currency == baseCurrency)
+				{
+					input.Exchange_Rate = 1;
+				}
+				else
+				{
+					try 
+					{
+						exchange_rate_get_response = invokeurl
+						[
+							url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+							type :GET
+						];
+						exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+						input.Exchange_Rate = exchange_rate;
+					}
+					catch (e)
+					{
+						info e;
+						input.Exchange_Rate = "";
+					}
+				}
+				tenancyInfo = Tenancy[ID == input.Customer_Code];
 				//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 				getInvs = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer_Code == input.Customer_Code];
 				getDebitNotes = Debit_Note[Status == "Partially Paid" || Status == "Sent" || Status = "Overdue" && Customer_Code == input.Customer_Code];
@@ -60,9 +90,37 @@ Handle_Customer_Code2 as "Handle Customer Code"
 		{
 			custom deluge script
 			(
-					tenancyInfo = Tenancy[ID == input.Customer_Code];
-				// input.Currency = tenancyInfo.Currency;
-				// input.Exchange_Rate = ifnull(tenancyInfo.Currency.Exchange_Rate_to_MYR,1);
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				input.Currency = ifnull(customerInfo.Currency,null);
+				getOrganization = Organization_Settings[ID != null];
+				baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+				if(input.Currency == null || input.Currency == "")
+				{
+					input.Exchange_Rate = null;
+				}
+				else if(input.Currency == baseCurrency)
+				{
+					input.Exchange_Rate = 1;
+				}
+				else
+				{
+					try 
+					{
+						exchange_rate_get_response = invokeurl
+						[
+							url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+							type :GET
+						];
+						exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+						input.Exchange_Rate = exchange_rate;
+					}
+					catch (e)
+					{
+						info e;
+						input.Exchange_Rate = "";
+					}
+				}
+				tenancyInfo = Tenancy[ID == input.Customer_Code];
 				//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 				subTotal = 0;
 				totalTax = 0;

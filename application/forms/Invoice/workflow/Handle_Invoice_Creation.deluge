@@ -11,10 +11,13 @@ Handle_Invoice_Creation as "Handle Invoice Creation"
 		{
 			custom deluge script
 			(
-					input.Invoice_No = thisapp.invoice.generate_invoice_number();
-				thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",input.ID);
-				//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-				//input.Delivery_Order_No = thisapp.generate_delivery_order_no();
+					invNo = thisapp.invoice.generate_invoice_number();
+				update Invoice[ID == input.ID]
+				[
+					Invoice_No = invNo
+				];
+				// Invoice_Blueprint start stage is already "Draft" on form add.
+				// changeStage to Draft here fails and blocks Invoice_No from saving.
 			)
 		}
 	}

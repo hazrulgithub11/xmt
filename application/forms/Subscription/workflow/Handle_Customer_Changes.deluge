@@ -12,6 +12,35 @@ Handle_Customer_Changes as "Handle Customer Changes"
 			custom deluge script
 			(
 					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				input.Currency = ifnull(customerInfo.Currency, null);
+				getOrganization = Organization_Settings[ID != null];
+				baseCurrency = ifnull(getOrganization.Base_Currency, "MYR");
+				if(input.Currency == null || input.Currency == "")
+				{
+					input.Exchange_Rate = null;
+				}
+				else if(input.Currency == baseCurrency)
+				{
+					input.Exchange_Rate = 1;
+				}
+				else
+				{
+					try 
+					{
+						exchange_rate_get_response = invokeurl
+						[
+							url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+							type :GET
+						];
+						exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+						input.Exchange_Rate = exchange_rate;
+					}
+					catch (e)
+					{
+						info e;
+						input.Exchange_Rate = "";
+					}
+				}
 				input.Payment_Term = null;
 				input.Payable_To1 = null;
 				input.Payment_Term = null;

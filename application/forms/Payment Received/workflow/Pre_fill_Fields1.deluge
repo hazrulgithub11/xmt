@@ -18,6 +18,34 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 					input.Customer_SST = ifnull(input.Customer_Name.Customer_SST,"");
 					input.Customer_Email = ifnull(input.Customer_Name.Email_Address,"");
 					input.Currency = input.Customer_Name.Currency;
+					getOrganization = Organization_Settings[ID != null];
+					baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+					if(input.Currency == null || input.Currency == "")
+					{
+						input.Exchange_Rate = null;
+					}
+					else if(input.Currency == baseCurrency)
+					{
+						input.Exchange_Rate = 1;
+					}
+					else
+					{
+						try 
+						{
+							exchange_rate_get_response = invokeurl
+							[
+								url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+								type :GET
+							];
+							exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+							input.Exchange_Rate = exchange_rate;
+						}
+						catch (e)
+						{
+							info e;
+							input.Exchange_Rate = "";
+						}
+					}
 				}
 				// if(input.Customer_Code != null)
 				// {
@@ -112,6 +140,41 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 				if(input.Payment_Type_Single_Record == "Invoice")
 				{
 					getInvs = Invoice[ID == input.Invoice];
+					if(getInvs.ID != null)
+					{
+						input.Currency = ifnull(getInvs.Invoice_Currency,ifnull(input.Customer_Name.Currency,null));
+						if(getInvs.Exchange_Rate != null)
+						{
+							input.Exchange_Rate = getInvs.Exchange_Rate;
+						}
+						else
+						{
+							getOrganization = Organization_Settings[ID != null];
+							baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+							if(input.Currency == baseCurrency)
+							{
+								input.Exchange_Rate = 1;
+							}
+							else
+							{
+								try 
+								{
+									exchange_rate_get_response = invokeurl
+									[
+										url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+										type :GET
+									];
+									exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+									input.Exchange_Rate = exchange_rate;
+								}
+								catch (e)
+								{
+									info e;
+									input.Exchange_Rate = "";
+								}
+							}
+						}
+					}
 					for each  inv in getInvs
 					{
 						payRow = Payment_Received.Payment_Received_Line_Item();

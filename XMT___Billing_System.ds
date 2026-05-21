@@ -9562,7 +9562,7 @@
 	 			column = 2   
 				width = medium
 			)
-			Contact
+			must have Contact
 			(
     			type = text
 				displayname = "Technical Contact Name"
@@ -9570,7 +9570,7 @@
 	 			column = 2   
 				width = medium
 			)
-			Technical_Email
+			must have Technical_Email
 			(
     			type = email
 				displayname = "Technical Email"
@@ -9580,7 +9580,7 @@
 				width = medium
 				personal data = true
 			)
-			Phone_Number
+			must have Phone_Number
 			(
     			type = phonenumber
 				displayname = "Technical Phone Number"
@@ -21084,6 +21084,35 @@
 						custom deluge script
 						(
 											customerInfo = Customer_Profile[ID == input.Customer_Name];
+										input.Currency = ifnull(customerInfo.Currency, null);
+										getOrganization = Organization_Settings[ID != null];
+										baseCurrency = ifnull(getOrganization.Base_Currency, "MYR");
+										if(input.Currency == null || input.Currency == "")
+										{
+											input.Exchange_Rate = null;
+										}
+										else if(input.Currency == baseCurrency)
+										{
+											input.Exchange_Rate = 1;
+										}
+										else
+										{
+											try 
+											{
+												exchange_rate_get_response = invokeurl
+												[
+													url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+													type :GET
+												];
+												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+												input.Exchange_Rate = exchange_rate;
+											}
+											catch (e)
+											{
+												info e;
+												input.Exchange_Rate = "";
+											}
+										}
 										input.Payment_Term = null;
 										input.Payable_To1 = null;
 										input.Payment_Term = null;
@@ -23414,10 +23443,13 @@
 					{
 						custom deluge script
 						(
-											input.Invoice_No = thisapp.invoice.generate_invoice_number();
-										thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",input.ID);
-										//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-										//input.Delivery_Order_No = thisapp.generate_delivery_order_no();
+											invNo = thisapp.invoice.generate_invoice_number();
+										update Invoice[ID == input.ID]
+										[
+											Invoice_No = invNo
+										];
+										// Invoice_Blueprint start stage is already "Draft" on form add.
+										// changeStage to Draft here fails and blocks Invoice_No from saving.
 						)
 					}
 				}
@@ -24182,6 +24214,34 @@
 											input.Customer_SST = ifnull(input.Customer_Name.Customer_SST,"");
 											input.Customer_Email = ifnull(input.Customer_Name.Email_Address,"");
 											input.Currency = input.Customer_Name.Currency;
+											getOrganization = Organization_Settings[ID != null];
+											baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+											if(input.Currency == null || input.Currency == "")
+											{
+												input.Exchange_Rate = null;
+											}
+											else if(input.Currency == baseCurrency)
+											{
+												input.Exchange_Rate = 1;
+											}
+											else
+											{
+												try 
+												{
+													exchange_rate_get_response = invokeurl
+													[
+														url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+														type :GET
+													];
+													exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+													input.Exchange_Rate = exchange_rate;
+												}
+												catch (e)
+												{
+													info e;
+													input.Exchange_Rate = "";
+												}
+											}
 										}
 										// if(input.Customer_Code != null)
 										// {
@@ -24276,6 +24336,41 @@
 										if(input.Payment_Type_Single_Record == "Invoice")
 										{
 											getInvs = Invoice[ID == input.Invoice];
+											if(getInvs.ID != null)
+											{
+												input.Currency = ifnull(getInvs.Invoice_Currency,ifnull(input.Customer_Name.Currency,null));
+												if(getInvs.Exchange_Rate != null)
+												{
+													input.Exchange_Rate = getInvs.Exchange_Rate;
+												}
+												else
+												{
+													getOrganization = Organization_Settings[ID != null];
+													baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+													if(input.Currency == baseCurrency)
+													{
+														input.Exchange_Rate = 1;
+													}
+													else
+													{
+														try 
+														{
+															exchange_rate_get_response = invokeurl
+															[
+																url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+																type :GET
+															];
+															exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+															input.Exchange_Rate = exchange_rate;
+														}
+														catch (e)
+														{
+															info e;
+															input.Exchange_Rate = "";
+														}
+													}
+												}
+											}
 											for each  inv in getInvs
 											{
 												payRow = Payment_Received.Payment_Received_Line_Item();
@@ -24716,16 +24811,43 @@
 					{
 						custom deluge script
 						(
-											input.Currency = ifnull(input.Customer_Name.Currency,null);
+											customerInfo = Customer_Profile[ID == input.Customer_Name];
+										input.Currency = ifnull(customerInfo.Currency,null);
+										getOrganization = Organization_Settings[ID != null];
+										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+										if(input.Currency == null || input.Currency == "")
+										{
+											input.Exchange_Rate = null;
+										}
+										else if(input.Currency == baseCurrency)
+										{
+											input.Exchange_Rate = 1;
+										}
+										else
+										{
+											try 
+											{
+												exchange_rate_get_response = invokeurl
+												[
+													url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+													type :GET
+												];
+												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+												input.Exchange_Rate = exchange_rate;
+											}
+											catch (e)
+											{
+												info e;
+												input.Exchange_Rate = "";
+											}
+										}
 										input.Customer_Code = null;
 										input.Payment_Method = null;
 										input.Reference = "";
-										input.Customer_Email = ifnull(input.Customer_Name.Email_Address,"");
-										input.Customer_TIN = ifnull(input.Customer_Name.Customer_TIN,"");
-										input.Customer_SST = ifnull(input.Customer_Name.Customer_SST,"");
+										input.Customer_Email = ifnull(customerInfo.Email_Address,"");
+										input.Customer_TIN = ifnull(customerInfo.Customer_TIN,"");
+										input.Customer_SST = ifnull(customerInfo.Customer_SST,"");
 										input.Paid_To = null;
-										totalAmountReceived = 0;
-										customerInfo = Customer_Profile[ID == input.Customer_Name];
 										input.Payment_Received_Line_Item.clear();
 										input.Amount_Received = 0;
 										input.Amount_Received_MYR = ifnull(input.Amount_Received,0) * ifnull(input.Exchange_Rate,1);
@@ -24747,7 +24869,37 @@
 					{
 						custom deluge script
 						(
-											tenancyInfo = Tenancy[ID == input.Customer_Code];
+											customerInfo = Customer_Profile[ID == input.Customer_Name];
+										input.Currency = ifnull(customerInfo.Currency,null);
+										getOrganization = Organization_Settings[ID != null];
+										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+										if(input.Currency == null || input.Currency == "")
+										{
+											input.Exchange_Rate = null;
+										}
+										else if(input.Currency == baseCurrency)
+										{
+											input.Exchange_Rate = 1;
+										}
+										else
+										{
+											try 
+											{
+												exchange_rate_get_response = invokeurl
+												[
+													url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+													type :GET
+												];
+												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+												input.Exchange_Rate = exchange_rate;
+											}
+											catch (e)
+											{
+												info e;
+												input.Exchange_Rate = "";
+											}
+										}
+										tenancyInfo = Tenancy[ID == input.Customer_Code];
 										//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 										getInvs = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer_Code == input.Customer_Code];
 										getDebitNotes = Debit_Note[Status == "Partially Paid" || Status == "Sent" || Status = "Overdue" && Customer_Code == input.Customer_Code];
@@ -24796,9 +24948,37 @@
 					{
 						custom deluge script
 						(
-											tenancyInfo = Tenancy[ID == input.Customer_Code];
-										// input.Currency = tenancyInfo.Currency;
-										// input.Exchange_Rate = ifnull(tenancyInfo.Currency.Exchange_Rate_to_MYR,1);
+											customerInfo = Customer_Profile[ID == input.Customer_Name];
+										input.Currency = ifnull(customerInfo.Currency,null);
+										getOrganization = Organization_Settings[ID != null];
+										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
+										if(input.Currency == null || input.Currency == "")
+										{
+											input.Exchange_Rate = null;
+										}
+										else if(input.Currency == baseCurrency)
+										{
+											input.Exchange_Rate = 1;
+										}
+										else
+										{
+											try 
+											{
+												exchange_rate_get_response = invokeurl
+												[
+													url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+													type :GET
+												];
+												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+												input.Exchange_Rate = exchange_rate;
+											}
+											catch (e)
+											{
+												info e;
+												input.Exchange_Rate = "";
+											}
+										}
+										tenancyInfo = Tenancy[ID == input.Customer_Code];
 										//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 										subTotal = 0;
 										totalTax = 0;
