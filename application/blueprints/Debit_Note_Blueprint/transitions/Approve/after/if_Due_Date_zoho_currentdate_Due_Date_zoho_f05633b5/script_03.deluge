@@ -1,0 +1,1 @@
+thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Approved",input.ID);

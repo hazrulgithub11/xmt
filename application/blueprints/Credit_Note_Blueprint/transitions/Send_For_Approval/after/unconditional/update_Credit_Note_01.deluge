@@ -1,0 +1,4 @@
+update Credit_Note[ID == input.ID]
+[
+Status = "Pending Approval"
+]

@@ -1,0 +1,9 @@
+/* Invoice can be either status Sent and status Overdue after sending invoice*/
+														if(input.Due_Date > today)
+														{
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
+														}
+														else
+														{
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
+														}

@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 20-May-2026 18:37:39
+ * Generated on : 21-May-2026 18:20:34
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -3038,16 +3038,6 @@
 	 			column = 1   
 				width = medium
 			)
-			Status
-			(
-				type = picklist
-				maxchar = 100
-				values = {"Draft","Pending Approval","Approved","Rejected","Sent","Partially Paid","Paid","Overdue"}
-				sortorder = ascending
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
 			must have Invoice_Date
 			(
     			type = date
@@ -3937,7 +3927,7 @@
 			}
 			blueprint components
 			{
-				stages = {"Draft","Pending Approval","Rejected","Approved","Closed"}
+				stages = {"Draft","Pending Approval","Rejected","Approved","Closed","Sent","Paid","Partially Paid","Overdue"}
 			}
 		print template
 			{
@@ -11506,6 +11496,7 @@
 				Invoice_Currency as "Invoice Currency"
 				Exchange_Rate as "Exchange Rate"
 				Amount_Paid as "Amount Paid"
+				Blueprint.Current_Stage as "Current Stage"
 			)
 			sort by
 			(
@@ -11534,18 +11525,6 @@
 				confirmation before execution
 				(
 					message for individual record = "Are you sure you want to \"Send Invoice\" this Invoice ${Invoice_No}?"
-					confirm button text = "Yes"		
-					cancel button text = "No"
-				)
-				)
-				"Mark As Sent"
-				(
-	  			workflow = Mark_As_Sent
-				show action in view header = true
-				condition = (Blueprint.Current_Stage == "Approved")
-				confirmation before execution
-				(
-					message for individual record = "Are you sure you want to \"Mark As Sent\" this Invoice ${Invoice_No}?"
 					confirm button text = "Yes"		
 					cancel button text = "No"
 				)
@@ -12121,13 +12100,6 @@
 				show action in view header = true
 				condition = (Blueprint.Current_Stage != "Draft" && Blueprint.Current_Stage != "Rejected" && Blueprint.Current_Stage != "Resubmit")
 				)
-				"Mark As Sent"
-				(
-	  			workflow = Mark_As_Sent
-				show action in view header = true
-				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved")
-				)
 			)
 			conditional formatting
 			(
@@ -12550,12 +12522,6 @@
 				show action in view header = true
 				show action in edit record menu = true
 				condition = (Blueprint.Current_Stage != "Draft" && Blueprint.Current_Stage != "Rejected" && Blueprint.Current_Stage != "Pending Approval")
-				)
-				"Mark As Sent"
-				(
-	  			workflow = Mark_As_Sent
-				show action in view header = true
-				condition = (Blueprint.Current_Stage == "Approved")
 				)
 				"Record Payment"
 				(
@@ -13009,7 +12975,6 @@
 				Invoice_UUID_Link as "Invoice UUID Link"
 				Invoice_Public_Link as "Invoice Public Link"
 				QR_Invoice_Public_Link as "QR Invoice Public Link"
-				Status
 				Invoice_Date as "Invoice Date"
 				Payment_Term as "Payment Term"
 				Due_Date as "Due Date"
@@ -18785,38 +18750,18 @@
                  	//mp.put("Previous_Invoice",previousInvoice);
                  	return mp;
                  }
-				 void invoice.invoice_balance_updates(int invId)
+				 void invoice.invoice_balance_updates(int invoice_id)
                  {
-                 	getInvoice = Invoice[ID == invId];
-                 	invoiceDate = getInvoice.Invoice_Date;
-                 	tenantID = getInvoice.Customer_Code;
-                 	previoustotalAmountDue = 0;
-                 	for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoiceDate.toStartOfMonth() && Customer_Code == tenantID]
+                 	get_invoice = Invoice[ID == invoice_id];
+                 	get_invoice_date = get_invoice.Invoice_Date;
+                 	get_invoice_tenant_id = get_invoice.Customer_Code;
+                 	previous_total_amount_due = 0;
+                 	for each  curr_invoice in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < get_invoice_date.toStartOfMonth() && Customer_Code == get_invoice_tenant_id]
                  	{
-                 		previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+                 		previous_total_amount_due = previous_total_amount_due + curr_invoice.Amount_Due;
                  	}
-                 	getInvoice.Previous_Balance=previoustotalAmountDue;
-                 	getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-                 	// 	for each  inv in Invoice[Previous_Invoice == invId]
-                 	// 	{
-                 	// 		info "Update " + inv.Invoice_No + " That Use " + Invoice[ID == invId].Invoice_No + " reference for Previous Invoice";
-                 	// 		previoustotalAmountDue = 0;
-                 	// 		for each  x in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < inv.Invoice_Date.toStartOfMonth() && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == inv.Customer_Code]
-                 	// 		{
-                 	// 			previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-                 	// 		}
-                 	// 		info "previoustotalAmountDue:" + previoustotalAmountDue;
-                 	// 		inv.Previous_Balance=previoustotalAmountDue;
-                 	// 		inv.Overdue_Charges=previoustotalAmountDue;
-                 	// 		inv.Total_Amount_Due=previoustotalAmountDue + inv.Amount_Due;
-                 	// 		info "totalAmountDue:" + inv.Total_Amount_Due;
-                 	// 		info "totalAmountDue:" + previoustotalAmountDue + inv.Amount_Due;
-                 	// 		getInvoices = Invoice[Previous_Invoice == inv.ID].ID.getAll();
-                 	// 		if(getInvoices.size() > 0)
-                 	// 		{
-                 	// 			thisapp.invoice.invoice_balance_updates(inv.ID);
-                 	// 		}
-                 	// 	}
+                 	get_invoice.Previous_Balance=previous_total_amount_due;
+                 	get_invoice.Total_Amount_Due=get_invoice.Grand_Total;
                  }
 				 void invoice.recalculate_overdue(int tenantId, int invId)
                  {
@@ -21084,9 +21029,9 @@
 						custom deluge script
 						(
 											customerInfo = Customer_Profile[ID == input.Customer_Name];
-										input.Currency = ifnull(customerInfo.Currency, null);
+										input.Currency = ifnull(customerInfo.Currency,null);
 										getOrganization = Organization_Settings[ID != null];
-										baseCurrency = ifnull(getOrganization.Base_Currency, "MYR");
+										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
 										if(input.Currency == null || input.Currency == "")
 										{
 											input.Exchange_Rate = null;
@@ -21106,8 +21051,7 @@
 												];
 												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 												input.Exchange_Rate = exchange_rate;
-											}
-											catch (e)
+											}	catch (e)
 											{
 												info e;
 												input.Exchange_Rate = "";
@@ -21122,7 +21066,7 @@
 										input.Prorate = false;
 										input.Prorate_Note1 = "";
 										/* grandTotal = 0;
-										 				 				grandTotalMYR = 0; */
+														 				 				grandTotalMYR = 0; */
 										for each  subLineItem in input.Subcription_Line_Items
 										{
 											unitPrice = ifnull(subLineItem.Item.Unit_Price,0);
@@ -21138,21 +21082,21 @@
 											subLineItem.Total=0;
 											subLineItem.Total_MYR=0;
 											/*if(subLineItem.Item.Tax == null)
-										 				 					{
-										 				 						subLineItem.Tax=null;
-										 				 						subLineItem.Tax_Pct=0;
-										 				 						subLineItem.Tax_Amount=0;
-										 				 					}
-										 				 					else
-										 				 					{
-										 				 						subLineItem.Tax=subLineItem.Item.Tax;
-										 				 						subLineItem.Tax_Pct=subLineItem.Item.Tax.Tax_Percentage;
-										 				 						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Item.Tax.Tax_Percentage / 100;
-										 				 					}
-										 				 					subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
-										 				 					subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Currency.Exchange_Rate_to_MYR,1);
-										 				 					grandTotal = grandTotal + subLineItem.Total;
-										 				 					grandTotalMYR = grandTotalMYR + subLineItem.Total_MYR;*/
+														 				 					{
+														 				 						subLineItem.Tax=null;
+														 				 						subLineItem.Tax_Pct=0;
+														 				 						subLineItem.Tax_Amount=0;
+														 				 					}
+														 				 					else
+														 				 					{
+														 				 						subLineItem.Tax=subLineItem.Item.Tax;
+														 				 						subLineItem.Tax_Pct=subLineItem.Item.Tax.Tax_Percentage;
+														 				 						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Item.Tax.Tax_Percentage / 100;
+														 				 					}
+														 				 					subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
+														 				 					subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Currency.Exchange_Rate_to_MYR,1);
+														 				 					grandTotal = grandTotal + subLineItem.Total;
+														 				 					grandTotalMYR = grandTotalMYR + subLineItem.Total_MYR;*/
 											if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
 											{
 												subLineItem.Business_Segment:ui.add(customerInfo.Business_Segment);
@@ -22747,7 +22691,7 @@
 										disable Previous_Balance;
 										disable Deposit_Amount;
 										disable Total_Amount_Due;
-										if(Blueprint.Current_Stage != "Pending Approval" && Blueprint.Current_Stage != "Resubmit")
+										if(Blueprint.Current_Stage != "Pending Approval")
 										{
 											disable Rejection_Reason;
 										}
@@ -23079,23 +23023,6 @@
 
 				on success
 				{
-					actions 
-					{
-						custom deluge script
-						(
-											previoustotalAmountDue = 0;
-										for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-										{
-											previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-										}
-										input.Previous_Balance = previoustotalAmountDue;
-										input.Total_Amount_Due = input.Grand_Total;
-										for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-										{
-											thisapp.invoice.invoice_balance_updates(inv.ID);
-										}
-						)
-					}
 					actions 
 					{
 						custom deluge script
@@ -23446,7 +23373,7 @@
 											invNo = thisapp.invoice.generate_invoice_number();
 										update Invoice[ID == input.ID]
 										[
-											Invoice_No = invNo
+											Invoice_No=invNo
 										];
 										// Invoice_Blueprint start stage is already "Draft" on form add.
 										// changeStage to Draft here fails and blocks Invoice_No from saving.
@@ -24235,8 +24162,7 @@
 													];
 													exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 													input.Exchange_Rate = exchange_rate;
-												}
-												catch (e)
+												}		catch (e)
 												{
 													info e;
 													input.Exchange_Rate = "";
@@ -24256,7 +24182,7 @@
 											totalPaymentReceived = 0;
 										totalPaymentReceivedMYR = 0;
 										getInvs = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" && Customer_Code == input.Customer_Code];
-										getDebitNotes = Debit_Note[Status == "Partially Paid" || Status == "Sent" && Customer_Code == input.Customer_Code];
+										getDebitNotes = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" && Customer_Code == input.Customer_Code];
 										if(getInvs.ID == null && getDebitNotes.ID == null && input.Customer_Code != null)
 										{
 											alert "There are no unpaid invoices associated with this customer code.";
@@ -24362,8 +24288,7 @@
 															];
 															exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 															input.Exchange_Rate = exchange_rate;
-														}
-														catch (e)
+														}				catch (e)
 														{
 															info e;
 															input.Exchange_Rate = "";
@@ -24756,7 +24681,7 @@
 				}
 
 			}
-			Field_Rules_Payment_Type as "Field Rules Payment Type"
+			Field_Rules_when_Payment_ as "Field Rules when Payment Type is null"
 			{
 				type =  form
 				form = Payment_Received
@@ -24767,7 +24692,7 @@
 				{
 					actions  (Payment_Type is null || Payment_Type == "")
 					{
-						hide Customer_Name,Customer_TIN,Customer_SST,Customer_Code,Payment_Date,Payment_Method,Paid_To,Reference,Payment_Received_Line_Item,Amount_Received,Exchange_Rate,Amount_Received_MYR,Customer_Email,Currency;
+						hide Customer_Name,Customer_TIN,Customer_SST,Customer_Code,Payment_Date,Payment_Method,Paid_To,Reference,Payment_Received_Line_Item,Amount_Received,Exchange_Rate,Amount_Received_MYR,Customer_Email,Currency,Payment_Received_No,Total_Still_Owing;
 					}
 				}
 
@@ -24778,6 +24703,7 @@
 				form = Payment_Received
 
 				record event = on add
+					status = inactive
 
 				on load
 				{
@@ -24834,8 +24760,7 @@
 												];
 												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 												input.Exchange_Rate = exchange_rate;
-											}
-											catch (e)
+											}	catch (e)
 											{
 												info e;
 												input.Exchange_Rate = "";
@@ -24892,8 +24817,7 @@
 												];
 												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 												input.Exchange_Rate = exchange_rate;
-											}
-											catch (e)
+											}	catch (e)
 											{
 												info e;
 												input.Exchange_Rate = "";
@@ -24902,7 +24826,7 @@
 										tenancyInfo = Tenancy[ID == input.Customer_Code];
 										//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 										getInvs = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer_Code == input.Customer_Code];
-										getDebitNotes = Debit_Note[Status == "Partially Paid" || Status == "Sent" || Status = "Overdue" && Customer_Code == input.Customer_Code];
+										getDebitNotes = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer_Code == input.Customer_Code];
 										if(getInvs.ID == null && getDebitNotes.ID == null && input.Customer_Code != null)
 										{
 											alert "There are no unpaid invoices associated with this customer code.";
@@ -24971,8 +24895,7 @@
 												];
 												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 												input.Exchange_Rate = exchange_rate;
-											}
-											catch (e)
+											}	catch (e)
 											{
 												info e;
 												input.Exchange_Rate = "";
@@ -25138,17 +25061,17 @@
 														getDbNote.Amount_Due=newAmountDue;
 														if(getDbNote.Due_Date > zoho.currentdate)
 														{
-															getDbNote.Status="Partially Paid";
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",getDbNote.ID);
 														}
 														else if(getDbNote.Due_Date < zoho.currentdate)
 														{
-															getDbNote.Status="Overdue";
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
 														}
 													}
 													else
 													{
 														getDbNote.Amount_Due=0;
-														getDbNote.Status="Paid";
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Paid",getDbNote.ID);
 													}
 													newAmountPaidDB = getDbNote.Amount_Paid + paymentReceivedLineItem.Allocation;
 													if(newAmountPaidDB >= getDbNote.Grand_Total)
@@ -25477,11 +25400,11 @@
 													getDbNote.Amount_Paid=newAmountPaidDB;
 													if(getDbNote.Due_Date > zoho.currentdate)
 													{
-														getDbNote.Status="Partially Paid";
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",getDbNote.ID);
 													}
 													else
 													{
-														getDbNote.Status="Overdue";
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
 													}
 												}
 												else
@@ -25489,11 +25412,11 @@
 													getDbNote.Amount_Paid=0;
 													if(getDbNote.Due_Date > zoho.currentdate)
 													{
-														getDbNote.Status="Sent";
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",getDbNote.ID);
 													}
 													else
 													{
-														getDbNote.Status="Overdue";
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
 													}
 												}
 												newAmountDueDB = getDbNote.Amount_Due + paymentReceived.Allocation;
@@ -25634,16 +25557,16 @@
 													{
 														if(getDbNote.Due_Date > zoho.currentdate)
 														{
-															getDbNote.Status="Sent";
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",getDbNote.ID);
 														}
 														else if(getDbNote.Due_Date < zoho.currentdate)
 														{
-															getDbNote.Status="Overdue";
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
 														}
 													}
 													else if(getDbNote.Amount_Paid == getDbNote.Grand_Total)
 													{
-														getDbNote.Status="Paid";
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Paid",getDbNote.ID);
 														getJournalEntry = Journal_Entry[Debit_Note == getDbNote.ID];
 														if(getJournalEntry.ID != null)
 														{
@@ -25688,11 +25611,11 @@
 													{
 														if(getDbNote.Due_Date > zoho.currentdate)
 														{
-															getDbNote.Status="Partially Paid";
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",getDbNote.ID);
 														}
 														else if(getDbNote.Due_Date < zoho.currentdate)
 														{
-															getDbNote.Status="Overdue";
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
 														}
 													}
 												}
@@ -26957,7 +26880,7 @@
 											{
 												invoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 												proformaInvoiceValue = ifnull(Pro_Forma_Invoices[Pro_Forma_Invoice_Date < input.Start_Date && Customer_Name == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
-												debitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+												debitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 												totalInvoiceValue = totalInvoiceValue + invoiceValue;
 												totalProformaInvoiceValue = totalProformaInvoiceValue + proformaInvoiceValue;
 												totalDebitNoteValue = totalDebitNoteValue + debitNoteValue;
@@ -26967,7 +26890,7 @@
 										{
 											totalInvoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 											totalProformaInvoiceValue = ifnull(Pro_Forma_Invoices[Pro_Forma_Invoice_Date < input.Start_Date && Customer_Name == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
-											totalDebitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+											totalDebitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 										}
 										totalAmountOpeningBalance = totalInvoiceValue + totalProformaInvoiceValue + totalDebitNoteValue;
 										obList = list();
@@ -32022,6 +31945,7 @@
 											input.Credits_Applied_Total = input_invoice.Credits_Applied_Total;
 											input_invoice.Amount_Due=input.Grand_Total - input.Amount_Paid - credits_applied_total;
 											input.Amount_Due = input_invoice.Amount_Due;
+											input.Total_Amount_Due = input.Amount_Due + input.Previous_Balance;
 										}
 						)
 					}
@@ -32122,7 +32046,6 @@
 										disable Delivery_Country;
 										// Invoice Info
 										disable Invoice_No;
-										disable Status;
 										disable Amount_Paid;
 										disable Amount_Due;
 										disable Base_Currency;
@@ -32165,7 +32088,7 @@
 										disable Total_Tax;
 										disable Grand_Total;
 										disable Grand_Total_Base_Currency;
-										if(input.Status != "Pending Approval" && input.Status != "Resubmit")
+										if(input.Blueprint.Current_Stage != "Pending Approval")
 										{
 											disable Rejection_Reason;
 										}
@@ -32180,65 +32103,6 @@
 										disable Invoice_Related_List.STATUS;
 										disable Invoice_Related_List.MESSAGE;
 										disable User_Input_Trigger;
-						)
-					}
-					actions  (Status == "Approved" || Status == "Rejected" || Status == "Sent" || Status == "Partially Paid" || Status == "Paid" || Status == "Overdue")
-					{
-						custom deluge script
-						(
-											/*
-										 				 														// Customer info
-										 				 														disable Customer;
-										 				 														disable Customer_Code;
-										 				 														disable Invoice_Date;
-										 				 														disable Due_Date;
-										 				 														disable Payment_Term;
-										 				 														// Invoice info
-										 				 														disable Charge_Category;
-										 				 														disable Attachment;
-										 				 														disable Exchange_Rate;
-										 				 														disable Payable_To;
-										 				 														disable Reference_Invoice;
-										 				 														// Monthly Rental
-										 				 														disable Monthly_Rental.Item_Monthly_Rental;
-										 				 														disable Monthly_Rental.Classification_Codes_Monthly_Rental;
-										 				 														disable Monthly_Rental.Description_Monthly_Rental;
-										 				 														disable Monthly_Rental.Quantity_Monthly_Rental;
-										 				 														disable Monthly_Rental.Unit_Price_Monthly_Rental;
-										 				 														disable Monthly_Rental.Tax_Monthly_Rental;
-										 				 														disable Monthly_Rental.Customer_PO_No_Monthly_Rental;
-										 				 														disable Monthly_Rental.Business_Segment_Monthly_Rental;
-										 				 														disable Monthly_Rental.Business_Unit_Monthly_Rental;
-										 				 														disable Monthly_Rental.Circuit_ID_Monthly_Rental;
-										 				 														disable Monthly_Rental.Circuit_ID_Type_Monthly_Rental;
-										 				 														disable Monthly_Rental.Sub_Line_Item_Monthly_Rental;
-										 				 														// Internet Charges
-										 				 														disable Internet_Charges.Item_Internet_Charges;
-										 				 														disable Internet_Charges.Classification_Codes_Internet_Charges;
-										 				 														disable Internet_Charges.Description_Internet_Charges;
-										 				 														disable Internet_Charges.Quantity_Internet_Charges;
-										 				 														disable Internet_Charges.Unit_Price_Internet_Charges;
-										 				 														disable Internet_Charges.Tax_Internet_Charges;
-										 				 														disable Internet_Charges.Customer_PO_No_Internet_Charges;
-										 				 														disable Internet_Charges.Business_Segment_Internet_Charges;
-										 				 														disable Internet_Charges.Business_Unit_Internet_Charges;
-										 				 														disable Internet_Charges.Circuit_ID_Internet_Charges;
-										 				 														disable Internet_Charges.Circuit_ID_Type_Internet_Charges;
-										 				 														disable Internet_Charges.Sub_Line_Item_Internet_Charges;
-										 				 														// Call Charges
-										 				 														disable Call_Charges.Item_Call_Charges;
-										 				 														disable Call_Charges.Classification_Codes_Call_Charges;
-										 				 														disable Call_Charges.Description_Call_Charges;
-										 				 														disable Call_Charges.Quantity_Call_Charges;
-										 				 														disable Call_Charges.Unit_Price_Call_Charges;
-										 				 														disable Call_Charges.Tax_Call_Charges;
-										 				 														disable Call_Charges.Customer_PO_No_Call_Charges;
-										 				 														disable Call_Charges.Business_Segment_Call_Charges;
-										 				 														disable Call_Charges.Business_Unit_Call_Charges;
-										 				 														disable Call_Charges.Circuit_ID_Call_Charges;
-										 				 														disable Call_Charges.Circuit_ID_Type_Call_Charges;
-										 				 														disable Call_Charges.Sub_Line_Item_Call_Charges;
-										 				 														*/
 						)
 					}
 				}
@@ -32257,11 +32121,11 @@
 					{
 						custom deluge script
 						(
-											if(input.Status != "Rejected")
+											if(input.Blueprint.Current_Stage != "Rejected")
 										{
 											hide Rejection_Reason;
 										}
-										if(input.Status != "Rejected")
+										if(input.Blueprint.Current_Stage != "Rejected")
 										{
 											hide Confirm_resubmission;
 										}
@@ -32495,7 +32359,7 @@
 
 				on validate
 				{
-					actions  (Status == "Rejected")
+					actions  (Blueprint.Current_Stage == "Rejected")
 					{
 						custom deluge script
 						(
@@ -32506,7 +32370,7 @@
 										}
 						)
 					}
-					actions  (Status == "Pending Approval")
+					actions  (Blueprint.Current_Stage == "Pending Approval")
 					{
 						custom deluge script
 						(
@@ -32534,11 +32398,8 @@
 						custom deluge script
 						(
 											input.Invoice_No = thisapp.debit_note.generate_debit_note_no();
+										thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Draft",input.ID);
 						)
-					update Debit_Note[ID == input.ID]
-					[
-						Status = "Draft"
-					]
 					}
 				}
 
@@ -32603,7 +32464,6 @@
 										input.Supplier_State = getOrganization.State;
 										input.Base_Currency = getOrganization.Base_Currency;
 										hide Invoice_No;
-										hide Status;
 						)
 					}
 				}
@@ -33130,23 +32990,6 @@
 											input.Amount_Due = 0;
 										}
 						)
-					}
-				}
-
-			}
-			Disable_Addition_And_Dele2 as "Disable Addition And Deletion Row"
-			{
-				type =  form
-				form = Debit_Note
-
-				record event = on add or edit
-
-				field rules
-				{
-					actions  (Status == "Approved" || Status == "Overdue" || Status == "Sent" || Status == "Partially Paid" || Status == "Paid")
-					{
-					hide add row of Call_Charges,Internet_Charges,Monthly_Rental;
-					hide delete row of Call_Charges,Internet_Charges,Monthly_Rental;
 					}
 				}
 
@@ -36713,6 +36556,14 @@
 										input.User_Input_Trigger = !input.User_Input_Trigger;
 										/* Customer Name Trigger Initialization*/
 										input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+										/* Get Previous Total Amount Due */
+										get_invoice_tenant_id = input.Customer_Code;
+										previous_total_amount_due = 0;
+										for each  curr_invoice in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == get_invoice_tenant_id]
+										{
+											previous_total_amount_due = previous_total_amount_due + curr_invoice.Amount_Due;
+										}
+										input.Previous_Balance = previous_total_amount_due;
 						)
 					}
 				}
@@ -38960,6 +38811,36 @@
          				}
          				after
          				{
+							actions 
+							{
+								custom deluge script
+								(
+															/* Invoice can be either status Sent and status Overdue after sending invoice*/
+														if(input.Due_Date > today)
+														{
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
+														}
+														else
+														{
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
+														}
+								)
+							}
+							actions  (Customer.Credit_Available > 0)
+							{
+								custom deluge script
+								(
+															getCustomerProfile = Customer_Profile[ID == input.Customer];
+														msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
+														customerName = "&Customer_Name=" + input.Customer;
+														customerCode = "&Customer_Code=" + input.Customer_Code;
+														invoice = "&Invoice=" + input.ID;
+														customerEmail = "&Customer_Email=" + input.Customer_E_mail;
+														invoiceNo = "&Invoice_No=" + input.Invoice_No;
+														typeOfAction = "&Type_Of_Action=Mark As Sent";
+														openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
+								)
+							}
          				}
          				chart data
          				{
@@ -39439,34 +39320,37 @@
                    			position : "-331 553.15"
                			}
            			}
-           			"Closed"
+           			"Sent"
            			{
                			chart data
                			{
-                   			position : "-70.2204495740657 552.8378914897611"
+                   			position : "-30.715667705480882 556.6043770945611"
+               			}
+           			}
+           			"Paid"
+           			{
+               			chart data
+               			{
+                   			position : "306.78433229451946 554.1043770945613"
+               			}
+           			}
+           			"Partially Paid"
+           			{
+               			chart data
+               			{
+                   			position : "306.78433229451946 397.43771042789444"
+               			}
+           			}
+           			"Overdue"
+           			{
+               			chart data
+               			{
+                   			position : "294.28433229451946 643.4999999999999"
                			}
            			}
         			}
         			transitions
         			{
-    				Apply as "Apply"
-    				{
-         				type = normal
-         				from stage = "Approved"
-         				to stage = "Closed"
-         				before
-         				{
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : R1
-             				to port   : L1
-             				path      : [-226.8078898092706,578.9539148976107,-216.8078898092706,578.9539148976107,-148.51416969166814,578.9539148976107,-148.51416969166814,578.6418063873718,-80.2204495740657,578.6418063873718,-70.2204495740657,578.6418063873718]
-        				}
-  				}
     				Approve as "Approve"
     				{
          				type = normal
@@ -39474,22 +39358,269 @@
          				to stage = "Approved"
          				before
          				{
+            				transition owner
+            				(
+                				permissions = {"Administrator", "Finance Manager"}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Approve' this Invoice ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)
          				}
          				after
          				{
+							actions 
+							{
+								custom deluge script
+								(
+															listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943011]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmail.add("test@aplikasi.us");
+														//listEmailID.add(zoho.adminuserid);
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
+														//Send Mail & App Notify To Parts Coordinator
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Invoice " + input.Invoice_No + " Approved"
+															message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been successfully approved.As the next step, please submit the approved invoice to the customer at your earliest convenience.Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Invoice " + input.Invoice_No + " Approved";
+														notifyMessage = "Invoice " + input.Invoice_No + " has been approved. Thank you! Please submit it to the customer.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+														//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
+								)
+								custom deluge script
+								(
+															previoustotalAmountDue = 0;
+														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+														{
+															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+														}
+														Previous_Balance = previoustotalAmountDue;
+														Total_Amount_Due = input.Grand_Total;
+														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+														{
+															thisapp.invoice.invoice_balance_updates(inv.ID);
+														}
+								)
+								custom deluge script
+								(
+															zoho_loginuser = zoho.loginuser;
+														app_link_name = "xmt-billing-system";
+														// Main info
+														client_id = input.Supplier.Client_ID;
+														client_secret = input.Supplier.Client_Secret;
+														organization_scheme_id = input.Supplier.Scheme_ID;
+														organization_scheme_agency_id = input.Supplier.Scheme_agency_ID;
+														organization_tax_name = input.Supplier.Tax_Name;
+														organization_environment = input.Supplier.LHDN_Portal_Environment;
+														// Organization info
+														organization_name = input.Supplier_Name;
+														organization_tin = input.Supplier_TIN;
+														organization_registration_number_scheme = input.Supplier_ID_Type;
+														organization_registration_number = input.Supplier_Registration_Identification_Passport_Number;
+														organization_sst_registration_number = input.Supplier_SST_Registration_Number;
+														organization_msic_description = input.Supplier_Business_Activity_Description;
+														organization_email = input.Supplier_E_mail;
+														organization_phone = input.Supplier_Telephone_Number;
+														organization_street_address = input.Supplier_Street;
+														organization_city = input.Supplier_City;
+														organization_zip = input.Supplier_Postcode;
+														organization_country = input.Supplier_Country;
+														organization_state = input.Supplier_State;
+														organization_object = {"client_id":client_id,"client_secret":client_secret,"organization_scheme_id":organization_scheme_id,"organization_scheme_agency_id":organization_scheme_agency_id,"organization_tax_name":organization_tax_name,"organization_environment":organization_environment,"organization_name":organization_name,"organization_tin":organization_tin,"organization_registration_number_scheme":organization_registration_number_scheme,"organization_registration_number":organization_registration_number,"organization_sst_registration_number":organization_sst_registration_number,"organization_msic_description":organization_msic_description,"organization_email":organization_email,"organization_phone":organization_phone,"organization_street_address":organization_street_address,"organization_city":organization_city,"organization_zip":organization_zip,"organization_country":organization_country,"organization_state":organization_state};
+														organization = organization_object.toString();
+														// Customer info
+														customer_name = input.Customer_Name;
+														customer_tin = input.Customer_TIN;
+														customer_registration_number_scheme = input.Customer_ID_Type;
+														customer_registration_number = input.Customer_Registration_Identification_Passport_Number;
+														customer_sst_registration_number = input.Customer_SST_Registration_Number;
+														customer_email = input.Customer_E_mail;
+														customer_phone = input.Customer_Telephone_Number;
+														customer_billing_street_address = input.Customer_Street;
+														customer_billing_city = input.Customer_City;
+														customer_billing_zip = input.Customer_Postcode;
+														customer_billing_country_name = input.Customer_Country;
+														customer_billing_state = input.Customer_State;
+														customer_shipping_street_address = input.Delivery_Street;
+														customer_shipping_city = input.Delivery_City;
+														customer_shipping_zip = input.Delivery_Postcode;
+														customer_shipping_country_name = input.Delivery_Country;
+														customer_shipping_state = input.Delivery_State;
+														customer_object = {"customer_name":customer_name,"customer_tin":customer_tin,"customer_registration_number_scheme":customer_registration_number_scheme,"customer_registration_number":customer_registration_number,"customer_sst_registration_number":customer_sst_registration_number,"customer_email":customer_email,"customer_phone":customer_phone,"customer_billing_street_address":customer_billing_street_address,"customer_billing_city":customer_billing_city,"customer_billing_zip":customer_billing_zip,"customer_billing_country_name":customer_billing_country_name,"customer_billing_state":customer_billing_state,"customer_shipping_street_address":customer_shipping_street_address,"customer_shipping_city":customer_shipping_city,"customer_shipping_zip":customer_shipping_zip,"customer_shipping_country_name":customer_shipping_country_name,"customer_shipping_state":customer_shipping_state};
+														customer = customer_object.toString();
+														// Invoice info
+														line_item_list = {};
+														for each  curr_monthly_rental in input.Monthly_Rental
+														{
+															curr_item_name = curr_monthly_rental.Item_Code_Monthly_Rental;
+															curr_item_classification_code_list = curr_monthly_rental.Classification_Codes_Monthly_Rental;
+															curr_item_description = "Monthly Rental: " + curr_monthly_rental.Description_Monthly_Rental;
+															curr_item_quantity = curr_monthly_rental.Quantity_Monthly_Rental;
+															curr_item_unit_price = curr_monthly_rental.Unit_Price_Monthly_Rental;
+															curr_item_price_extension = curr_monthly_rental.Sub_Total_Monthly_Rental;
+															curr_item_tax_type = curr_monthly_rental.Tax_Type_Monthly_Rental;
+															curr_item_tax_percentage = curr_monthly_rental.Tax_Pct_Monthly_Rental;
+															curr_item_tax_amount = curr_monthly_rental.Tax_Amount_Monthly_Rental;
+															curr_item = {"item_name":curr_item_name,"item_classification_code_list":curr_item_classification_code_list,"item_description":curr_item_description,"item_quantity":curr_item_quantity,"item_unit_price":curr_item_unit_price,"item_price_extension":curr_item_price_extension,"item_tax_type":curr_item_tax_type,"item_tax_percentage":curr_item_tax_percentage,"item_tax_amount":curr_item_tax_amount};
+															line_item_list.add(curr_item);
+														}
+														for each  curr_internet_charge in input.Internet_Charges
+														{
+															curr_item_name = curr_internet_charge.Item_Code_Internet_Charges;
+															curr_item_classification_code_list = curr_internet_charge.Classification_Codes_Internet_Charges;
+															curr_item_description = "Internet Charge: " + curr_internet_charge.Description_Internet_Charges;
+															curr_item_quantity = curr_internet_charge.Quantity_Internet_Charges;
+															curr_item_unit_price = curr_internet_charge.Unit_Price_Internet_Charges;
+															curr_item_price_extension = curr_internet_charge.Sub_Total_Internet_Charges;
+															curr_item_tax_type = curr_internet_charge.Tax_Type_Internet_Charges;
+															curr_item_tax_percentage = curr_internet_charge.Tax_Pct_Internet_Charges;
+															curr_item_tax_amount = curr_internet_charge.Tax_Amount_Internet_Charges;
+															curr_item = {"item_name":curr_item_name,"item_classification_code_list":curr_item_classification_code_list,"item_description":curr_item_description,"item_quantity":curr_item_quantity,"item_unit_price":curr_item_unit_price,"item_price_extension":curr_item_price_extension,"item_tax_type":curr_item_tax_type,"item_tax_percentage":curr_item_tax_percentage,"item_tax_amount":curr_item_tax_amount};
+															line_item_list.add(curr_item);
+														}
+														for each  curr_call_charge in input.Call_Charges
+														{
+															curr_item_name = curr_call_charge.Item_Code_Call_Charges;
+															curr_item_classification_code_list = curr_call_charge.Classification_Codes_Call_Charges;
+															curr_item_description = "Call Charge: " + curr_call_charge.Description_Call_Charges;
+															curr_item_quantity = curr_call_charge.Quantity_Call_Charges;
+															curr_item_unit_price = curr_call_charge.Unit_Price_Call_Charges;
+															curr_item_price_extension = curr_call_charge.Sub_Total_Call_Charges;
+															curr_item_tax_type = curr_call_charge.Tax_Type_Call_Charges;
+															curr_item_tax_percentage = curr_call_charge.Tax_Pct_Call_Charges;
+															curr_item_tax_amount = curr_call_charge.Tax_Amount_Call_Charges;
+															curr_item = {"item_name":curr_item_name,"item_classification_code_list":curr_item_classification_code_list,"item_description":curr_item_description,"item_quantity":curr_item_quantity,"item_unit_price":curr_item_unit_price,"item_price_extension":curr_item_price_extension,"item_tax_type":curr_item_tax_type,"item_tax_percentage":curr_item_tax_percentage,"item_tax_amount":curr_item_tax_amount};
+															line_item_list.add(curr_item);
+														}
+														invoice_id = input.ID.toString();
+														invoice_get_response = Map();
+														invoice_get_response.put("Invoice_Date",input.Invoice_Date);
+														invoice_get_response.put("Invoice_No",input.Invoice_No);
+														invoice_get_response.put("Payment_Term",input.Payment_Term.Days.toString());
+														invoice_get_response.put("ID",input.ID);
+														invoice_get_response.put("Due_Date",input.Due_Date);
+														invoice_get_response.put("invoice_uuid",input.Invoice_UUID);
+														invoice_get_response.put("invoice_public_link",input.Invoice_Public_Link);
+														invoice_get_response.put("invoice_subtotal",input.Sub_Total);
+														invoice_get_response.put("invoice_tax_total",input.Total_Tax);
+														invoice_get_response.put("invoice_total",input.Grand_Total);
+														invoice_get_response.put("organization_currency_code",input.Base_Currency);
+														invoice_get_response.put("invoice_currency_code",input.Invoice_Currency);
+														invoice_get_response.put("invoice_exchange_rate",input.Exchange_Rate);
+														invoice_get_response.put("line_items",line_item_list);
+														invoice = invoice_get_response.toString();
+														// Invoice LHDN submission
+														invoice_submit_lhdn_output = thisapp.invoice_submit_lhdn(invoice,organization,customer);
+														info invoice_submit_lhdn_output.get("output").toMap();
+														invoice_submit_lhdn_output = invoice_submit_lhdn_output.get("output").toMap();
+														current_date_time = zoho.currenttime;
+														new_row_invoice_related_list = Invoice.Invoice_Related_List();
+														new_row_invoice_related_list.USERNAME=zoho_loginuser;
+														new_row_invoice_related_list.INVOICE_NUMBER=input.Invoice_No;
+														new_row_invoice_related_list.Related_List_Date=current_date_time.toDate();
+														new_row_invoice_related_list.Related_List_Time=current_date_time.toTime();
+														new_row_invoice_related_list.SUBMISSION_ID=invoice_submit_lhdn_output.get("SUBMISSION_ID");
+														new_row_invoice_related_list.UUID=invoice_submit_lhdn_output.get("UUID_LINK");
+														new_row_invoice_related_list.PUBLIC_LINK=invoice_submit_lhdn_output.get("PUBLIC_LINK");
+														new_row_invoice_related_list.STATUS=invoice_submit_lhdn_output.get("STATUS");
+														new_row_invoice_related_list.MESSAGE=invoice_submit_lhdn_output.get("MESSAGE");
+														// Invoice Info
+														new_invoice_uuid = invoice_submit_lhdn_output.get("UUID");
+														new_invoice_uuid_link = invoice_submit_lhdn_output.get("UUID_LINK");
+														new_public_link = invoice_submit_lhdn_output.get("PUBLIC_LINK");
+														if(new_invoice_uuid != null && new_invoice_uuid != "")
+														{
+															input.Invoice_UUID = new_invoice_uuid;
+														}
+														if(new_invoice_uuid_link != null && new_invoice_uuid_link != "")
+														{
+															input.Invoice_UUID_Link = new_invoice_uuid_link;
+														}
+														if(new_public_link != null && new_public_link != "")
+														{
+															input.Invoice_Public_Link = new_public_link;
+														}
+														input.Invoice_Related_List.insert(new_row_invoice_related_list);
+								)
+							}
 							actions  (Due_Date < zoho.currentdate)
 							{
-							update Debit_Note[ID == input.ID]
-							[
-								Status = "Overdue"
-							]
+								custom deluge script
+								(
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",input.ID);
+								)
 							}
 							actions  (Due_Date > zoho.currentdate || Due_Date == zoho.currentdate)
 							{
-							update Debit_Note[ID == input.ID]
-							[
-								Status = "Approved"
-							]
+								custom deluge script
+								(
+															journalEntryLineItem = Collection();
+														row1 = Journal_Entry.Journal_Entry_Line_Item();
+														row1.Account=4662372000000087205;
+														row1.Description="Invoice " + input.Invoice_No + " Subtotal";
+														row1.Debit=0;
+														row1.Credit=ifnull(input.Sub_Total,0);
+														row1.Invoice=input.ID;
+														row2 = Journal_Entry.Journal_Entry_Line_Item();
+														row2.Account=4662372000000941743;
+														row2.Description="Invoice " + input.Invoice_No + " Total Tax";
+														row2.Debit=0;
+														row2.Credit=ifnull(input.Total_Tax,0);
+														row2.Invoice=input.ID;
+														row3 = Journal_Entry.Journal_Entry_Line_Item();
+														row3.Account=4662372000000941747;
+														row3.Description="Invoice " + input.Invoice_No + " Grand Total";
+														row3.Debit=ifnull(input.Grand_Total,0);
+														row3.Credit=0;
+														row3.Invoice=input.ID;
+														journalEntryLineItem.insert(row1,row2,row3);
+														newJournalEntryRecord = insert into Journal_Entry
+														[
+															Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+															Document_No=input.Invoice_No
+															Added_User=zoho.loginuser
+															Invoice=input.ID
+															Date_field=zoho.currentdate
+															Journal_Entry_Line_Item=journalEntryLineItem
+															Sub_Total_Debit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
+															Sub_Total_Credit=ifnull(input.Sub_Total,0)
+															Total_Debit=ifnull(input.Grand_Total,0)
+															Total_Credit=ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0)
+															Difference=ifnull(input.Grand_Total,0) - (ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0))
+															Created_By_The_System=true
+														];
+														//thisapp.invoice.recalculate_overdue(input.Customer_Code);
+								)
+								custom deluge script
+								(
+															previoustotalAmountDue = 0;
+														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+														{
+															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+														}
+														Previous_Balance = previoustotalAmountDue;
+														Total_Amount_Due = input.Grand_Total;
+														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+														{
+															thisapp.invoice.invoice_balance_updates(inv.ID);
+														}
+								)
+								custom deluge script
+								(
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Approved",input.ID);
+								)
 							}
          				}
          				chart data
@@ -39506,15 +39637,67 @@
          				to stage = "Rejected"
          				before
          				{
+            				transition owner
+            				(
+                				permissions = {"Administrator", "Finance Manager"}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Reject'  this Invoice ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)
+         				}
+         				during
+         				{
+            				action = update_fields
+            				workflow status = true
+            				visible fields = [Rejection_Reason]
          				}
          				after
          				{
 							actions 
 							{
-							update Debit_Note[ID == input.ID]
-							[
-								Status = "Rejected"
-							]
+								custom deluge script
+								(
+															listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943011]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmailID.add(zoho.adminuserid);
+														//listEmail.add("test@aplikasi.us");
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
+														//Send Mail & App Notify To Parts Coordinator
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Invoice " + input.Invoice_No + "  Rejected – Action Required"
+															message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Invoice " + input.Invoice_No + " Rejected – Action Required";
+														notifyMessage = "Invoice " + input.Invoice_No + " has been rejected. Please review the reason for rejection.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+								)
+								custom deluge script
+								(
+															//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
+														previoustotalAmountDue = 0;
+														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+														{
+															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+														}
+														Previous_Balance = previoustotalAmountDue;
+														Total_Amount_Due = input.Grand_Total;
+														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+														{
+															thisapp.invoice.invoice_balance_updates(inv.ID);
+														}
+								)
 							}
          				}
          				chart data
@@ -39531,16 +39714,26 @@
          				to stage = "Pending Approval"
          				before
          				{
+            				transition owner
+            				(
+                				permissions = {"Administrator", "Finance Executive"}
+                				userfields = {Added_User}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Resubmit' this Invoice ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)
+         				}
+         				during
+         				{
+            				action = update_fields
+            				workflow status = true
+            				visible fields = [Supplier_From_Section,Reject_Section,Total_Section,Monthly_Rental,Internet_Charges,Call_Charges]
          				}
          				after
          				{
-							actions 
-							{
-							update Debit_Note[ID == input.ID]
-							[
-								Status = "Pending Approval"
-							]
-							}
          				}
          				chart data
          				{
@@ -39549,7 +39742,7 @@
              				path      : [222.78505045669283,302.15,222.78505045669283,292.15,-235.34995608698978,292.15,-235.34995608698978,294.15,-235.34995608698978,296.15,-235.34995608698978,306.15]
         				}
   				}
-    				Send_For_Approval1 as "Send For Approval"
+    				Send_For_Approval as "Send For Approval"
     				{
          				type = normal
          				from stage = "Draft"
@@ -39562,9 +39755,180 @@
          				}
          				chart data
          				{
+             				from port : B4
+             				to port   : T3
+             				path      : [-274.6109829369618,152.60782979522162,-274.6109829369618,162.60782979522162,-274.6109829369618,229.3789148976108,-279.8099736521939,229.3789148976108,-279.8099736521939,296.15,-279.8099736521939,306.15]
+        				}
+  				}
+    				Send_Invoice as "Send Invoice"
+    				{
+         				type = normal
+         				from stage = "Approved"
+         				to stage = "Sent"
+         				before
+         				{
+         				}
+         				after
+         				{
+							actions 
+							{
+								custom deluge script
+								(
+															if(!Charge_Category == "Miscellaneous Charges")
+														{
+															get_invoice_tenant_id = input.Customer_Code;
+															previous_total_amount_due = 0;
+															for each  curr_invoice in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && !Charge_Category == "Miscellaneous Charges" && Customer_Code == get_invoice_tenant_id]
+															{
+																previous_total_amount_due = previous_total_amount_due + curr_invoice.Amount_Due;
+															}
+															Previous_Balance = previous_total_amount_due;
+															Total_Amount_Due = input.Grand_Total;
+															for each  curr_invoice in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && !Charge_Category == "Miscellaneous Charges" && Customer_Code == get_invoice_tenant_id]
+															{
+																thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
+															}
+														}
+														/* Invoice can be either status Sent and status Overdue after sending invoice*/
+														if(input.Due_Date > today)
+														{
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
+														}
+														else
+														{
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
+														}
+								)
+							}
+							actions 
+							{
+								custom deluge script
+								(
+															getCustomerProfile = Customer_Profile[ID == input.Customer];
+														msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
+														customerName = "&Customer_Name=" + input.Customer;
+														customerCode = "&Customer_Code=" + input.Customer_Code;
+														invoice = "&Invoice=" + input.ID;
+														customerEmail = "&Customer_Email=" + input.Customer_E_mail;
+														invoiceNo = "&Invoice_No=" + input.Invoice_No;
+														typeOfAction = "&Type_Of_Action=Mark As Sent";
+														openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
+								)
+							}
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [-226.8078898092706,578.9539148976107,-216.8078898092706,578.9539148976107,-128.76177875737574,578.9539148976107,-128.76177875737574,582.4082919921718,-40.71566770548088,582.4082919921718,-30.715667705480882,582.4082919921718]
+        				}
+  				}
+    				Payment_Received_Full as "Payment Received Full"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [41.17143455067823,582.4082919921718,51.17143455067823,582.4082919921718,173.97788342259884,582.4082919921718,173.97788342259884,579.908291992172,296.78433229451946,579.908291992172,306.78433229451946,579.908291992172]
+        				}
+  				}
+    				Payment_Received_Partial as "Payment Received Partial"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Partially Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T3
+             				to port   : L1
+             				path      : [5.227883422598673,556.6043770945611,5.227883422598673,546.6043770945611,5.227883422598673,423.24162532550525,151.00610785855906,423.24162532550525,296.78433229451946,423.24162532550525,306.78433229451946,423.24162532550525]
+        				}
+  				}
+    				Remaining_Paid as "Remaining Paid"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
              				from port : B3
              				to port   : T3
-             				path      : [-284.15000000000003,152.60782979522162,-284.15000000000003,162.60782979522162,-284.15000000000003,229.3789148976108,-279.8099736521939,229.3789148976108,-279.8099736521939,296.15,-279.8099736521939,306.15]
+             				path      : [368.67335613988416,449.04554022311606,368.67335613988416,459.04554022311606,368.67335613988416,501.5749586588387,342.05938824437635,501.5749586588387,342.05938824437635,544.1043770945613,342.05938824437635,554.1043770945613]
+        				}
+  				}
+    				Payment_Received as "Payment Received"
+    				{
+         				type = normal
+         				from stage = "Overdue"
+         				to stage = "Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T3
+             				to port   : B3
+             				path      : [343.1183863522865,643.4999999999999,343.1183863522865,633.4999999999999,343.1183863522865,624.6061034448915,342.05938824437635,624.6061034448915,342.05938824437635,615.7122068897829,342.05938824437635,605.7122068897829]
+        				}
+  				}
+    				Due_Date_Passed as "Due Date Passed"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Overdue"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : L1
+             				path      : [5.227883422598673,608.2122068897827,5.227883422598673,618.2122068897827,5.227883422598673,669.3039148976106,144.75610785855906,669.3039148976106,284.28433229451946,669.3039148976106,294.28433229451946,669.3039148976106]
+        				}
+  				}
+    				Due_Date_Passed1 as "Due Date Passed"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Overdue"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : R1
+             				path      : [430.56237998524887,423.24162532550525,440.56237998524887,423.24162532550525,440.56237998524887,669.3039148976106,421.2574101976512,669.3039148976106,401.95244041005355,669.3039148976106,391.95244041005355,669.3039148976106]
         				}
   				}
         			}
@@ -39823,99 +40187,6 @@
 										customerEmail = "&Customer_Email=" + input.Customer_E_mail;
 										invoiceNo = "&Invoice_No=" + input.Invoice_No;
 										typeOfAction = "&Type_Of_Action=Send Invoice";
-										openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
-					)
-					}
-				}
-			}
-			Mark_As_Sent as "Mark As Sent"
-			{
-				type =  functions
-				form = Invoice
-				execution type = for each record	
-				on start
-				{
-					actions  (Customer.Credit_Available <= 0 || Customer.Credit_Available is null)
-					{
-					on click
-					(
-						journalEntryLineItem = Collection();
-										row1 = Journal_Entry.Journal_Entry_Line_Item();
-										row1.Account=4662372000000087205;
-										row1.Description="Invoice " + input.Invoice_No + " Subtotal";
-										row1.Debit=0;
-										row1.Credit=ifnull(input.Sub_Total,0);
-										row1.Invoice=input.ID;
-										row2 = Journal_Entry.Journal_Entry_Line_Item();
-										row2.Account=4662372000000941743;
-										row2.Description="Invoice " + input.Invoice_No + " Total Tax";
-										row2.Debit=0;
-										row2.Credit=ifnull(input.Total_Tax,0);
-										row2.Invoice=input.ID;
-										row3 = Journal_Entry.Journal_Entry_Line_Item();
-										row3.Account=4662372000000941747;
-										row3.Description="Invoice " + input.Invoice_No + " Grand Total";
-										row3.Debit=ifnull(input.Grand_Total,0);
-										row3.Credit=0;
-										row3.Invoice=input.ID;
-										journalEntryLineItem.insert(row1,row2,row3);
-										newJournalEntryRecord = insert into Journal_Entry
-										[
-											Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-											Document_No=input.Invoice_No
-											Added_User=zoho.loginuser
-											Invoice=input.ID
-											Date_field=zoho.currentdate
-											Journal_Entry_Line_Item=journalEntryLineItem
-											Sub_Total_Debit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
-											Sub_Total_Credit=ifnull(input.Sub_Total,0)
-											Total_Debit=ifnull(input.Grand_Total,0)
-											Total_Credit=ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0)
-											Difference=ifnull(input.Grand_Total,0) - (ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0))
-											Created_By_The_System=true
-										];
-					)
-					on click
-					(
-						if(!Charge_Category == "Miscellaneous Charges")
-										{
-											previoustotalAmountDue = 0;
-											for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && !Charge_Category == "Miscellaneous Charges" && Customer_Code == input.Customer_Code]
-											{
-												previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-											}
-											input.Previous_Balance = previoustotalAmountDue;
-											input.Total_Amount_Due = input.Grand_Total;
-											for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && !Charge_Category == "Miscellaneous Charges" && Customer_Code == input.Customer_Code]
-											{
-												thisapp.invoice.invoice_balance_updates(inv.ID);
-											}
-										}
-					)
-					on click
-					(
-						if(input.Due_Date > today)
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
-										}
-										else
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
-										}
-					)
-					}
-					actions  (Customer.Credit_Available > 0)
-					{
-					on click
-					(
-						getCustomerProfile = Customer_Profile[ID == input.Customer];
-										msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
-										customerName = "&Customer_Name=" + input.Customer;
-										customerCode = "&Customer_Code=" + input.Customer_Code;
-										invoice = "&Invoice=" + input.ID;
-										customerEmail = "&Customer_Email=" + input.Customer_E_mail;
-										invoiceNo = "&Invoice_No=" + input.Invoice_No;
-										typeOfAction = "&Type_Of_Action=Mark As Sent";
 										openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
 					)
 					}
@@ -43240,6 +43511,7 @@
 							fields
 							(
 								Invoice_No as "Invoice No."
+								Blueprint.Current_Stage as "Current Stage"
 								Supplier
 								Supplier_Name as "Customer Name"
 								Invoice_Date as "Invoice Date"
@@ -43294,7 +43566,6 @@
     		 				Edit 
     		 				Delete 
 			 				"Send Invoice"
-			 				"Mark As Sent"
 			 				"Convert To Credit Note"
 			 				"Convert To Debit Note"
 			 				"Record Payment"
@@ -44628,7 +44899,6 @@
     				(
     	 				header
     	 				(
-			 				"Mark As Sent"
 			 				"Send Invoice"
     	 				)
     				)
@@ -46416,7 +46686,6 @@
 								Invoice_UUID_Link as "Invoice UUID Link"
 								Invoice_Public_Link as "Invoice Public Link"
 								QR_Invoice_Public_Link as "QR Invoice Public Link"
-								Status
 								Invoice_Date as "Invoice Date"
 								Payment_Term as "Payment Term"
 								Due_Date as "Due Date"

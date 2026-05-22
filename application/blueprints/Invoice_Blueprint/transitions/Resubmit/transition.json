@@ -1,0 +1,6 @@
+{
+  "link_name": "Resubmit",
+  "display_name": "Resubmit",
+  "from_stage": "Rejected",
+  "to_stage": "Pending Approval"
+}

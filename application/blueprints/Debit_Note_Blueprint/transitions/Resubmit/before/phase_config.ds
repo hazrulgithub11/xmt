@@ -1,0 +1,11 @@
+transition owner
+            				(
+                				permissions = {"Administrator", "Finance Executive"}
+                				userfields = {Added_User}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Resubmit' this Invoice ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)

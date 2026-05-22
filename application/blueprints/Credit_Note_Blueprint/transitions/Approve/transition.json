@@ -1,0 +1,6 @@
+{
+  "link_name": "Approve",
+  "display_name": "Approve",
+  "from_stage": "Pending Approval",
+  "to_stage": "Approved"
+}

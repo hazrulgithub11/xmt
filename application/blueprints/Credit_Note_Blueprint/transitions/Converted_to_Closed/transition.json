@@ -1,0 +1,6 @@
+{
+  "link_name": "Converted_to_Closed",
+  "display_name": "Converted to Closed",
+  "from_stage": "Open",
+  "to_stage": "Closed"
+}

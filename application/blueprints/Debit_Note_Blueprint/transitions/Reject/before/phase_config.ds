@@ -1,0 +1,10 @@
+transition owner
+            				(
+                				permissions = {"Administrator", "Finance Manager"}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Reject'  this Invoice ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)

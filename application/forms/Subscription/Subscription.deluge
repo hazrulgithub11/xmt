@@ -31,7 +31,7 @@
 	 			column = 1   
 				width = medium
 			)
-			Customer_PO_No
+			must have Customer_PO_No
 			(
     			type = text
 				displayname = "Customer PO No."
