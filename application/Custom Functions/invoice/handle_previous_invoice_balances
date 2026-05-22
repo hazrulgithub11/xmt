@@ -2,18 +2,13 @@ map invoice.handle_previous_invoice_balances(date actualBillingDate, int billing
 {
 mp = Map();
 previoustotalAmountDue = 0;
-//Comment Nubhan 02/07/2025 - Start
-/* 	for each  inv in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == tenantID]
-                	{
-                		previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
-                	} */
-//Comment Nubhan 02/07/2025 - End
-//Add Nubhan 02/07/2025 - Start
-for each  inv in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && Customer_Code == tenantID]
+if(actualBillingDate != null && tenantID != null)
 {
-	previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+	for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && Customer_Code == tenantID]
+	{
+		previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+	}
 }
-//Add Nubhan 02/07/2025 - End
 previousBalance = previoustotalAmountDue;
 overdueCharges = previoustotalAmountDue;
 totalAmountDue = previoustotalAmountDue + grandTotal;

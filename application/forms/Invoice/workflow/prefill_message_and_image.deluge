@@ -11,11 +11,15 @@ prefill_message_and_image as "prefill message and image"
 		{
 			custom deluge script
 			(
-					// // Fetch the Announcement image based on the selected announcement
+					// Fetch the Announcement image based on the selected announcement
 				getAnnouncement = Announcement[ID == input.Announcement];
-				if(getAnnouncement != null)
+				if(getAnnouncement != null && getAnnouncement.Announcement_Image != null && getAnnouncement.Announcement_Image != "")
 				{
-					input.Announcement_image = getAnnouncement.Announcement_Image;
+					input.Announcement_image = "<div style='text-align:center'><img src='https://creatorapp.zoho.com" + zoho.appuri + getAnnouncement.Announcement_Image + "' /></div>";
+				}
+				else
+				{
+					input.Announcement_image = "<div> <br /></div>";
 				}
 			)
 		}

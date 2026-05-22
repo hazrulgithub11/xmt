@@ -105,6 +105,15 @@ Customer_Name_Trigger_Wor as "Customer Name Trigger Workflow"
 							input.Exchange_Rate = "";
 						}
 					}
+					if(input.Invoice_Date != null && input.Customer_Code != null)
+					{
+						previoustotalAmountDue = 0;
+						for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+						{
+							previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+						}
+						input.Previous_Balance = previoustotalAmountDue;
+					}
 					customer_info = Customer_Profile[ID == input.Customer];
 					for each  curr_monthly_rental in input.Monthly_Rental
 					{
@@ -127,7 +136,7 @@ Customer_Name_Trigger_Wor as "Customer Name Trigger Workflow"
 						if(curr_internet_charges.Business_Segment_Internet_Charges != null)
 						{
 							curr_get_business_units = Business_Unit[Business_Segment == curr_internet_charges.Business_Segment_Internet_Charges].ID.getAll();
-							Internet_Charges.Business_Unit_Internet_Charges:ui.add(curr_get_business_units);
+							curr_internet_charges.Business_Unit_Internet_Charges:ui.add(curr_get_business_units);
 						}
 						curr_internet_charges.Business_Segment_Internet_Charges=curr_bussiness_segment_internet_charges;
 						curr_internet_charges.Business_Unit_Internet_Charges=curr_bussiness_unit_internet_charges;
@@ -140,7 +149,7 @@ Customer_Name_Trigger_Wor as "Customer Name Trigger Workflow"
 						if(curr_call_charges.Business_Segment_Call_Charges != null)
 						{
 							curr_get_business_units = Business_Unit[Business_Segment == curr_call_charges.Business_Segment_Call_Charges].ID.getAll();
-							Call_Charges.Business_Unit_Call_Charges:ui.add(curr_get_business_units);
+							curr_call_charges.Business_Unit_Call_Charges:ui.add(curr_get_business_units);
 						}
 						curr_call_charges.Business_Segment_Call_Charges=curr_bussiness_segment_call_charges;
 						curr_call_charges.Business_Unit_Call_Charges=curr_bussiness_unit_call_charges;

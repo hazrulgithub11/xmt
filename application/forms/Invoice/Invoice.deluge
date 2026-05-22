@@ -381,6 +381,7 @@ form Invoice
     	type = date
 		displayname = "Invoice Date"
 		alloweddays = 0,1,2,3,4,5,6
+		initial value = "${zoho.currentdate}"
 	 	row = 4
 	 	column = 2   
 		width = medium

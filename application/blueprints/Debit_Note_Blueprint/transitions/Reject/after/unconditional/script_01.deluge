@@ -1,22 +1,21 @@
 listEmail = List();
-														listEmailID = List();
-														for each  user in User[Role == 4662372000000943011]
-														{
-															email = user.Email;
-															listEmail.add(email);
-															listEmailID.add(email.toLowerCase());
-														}
-														//listEmailID.add(zoho.adminuserid);
-														//listEmail.add("test@aplikasi.us");
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
-														//Send Mail & App Notify To Parts Coordinator
-														sendmail
-														[
-															from :zoho.adminuserid
-															to :listEmail
-															subject :"Invoice " + input.Invoice_No + "  Rejected – Action Required"
-															message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-														]
-														notifyTitle = "Invoice " + input.Invoice_No + " Rejected – Action Required";
-														notifyMessage = "Invoice " + input.Invoice_No + " has been rejected. Please review the reason for rejection.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+listEmailID = List();
+for each  user in User[Role == 4662372000000943011]
+{
+	email = user.Email;
+	listEmail.add(email);
+	listEmailID.add(email.toLowerCase());
+}
+//listEmailID.add(zoho.adminuserid);
+//listEmail.add("test@aplikasi.us");
+urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Invoice_No=" + input.Invoice_No;
+sendmail
+[
+	from :zoho.adminuserid
+	to :listEmail
+	subject :"Debit Note " + input.Invoice_No + "  Rejected – Action Required"
+	message :"Dear,<br><br>We are pleased to inform you that Debit Note " + input.Invoice_No + " has been rejected. Please review the reason for the rejection and address any issues promptly to facilitate re-submission. Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+]
+notifyTitle = "Debit Note " + input.Invoice_No + " Rejected – Action Required";
+notifyMessage = "Debit Note " + input.Invoice_No + " has been rejected. Please review the reason for rejection.";
+zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);

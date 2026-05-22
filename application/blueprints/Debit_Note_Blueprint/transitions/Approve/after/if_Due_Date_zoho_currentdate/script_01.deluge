@@ -1,1 +1,2 @@
 thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",input.ID);
+input.Status = "Overdue";

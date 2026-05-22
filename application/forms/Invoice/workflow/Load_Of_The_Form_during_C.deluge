@@ -28,6 +28,8 @@ Load_Of_The_Form_during_C as "Load Of The Form during Creation"
 				input.Supplier_Country = getOrganization.Country;
 				input.Supplier_State = getOrganization.State;
 				input.Base_Currency = getOrganization.Base_Currency;
+				input.Invoice_Date = zoho.currentdate;
+				input.Invoice_For_Usage = thisapp.invoice.get_invoice_usage(zoho.currentdate);
 				hide Invoice_No;
 			)
 		}

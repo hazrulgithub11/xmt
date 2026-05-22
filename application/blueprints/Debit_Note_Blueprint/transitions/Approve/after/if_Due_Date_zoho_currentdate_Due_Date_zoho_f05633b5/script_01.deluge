@@ -1,36 +1,36 @@
 journalEntryLineItem = Collection();
-														row1 = Journal_Entry.Journal_Entry_Line_Item();
-														row1.Account=4662372000000087205;
-														row1.Description="Invoice " + input.Invoice_No + " Subtotal";
-														row1.Debit=0;
-														row1.Credit=ifnull(input.Sub_Total,0);
-														row1.Invoice=input.ID;
-														row2 = Journal_Entry.Journal_Entry_Line_Item();
-														row2.Account=4662372000000941743;
-														row2.Description="Invoice " + input.Invoice_No + " Total Tax";
-														row2.Debit=0;
-														row2.Credit=ifnull(input.Total_Tax,0);
-														row2.Invoice=input.ID;
-														row3 = Journal_Entry.Journal_Entry_Line_Item();
-														row3.Account=4662372000000941747;
-														row3.Description="Invoice " + input.Invoice_No + " Grand Total";
-														row3.Debit=ifnull(input.Grand_Total,0);
-														row3.Credit=0;
-														row3.Invoice=input.ID;
-														journalEntryLineItem.insert(row1,row2,row3);
-														newJournalEntryRecord = insert into Journal_Entry
-														[
-															Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-															Document_No=input.Invoice_No
-															Added_User=zoho.loginuser
-															Invoice=input.ID
-															Date_field=zoho.currentdate
-															Journal_Entry_Line_Item=journalEntryLineItem
-															Sub_Total_Debit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
-															Sub_Total_Credit=ifnull(input.Sub_Total,0)
-															Total_Debit=ifnull(input.Grand_Total,0)
-															Total_Credit=ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0)
-															Difference=ifnull(input.Grand_Total,0) - (ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0))
-															Created_By_The_System=true
-														];
-														//thisapp.invoice.recalculate_overdue(input.Customer_Code);
+row1 = Journal_Entry.Journal_Entry_Line_Item();
+row1.Account=4662372000000087205;
+row1.Description="Debit Note " + input.Invoice_No + " Subtotal";
+row1.Debit=0;
+row1.Credit=ifnull(input.Sub_Total,0);
+row1.Debit_Note=input.ID;
+row2 = Journal_Entry.Journal_Entry_Line_Item();
+row2.Account=4662372000000941743;
+row2.Description="Debit Note " + input.Invoice_No + " Total Tax";
+row2.Debit=0;
+row2.Credit=ifnull(input.Total_Tax,0);
+row2.Debit_Note=input.ID;
+row3 = Journal_Entry.Journal_Entry_Line_Item();
+row3.Account=4662372000000941747;
+row3.Description="Debit Note " + input.Invoice_No + " Grand Total";
+row3.Debit=ifnull(input.Grand_Total,0);
+row3.Credit=0;
+row3.Debit_Note=input.ID;
+journalEntryLineItem.insert(row1,row2,row3);
+newJournalEntryRecord = insert into Journal_Entry
+[
+	Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+	Document_No=input.Invoice_No
+	Added_User=zoho.loginuser
+	Debit_Note=input.ID
+	Date_field=zoho.currentdate
+	Journal_Entry_Line_Item=journalEntryLineItem
+	Sub_Total_Debit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
+	Sub_Total_Credit=ifnull(input.Sub_Total,0)
+	Total_Debit=ifnull(input.Grand_Total,0)
+	Total_Credit=ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0)
+	Difference=ifnull(input.Grand_Total,0) - (ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0))
+	Created_By_The_System=true
+];
+//thisapp.invoice.recalculate_overdue(input.Customer_Code);

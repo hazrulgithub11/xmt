@@ -90,10 +90,10 @@ User_Input_Trigger_Workfl as "User_Input_Trigger_Workflow"
 				input.Amount_Due = input.Grand_Total;
 				///////////////////////////////////////////////////////////////////////////////////////////
 				// Apply Credit To Invoices Calculation
-				if(input.ID != null)
+				if(input.ID != null && input.ID != 0)
 				{
 					credits_applied_total = 0;
-					input_invoice = Invoice[ID = input.ID];
+					input_invoice = Invoice[ID == input.ID];
 					if(input.Is_Initialization == true)
 					{
 						input.Is_Initialization = false;

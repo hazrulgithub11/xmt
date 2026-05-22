@@ -23,6 +23,15 @@ Handle_Invoice_Date as "Handle Invoice Date"
 					{
 						input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
 					}
+					if(input.Customer_Code != null)
+					{
+						previoustotalAmountDue = 0;
+						for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+						{
+							previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+						}
+						input.Previous_Balance = previoustotalAmountDue;
+					}
 				}
 			)
 		}

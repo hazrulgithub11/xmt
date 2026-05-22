@@ -1,33 +1,21 @@
 void invoice.invoice_balance_updates(int invId)
 {
 getInvoice = Invoice[ID == invId];
+if(getInvoice == null)
+{
+	return;
+}
 invoiceDate = getInvoice.Invoice_Date;
 tenantID = getInvoice.Customer_Code;
 previoustotalAmountDue = 0;
-for each  inv in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoiceDate.toStartOfMonth() && Customer_Code == tenantID]
+if(invoiceDate != null && tenantID != null)
 {
-	previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+	for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoiceDate.toStartOfMonth() && Customer_Code == tenantID]
+	{
+		previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+	}
 }
 getInvoice.Previous_Balance=previoustotalAmountDue;
 getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-// 	for each  inv in Invoice[Previous_Invoice == invId]
-// 	{
-// 		info "Update " + inv.Invoice_No + " That Use " + Invoice[ID == invId].Invoice_No + " reference for Previous Invoice";
-// 		previoustotalAmountDue = 0;
-// 		for each  x in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < inv.Invoice_Date.toStartOfMonth() && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == inv.Customer_Code]
-// 		{
-// 			previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-// 		}
-// 		info "previoustotalAmountDue:" + previoustotalAmountDue;
-// 		inv.Previous_Balance=previoustotalAmountDue;
-// 		inv.Overdue_Charges=previoustotalAmountDue;
-// 		inv.Total_Amount_Due=previoustotalAmountDue + inv.Amount_Due;
-// 		info "totalAmountDue:" + inv.Total_Amount_Due;
-// 		info "totalAmountDue:" + previoustotalAmountDue + inv.Amount_Due;
-// 		getInvoices = Invoice[Previous_Invoice == inv.ID].ID.getAll();
-// 		if(getInvoices.size() > 0)
-// 		{
-// 			thisapp.invoice.invoice_balance_updates(inv.ID);
-// 		}
-// 	}
+
 }

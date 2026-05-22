@@ -13,9 +13,18 @@ Load_of_the_form_Initiali as "Load of the form Initialization"
 			(
 					/* Credits Applied Initialization */
 				input.Is_Initialization = true;
+				input.Previous_Balance = 0;
 				input.User_Input_Trigger = !input.User_Input_Trigger;
 				/* Customer Name Trigger Initialization*/
 				input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+				/* Get Previous Total Amount Due */
+				get_invoice_tenant_id = input.Customer_Code;
+				previous_total_amount_due = 0;
+				for each  curr_invoice in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == get_invoice_tenant_id]
+				{
+					previous_total_amount_due = previous_total_amount_due + curr_invoice.Amount_Due;
+				}
+				input.Previous_Balance = previous_total_amount_due;
 			)
 		}
 	}
