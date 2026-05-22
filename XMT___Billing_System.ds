@@ -32397,8 +32397,13 @@
 					{
 						custom deluge script
 						(
-											input.Invoice_No = thisapp.debit_note.generate_debit_note_no();
-										thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Draft",input.ID);
+											dnNo = thisapp.debit_note.generate_debit_note_no();
+										update Debit_Note[ID == input.ID]
+										[
+											Invoice_No=dnNo
+										];
+										// Debit_Note_Blueprint start stage is already "Draft" on form add.
+										// changeStage to Draft here fails: record is not yet active on the blueprint.
 						)
 					}
 				}
