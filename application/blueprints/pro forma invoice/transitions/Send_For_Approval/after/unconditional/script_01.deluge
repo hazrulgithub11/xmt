@@ -1,0 +1,2 @@
+input.Amount_Due = ifnull(input.Grand_Total,0);
+input.Amount_Paid = 0;

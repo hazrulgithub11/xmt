@@ -1,348 +1,1500 @@
-		form Pro_Forma_Invoices
-		{
-			displayname = "Pro Forma Invoices"
-			success message = "Deposit Added Successfully"
-			Main_Section
-			(
-				type = section
-				displayname = "Main Section"
-	 			row = 1
-	 			column = 0   
-				width = medium
-			)
-			Supplier_TIN
-			(
-    			type = text
-				displayname = "Supplier TIN"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			SST_ID
-			(
-    			type = text
-				displayname = "SST ID"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			unique Pro_Forma_Invoice_No
-			(
-    			type = text
-				displayname = "Pro Forma Invoice No."
-    			description
-    			[
-    				type = tooltip
-    			 	message = "Doc. No. will be generated after record is created"
-    			]
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_Name
-			(
-				type = picklist	
-				displayname = "Customer Name"
-				values  = Customer_Profile.ID
-    			displayformat = [Customer_Name]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_Email
-			(
-    			type = email
-				displayname = "Customer Email"
-				maxchar = 80
-	 			row = 1
-	 			column = 1   
-				width = medium
-				personal data = true
-			)
-			must have Customer_TIN
-			(
-    			type = text
-				displayname = "Customer TIN"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Customer_SST
-			(
-    			type = text
-				displayname = "Customer SST"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_Code
-			(
-				type = picklist	
-				displayname = "Customer Code"
-				values  = Tenancy[Customer_Name.ID == input.Customer_Name].ID
-    			displayformat = [Customer_Code]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Status
-			(
-				type = picklist
-				maxchar = 100
-				values = {"Draft","Pending Approval","Approved","Sent","Rejected","Paid","Drawn","Resubmit","Overdue"}
-				initial value = "Draft"
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Pro_Forma_Invoice_Date
-			(
-    			type = date
-				displayname = "Pro Forma Invoice Date"
-				initial value = "${zoho.currentdate}"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Payment_Term
-			(
-				type = picklist	
-				displayname = "Payment Term"
-				values  = Payment_Term.ID
-    			displayformat = [Days]
-				sortorder = ascending
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Due_Date
-			(
-    			type = date
-				displayname = "Due Date"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Payment_Method
-			(
-				type = picklist
-				displayname = "Payment Method"
-				maxchar = 100
-				values = {"Cash","Cheque","IBFT","IBG","Foreign TT"}
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Payable_To1
-			(
-				type = list	
-				displayname = "Payable To"
-				values  = Chart_Of_Account[Account_Type == "Bank"].ID
-    			displayformat = [Account + " - " + Bank_Account_Number]
-				sortorder = ascending
-				height = 60px
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			Pro_Forma_Invoice_Line_Item
-			(
-				type = grid
-				displayname = "Pro Forma Invoice Line Item"
-				values  = Pro_Forma_Invoices_Line_Item.ID
-    			bidirectional = Pro_Forma_Invoice
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			Total_Section
-			(
-				type = section
-				displayname = "Total Section"
-	 			row = 3
-	 			column = 0   
-				width = medium
-			)
-			Sub_Total
-			(
-				type = decimal
-				displayname = "Sub Total"
-				format = commadotwestern
-				initial value = 0
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Total_Tax
-			(
-				type = decimal
-				displayname = "Total Tax"
-				format = commadotwestern
-				initial value = 0
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Grand_Total
-			(
-				type = decimal
-				displayname = "Grand Total"
-				format = commadotwestern
-				initial value = 0
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			must have Currency
-			(
-				type = picklist
-				maxchar = 100
-				values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			must have Exchange_Rate
-			(
-				type = decimal
-				displayname = "Exchange Rate"
-				format = commadotwestern
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Grand_Total_MYR
-			(
-				type = decimal
-				displayname = "Grand Total(MYR)"
-				format = commadotwestern
-				initial value = 0
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Amount_Due
-			(
-				type = decimal
-				displayname = "Amount Due"
-				format = commadotwestern
-				initial value = 0
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Amount_Paid
-			(
-				type = decimal
-				displayname = "Amount Paid"
-				format = commadotwestern
-				initial value = 0
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Reject_Section
-			(
-				type = section
-				displayname = "Reject Section"
-	 			row = 4
-	 			column = 0   
-				width = medium
-			)
-			Rejection_Reason
-			(
-    			type = textarea
-				displayname = "Rejection Reason"
-				height = 100px
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
-			Confirm_resubmission
-			(
-    			type = checkbox
-				displayname = "Confirm resubmission?"
-				initial value = false
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
-			System_Section
-			(
-				type = section
-				displayname = "System Section"
-	 			row = 5
-	 			column = 0   
-				width = medium
-			)
-			Organization
-			(
-				type = picklist	
-				values  = Organization_Settings.ID
-    			displayformat = [Organization_Name]
-				sortorder = ascending
-	 			row = 5
-	 			column = 1   
-				width = medium
-			)
-			Send_Email
-			(
-    			type = checkbox
-				displayname = "Send Email"
-				initial value = false
-	 			row = 5
-	 			column = 1   
-				width = medium
-			)
+form Pro_Forma_Invoices
+{
+	displayname = "Pro Forma Invoices"
+	success message = "Pro Forma Invoice Added Successfully"
+	Section
+	(
+		type = section
+		displayname = "Supplier (From)"
+		visibility = true
+	 	row = 1
+	 	column = 0   
+		width = medium
+	)
+	must have Supplier
+	(
+		type = picklist	
+		values  = Organization_Settings.ID
+    	displayformat = [Organization_Name]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_Business_Activity_Description
+	(
+    	type = text
+		displayname = "Business Activity Description"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_TIN
+	(
+    	type = text
+		displayname = "Tax Identification Number(TIN)"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_ID_Type
+	(
+    	type = text
+		displayname = "ID Type"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_Registration_Identification_Passport_Number
+	(
+    	type = text
+		displayname = "Registration / Identification / Passport Number"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_SST_Registration_Number
+	(
+    	type = text
+		displayname = "SST Registration Number"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_Telephone_Number
+	(
+    	type = phonenumber
+		displayname = "Telephone Number"
+	 	row = 1
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	Supplier_E_mail
+	(
+    	type = email
+		displayname = "E-mail"
+		maxchar = 80
+	 	row = 1
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Supplier_Name
+	(
+    	type = text
+		displayname = "Name"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_Street
+	(
+    	type = textarea
+		displayname = "Street"
+		height = 100px
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_Postcode
+	(
+    	type = text
+		displayname = "Postcode"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_City
+	(
+    	type = text
+		displayname = "City"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_State
+	(
+    	type = text
+		displayname = "State"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_Country
+	(
+    	type = text
+		displayname = "Country"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Buyer_To_Section
+	(
+		type = section
+		displayname = "Buyer (To)"
+		visibility = true
+	 	row = 2
+	 	column = 0   
+		width = medium
+	)
+	must have Customer
+	(
+		type = picklist	
+		displayname = "Customer Name"
+		values  = Customer_Profile.ID
+    	displayformat = [Customer_Name]
+		sortorder = ascending
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Code
+	(
+		type = picklist	
+		displayname = "Customer Code"
+		values  = Tenancy[Customer_Name.ID == input.Customer].ID
+    	displayformat = [Customer_Code]
+		sortorder = ascending
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_TIN
+	(
+    	type = text
+		displayname = "Tax Identification Number(TIN)"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_ID_Type
+	(
+    	type = text
+		displayname = "ID Type"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Registration_Identification_Passport_Number
+	(
+    	type = text
+		displayname = "Registration / Identification / Passport Number"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_SST_Registration_Number
+	(
+    	type = text
+		displayname = "SST Registration Number"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Telephone_Number
+	(
+    	type = phonenumber
+		displayname = "Telephone Number"
+	 	row = 2
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Customer_E_mail
+	(
+    	type = email
+		displayname = "E-mail"
+		maxchar = 80
+	 	row = 2
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Customer_Name
+	(
+    	type = text
+		displayname = "Name"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_Street
+	(
+    	type = textarea
+		displayname = "Street"
+		height = 100px
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_Postcode
+	(
+    	type = text
+		displayname = "Postcode"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_City
+	(
+    	type = text
+		displayname = "City"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_State
+	(
+    	type = text
+		displayname = "State"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_Country
+	(
+    	type = text
+		displayname = "Country"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Shipping_Information_Section
+	(
+		type = section
+		displayname = "Shipping Information"
+		visibility = true
+	 	row = 3
+	 	column = 0   
+		width = medium
+	)
+	Delivery_Street
+	(
+    	type = textarea
+		displayname = "Delivery Street"
+		height = 100px
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_Postcode
+	(
+    	type = text
+		displayname = "Delivery Postcode"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_City
+	(
+    	type = text
+		displayname = "Delivery City"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_State
+	(
+    	type = text
+		displayname = "Delivery State"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_Country
+	(
+    	type = text
+		displayname = "Delivery Country"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Invoice_Info
+	(
+		type = section
+		displayname = "Invoice Info"
+		visibility = true
+	 	row = 4
+	 	column = 0   
+		width = medium
+	)
+	unique Invoice_No
+	(
+    	type = text
+		displayname = "Invoice No."
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Doc. No. will be generated after record is created"
+    	]
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Invoice_UUID
+	(
+    	type = text
+		displayname = "Invoice UUID"
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Invoice_UUID_Link
+	(
+    	type = url
+		displayname = "Invoice UUID Link"
+		enable  linkname
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Invoice_Public_Link
+	(
+    	type = url
+		displayname = "Invoice Public Link"
+		enable  linkname
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	QR_Invoice_Public_Link
+	(
+		type = qrcode
+		displayname = "QR Invoice Public Link"
+		value = "${Invoice_Public_Link}"
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Subscriptions
+	(
+		type = list	
+		values  = Subscription.ID
+    	displayformat = [Customer_PO_No]
+		sortorder = ascending
+		height = 60px
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Invoice_Date
+	(
+    	type = date
+		displayname = "Invoice Date"
+		initial value = "${zoho.currentdate}"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Invoice_For_Usage
+	(
+    	type = text
+		displayname = "Invoice For Usage"
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Billing Period"
+    	]
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Payment_Term
+	(
+		type = picklist	
+		displayname = "Payment Term"
+		values  = Payment_Term.ID
+    	displayformat = [Days]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Due_Date
+	(
+    	type = date
+		displayname = "Due Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Enable_Reminder
+	(
+		type = picklist
+		displayname = "Enable Reminder ?"
+		maxchar = 100
+		values = {"Yes","No"}
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Charge_Category
+	(
+		type = picklist
+		displayname = "Charge Category"
+		maxchar = 100
+		values = {"Miscellaneous Charges","Fixed Charges","Telephone Charges"}
+		initial value = "Miscellaneous Charges"
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Announcement
+	(
+		type = picklist	
+		values  = Announcement.ID
+    	displayformat = [Announcement_Message]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Announcement_image
+	(
+    	type = plaintext
+		value = "<div> <br /></div>"
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Attachment
+	(
+    	type = upload file
+				browse = local_drive
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Send_Email
+	(
+    	type = checkbox
+		displayname = "Send Email"
+		initial value = false
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Transaction_Info
+	(
+		type = section
+		displayname = "Transaction Info"
+		visibility = true
+	 	row = 5
+	 	column = 0   
+		width = medium
+	)
+	must have Base_Currency
+	(
+    	type = text
+		displayname = "Base Currency"
+	 	row = 5
+	 	column = 1   
+		width = medium
+	)
+	must have Invoice_Currency
+	(
+    	type = text
+		displayname = "Invoice Currency"
+	 	row = 5
+	 	column = 1   
+		width = medium
+	)
+	must have Exchange_Rate
+	(
+		type = decimal
+		displayname = "Exchange Rate"
+		format = commadotwestern
+		decimalplace = 4
+	 	row = 5
+	 	column = 1   
+		width = medium
+	)
+	Monthly_Rental
+	(
+		type = grid
+		displayname = "Monthly Rental"
+		must have Item_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type.ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Item_Code_Monthly_Rental
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Monthly_Rental
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Monthly_Rental
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Sub_Total_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Monthly_Rental
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Amount_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Total "
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		Customer_PO_No_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Customer PO No."
+			values  = Subscription.ID
+    		displayformat = [Customer_PO_No]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Segment_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+		Sub_Line_Item_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Sub Line Item"
+			values  = Subscription_Line_Item.ID
+    		displayformat = [ID]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 6
+	 	column = 1   
+		width = medium
+	)
+	Internet_Charges
+	(
+		type = grid
+		displayname = "Internet Charges"
+		must have Item_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type.ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Item_Code_Internet_Charges
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Internet_Charges
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Internet_Charges
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Internet_Charges
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Internet_Charges
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Sub_Total_Internet_Charges
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Internet_Charges
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Internet_Charges
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Amount_Internet_Charges
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Internet_Charges
+		(
+			type = decimal
+			displayname = "Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		Customer_PO_No_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Customer PO No."
+			values  = Subscription.ID
+    		displayformat = [Customer_PO_No]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Segment_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+		Sub_Line_Item_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Sub Line Item"
+			values  = Subscription_Line_Item.ID
+    		displayformat = [ID]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 7
+	 	column = 1   
+		width = medium
+	)
+	Total_Section
+	(
+		type = section
+		displayname = "Total Section"
+	 	row = 8
+	 	column = 0   
+		width = medium
+	)
+	Call_Charges
+	(
+		type = grid
+		displayname = "Call Charges"
+		must have Item_Call_Charges
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type[Charges_Type == "Call Charges"].ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = 100px
+		)
+		must have Item_Code_Call_Charges
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Call_Charges
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Call_Charges
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Call_Charges
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Call_Charges
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Sub_Total_Call_Charges
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Tax_Call_Charges
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Call_Charges
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Call_Charges
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Tax_Amount_Call_Charges
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Call_Charges
+		(
+			type = decimal
+			displayname = "Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		Customer_PO_No_Call_Charges
+		(
+			type = picklist	
+			displayname = "Customer PO No."
+			values  = Subscription.ID
+    		displayformat = [Customer_PO_No]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Segment_Call_Charges
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Call_Charges
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Call_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Call_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+		Sub_Line_Item_Call_Charges
+		(
+			type = picklist	
+			displayname = "Sub Line Item"
+			values  = Subscription_Line_Item.ID
+    		displayformat = [ID]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 8
+	 	column = 1   
+		width = medium
+	)
+	Reject_Section
+	(
+		type = section
+		displayname = "Reject Section"
+	 	row = 10
+	 	column = 0   
+		width = medium
+	)
+	Sub_Total_Monthly_Rental
+	(
+		type = decimal
+		displayname = "Sub Total Monthly Rental"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Total_Tax_Monthly_Rental
+	(
+		type = decimal
+		displayname = "Total Tax Monthly Rental"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Grand_Total_Monthly_Rental
+	(
+		type = decimal
+		displayname = "Grand Total Monthly Rental"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Sub_Total_Internet_Charges
+	(
+		type = decimal
+		displayname = "Sub Total Internet Charges"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Total_Tax_Internet_Charges
+	(
+		type = decimal
+		displayname = "Total Tax Internet Charges"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Grand_Total_Internet_Charges
+	(
+		type = decimal
+		displayname = "Grand Total Internet Charges"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Sub_Total_Call_Charges
+	(
+		type = decimal
+		displayname = "Sub Total Call Charges (Analog, Domestic & Overseas)"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Total_Tax_Call_Charges
+	(
+		type = decimal
+		displayname = "Total Tax Call Charges (Analog, Domestic & Overseas)"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Grand_Total_Call_Charges
+	(
+		type = decimal
+		displayname = "Grand Total Call Charges (Analog, Domestic & Overseas)"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Sub_Total
+	(
+		type = decimal
+		displayname = "Sub Total"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Total_Tax
+	(
+		type = decimal
+		displayname = "Total Tax"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Grand_Total
+	(
+		type = decimal
+		displayname = "Grand Total"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Grand_Total_Base_Currency
+	(
+		type = decimal
+		displayname = "Grand Total (Base Currency)"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Amount_Paid
+	(
+		type = decimal
+		displayname = "Amount Paid"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Credits_Applied_Total
+	(
+		type = decimal
+		displayname = "Credits Applied Total"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Amount_Due
+	(
+		type = decimal
+		displayname = "Amount Due"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Previous_Balance
+	(
+		type = decimal
+		displayname = "Previous Balance"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Total_Amount_Due
+	(
+		type = decimal
+		displayname = "Total Amount Due"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Deposit_Amount
+	(
+		type = decimal
+		displayname = "Deposit Amount"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Payable_To1
+	(
+		type = list	
+		displayname = "Payable To"
+		values  = Chart_Of_Account[Account_Type == "Bank"].ID
+    	displayformat = [Account + " - " + Bank_Account_Number]
+		sortorder = ascending
+		height = 60px
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Credits_Applied
+	(
+		type = grid
+		displayname = "Credits Applied"
+		CA_Apply_Credit_To_Invoice_Line_ID
+		(
+    		type = text
+			displayname = "Apply_Credit_To_Invoice_Line_ID"
+			width = medium
+		)
+		CA_Date
+		(
+    		type = date
+			displayname = "Date"
+			alloweddays = 0,1,2,3,4,5,6
+			width = medium
+		)
+		CA_Credit_Note
+		(
+			type = picklist	
+			displayname = "Credit Note"
+			values  = Credit_Note.ID
+    		displayformat = [Invoice_No]
+			sortorder = ascending
+			width = medium
+		)
+		CA_Total
+		(
+			type = decimal
+			displayname = "Credits Applied"
+			width = medium
+		)
+	 	row = 11
+	 	column = 1   
+		width = medium
+	)
+	Pro_Forma_Invoice_Line_Item
+	(
+		type = grid
+		displayname = "Pro Forma Invoice Line Item"
+		values  = Pro_Forma_Invoices_Line_Item.ID
+    	bidirectional = Pro_Forma_Invoice
+	 	row = 12
+	 	column = 1   
+		width = medium
+	)
+	System_Section
+	(
+		type = section
+		displayname = "System Section"
+	 	row = 13
+	 	column = 0   
+		width = medium
+	)
+	Rejection_Reason
+	(
+    	type = textarea
+		displayname = "Rejection Reason"
+		height = 100px
+	 	row = 13
+	 	column = 1   
+		width = medium
+	)
+	Confirm_resubmission
+	(
+    	type = checkbox
+		displayname = "Confirm resubmission?"
+		initial value = false
+	 	row = 13
+	 	column = 1   
+		width = medium
+	)
+	Invoice_Related_List
+	(
+		type = grid
+		displayname = "Invoice Related List"
+		USERNAME
+		(
+    		type = text
+			width = medium
+		)
+		INVOICE_NUMBER
+		(
+    		type = text
+			width = medium
+		)
+		Related_List_Date
+		(
+    		type = date
+			displayname = "DATE"
+			alloweddays = 0,1,2,3,4,5,6
+			width = medium
+		)
+		Related_List_Time
+		(
+    		type = time
+			displayname = "TIME"
+			timedisplayoptions = "hh:mm:ss" 
+			width = medium
+		)
+		SUBMISSION_ID
+		(
+    		type = text
+			displayname = "SUBMISSION ID"
+			width = medium
+		)
+		UUID
+		(
+    		type = url
+			enable  linkname
+			width = medium
+		)
+		PUBLIC_LINK
+		(
+    		type = url
+			enable  linkname
+			width = medium
+		)
+		STATUS
+		(
+    		type = text
+			width = medium
+		)
+		MESSAGE
+		(
+    		type = textarea
+			height = 100px
+			width = medium
+		)
+	 	row = 14
+	 	column = 1   
+		width = medium
+	)
+	Main_Section
+	(
+		type = section
+		displayname = "Pro Forma Invoice Info"
+	 	row = 15
+	 	column = 0   
+		width = medium
+	)
+	Decision_Section
+	(
+		type = section
+		displayname = "Decision Section"
+	 	row = 16
+	 	column = 0   
+		width = medium
+	)
+	Customer_Name_Trigger
+	(
+    	type = checkbox
+		displayname = "Customer Name Trigger"
+		initial value = false
+	 	row = 14
+	 	column = 1   
+		width = medium
+	)
+	User_Input_Trigger
+	(
+    	type = checkbox
+		initial value = false
+	 	row = 14
+	 	column = 1   
+		width = medium
+	)
+	Is_Initialization
+	(
+    	type = checkbox
+		initial value = false
+	 	row = 14
+	 	column = 1   
+		width = medium
+	)
+	Credits_Applied_Trigger
+	(
+    	type = checkbox
+		initial value = false
+	 	row = 14
+	 	column = 1   
+		width = medium
+	)
+	Created_By_The_System
+	(
+    	type = checkbox
+		displayname = "Created By The System"
+		initial value = false
+	 	row = 14
+	 	column = 1   
+		width = medium
+	)
+	Organization
+	(
+		type = picklist	
+		values  = Organization_Settings.ID
+    	displayformat = [Organization_Name]
+		sortorder = ascending
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
+	must have Pro_Forma_Invoice_Date
+	(
+    	type = date
+		displayname = "Pro Forma Invoice Date"
+		initial value = "${zoho.currentdate}"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
+	must have Currency
+	(
+		type = picklist
+		maxchar = 100
+		values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
+	must have Payment_Method
+	(
+		type = picklist
+		displayname = "Payment Method"
+		maxchar = 100
+		values = {"Cash","Cheque","IBFT","IBG","Foreign TT"}
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
+	Grand_Total_MYR
+	(
+		type = decimal
+		displayname = "Grand Total(MYR)"
+		format = commadotwestern
+		initial value = 0
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
+	Status
+	(
+		type = picklist
+		maxchar = 100
+		values = {"Draft","Pending Approval","Approved","Sent","Rejected","Paid","Drawn","Resubmit","Overdue"}
+		initial value = "Draft"
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
+	SST_ID
+	(
+    	type = text
+		displayname = "SST ID"
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
+	unique Pro_Forma_Invoice_No
+	(
+    	type = text
+		displayname = "Pro Forma Invoice No."
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Doc. No. will be generated after record is created"
+    	]
+	 	row = 16
+	 	column = 1   
+		width = medium
+	)
 	
-			actions
-			{
-				on add
-				{
-					submit
-					(
-   						type = submit
-   						displayname = "Submit"
-					)
-					reset
-					(
-   						type = reset
-   						displayname = "Reset"
-					)
-				}
-				on edit
-				{
-					update
-					(
-   						type = submit
-   						displayname = "Update"
-					)
-					cancel
-					(
-   						type = cancel
-   						displayname = "Cancel"
-					)
-				}
-			}
-			blueprint components
-			{
-				stages = {"Draft","Pending Approval","Approved","Rejected"}
-			}
-		print template
-			{
-				PI_TEST_Footer
-				{
-							displayname = "PI TEST Footer"
-							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_23764415999999642","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"","imageId":"","imageType":"","fileId":""}],"imageId":"","isFooterEnabled":true,"footer":{"imageId":"","elements":[{"type":"columns","element":{"split":"100","id":"u_elem_12878410000002384","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"Fields":[{"Related_Fields":["Organization_Name"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"padding: 5px; width: 50%\" width=\"50%\"><font\n            style=\"font-size: 10px\"\n          face=\"arimo\">For direct bank-in, payments are to be made to :<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left; padding: 5px\"><font\n            style=\"font-size: 10px\"\n                face=\"arimo\">Beneficiary Name :&nbsp; <b><font\n            color=\"#000000\">${Organization.Organization_Name}<\/font><\/b> <\/font><span style=\"font-size: 12px; color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp; <br /><\/span><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"id":"u_elem_136137561487673261","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Chart_Of_Account","labelText":"Payable To","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payable_To1","refFields":[{"valueStyle":"                        ","fieldLayoutType":"2","labelText":"Account","labelStyle":"background-color: rgba(0, 0, 0, 0)","Label_Name":"Account"},{"valueStyle":"                        ","fieldLayoutType":"2","labelText":"Bank Account Number","labelStyle":"background-color: rgba(0, 0, 0, 0)","Label_Name":"Bank_Account_Number"}],"labelTextStyle":""}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_1063085","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"Fields":[{"Related_Fields":["Finance_Email"],"Label_Name":"Organization"}],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal; text-align: left\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <i style=\"font-size: 10px\">**Please notify us via e-mail&nbsp;${Organization.Finance_Email}&nbsp;&nbsp;for all notification of payment for further notice<\/i><\/font> <\/font><\/p>\n  <\/div>"}},{"type":"text","element":{"id":"u_elem_9776145399999976","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\"><b style=\"\">This is a computer generated document and therefore no signature is required<\/b><\/font><\/font> <\/font><\/h1>\n  <\/div>"}},{"type":"text","element":{"Fields":[{"Related_Fields":["City"],"Label_Name":"Organization"},{"Related_Fields":["Company_Phone_Number"],"Label_Name":"Organization"},{"Related_Fields":["Company_Registration_Number"],"Label_Name":"Organization"},{"Related_Fields":["Country"],"Label_Name":"Organization"},{"Related_Fields":["Helpdesk"],"Label_Name":"Organization"},{"Related_Fields":["Organization_Name"],"Label_Name":"Organization"},{"Related_Fields":["Postcode"],"Label_Name":"Organization"},{"Related_Fields":["State"],"Label_Name":"Organization"},{"Related_Fields":["Street"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 0; border-collapse: collapse\">\n    <tbody>\n     <tr>\n      <td\n          width=\"50%\" style=\"text-align: center\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"> <font\n                style=\"font-size: 10px\"> ${Organization.Organization_Name} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp; <span>${Organization.Company_Registration_Number}<\/span> <\/span> <br /><\/font> <\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: center\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"> <font\n                style=\"\"> <span>${Organization.Street}<\/span> <span\n                  style=\"font-weight: 400; font-style: normal\">, <span>${Organization.Postcode}<\/span> <span\n                    style=\"font-weight: 400; font-style: normal\">, <span>${Organization.City}<\/span> <span\n                      style=\"font-weight: 400; font-style: normal\">, <span>${Organization.State}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">, <span>${Organization.Country}<\/span> <\/span> <\/span> <\/span> <\/span> <br /><\/font> <\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: center\"><font color=\"#000000\"\n              style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n              style=\"\">Free.Komm Helpdesk:&nbsp; <span>${Organization.Helpdesk}<\/span> <\/font> <\/font><span\n                style=\"font-weight: 400; font-style: normal\"><font\n                style=\"font-size: 10px\" face=\"arimo\"> <\/font><font\n                  style=\"\"><font style=\"font-size: 10px\"\n                    face=\"arimo\">&nbsp;Fax:&nbsp; ${Organization.Company_Phone_Number} <span style=\"font-weight: 400; font-style: normal\">&nbsp;Email: cco@xmt.com.my<\/span><\/font> <\/font> <\/span> <\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]}]}}],"style":"display: block","bgImg":""},"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none; margin: 0px","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_24377572999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_24377570999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"3,48,47,2","id":"u_elem_2373865","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_2473609699999988","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_23764415999999642","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_2373863699999988","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Related_Fields":["City"],"Label_Name":"Organization"},{"Related_Fields":["Company_Registration_Number"],"Label_Name":"Organization"},{"Related_Fields":["Country"],"Label_Name":"Organization"},{"Related_Fields":["Organization_Name"],"Label_Name":"Organization"},{"Related_Fields":["Postcode"],"Label_Name":"Organization"},{"Related_Fields":["State"],"Label_Name":"Organization"},{"Related_Fields":["Street"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <span><\/span>\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n    cellspacing=\"0\">\n    <tbody>\n    <\/tbody>\n   <\/table>\n   <table\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n    width=\"50%\"><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table><font\n    style=\"font-size: 10px\" face=\"arimo\"><span\n        style=\"color: rgb(68, 68, 68); font-style: normal\"><b\n      style=\"font-size: 10px\">${Organization.Organization_Name}<\/b><\/span> <\/font>\n   <div>\n    <font\n      style=\"font-size: 10px\" face=\"arimo\"><font\n          style=\"font-size: 10px\">Company No:&nbsp;&nbsp; ${Organization.Company_Registration_Number} <span\n      style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <\/font>\n   <\/div>\n   <div>\n    <font\n      style=\"font-size: 12px\"><\/font> <font\n      style=\"font-size: 12px\"> <br /><\/font> <font\n      style=\"font-size: 10px\" face=\"arimo\"><span> <font\n            style=\"font-size: 10px\"> ${Organization.Street}, ${Organization.Postcode} <span\n        style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;,<\/span> <\/font> <\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.City}<\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">&nbsp;,<\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.State},<\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.Country}<\/span> <span style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">&nbsp;<\/span><\/font>\n   <\/div>\n  <\/div>"}},{"type":"text","element":{"Fields":[{"Related_Fields":["Company_Email"],"Label_Name":"Organization"},{"Related_Fields":["Company_Fax"],"Label_Name":"Organization"},{"Related_Fields":["Company_Phone_Number"],"Label_Name":"Organization"},{"Related_Fields":["Company_Website"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: none\">\n    <tbody>\n     <tr>\n      <td\n          style=\"border-right: none; border-bottom: none\"\n            width=\"33%\"><font style=\"font-size: 10px\" face=\"arimo\"><b\n              style=\"font-size: 10px\">[tel]<\/b> <span\n          style=\"color: rgb(68, 68, 68); font-weight: 700; font-style: normal\">${Organization.Company_Phone_Number}<\/span> <\/font><\/td>\n      <td\n          style=\"border-bottom: none\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><b\n              style=\"font-size: 10px\">[fax]<\/b> <span\n          style=\"color: rgb(68, 68, 68); font-weight: 700; font-style: normal\">${Organization.Company_Fax}<\/span> <\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border-right: none\"><font style=\"font-size: 10px\"\n              face=\"arimo\"><b>[e-mail]:<\/b> <font\n          color=\"#2f78d0\"><b><span>${Organization.Company_Email}<\/span><\/b><\/font> <\/font><\/td>\n      <td\n            style=\"\"><font style=\"font-size: 10px\"\n              face=\"arimo\"><b>[url]<\/b>&nbsp;<a\n              href=\"http://www.xmt.com.my\"\n                  title=\"http://www.xmt.com.my\"><b><font color=\"#2f78d0\"><span>${Organization.Company_Website}<\/span><\/font><\/b><\/a> <\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_28333885999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_2857421699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_28574210999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_2865945699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_2865944399999976","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b style=\"font-size: 24px\">PRO FORMA INVOICE<\/b><\/font><\/h1>\n  <\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_30336240999999642","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3033623699999988","height":"25"}}]}]}},{"type":"columns","element":{"split":"4,47,2,45,2","id":"u_elem_30447405999999642","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3153859899999976","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Email"},{"Label_Name":"Customer_SST"},{"Label_Name":"Customer_TIN"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["Customer_Registration_Number"],"Label_Name":"Customer_Name"},{"Related_Fields":["Phone_Number"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Code"},{"Related_Fields":["Country"],"Label_Name":"Customer_Code"},{"Related_Fields":["Display_Name"],"Label_Name":"Customer_Code"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Code"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 0\">\n    <tbody>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer SST<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"><font\n                style=\"\"> <span>${Customer_SST}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          width=\"25%\" style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer TIN<\/font><\/td>\n      <td width=\"1%\"\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n          style=\"border: 0\" width=\"25%\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_TIN}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Name<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n              style=\"border: 0\"><span><font style=\"font-size: 10px\"\n              face=\"arimo\"\n            color=\"#000000\"><b>${Customer_Code.Display_Name}<\/b><\/font><\/span><span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Registration No<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_Name.Customer_Registration_Number}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"><font\n          style=\"padding: 5px\">Customer Address<\/font> <br /><\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Customer_Name.Business_Street},<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: 0\"><\/td>\n      <td\n          style=\"border: 0\"><\/td>\n      <td style=\"border: 0\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_Code.Postcode}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp; <span>${Customer_Code.City}<\/span>,<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: 0\"><\/td>\n      <td\n          style=\"border: 0\"><\/td>\n      <td style=\"border: 0\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\"> <span>${Customer_Code.Country}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Contact No<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Customer_Name.Phone_Number}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Email<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"\"><font color=\"#000000\"\n              style=\"font-size: 10px\" face=\"arimo\"> ${Customer_Email}<\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_3061262","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Due_Date"},{"Label_Name":"Pro_Forma_Invoice_No"},{"Label_Name":"SST_ID"},{"Label_Name":"Supplier_TIN"},{"Label_Name":"Added_Time"},{"Related_Fields":["Account_Number"],"Label_Name":"Customer_Code"},{"Related_Fields":["MSIC_Description"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"border: none\" width=\"25%\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Supplier TIN<\/font><\/td>\n      <td width=\"1%\"\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n          style=\"border: none\" width=\"25%\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Supplier_TIN}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Supplier MSIC Code<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Organization.MSIC_Description}<\/span><span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span><br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">SST ID<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${SST_ID}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer A/c No<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_Code.Account_Number}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Document No.<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"><span\n                style=\"font-weight: 400; font-style: normal\"><span>${Pro_Forma_Invoice_No}<\/span><span\n              style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span>&nbsp;<\/span>&nbsp;<span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Document Date and Time<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"><span\n                style=\"font-weight: 400; font-style: normal\"><span\n                  style=\"font-weight: 400; font-style: normal\"><span>${Added_Time}<\/span><span\n                style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>&nbsp;<\/span>&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span>&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Payment Due<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"padding: 1px\"\n              color=\"#000000\"><font style=\"font-size: 10px\"\n              face=\"arimo\"> ${Due_Date} <\/font><span\n          style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: none\"><br /><\/td>\n      <td\n          style=\"border: none\"><\/td>\n      <td style=\"\"><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_31822760999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"3,97","id":"u_elem_3302056699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_33395375999999642","height":"38"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_33020547999999523","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"color: rgb(0, 0, 0); font-style: normal; text-align: left\"><font\n      style=\"padding: 5px; font-size: 10px\" face=\"arimo\"><b style=\"font-size: 10px\">ATT : FINANCE DEPARTMENT<\/b><\/font><\/h1>\n  <\/div>"}}]}]}},{"type":"columns","element":{"split":"3,95,2","id":"u_elem_33955962999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4442664299999952","height":"25"}}]},{"colElements":[{"id":"u_elem_136137561487573450","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Pro_Forma_Invoices_Line_Item","labelText":"Deposits Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Pro_Forma_Invoice_Line_Item","refFields":[{"valueStyle":"                              ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"               text-align: center               ","fieldLayoutType":"2","labelText":"Quantity","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Quantity"},{"valueStyle":"               text-align: center               ","fieldLayoutType":"2","labelText":"Unit Price","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Unit_Price"},{"valueStyle":"               text-align: center               ","fieldLayoutType":"2","labelText":"Sub Total","labelStyle":"background-color: rgb(29, 80, 142); font-weight: bold; color: rgb(255, 255, 255); text-align: center","Label_Name":"Sub_Total"},{"valueStyle":"               text-align: center               ","fieldLayoutType":"2","labelText":"Tax Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Tax_Amount"},{"valueStyle":"               text-align: right               ","fieldLayoutType":"2","labelText":"Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: right; background-color: rgb(29, 80, 142)","Label_Name":"Total"}],"labelTextStyle":""}},{"type":"text","element":{"id":"u_elem_45263705","fields":[],"content":"<div style=\"outline: none; border-width: 1px\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: none; border-bottom: 1px solid rgb(51, 51, 51)\">\n    <tbody>\n     <tr>\n      <td\n          style=\"\" width=\"33%\"><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4452255799999952","height":"25"}}]}]}},{"type":"columns","element":{"split":"3,48,4,43,2","id":"u_elem_4628236099999964","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4703058099999964","height":"25"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_4628234199999988","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"color: rgb(0, 0, 0); font-weight: 400; text-align: left\"><font\n      style=\"font-size: 10px\" face=\"arimo\"><i style=\"font-size: 10px\">E.&amp; O.E.<\/i><\/font><\/h1>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9446439299999952","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Currency"},{"Label_Name":"Grand_Total"},{"Label_Name":"Sub_Total"},{"Label_Name":"Total_Tax"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 1px solid rgb(51, 51, 51)\">\n    <tbody>\n     <tr>\n      <td\n          width=\"50%\" style=\"padding: 5px\"><br /><\/td>\n      <td\n          width=\"50%\" style=\"text-align: right; padding: 5px\"><b><font\n              color=\"#000000\" style=\"font-size: 10px\"\n          face=\"arimo\">${Currency}<\/font><\/b><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Sub Total<\/font><\/td>\n      <td\n            style=\"text-align: right; border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            color=\"#000000\" style=\"font-size: 10px\"\n                face=\"arimo\"><span><font\n          style=\"\">&nbsp;<span>${Sub_Total}<\/span><\/font><\/span><br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left; padding: 5px\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Total Excl. Tax<\/font><\/td>\n      <td\n            style=\"text-align: right; padding: 5px\"><font\n            color=\"#000000\" style=\"font-size: 10px\" face=\"arimo\"><span\n                  style=\"font-weight: 400; font-style: normal\"><span><font\n          style=\"\">${Sub_Total}<\/font><\/span><\/span><br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Add Service Tax @ 6%<\/font><\/td>\n      <td\n            style=\"text-align: right; border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            color=\"#000000\" style=\"font-size: 10px\"\n          face=\"arimo\">${Total_Tax}<br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n              style=\"padding: 5px\"><b><font style=\"font-size: 10px\"\n              color=\"#000000\"\n          face=\"arimo\">Total Payable Incl. Tax<\/font><\/b><\/td>\n      <td\n            style=\"text-align: right; padding: 5px\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><span><font style=\"\" color=\"#000000\"><b>${Grand_Total}<\/b><\/font><\/span><br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9449587299999952","height":"25"}}]}]}},{"type":"columns","element":{"split":"2,48,50","id":"u_elem_9691713299999952","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_9720102099999964","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9696353199999988","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_97332695","height":"184"}}]}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
-				}
-				Proforma_Invoice
-				{
-							displayname = "Proforma Invoice"
-							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_23764415999999642","imageType":"upload","fileId":"6069490000000054013"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_24377572999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_24377570999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"7,46,40,7","id":"u_elem_2373865","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_2473609699999988","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_23764415999999642","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_2373863699999988","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Related_Fields":["City"],"Label_Name":"Organization"},{"Related_Fields":["Company_Registration_Number"],"Label_Name":"Organization"},{"Related_Fields":["Country"],"Label_Name":"Organization"},{"Related_Fields":["Organization_Name"],"Label_Name":"Organization"},{"Related_Fields":["Postcode"],"Label_Name":"Organization"},{"Related_Fields":["State"],"Label_Name":"Organization"},{"Related_Fields":["Street"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <span><\/span>\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n    cellspacing=\"0\">\n    <tbody>\n    <\/tbody>\n   <\/table>\n   <table\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n    width=\"50%\"><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table><font\n    style=\"font-size: 10px\" face=\"arimo\"><span\n        style=\"color: rgb(68, 68, 68); font-style: normal\"><b\n      style=\"font-size: 10px\">${Organization.Organization_Name}<\/b><\/span> <\/font>\n   <div>\n    <font\n      style=\"font-size: 10px\" face=\"arimo\"><font\n          style=\"font-size: 10px\">Company No:&nbsp;&nbsp; ${Organization.Company_Registration_Number} <span\n      style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span><\/font><\/font>\n   <\/div>\n   <div>\n    <font\n      style=\"font-size: 10px\" face=\"arimo\"><span> <font\n            style=\"font-size: 10px\"> ${Organization.Street}, ${Organization.Postcode} <span\n        style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;,<\/span> <\/font> <\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.City}<\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">&nbsp;,<\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.State},<\/span> <span\n        style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">${Organization.Country}<\/span> <span style=\"letter-spacing: 0px; text-decoration-style: solid; text-decoration-color: rgb(68, 68, 68)\">&nbsp;<\/span><\/font>\n   <\/div>\n  <\/div>"}},{"type":"text","element":{"Fields":[{"Related_Fields":["Company_Email"],"Label_Name":"Organization"},{"Related_Fields":["Company_Fax"],"Label_Name":"Organization"},{"Related_Fields":["Company_Phone_Number"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: none\">\n    <tbody>\n     <tr>\n      <td\n          style=\"border-right: none; border-bottom: none\"\n            width=\"33%\"><font style=\"font-size: 10px\" face=\"arimo\"><b\n              style=\"font-size: 10px\">[tel]<\/b> <span\n          style=\"color: rgb(68, 68, 68); font-weight: 700; font-style: normal\">${Organization.Company_Phone_Number}<\/span> <\/font><\/td>\n      <td\n          style=\"border-bottom: none\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><b\n              style=\"font-size: 10px\">[fax]<\/b> <span\n          style=\"color: rgb(68, 68, 68); font-weight: 700; font-style: normal\">${Organization.Company_Fax}<\/span> <\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border-right: none\"><font style=\"font-size: 10px\"\n              face=\"arimo\"><b>[e-mail]:<\/b> <font\n          color=\"#2f78d0\"><b><span>${Organization.Company_Email}<\/span><\/b><\/font> <\/font><\/td>\n      <td\n            style=\"\"><font style=\"font-size: 10px\"\n                face=\"arimo\"><b>[url]<\/b>&nbsp;<span> <a target=\"_blank\"\n                href=\"http://www.xmt.com.my/\"\n                    rel=\"noopener noreferrer\"><b><font color=\"#2f78d0\">http://www.xmt.com.my<\/font><\/b><\/a> <\/span><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_28333885999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_2857421699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_28574210999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_2865945699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_2865944399999976","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b style=\"font-size: 24px\">PRO FORMA INVOICE<\/b><\/font><\/h1>\n  <\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_30336240999999642","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3033623699999988","height":"25"}}]}]}},{"type":"columns","element":{"split":"7,44,2,45,2","id":"u_elem_30447405999999642","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3153859899999976","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Email"},{"Label_Name":"Customer_SST"},{"Label_Name":"Customer_TIN"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["Customer_Registration_Number"],"Label_Name":"Customer_Name"},{"Related_Fields":["Phone_Number"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Code"},{"Related_Fields":["Country"],"Label_Name":"Customer_Code"},{"Related_Fields":["Display_Name"],"Label_Name":"Customer_Code"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Code"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 0\">\n    <tbody>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer SST<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"><font\n                style=\"\"> <span>${Customer_SST}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          width=\"25%\" style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer TIN<\/font><\/td>\n      <td width=\"1%\"\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n          style=\"border: 0\" width=\"25%\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_TIN}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Name<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n              style=\"border: 0\"><span><font style=\"font-size: 10px\"\n              face=\"arimo\"\n            color=\"#000000\"><b>${Customer_Code.Display_Name}<\/b><\/font><\/span><span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Registration No<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_Name.Customer_Registration_Number}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"><font\n          style=\"padding: 5px\">Customer Address<\/font> <br /><\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Customer_Name.Business_Street},<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: 0\"><\/td>\n      <td\n          style=\"border: 0\"><\/td>\n      <td style=\"border: 0\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_Code.Postcode}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp; <span>${Customer_Code.City}<\/span>,<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: 0\"><\/td>\n      <td\n          style=\"border: 0\"><\/td>\n      <td style=\"border: 0\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\"> <span>${Customer_Code.Country}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Contact No<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Customer_Name.Phone_Number}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Email<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"\"><font color=\"#000000\"\n              style=\"font-size: 10px\" face=\"arimo\"> ${Customer_Email}<\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_3061262","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Due_Date"},{"Label_Name":"Pro_Forma_Invoice_No"},{"Label_Name":"SST_ID"},{"Label_Name":"Supplier_TIN"},{"Label_Name":"Added_Time"},{"Related_Fields":["Account_Number"],"Label_Name":"Customer_Code"},{"Related_Fields":["MSIC_Description"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"border: none\" width=\"25%\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Supplier TIN<\/font><\/td>\n      <td width=\"1%\"\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n          style=\"border: none\" width=\"25%\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Supplier_TIN}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Supplier MSIC Code<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Organization.MSIC_Description}<\/span><span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span><br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">SST ID<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${SST_ID}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer A/c No<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_Code.Account_Number}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Document No.<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"><span\n                style=\"font-weight: 400; font-style: normal\"><span>${Pro_Forma_Invoice_No}<\/span><span\n              style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span>&nbsp;<\/span>&nbsp;<span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Document Date and Time<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 1px; font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"><span\n                style=\"font-weight: 400; font-style: normal\"><span\n                  style=\"font-weight: 400; font-style: normal\"><span>${Added_Time}<\/span><span\n                style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>&nbsp;<\/span>&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span>&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Payment Due<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"padding: 1px\"\n              color=\"#000000\"><font style=\"font-size: 10px\"\n              face=\"arimo\"> ${Due_Date} <\/font><span\n          style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: none\"><br /><\/td>\n      <td\n          style=\"border: none\"><\/td>\n      <td style=\"\"><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_31822760999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"6,94","id":"u_elem_3302056699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_33395375999999642","height":"38"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_33020547999999523","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"color: rgb(0, 0, 0); font-style: normal; text-align: left\"><font\n      style=\"padding: 5px; font-size: 10px\" face=\"arimo\"><b style=\"font-size: 10px\">ATT : FINANCE DEPARTMENT<\/b><\/font><\/h1>\n  <\/div>"}}]}]}},{"type":"columns","element":{"split":"7,85,8","id":"u_elem_33955962999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4442664299999952","height":"25"}}]},{"colElements":[{"id":"u_elem_136137538618907417","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Pro_Forma_Invoices_Line_Item","labelText":"Deposits Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Pro_Forma_Invoice_Line_Item","refFields":[{"valueStyle":"                                  ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"                 text-align: center                 ","fieldLayoutType":"2","labelText":"Quantity","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Quantity"},{"valueStyle":"                 text-align: center                 ","fieldLayoutType":"2","labelText":"Unit Price","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Unit_Price"},{"valueStyle":"                 text-align: center                 ","fieldLayoutType":"2","labelText":"Sub Total","labelStyle":"background-color: rgb(29, 80, 142); font-weight: bold; color: rgb(255, 255, 255); text-align: center","Label_Name":"Sub_Total"},{"valueStyle":"                 text-align: center                 ","fieldLayoutType":"2","labelText":"Tax Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Tax_Amount"},{"valueStyle":"                 text-align: right                 ","fieldLayoutType":"2","labelText":"Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: right; background-color: rgb(29, 80, 142)","Label_Name":"Total"}],"labelTextStyle":""}},{"type":"text","element":{"id":"u_elem_45263705","fields":[],"content":"<div style=\"outline: none; border-width: 1px\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none; border-bottom: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td width=\"33%\" style=\"\"><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4452255799999952","height":"25"}}]}]}},{"type":"columns","element":{"split":"7,48,37,8","id":"u_elem_4628236099999964","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_12612175400000095","height":"67"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_16528294200000001","fields":[],"content":"<div style=\"outline: none\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: 1px solid rgb(51, 51, 51); border-bottom: none; border-left: none; border-right: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n                width=\"33%\"><span><i>&nbsp; <font\n                style=\"font-size: 10px\" face=\"arimo\">E.&amp; O.E.<\/font><\/i> <\/span> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Currency"},{"Label_Name":"Grand_Total"},{"Label_Name":"Sub_Total"},{"Label_Name":"Total_Tax"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border-left: 1px solid rgb(51, 51, 51); border-right: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-top: 1px solid rgb(51, 51, 51)\">\n    <tbody>\n     <tr>\n      <td\n          width=\"50%\" style=\"padding: 5px\"><br /><\/td>\n      <td\n          width=\"50%\" style=\"text-align: right; padding: 5px\"><b><font\n              color=\"#000000\" style=\"font-size: 10px\"\n          face=\"arimo\">${Currency}<\/font><\/b><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Sub Total<\/font><\/td>\n      <td\n            style=\"text-align: right; border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            color=\"#000000\" style=\"font-size: 10px\"\n                face=\"arimo\"> <span> <font\n          style=\"\">&nbsp; <span>${Sub_Total}<\/span> <\/font> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left; padding: 5px\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Total Excl. Tax<\/font><\/td>\n      <td\n            style=\"text-align: right; padding: 5px\"><font\n            color=\"#000000\" style=\"font-size: 10px\" face=\"arimo\"> <span\n                  style=\"font-weight: 400; font-style: normal\"> <span> <font\n          style=\"\">${Sub_Total}<\/font> <\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Add Service Tax @ 6%<\/font><\/td>\n      <td\n            style=\"text-align: right; border-bottom: 1px solid rgb(51, 51, 51); padding: 5px\"><font\n            color=\"#000000\" style=\"font-size: 10px\"\n          face=\"arimo\">${Total_Tax} <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n              style=\"padding: 5px\"><b><font style=\"font-size: 10px\"\n              color=\"#000000\"\n          face=\"arimo\">Total Payable Incl. Tax<\/font><\/b><\/td>\n      <td\n            style=\"text-align: right; padding: 5px\"><font\n            style=\"font-size: 10px\" face=\"arimo\"> <span> <font style=\"\" color=\"#000000\"><b>${Grand_Total}<\/b><\/font> <\/span> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9449587299999952","height":"25"}}]}]}},{"type":"columns","element":{"split":"7,43,50","id":"u_elem_9691713299999952","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_9720102099999964","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9696353199999988","height":"25"}},{"type":"text","element":{"Fields":[{"Related_Fields":["Organization_Name"],"Label_Name":"Organization"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"padding: 5px; width: 50%\" width=\"50%\"><font\n            style=\"font-size: 10px\"\n          face=\"arimo\">For direct bank-in, payments are to be made to :<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left; padding: 5px\"><font\n            style=\"font-size: 10px\"\n                face=\"arimo\">Beneficiary Name :&nbsp; <b><font\n            color=\"#000000\">${Organization.Organization_Name}<\/font><\/b> <\/font><span style=\"font-size: 12px; color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp; <br /><\/span><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"id":"u_elem_136137538618958487","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Chart_Of_Account","labelText":"Payable To","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payable_To1","refFields":[{"valueStyle":"                            ","fieldLayoutType":"2","labelText":"Account","labelStyle":"background-color: rgba(0, 0, 0, 0)","Label_Name":"Account"},{"valueStyle":"                            ","fieldLayoutType":"2","labelText":"Bank Account Number","labelStyle":"background-color: rgba(0, 0, 0, 0)","Label_Name":"Bank_Account_Number"}],"labelTextStyle":""}},{"type":"text","element":{"Fields":[{"Related_Fields":["Finance_Email"],"Label_Name":"Organization"}],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal; text-align: left\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <i style=\"font-size: 10px\"><span> <i>**If payment is made via bank transfer, please send proof of payment via email ${Organization.Finance_Email}&nbsp;<\/i> <\/span><\/i><\/font> <\/font><\/p>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_97332695","height":"184"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9776148299999952","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_9776145399999976","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\"><b style=\"\">This is a computer generated document and therefore no signature is required<\/b><\/font><\/font> <\/font><\/h1>\n  <\/div>"}}]}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
-				}
-			}
+	actions
+	{
+		on add
+		{
+			submit
+			(
+   				type = submit
+   				displayname = "Submit"
+			)
+			reset
+			(
+   				type = reset
+   				displayname = "Reset"
+			)
 		}
+		on edit
+		{
+			update
+			(
+   				type = submit
+   				displayname = "Update"
+			)
+			cancel
+			(
+   				type = cancel
+   				displayname = "Cancel"
+			)
+		}
+	}
+	blueprint components
+	{
+		stages = {"Draft","Pending Approval","Approved","Rejected","Sent","Paid","Partially Paid","Overdue"}
+	}
+}

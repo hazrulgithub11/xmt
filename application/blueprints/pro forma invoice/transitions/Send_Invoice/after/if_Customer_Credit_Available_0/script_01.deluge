@@ -1,0 +1,10 @@
+// Pro forma deposits do not use Apply_Credits / Notify_Credits_Available (invoice-only).
+// When customer has credit, proceed with Send Invoice stage change only.
+if(input.Due_Date > zoho.currentdate)
+{
+	thisapp.blueprint.changeStage("Pro_Forma_Invoices","Deposits_Blueprint","Sent",input.ID);
+}
+else
+{
+	thisapp.blueprint.changeStage("Pro_Forma_Invoices","Deposits_Blueprint","Overdue",input.ID);
+}

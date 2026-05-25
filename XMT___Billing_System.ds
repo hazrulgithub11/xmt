@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 21-May-2026 18:20:34
+ * Generated on : 24-May-2026 17:29:19
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -190,10 +190,9 @@
 	 			column = 0   
 				width = medium
 			)
-			must have Credit_Note
+			must have invoice
 			(
 				type = picklist	
-				displayname = "Credit Note"
 				values  = Credit_Note.ID
     			displayformat = [Invoice_No]
 				sortorder = ascending
@@ -4558,6 +4557,7 @@
 			(
     			type = date
 				displayname = "Invoice Date"
+				initial value = "${zoho.currentdate}"
 				alloweddays = 0,1,2,3,4,5,6
 	 			row = 4
 	 			column = 2   
@@ -5403,11 +5403,21 @@
 	 			column = 1   
 				width = medium
 			)
+			Payments_Received_Line_Item
+			(
+				type = grid
+				displayname = "Payments Received Line Item"
+				values  = Payment_Received_Line_Item.ID
+				auto width = false
+	 			row = 11
+	 			column = 1   
+				width = medium
+			)
 			System_Section
 			(
 				type = section
 				displayname = "System Section"
-	 			row = 11
+	 			row = 12
 	 			column = 0   
 				width = medium
 			)
@@ -5416,7 +5426,7 @@
     			type = textarea
 				displayname = "Rejection Reason"
 				height = 100px
-	 			row = 11
+	 			row = 12
 	 			column = 1   
 				width = medium
 			)
@@ -5425,7 +5435,7 @@
     			type = checkbox
 				displayname = "Confirm resubmission?"
 				initial value = false
-	 			row = 11
+	 			row = 12
 	 			column = 1   
 				width = medium
 			)
@@ -5486,7 +5496,7 @@
 					height = 100px
 					width = medium
 				)
-	 			row = 12
+	 			row = 13
 	 			column = 1   
 				width = medium
 			)
@@ -5494,7 +5504,7 @@
 			(
 				type = section
 				displayname = "Decision Section"
-	 			row = 13
+	 			row = 14
 	 			column = 0   
 				width = medium
 			)
@@ -5503,7 +5513,7 @@
     			type = checkbox
 				displayname = "Customer Name Trigger"
 				initial value = false
-	 			row = 13
+	 			row = 14
 	 			column = 1   
 				width = medium
 			)
@@ -5511,7 +5521,7 @@
 			(
     			type = checkbox
 				initial value = false
-	 			row = 13
+	 			row = 14
 	 			column = 1   
 				width = medium
 			)
@@ -5519,7 +5529,7 @@
 			(
     			type = checkbox
 				initial value = false
-	 			row = 13
+	 			row = 14
 	 			column = 1   
 				width = medium
 			)
@@ -5527,7 +5537,7 @@
 			(
     			type = checkbox
 				initial value = false
-	 			row = 13
+	 			row = 14
 	 			column = 1   
 				width = medium
 			)
@@ -5536,7 +5546,7 @@
     			type = checkbox
 				displayname = "Created By The System"
 				initial value = false
-	 			row = 13
+	 			row = 14
 	 			column = 1   
 				width = medium
 			)
@@ -6421,7 +6431,17 @@
 	 			column = 0   
 				width = medium
 			)
-			Amount_Received
+			must have Payment_Received_Currency
+			(
+				type = picklist
+				displayname = "Payment Received Currency"
+				maxchar = 100
+				values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			must have Amount_Received
 			(
 				type = decimal
 				displayname = "Amount Received"
@@ -6430,25 +6450,7 @@
 	 			column = 1   
 				width = medium
 			)
-			must have Currency
-			(
-				type = picklist
-				maxchar = 100
-				values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			must have Exchange_Rate
-			(
-				type = decimal
-				displayname = "Exchange Rate"
-				format = commadotwestern
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Amount_Received_MYR
+			must have Amount_Received_MYR
 			(
 				type = decimal
 				displayname = "Amount Received (MYR)"
@@ -6457,7 +6459,7 @@
 	 			column = 1   
 				width = medium
 			)
-			Total_Still_Owing
+			must have Total_Still_Owing
 			(
 				type = decimal
 				displayname = "Total Still Owing"
@@ -6512,10 +6514,10 @@
 	 			column = 1   
 				width = medium
 			)
-			Send_Email
+			Payment_Received_Trigger
 			(
     			type = checkbox
-				displayname = "Send Email"
+				displayname = "Payment Received Trigger"
 				initial value = false
 	 			row = 4
 	 			column = 1   
@@ -6593,12 +6595,12 @@
 				Deposit_Receipt
 				{
 							displayname = "Deposit Receipt"
-							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_6707418100000024","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"1728874515218_Picture1.png","imageId":"img_67368158000000715","imageType":"upload","fileId":"6069490000000049011"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_6753594200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67535935","height":"25"}}]}]}},{"type":"columns","element":{"split":"8,43,21,19,9","id":"u_elem_67033553000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67667373000000715","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_6707418100000024","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_67033543000000715","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_81632338000000715","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_67368158000000715","size":"F","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000049011&imgFileName=1728874515218_Picture1.png","parWidth":"100%","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_6734721399999976","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 100%","formCompId":""}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_13724668000001907","height":"58"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_81582813000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_8158280100000024","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b>DEPOSIT RECEIPT<\/b><\/font><\/h1>\n  <\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_82374528000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_8237451200000048","height":"25"}}]}]}},{"type":"columns","element":{"split":"7,56,29,8","id":"u_elem_8642564100000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_30751460000014305","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Name"},{"Related_Fields":["Country"],"Label_Name":"Customer_Name"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Name"},{"Related_Fields":["State"],"Label_Name":"Customer_Name"}],"content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n            width=\"50%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right\"\n            width=\"50%\"><\/td>\n     <\/tr>\n     <tr>\n      <td><br /><span\n              style=\"font-weight: 400; font-style: normal\"><font\n              face=\"arimo\" style=\"font-size: 10px\"\n            color=\"#000000\">${Customer_Name.Business_Street}<\/font><\/span><span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span><br /><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Postcode},&nbsp;<span\n              style=\"font-weight: 400; font-style: normal\">&nbsp;<span> <span>${Customer_Name.City},&nbsp;<\/span><\/span><\/span><span><span><br /><\/span> <\/span><span\n              style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">${Customer_Name.State}<\/span><span\n                  style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">&nbsp;,&nbsp;<span> <font\n                    face=\"arimo\"><font\n                    color=\"#000000\">${Customer_Name.Country}<span>&nbsp;<\/span><\/font><\/font><span><font\n                      face=\"arimo\"><font\n            color=\"#000000\">&nbsp;&nbsp;<\/font><\/font><\/span> <\/span><\/span><br /><\/font><\/td>\n      <td><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font style=\"\"><br /><\/font><\/td>\n      <td><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Payment_Date"},{"Label_Name":"Payment_Received_No"}],"content":"<div style=\"border-width: 0px\">\n   <table\n    style=\"text-align: center; margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right\" width=\"45%\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Payment Date<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">${Payment_Date}<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          width=\"45%\" style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Receipt No.<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">${Payment_Received_No}<\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_31296930000019073","height":"25"}}]}]}},{"type":"columns","element":{"split":"2,90,8","id":"u_elem_9746556200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3188222000000477","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9749436","height":"25"}},{"type":"columns","element":{"split":"60,40","id":"u_elem_4799869699999809","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4875513","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Currency"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font style=\"font-size: 12px\"\n            color=\"#000000\">&nbsp; &nbsp; &nbsp;<\/font><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">TOTAL ${Currency}<span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>PAID :<\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font color=\"#000000\" style=\"\"><font\n              style=\"font-size: 10px\"\n              face=\"arimo\">${Amount_Received} <\/font><span style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_324970","height":"25"}}]}]}},{"type":"columns","element":{"split":"7,85,8","id":"u_elem_41560137999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_33083030000019073","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4161705899999976","height":"25"}},{"id":"u_elem_136131018281774992","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Payment_Received_Line_Item","labelText":"Payment Received Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payment_Received_Line_Item","refFields":[{"valueStyle":"        text-align: center        ","fieldLayoutType":"2","labelText":"Document Date","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Document_Date"},{"valueStyle":"        text-align: center        ","fieldLayoutType":"2","labelText":"Pro Forma Invoice No.","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Pro_Forma_Invoice_No"},{"valueStyle":"                ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"        text-align: center        ","fieldLayoutType":"2","labelText":"Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Amount"},{"valueStyle":"        text-align: center        ","fieldLayoutType":"2","labelText":"Allocation","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Allocation"},{"valueStyle":"        text-align: center        ","fieldLayoutType":"2","labelText":"Still Owing","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Still_Owing"}],"labelTextStyle":""}},{"type":"spacer","element":{"id":"u_elem_4327278099999905","height":"25"}},{"type":"columns","element":{"split":"51,47,2","id":"u_elem_4263726099999905","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_41638990999999046","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Currency"},{"Label_Name":"Total_Still_Owing"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">Total&nbsp; ${Currency} <span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n      <td\n          width=\"20%\"\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><br /><\/td>\n      <td\n          width=\"20%\"\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n          style=\"font-size: 10px\">\u200b<\/font><br /><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"font-size: 10px\"> ${Amount_Received} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"\">&nbsp;${Total_Still_Owing} <span style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4347748299999952","height":"25"}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_34001430000019073","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_4436061600000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4440055100000024","height":"25"}},{"type":"text","element":{"id":"u_elem_4436061299999952","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\">This is a computer generated document and therefore no signature is required<\/font><\/font> <\/font><\/h1>\n  <\/div>"}}]}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
+							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_6707418100000024","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"1728874515218_Picture1.png","imageId":"img_67368158000000715","imageType":"upload","fileId":"6069490000000049011"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_6753594200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67535935","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"8,43,21,19,9","id":"u_elem_67033553000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67667373000000715","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_6707418100000024","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_67033543000000715","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_81632338000000715","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_67368158000000715","size":"F","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000049011&imgFileName=1728874515218_Picture1.png","parWidth":"100%","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_6734721399999976","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 100%","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_13724668000001907","height":"58"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_81582813000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_8158280100000024","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b>DEPOSIT RECEIPT<\/b><\/font><\/h1>\n  <\/div>"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_82374528000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_8237451200000048","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"7,56,29,8","id":"u_elem_8642564100000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_30751460000014305","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Name"},{"Related_Fields":["Country"],"Label_Name":"Customer_Name"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Name"},{"Related_Fields":["State"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745897962320161","content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n            width=\"50%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right\"\n            width=\"50%\"><\/td>\n     <\/tr>\n     <tr>\n      <td><br /><span\n              style=\"font-weight: 400; font-style: normal\"><font\n              face=\"arimo\" style=\"font-size: 10px\"\n            color=\"#000000\">${Customer_Name.Business_Street}<\/font><\/span><span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span><br /><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Postcode},&nbsp;<span\n              style=\"font-weight: 400; font-style: normal\">&nbsp;<span> <span>${Customer_Name.City},&nbsp;<\/span><\/span><\/span><span><span><br /><\/span> <\/span><span\n              style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">${Customer_Name.State}<\/span><span\n                  style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">&nbsp;,&nbsp;<span> <font\n                    face=\"arimo\"><font\n                    color=\"#000000\">${Customer_Name.Country}<span>&nbsp;<\/span><\/font><\/font><span><font\n                      face=\"arimo\"><font\n            color=\"#000000\">&nbsp;&nbsp;<\/font><\/font><\/span> <\/span><\/span><br /><\/font><\/td>\n      <td><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font style=\"\"><br /><\/font><\/td>\n      <td><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Payment_Date"},{"Label_Name":"Payment_Received_No"}],"id":"u_elem_11745897962321041","content":"<div style=\"border-width: 0px\">\n   <table\n    style=\"text-align: center; margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right\" width=\"45%\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Payment Date<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">${Payment_Date}<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          width=\"45%\" style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Receipt No.<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">${Payment_Received_No}<\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_31296930000019073","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"2,90,8","id":"u_elem_9746556200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3188222000000477","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9749436","height":"25"}},{"type":"columns","element":{"split":"60,40","id":"u_elem_4799869699999809","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4875513","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Related_Fields":["Currency"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745897962322401","content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font style=\"font-size: 12px\"\n            color=\"#000000\">&nbsp; &nbsp; &nbsp;<\/font><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">TOTAL ${Customer_Name.Currency}<span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>PAID :<\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font color=\"#000000\" style=\"\"><font\n              style=\"font-size: 10px\"\n              face=\"arimo\">${Amount_Received} <\/font><span style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""}]}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_324970","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"7,85,8","id":"u_elem_41560137999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_33083030000019073","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4161705899999976","height":"25"}},{"id":"u_elem_11745897962326971","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Payment_Received_Line_Item","labelText":"Payment Received Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payment_Received_Line_Item","refFields":[{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Document Date","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Document_Date"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Pro Forma Invoice No.","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Pro_Forma_Invoice_No"},{"valueStyle":"                  ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Amount"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Allocation","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Allocation"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Still Owing","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Still_Owing"}],"labelTextStyle":""}},{"type":"spacer","element":{"id":"u_elem_4327278099999905","height":"25"}},{"type":"columns","element":{"split":"51,47,2","id":"u_elem_4263726099999905","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_41638990999999046","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Total_Still_Owing"}],"id":"u_elem_11745897962349441","content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">Total&nbsp; ${<span>\n\n<span>Customer_Name.Currency<\/span>\n\n<\/span>} <span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n      <td\n          width=\"20%\"\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><br /><\/td>\n      <td\n          width=\"20%\"\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n          style=\"font-size: 10px\">\u200b<\/font><br /><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"font-size: 10px\"> ${Amount_Received} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"\">&nbsp;${Total_Still_Owing} <span style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4347748299999952","height":"25"}}],"style":""}]}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_34001430000019073","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_4436061600000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4440055100000024","height":"25"}},{"type":"text","element":{"id":"u_elem_4436061299999952","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\">This is a computer generated document and therefore no signature is required<\/font><\/font> <\/font><\/h1>\n  <\/div>"}}],"style":""}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
 				}
 				Official_Receipt
 				{
 							displayname = "Official Receipt"
-							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_14249199999928474","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"1728874515218_Picture1.png","imageId":"img_240835","imageType":"upload","fileId":"6069490000000049011"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_39775699999928474","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3977560000002384","height":"25"}}]}]}},{"type":"columns","element":{"split":"6,38,28,20,8","id":"u_elem_12168199999928474","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_5804589999997616","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_14249199999928474","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_12166799999952316","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_50181299999952316","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_240835","size":"F","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000049011&imgFileName=1728874515218_Picture1.png","parWidth":"100%","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_215435","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 100%","formCompId":""}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_219110409","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_432375","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_4323710000002384","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b style=\"font-size: 24px\">OFFICIAL RECEIPT<\/b><\/font><\/h1>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_10765149000000954","height":"25"}}]}]}},{"type":"columns","element":{"split":"8,40,21,24,7","id":"u_elem_34098189999997616","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_21197","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Name"},{"Related_Fields":["Country"],"Label_Name":"Customer_Name"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Name"}],"content":"<div\n    style=\"border-width: 0px; border-style: solid; border-color: rgb(68, 68, 68)\">\n   <table\n    style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n            width=\"50%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"50%\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">&nbsp;&nbsp;&nbsp;<span\n            style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Business_Street} <span\n          style=\"font-weight: 400; font-style: normal\">,<\/span> <\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Postcode} <span\n            style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font\n              style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n                color=\"#000000\"\n              style=\"\"> ${Customer_Name.Country} <\/font> <\/font><span\n                style=\"font-weight: 400; font-style: normal\"><font\n                style=\"font-size: 10px\" face=\"arimo\"> <font\n                  color=\"#000000\"\n                style=\"\">&nbsp; ${Customer_Name.City}<\/font> <\/font><span style=\"font-family: Lato, Arimo, sans-serif; font-size: 12px; color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n      <td><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_16308358","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Payment_Date"},{"Label_Name":"Payment_Received_No"}],"content":"<div style=\"border-width: 0px\">\n   <table cellspacing=\"0\"\n          style=\"text-align: center; margin: 0px auto; width: 100%; border: none\">\n    <tbody>\n     <tr>\n      <td\n          width=\"45%\" style=\"text-align: right\"><font face=\"arimo\"\n            style=\"font-size: 10px\"\n          color=\"#000000\">Payment Date<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"5%\"><font face=\"arimo\"\n          color=\"#000000\">:<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"50%\"><font face=\"arimo\"\n            style=\"font-size: 10px\"\n          color=\"#000000\">${Payment_Date}<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"text-align: right\" width=\"45%\"><font face=\"arimo\"\n            style=\"font-size: 10px\"\n          color=\"#000000\">Receipt No.<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"5%\"><font face=\"arimo\"\n          color=\"#000000\">:<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"50%\"><font face=\"arimo\"\n            style=\"font-size: 10px\" color=\"#000000\">${Payment_Received_No}<\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_15051524000000954","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_2437699399999976","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_24376986999999285","height":"25"}}]}]}},{"type":"columns","element":{"split":"5,53,35,7","id":"u_elem_2441038600000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_58895200000047684","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_35630052000000477","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Currency"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border-collapse: collapse\">\n    <tbody>\n     <tr>\n      <td\n          width=\"33%\"\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            color=\"#000000\"\n            style=\"font-size: 12px\">&nbsp; &nbsp; &nbsp;<\/font><font\n            color=\"#000000\" style=\"font-size: 10px\"\n              face=\"arimo\">TOTAL ${Currency}<span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>PAID :<\/font><\/td>\n      <td\n          width=\"33%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            style=\"\" color=\"#000000\"><font style=\"font-size: 10px\"\n              face=\"arimo\">&nbsp;${Amount_Received} <\/font><span style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_11131029999995232","height":"25"}}]}]}},{"type":"columns","element":{"split":"5,88,7","id":"u_elem_2585263899999976","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_14080379999995232","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_2659097100000024","height":"25"}},{"id":"u_elem_136131050900558952","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Payment_Received_Line_Item","labelText":"Payment Received Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payment_Received_Line_Item","refFields":[{"valueStyle":"   text-align: left   ","fieldLayoutType":"2","labelText":"Document Date","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: left; background-color: rgb(29, 80, 142)","Label_Name":"Document_Date"},{"valueStyle":"   text-align: center   ","fieldLayoutType":"2","labelText":"Reference No.","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Reference_No"},{"valueStyle":"      ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"   text-align: center   ","fieldLayoutType":"2","labelText":"Outstanding Balance","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142); text-align: center","Label_Name":"Outstanding_Balance"},{"valueStyle":"   text-align: center   ","fieldLayoutType":"2","labelText":"Allocation","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Allocation"},{"valueStyle":"   text-align: center   ","fieldLayoutType":"2","labelText":"Still Owing","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Still_Owing"}],"labelTextStyle":""}},{"type":"spacer","element":{"id":"u_elem_36269489000000954","height":"25"}},{"type":"columns","element":{"split":"51,47,2","id":"u_elem_36428674000000954","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_36428665","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Currency"},{"Label_Name":"Total_Still_Owing"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border-collapse: collapse\">\n    <tbody>\n     <tr>\n      <td\n          width=\"20%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\">T<\/font><font color=\"#000000\" style=\"\"\n              face=\"arimo\"><font style=\"font-size: 10px\"\n              face=\"arimo\">otal&nbsp; <\/font><span\n              style=\"font-size: 10px\">${Currency}<\/span> <span\n          style=\"font-size: 10px; color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td width=\"20%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font style=\"\"\n                color=\"#000000\"> ${Amount_Received} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n      <td\n          width=\"20%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font style=\"\"\n                color=\"#000000\"> ${Total_Still_Owing} <span style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_3723911600000143","height":"25"}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_15793740000009537","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_3579294","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3582872899999976","height":"25"}},{"type":"text","element":{"id":"u_elem_35792926999999285","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\">This is a computer generated document and therefore no signature is required<\/font><\/font> <\/font><\/h1>\n  <\/div>"}}]}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
+							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_14249199999928474","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"1728874515218_Picture1.png","imageId":"img_240835","imageType":"upload","fileId":"6069490000000049011"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_39775699999928474","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3977560000002384","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"6,38,28,20,8","id":"u_elem_12168199999928474","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_5804589999997616","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_14249199999928474","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_12166799999952316","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_50181299999952316","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_240835","size":"F","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000049011&imgFileName=1728874515218_Picture1.png","parWidth":"100%","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_215435","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 100%","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_219110409","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_432375","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_4323710000002384","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b style=\"font-size: 24px\">OFFICIAL RECEIPT<\/b><\/font><\/h1>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_10765149000000954","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"8,40,21,24,7","id":"u_elem_34098189999997616","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_21197","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Name"},{"Related_Fields":["Country"],"Label_Name":"Customer_Name"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745616723869369","content":"<div\n    style=\"border-width: 0px; border-style: solid; border-color: rgb(68, 68, 68)\">\n   <table\n    style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n            width=\"50%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"50%\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">&nbsp;&nbsp;&nbsp;<span\n            style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Business_Street} <span\n          style=\"font-weight: 400; font-style: normal\">,<\/span> <\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Postcode} <span\n            style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font\n              style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n                color=\"#000000\"\n              style=\"\"> ${Customer_Name.Country} <\/font> <\/font><span\n                style=\"font-weight: 400; font-style: normal\"><font\n                style=\"font-size: 10px\" face=\"arimo\"> <font\n                  color=\"#000000\"\n                style=\"\">&nbsp; ${Customer_Name.City}<\/font> <\/font><span style=\"font-family: Lato, Arimo, sans-serif; font-size: 12px; color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n      <td><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_16308358","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Payment_Date"},{"Label_Name":"Payment_Received_No"}],"id":"u_elem_11745616723888129","content":"<div style=\"border-width: 0px\">\n   <table cellspacing=\"0\"\n          style=\"text-align: center; margin: 0px auto; width: 100%; border: none\">\n    <tbody>\n     <tr>\n      <td\n          width=\"45%\" style=\"text-align: right\"><font face=\"arimo\"\n            style=\"font-size: 10px\"\n          color=\"#000000\">Payment Date<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"5%\"><font face=\"arimo\"\n          color=\"#000000\">:<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"50%\"><font face=\"arimo\"\n            style=\"font-size: 10px\"\n          color=\"#000000\">${Payment_Date}<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"text-align: right\" width=\"45%\"><font face=\"arimo\"\n            style=\"font-size: 10px\"\n          color=\"#000000\">Receipt No.<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"5%\"><font face=\"arimo\"\n          color=\"#000000\">:<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"50%\"><font face=\"arimo\"\n            style=\"font-size: 10px\" color=\"#000000\">${Payment_Received_No}<\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_15051524000000954","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_2437699399999976","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_24376986999999285","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"5,53,35,7","id":"u_elem_2441038600000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_58895200000047684","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_35630052000000477","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Related_Fields":["Currency"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745616723890559","content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border-collapse: collapse\">\n    <tbody>\n     <tr>\n      <td\n          width=\"33%\"\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            color=\"#000000\"\n            style=\"font-size: 12px\">&nbsp; &nbsp; &nbsp;<\/font><font\n            color=\"#000000\" style=\"font-size: 10px\"\n              face=\"arimo\">TOTAL ${Customer_Name.Currency}<span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>PAID :<\/font><\/td>\n      <td\n          width=\"33%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            style=\"\" color=\"#000000\"><font style=\"font-size: 10px\"\n              face=\"arimo\">&nbsp;${Amount_Received} <\/font><span style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_11131029999995232","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"5,88,7","id":"u_elem_2585263899999976","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_14080379999995232","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_2659097100000024","height":"25"}},{"id":"u_elem_11745616723896279","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Payment_Received_Line_Item","labelText":"Payment Received Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payment_Received_Line_Item","refFields":[{"valueStyle":"    text-align: left    ","fieldLayoutType":"2","labelText":"Document Date","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: left; background-color: rgb(29, 80, 142)","Label_Name":"Document_Date"},{"valueStyle":"    text-align: center    ","fieldLayoutType":"2","labelText":"Reference No.","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Reference_No"},{"valueStyle":"        ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"    text-align: center    ","fieldLayoutType":"2","labelText":"Outstanding Balance","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142); text-align: center","Label_Name":"Outstanding_Balance"},{"valueStyle":"    text-align: center    ","fieldLayoutType":"2","labelText":"Allocation","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Allocation"},{"valueStyle":"    text-align: center    ","fieldLayoutType":"2","labelText":"Still Owing","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Still_Owing"}],"labelTextStyle":""}},{"type":"spacer","element":{"id":"u_elem_36269489000000954","height":"25"}},{"type":"columns","element":{"split":"51,47,2","id":"u_elem_36428674000000954","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_36428665","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Total_Still_Owing"},{"Related_Fields":["Currency"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745616723925010","content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border-collapse: collapse\">\n    <tbody>\n     <tr>\n      <td\n          width=\"20%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\">T<\/font><font color=\"#000000\" style=\"\"\n              face=\"arimo\"><font style=\"font-size: 10px\"\n              face=\"arimo\">otal&nbsp; <\/font><span\n              style=\"font-size: 10px\">${Customer_Name.Currency}<\/span> <span\n          style=\"font-size: 10px; color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td width=\"20%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font style=\"\"\n                color=\"#000000\"> ${Amount_Received} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n      <td\n          width=\"20%\"\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font style=\"\"\n                color=\"#000000\"> ${Total_Still_Owing} <span style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_3723911600000143","height":"25"}}],"style":""}]}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_15793740000009537","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_3579294","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3582872899999976","height":"25"}},{"type":"text","element":{"id":"u_elem_35792926999999285","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\">This is a computer generated document and therefore no signature is required<\/font><\/font> <\/font><\/h1>\n  <\/div>"}}],"style":""}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
 				}
 			}
 		}
@@ -6696,12 +6698,11 @@
 	 			column = 1   
 				width = medium
 			)
-			Allocation_MYR
+			must have Allocation_MYR
 			(
 				type = decimal
 				displayname = "Allocation (MYR)"
 				format = commadotwestern
-				private = true
 	 			row = 1
 	 			column = 1   
 				width = medium
@@ -6722,28 +6723,6 @@
 				values  = Payment_Received.ID
     			bidirectional = Payment_Received_Line_Item
     			displayformat = [Payment_Received_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Customer_Code
-			(
-				type = picklist	
-				displayname = "Customer Code"
-				values  = Tenancy.ID
-    			displayformat = [Tenant_Name]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Customer_Name
-			(
-				type = picklist	
-				displayname = "Customer Name"
-				values  = Customer_Profile.ID
-    			displayformat = [Customer_Name]
 				sortorder = ascending
 	 			row = 1
 	 			column = 1   
@@ -7162,7 +7141,7 @@
 			}
 			blueprint components
 			{
-				stages = {"Draft","Pending Approval","Approved","Rejected"}
+				stages = {"Draft","Pending Approval","Approved","Rejected","Sent","Paid","Partially Paid","Overdue"}
 			}
 		print template
 			{
@@ -8766,7 +8745,7 @@
 	 			column = 1   
 				width = medium
 			)
-			Customer_PO_No
+			must have Customer_PO_No
 			(
     			type = text
 				displayname = "Customer PO No."
@@ -11620,8 +11599,6 @@
 				Allocation
 				Payment_Received as "Payment Received"
 				Pro_Forma_Invoice_No as "Pro Forma Invoice No."
-				Customer_Name as "Customer Name"
-				Customer_Code as "Customer Code"
 				Reference_No as "Reference No."
 				Description
 				Allocation_MYR as "Allocation (MYR)"
@@ -12174,7 +12151,7 @@
 			show all rows from Apply_Credit_To_Invoices    
 			(
 				Unpaid_Invoices.Invoice as "Unpaid Invoices"
-				Credit_Note as "Credit Note"
+				invoice
 				Credits_Remaining as "Credits Remaining"
 				Credit_Note_Selection_Trigger
 			)
@@ -12567,26 +12544,8 @@
 				)
 				Payment_Received as "Payment Received"
 				Pro_Forma_Invoice_No as "Pro Forma Invoice No."
-				Customer_Name as "Customer Name"
 				Description
-				Customer_Code.Project_Location_Telco_Provider as "Project/Location/Telco Provider"
-				Customer_Code as "Customer Code"
 				Payment_Received.Paid_To as "Paid To"
-			)
-			filters
-			(
-				Customer_Name
-				Customer_Code
-			)
-			group by
-			(
-				Customer_Code.Project_Location_Telco_Provider ascending
-				Customer_Name descending
-				Customer_Code descending
-			)
-			sort by
-			(
-				Customer_Code.Project_Location_Telco_Provider ascending
 			)
 		}
 		list Payment_Received_Report
@@ -14693,9 +14652,7 @@
                  			Added_User=zoho.loginuser
                  			Supplier=Organization_Settings[ID != null].ID
                  		];
-                 		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",createInvoice);
-                 	}
-                 	catch (error)
+                 	}	catch (error)
                  	{
                  		if(error.contains("Duplicate entry"))
                  		{
@@ -15494,9 +15451,7 @@
                  			Added_User=zoho.loginuser
                  			Supplier=Organization_Settings[ID != null].ID
                  		];
-                 		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",createInvoice);
-                 	}
-                 	catch (error)
+                 	}	catch (error)
                  	{
                  		if(error.containsIgnoreCase("duplicate"))
                  		{
@@ -16340,9 +16295,7 @@
                  			Added_User=zoho.loginuser
                  			Supplier=Organization_Settings[ID != null].ID
                  		];
-                 		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",createInvoice);
-                 	}
-                 	catch (error)
+                 	}	catch (error)
                  	{
                  		if(error.containsIgnoreCase("duplicate"))
                  		{
@@ -17272,9 +17225,7 @@
                  			Added_User=zoho.loginuser
                  			Supplier=Organization_Settings[ID != null].ID
                  		];
-                 		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",createInvoice);
-                 	}
-                 	catch (error)
+                 	}	catch (error)
                  	{
                  		if(error.containsIgnoreCase("duplicate"))
                  		{
@@ -18229,10 +18180,8 @@
                  			Added_User=zoho.loginuser
                  			Supplier=Organization_Settings[ID != null].ID
                  		];
-                 		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",createInvoice);
                  		//subInfo.Trigger_Workflow=true;
-                 	}
-                 	catch (error)
+                 	}	catch (error)
                  	{
                  		if(error.containsIgnoreCase("duplicate"))
                  		{
@@ -18428,9 +18377,7 @@
                  			Created_By_The_System=true
                  			Added_User=zoho.loginuser
                  		];
-                 		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",createInvoice);
-                 	}
-                 	catch (error)
+                 	}	catch (error)
                  	{
                  		//info "error:" + error;
                  		if(error.containsIgnoreCase("duplicate"))
@@ -18604,8 +18551,7 @@
                  			getInvoice.Sub_Total_Call_Charges=subTotalCallCharges;
                  			getInvoice.Total_Tax_Call_Charges=totalTaxCallCharges;
                  			getInvoice.Grand_Total_Call_Charges=totalTaxCallCharges;
-                 		}
-                 		catch (e)
+                 		}		catch (e)
                  		{
                  			//info "error:" + e;
                  		}
@@ -18727,18 +18673,13 @@
                  {
                  	mp = Map();
                  	previoustotalAmountDue = 0;
-                 	//Comment Nubhan 02/07/2025 - Start
-                 	/* 	for each  inv in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == tenantID]
-                                  	{
-                                  		previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
-                                  	} */
-                 	//Comment Nubhan 02/07/2025 - End
-                 	//Add Nubhan 02/07/2025 - Start
-                 	for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && Customer_Code == tenantID]
+                 	if(actualBillingDate != null && tenantID != null)
                  	{
-                 		previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+                 		for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && Customer_Code == tenantID]
+                 		{
+                 			previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+                 		}
                  	}
-                 	//Add Nubhan 02/07/2025 - End
                  	previousBalance = previoustotalAmountDue;
                  	overdueCharges = previoustotalAmountDue;
                  	totalAmountDue = previoustotalAmountDue + grandTotal;
@@ -18750,18 +18691,25 @@
                  	//mp.put("Previous_Invoice",previousInvoice);
                  	return mp;
                  }
-				 void invoice.invoice_balance_updates(int invoice_id)
+				 void invoice.invoice_balance_updates(int invId)
                  {
-                 	get_invoice = Invoice[ID == invoice_id];
-                 	get_invoice_date = get_invoice.Invoice_Date;
-                 	get_invoice_tenant_id = get_invoice.Customer_Code;
-                 	previous_total_amount_due = 0;
-                 	for each  curr_invoice in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < get_invoice_date.toStartOfMonth() && Customer_Code == get_invoice_tenant_id]
+                 	getInvoice = Invoice[ID == invId];
+                 	if(getInvoice == null)
                  	{
-                 		previous_total_amount_due = previous_total_amount_due + curr_invoice.Amount_Due;
+                 		return;
                  	}
-                 	get_invoice.Previous_Balance=previous_total_amount_due;
-                 	get_invoice.Total_Amount_Due=get_invoice.Grand_Total;
+                 	invoiceDate = getInvoice.Invoice_Date;
+                 	tenantID = getInvoice.Customer_Code;
+                 	previoustotalAmountDue = 0;
+                 	if(invoiceDate != null && tenantID != null)
+                 	{
+                 		for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoiceDate.toStartOfMonth() && Customer_Code == tenantID]
+                 		{
+                 			previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+                 		}
+                 	}
+                 	getInvoice.Previous_Balance=previoustotalAmountDue;
+                 	getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
                  }
 				 void invoice.recalculate_overdue(int tenantId, int invId)
                  {
@@ -19123,7 +19071,7 @@
                  				pmMap.put("Tenant_Name",getTenant.Tenant_Name);
                  				pmMap.put("Customer_Code",getTenant.Customer_Code);
                  				pmMap.put("Date",pm.Payment_Date);
-                 				currency = pm.Currency;
+                 				currency = pm.Customer_Name.Currency;
                  				details = pm.Payment_Received_No + newline;
                  				for each  pmLineItem in pm.Payment_Received_Line_Item
                  				{
@@ -19157,7 +19105,7 @@
                  			pmMap.put("Tenant_Name",getTenant.Tenant_Name);
                  			pmMap.put("Customer_Code",getTenant.Customer_Code);
                  			pmMap.put("Date",pm.Payment_Date);
-                 			currency = pm.Currency;
+                 			currency = pm.Customer_Name.Currency;
                  			details = pm.Payment_Received_No + newline;
                  			for each  pmLineItem in pm.Payment_Received_Line_Item
                  			{
@@ -22711,6 +22659,13 @@
 										disable Credits_Applied.CA_Date;
 										disable Credits_Applied.CA_Credit_Note;
 										disable Credits_Applied.CA_Total;
+										// Payments Received Line Item
+										disable Payments_Received_Line_Item.Amount;
+										disable Payments_Received_Line_Item.Outstanding_Balance;
+										disable Payments_Received_Line_Item.Allocation;
+										disable Payments_Received_Line_Item.Allocation_MYR;
+										disable Payments_Received_Line_Item.Still_Owing;
+										disable Payments_Received_Line_Item.Payment_Received;
 						)
 					}
 				}
@@ -22769,6 +22724,13 @@
 										hide User_Input_Trigger;
 										hide Credits_Applied_Trigger;
 										hide Credits_Applied.CA_Apply_Credit_To_Invoice_Line_ID;
+										/* Payments Received Line Item */
+										hide Payments_Received_Line_Item.Document_Date;
+										hide Payments_Received_Line_Item.Reference_No;
+										hide Payments_Received_Line_Item.Description;
+										hide Payments_Received_Line_Item.Invoice_No;
+										hide Payments_Received_Line_Item.Debit_Note_No;
+										hide Payments_Received_Line_Item.Pro_Forma_Invoice_No;
 						)
 					}
 				}
@@ -23004,6 +22966,15 @@
 										{
 											input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
 										}
+										if(input.Invoice_Date != null && input.Customer_Code != null)
+										{
+											previoustotalAmountDue = 0;
+											for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+											{
+												previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+											}
+											input.Previous_Balance = previoustotalAmountDue;
+										}
 										if(input.Customer_Code == null)
 										{
 											input.Due_Date = null;
@@ -23023,6 +22994,26 @@
 
 				on success
 				{
+					actions 
+					{
+						custom deluge script
+						(
+											previoustotalAmountDue = 0;
+										if(input.Invoice_Date != null && input.Customer_Code != null)
+										{
+											for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+											{
+												previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+											}
+											for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+											{
+												thisapp.invoice.invoice_balance_updates(inv.ID);
+											}
+										}
+										input.Previous_Balance = previoustotalAmountDue;
+										input.Total_Amount_Due = input.Grand_Total;
+						)
+					}
 					actions 
 					{
 						custom deluge script
@@ -23375,8 +23366,6 @@
 										[
 											Invoice_No=invNo
 										];
-										// Invoice_Blueprint start stage is already "Draft" on form add.
-										// changeStage to Draft here fails and blocks Invoice_No from saving.
 						)
 					}
 				}
@@ -23406,6 +23395,15 @@
 											if(input.Payment_Term != null)
 											{
 												input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
+											}
+											if(input.Customer_Code != null)
+											{
+												previoustotalAmountDue = 0;
+												for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+												{
+													previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+												}
+												input.Previous_Balance = previoustotalAmountDue;
 											}
 										}
 						)
@@ -23607,6 +23605,8 @@
 										input.Supplier_Country = getOrganization.Country;
 										input.Supplier_State = getOrganization.State;
 										input.Base_Currency = getOrganization.Base_Currency;
+										input.Invoice_Date = zoho.currentdate;
+										input.Invoice_For_Usage = thisapp.invoice.get_invoice_usage(zoho.currentdate);
 										hide Invoice_No;
 						)
 					}
@@ -24135,223 +24135,76 @@
 						custom deluge script
 						(
 											input.Organization = Organization_Settings[ID != null].ID;
-										if(input.Customer_Name != null)
-										{
-											input.Customer_TIN = ifnull(input.Customer_Name.Customer_TIN,"");
-											input.Customer_SST = ifnull(input.Customer_Name.Customer_SST,"");
-											input.Customer_Email = ifnull(input.Customer_Name.Email_Address,"");
-											input.Currency = input.Customer_Name.Currency;
-											getOrganization = Organization_Settings[ID != null];
-											baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
-											if(input.Currency == null || input.Currency == "")
-											{
-												input.Exchange_Rate = null;
-											}
-											else if(input.Currency == baseCurrency)
-											{
-												input.Exchange_Rate = 1;
-											}
-											else
-											{
-												try 
-												{
-													exchange_rate_get_response = invokeurl
-													[
-														url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
-														type :GET
-													];
-													exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
-													input.Exchange_Rate = exchange_rate;
-												}		catch (e)
-												{
-													info e;
-													input.Exchange_Rate = "";
-												}
-											}
-										}
-										// if(input.Customer_Code != null)
-										// {
-										// 	input.Paid_To2 = ifnull(input.Customer_Code.Payable_To1,null);
-										// }
-						)
-					}
-					actions  (Payment_Type == "Invoice/Debit Note" && Single_Record_Payment == false)
-					{
-						custom deluge script
-						(
-											totalPaymentReceived = 0;
-										totalPaymentReceivedMYR = 0;
-										getInvs = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" && Customer_Code == input.Customer_Code];
-										getDebitNotes = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" && Customer_Code == input.Customer_Code];
-										if(getInvs.ID == null && getDebitNotes.ID == null && input.Customer_Code != null)
-										{
-											alert "There are no unpaid invoices associated with this customer code.";
-										}
-										input.Payment_Received_Line_Item.clear();
-										for each  inv in getInvs
-										{
-											payRow = Payment_Received.Payment_Received_Line_Item();
-											payRow.Reference_No=inv.Invoice_No;
-											payRow.Invoice_No=inv.ID;
-											payRow.Description="Payment Received For " + inv.Invoice_For_Usage + " INV " + inv.Invoice_No;
-											payRow.Document_Date=inv.Invoice_Date;
-											payRow.Amount=inv.Grand_Total;
-											payRow.Outstanding_Balance=inv.Amount_Due;
-											payRow.Allocation=inv.Amount_Due;
-											payRow.Allocation_MYR=inv.Amount_Due * ifnull(input.Exchange_Rate,1);
-											input.Payment_Received_Line_Item.insert(payRow);
-											totalPaymentReceived = totalPaymentReceived + inv.Amount_Due;
-											totalPaymentReceivedMYR = totalPaymentReceivedMYR + inv.Amount_Due * ifnull(input.Exchange_Rate,1);
-										}
-										for each  dbNote in getDebitNotes
-										{
-											payRow = Payment_Received.Payment_Received_Line_Item();
-											payRow.Reference_No=dbNote.Invoice_No;
-											payRow.Invoice_No=dbNote.ID;
-											payRow.Description="Payment Received For Debit Note " + dbNote.Invoice_No;
-											payRow.Document_Date=dbNote.Invoice_Date;
-											payRow.Amount=dbNote.Grand_Total;
-											payRow.Outstanding_Balance=dbNote.Amount_Due;
-											payRow.Allocation=dbNote.Amount_Due;
-											payRow.Allocation_MYR=dbNote.Amount_Due * ifnull(input.Exchange_Rate,1);
-											input.Payment_Received_Line_Item.insert(payRow);
-											totalPaymentReceived = totalPaymentReceived + dbNote.Amount_Due;
-											totalPaymentReceivedMYR = totalPaymentReceivedMYR + dbNote.Amount_Due * ifnull(input.Exchange_Rate,1);
-										}
-										input.Amount_Received = totalPaymentReceived;
-										input.Amount_Received_MYR = totalPaymentReceivedMYR;
-						)
-					}
-					actions  (Payment_Type == "Pro Forma Invoice" && Single_Record_Payment == false)
-					{
-						custom deluge script
-						(
-											totalPaymentReceived = 0;
-										totalPaymentReceivedMYR = 0;
-										getPIs = Pro_Forma_Invoices[Status == "Partially Paid" || Status == "Sent" && Customer_Code == input.Customer_Code];
-										if(getPIs.ID == null && input.Customer_Code != null)
-										{
-											alert "There are no unpaid deposits associated with this customer code.";
-										}
-										input.Payment_Received_Line_Item.clear();
-										for each  pi in getPIs
-										{
-											payRow = Payment_Received.Payment_Received_Line_Item();
-											payRow.Reference_No=pi.Pro_Forma_Invoice_No;
-											payRow.Pro_Forma_Invoice_No=pi.ID;
-											payRow.Description="Payment Received For DEP " + pi.Pro_Forma_Invoice_No;
-											payRow.Document_Date=pi.Pro_Forma_Invoice_Date;
-											payRow.Amount=pi.Grand_Total;
-											payRow.Outstanding_Balance=pi.Amount_Due;
-											payRow.Allocation=pi.Amount_Due;
-											payRow.Allocation_MYR=pi.Amount_Due * ifnull(input.Exchange_Rate,1);
-											input.Payment_Received_Line_Item.insert(payRow);
-											totalPaymentReceived = totalPaymentReceived + pi.Amount_Due;
-											totalPaymentReceivedMYR = totalPaymentReceivedMYR + pi.Amount_Due * ifnull(input.Exchange_Rate,1);
-										}
-										input.Amount_Received = totalPaymentReceived;
-										input.Amount_Received_MYR = totalPaymentReceivedMYR;
 						)
 					}
 					actions  (Single_Record_Payment == true)
 					{
 						custom deluge script
 						(
-											totalPaymentReceived = 0;
-										totalPaymentReceivedMYR = 0;
+											total_payment_received = 0;
+										total_payment_received_myr = 0;
 										if(input.Payment_Type_Single_Record == "Invoice")
 										{
-											getInvs = Invoice[ID == input.Invoice];
-											if(getInvs.ID != null)
+											get_invoice_list = Invoice[ID == input.Invoice];
+											for each  curr_invoice in get_invoice_list
 											{
-												input.Currency = ifnull(getInvs.Invoice_Currency,ifnull(input.Customer_Name.Currency,null));
-												if(getInvs.Exchange_Rate != null)
-												{
-													input.Exchange_Rate = getInvs.Exchange_Rate;
-												}
-												else
-												{
-													getOrganization = Organization_Settings[ID != null];
-													baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
-													if(input.Currency == baseCurrency)
-													{
-														input.Exchange_Rate = 1;
-													}
-													else
-													{
-														try 
-														{
-															exchange_rate_get_response = invokeurl
-															[
-																url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
-																type :GET
-															];
-															exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
-															input.Exchange_Rate = exchange_rate;
-														}				catch (e)
-														{
-															info e;
-															input.Exchange_Rate = "";
-														}
-													}
-												}
-											}
-											for each  inv in getInvs
-											{
-												payRow = Payment_Received.Payment_Received_Line_Item();
-												payRow.Reference_No=inv.Invoice_No;
-												payRow.Invoice_No=inv.ID;
-												payRow.Description="Payment Received For " + inv.Invoice_For_Usage + " INV " + inv.Invoice_No;
-												payRow.Document_Date=inv.Invoice_Date;
-												payRow.Amount=inv.Grand_Total;
-												payRow.Outstanding_Balance=inv.Amount_Due;
-												payRow.Allocation=inv.Amount_Due;
-												payRow.Allocation_MYR=inv.Amount_Due * ifnull(getInvs.Exchange_Rate,1);
-												input.Payment_Received_Line_Item.insert(payRow);
-												totalPaymentReceived = totalPaymentReceived + inv.Amount_Due;
-												totalPaymentReceivedMYR = totalPaymentReceivedMYR + inv.Amount_Due * ifnull(getInvs.Exchange_Rate,1);
+												curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+												curr_pay_row.Reference_No=curr_invoice.Invoice_No;
+												curr_pay_row.Invoice_No=curr_invoice.ID;
+												curr_pay_row.Description="Payment Received For " + curr_invoice.Invoice_For_Usage + " INV " + curr_invoice.Invoice_No;
+												curr_pay_row.Document_Date=curr_invoice.Invoice_Date;
+												curr_pay_row.Amount=curr_invoice.Grand_Total;
+												curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
+												curr_pay_row.Allocation=curr_invoice.Amount_Due;
+												curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+												input.Payment_Received_Line_Item.insert(curr_pay_row);
+												// Total payment received
+												total_payment_received = total_payment_received + curr_invoice.Amount_Due;
+												total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
 											}
 										}
 										else if(input.Payment_Type_Single_Record == "Debit Note")
 										{
-											getDebitNotes = Debit_Note[ID == input.Debit_Note];
-											for each  dbNote in getDebitNotes
+											get_debit_note_list = Debit_Note[ID == input.Debit_Note];
+											for each  curr_debit_note in get_debit_note_list
 											{
-												payRow = Payment_Received.Payment_Received_Line_Item();
-												payRow.Reference_No=dbNote.Invoice_No;
-												payRow.Debit_Note_No=dbNote.ID;
-												payRow.Description="Payment Received For Debit Note " + dbNote.Invoice_No;
-												payRow.Document_Date=dbNote.Invoice_Date;
-												payRow.Amount=dbNote.Grand_Total;
-												payRow.Outstanding_Balance=dbNote.Amount_Due;
-												payRow.Allocation=dbNote.Amount_Due;
-												payRow.Allocation_MYR=dbNote.Amount_Due * ifnull(getDebitNotes.Exchange_Rate,1);
-												input.Payment_Received_Line_Item.insert(payRow);
-												totalPaymentReceived = totalPaymentReceived + dbNote.Amount_Due;
-												totalPaymentReceivedMYR = totalPaymentReceivedMYR + dbNote.Amount_Due * ifnull(getDebitNotes.Exchange_Rate,1);
+												curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+												curr_pay_row.Reference_No=curr_debit_note.Invoice_No;
+												curr_pay_row.Debit_Note_No=curr_debit_note.ID;
+												curr_pay_row.Description="Payment Received For Debit Note " + curr_debit_note.Invoice_No;
+												curr_pay_row.Document_Date=curr_debit_note.Invoice_Date;
+												curr_pay_row.Amount=curr_debit_note.Grand_Total;
+												curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
+												curr_pay_row.Allocation=curr_debit_note.Amount_Due;
+												curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+												input.Payment_Received_Line_Item.insert(curr_pay_row);
+												// Total payment received
+												total_payment_received = total_payment_received + curr_debit_note.Amount_Due;
+												total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
 											}
 										}
 										else if(input.Payment_Type_Single_Record == "Pro Forma Invoice")
 										{
-											getPI = Pro_Forma_Invoices[ID == input.Pro_Forma_Invoices];
-											for each  pi in getPI
+											get_pro_forma_invoice_list = Pro_Forma_Invoices[ID == input.Pro_Forma_Invoices];
+											for each  curr_pro_forma_invoice in get_pro_forma_invoice_list
 											{
-												payRow = Payment_Received.Payment_Received_Line_Item();
-												payRow.Reference_No=pi.Pro_Forma_Invoice_No;
-												payRow.Pro_Forma_Invoice_No=pi.ID;
-												payRow.Description="Payment Received For DEP " + pi.Pro_Forma_Invoice_No;
-												payRow.Document_Date=pi.Pro_Forma_Invoice_Date;
-												payRow.Amount=pi.Grand_Total;
-												payRow.Outstanding_Balance=pi.Amount_Due;
-												payRow.Allocation=pi.Amount_Due;
-												payRow.Allocation_MYR=pi.Amount_Due * ifnull(getPI.Exchange_Rate,1);
-												input.Payment_Received_Line_Item.insert(payRow);
-												totalPaymentReceived = totalPaymentReceived + pi.Amount_Due;
-												totalPaymentReceivedMYR = totalPaymentReceivedMYR + pi.Amount_Due * ifnull(getPI.Exchange_Rate,1);
+												curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+												curr_pay_row.Reference_No=curr_pro_forma_invoice.Pro_Forma_Invoice_No;
+												curr_pay_row.Pro_Forma_Invoice_No=curr_pro_forma_invoice.ID;
+												curr_pay_row.Description="Payment Received For DEP " + curr_pro_forma_invoice.Pro_Forma_Invoice_No;
+												curr_pay_row.Document_Date=curr_pro_forma_invoice.Pro_Forma_Invoice_Date;
+												curr_pay_row.Amount=curr_pro_forma_invoice.Grand_Total;
+												curr_pay_row.Outstanding_Balance=curr_pro_forma_invoice.Amount_Due;
+												curr_pay_row.Allocation=curr_pro_forma_invoice.Amount_Due;
+												curr_pay_row.Allocation_MYR=curr_pro_forma_invoice.Amount_Due * curr_pro_forma_invoice.Exchange_Rate;
+												input.Payment_Received_Line_Item.insert(curr_pay_row);
+												// Total payment received
+												total_payment_received = total_payment_received + curr_pro_forma_invoice.Amount_Due;
+												total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
 											}
 										}
-										input.Amount_Received = totalPaymentReceived;
-										input.Amount_Received_MYR = totalPaymentReceivedMYR;
+										input.Amount_Received = total_payment_received;
+										input.Amount_Received_MYR = total_payment_received_myr;
 						)
 					}
 				}
@@ -24610,15 +24463,12 @@
 						(
 											disable Customer_TIN;
 										disable Customer_SST;
+										disable Customer_Email;
 										disable Payment_Received_No;
 										disable Organization;
 										disable Amount_Received;
-										disable Currency;
-										disable Exchange_Rate;
+										disable Payment_Received_Currency;
 										disable Amount_Received_MYR;
-										disable Invoice;
-										disable Debit_Note;
-										disable Pro_Forma_Invoices;
 										disable Single_Record_Payment;
 										disable Total_Still_Owing;
 										disable Payment_Type_Single_Record;
@@ -24630,8 +24480,6 @@
 										disable Payment_Received_Line_Item.Outstanding_Balance;
 										disable Payment_Received_Line_Item.Allocation_MYR;
 										disable Payment_Received_Line_Item.Payment_Received;
-										disable Payment_Received_Line_Item.Customer_Code;
-										disable Payment_Received_Line_Item.Customer_Name;
 										disable Payment_Received_Line_Item.Still_Owing;
 										if(input.Payment_Type == "Deposit")
 										{
@@ -24657,14 +24505,9 @@
 						(
 											hide Organization;
 										hide Receipt_Sent;
-										hide Invoice;
-										hide Debit_Note;
-										hide Pro_Forma_Invoices;
 										hide Single_Record_Payment;
 										hide Payment_Type_Single_Record;
 										hide Payment_Received_Line_Item.Payment_Received;
-										hide Payment_Received_Line_Item.Customer_Code;
-										hide Payment_Received_Line_Item.Customer_Name;
 										hide Payment_Received_Line_Item.Invoice_No;
 										hide Payment_Received_Line_Item.Debit_Note_No;
 										hide Payment_Received_Line_Item.Pro_Forma_Invoice_No;
@@ -24692,34 +24535,7 @@
 				{
 					actions  (Payment_Type is null || Payment_Type == "")
 					{
-						hide Customer_Name,Customer_TIN,Customer_SST,Customer_Code,Payment_Date,Payment_Method,Paid_To,Reference,Payment_Received_Line_Item,Amount_Received,Exchange_Rate,Amount_Received_MYR,Customer_Email,Currency,Payment_Received_No,Total_Still_Owing;
-					}
-				}
-
-			}
-			Hide_And_Disable_Fields as "Hide And Disable Fields"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on add
-					status = inactive
-
-				on load
-				{
-					actions 
-					{
-						custom deluge script
-						(
-											hide Payment_Received_No;
-										disable Payment_Received_No;
-										hide Payment_Received_Line_Item.Still_Owing;
-										hide Total_Still_Owing;
-										if(input.Payment_Type == "Deposit")
-										{
-											disable Payment_Received_Line_Item.Allocation;
-										}
-						)
+						hide Customer_Name,Customer_TIN,Customer_SST,Customer_Code,Payment_Date,Payment_Method,Paid_To,Reference,Payment_Received_Line_Item,Amount_Received,Amount_Received_MYR,Customer_Email,Payment_Received_Currency,Payment_Received_No,Total_Still_Owing;
 					}
 				}
 
@@ -24738,34 +24554,6 @@
 						custom deluge script
 						(
 											customerInfo = Customer_Profile[ID == input.Customer_Name];
-										input.Currency = ifnull(customerInfo.Currency,null);
-										getOrganization = Organization_Settings[ID != null];
-										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
-										if(input.Currency == null || input.Currency == "")
-										{
-											input.Exchange_Rate = null;
-										}
-										else if(input.Currency == baseCurrency)
-										{
-											input.Exchange_Rate = 1;
-										}
-										else
-										{
-											try 
-											{
-												exchange_rate_get_response = invokeurl
-												[
-													url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
-													type :GET
-												];
-												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
-												input.Exchange_Rate = exchange_rate;
-											}	catch (e)
-											{
-												info e;
-												input.Exchange_Rate = "";
-											}
-										}
 										input.Customer_Code = null;
 										input.Payment_Method = null;
 										input.Reference = "";
@@ -24775,132 +24563,61 @@
 										input.Paid_To = null;
 										input.Payment_Received_Line_Item.clear();
 										input.Amount_Received = 0;
-										input.Amount_Received_MYR = ifnull(input.Amount_Received,0) * ifnull(input.Exchange_Rate,1);
 						)
 					}
-				}
-
-			}
-			Handle_Customer_Code2 as "Handle Customer Code"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on add or edit
-
-				on user input of Customer_Code
-				{
-					actions  (Payment_Type == "Invoice/Debit Note" && Customer_Code.ID is not null)
+					actions  (Payment_Type == "Invoice/Debit Note" && Customer_Name.ID is not null)
 					{
 						custom deluge script
 						(
 											customerInfo = Customer_Profile[ID == input.Customer_Name];
-										input.Currency = ifnull(customerInfo.Currency,null);
-										getOrganization = Organization_Settings[ID != null];
-										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
-										if(input.Currency == null || input.Currency == "")
-										{
-											input.Exchange_Rate = null;
-										}
-										else if(input.Currency == baseCurrency)
-										{
-											input.Exchange_Rate = 1;
-										}
-										else
-										{
-											try 
-											{
-												exchange_rate_get_response = invokeurl
-												[
-													url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
-													type :GET
-												];
-												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
-												input.Exchange_Rate = exchange_rate;
-											}	catch (e)
-											{
-												info e;
-												input.Exchange_Rate = "";
-											}
-										}
-										tenancyInfo = Tenancy[ID == input.Customer_Code];
-										//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
-										getInvs = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer_Code == input.Customer_Code];
-										getDebitNotes = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer_Code == input.Customer_Code];
-										if(getInvs.ID == null && getDebitNotes.ID == null && input.Customer_Code != null)
+										get_invoice_list = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer == input.Customer_Name];
+										get_debit_note_list = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer == input.Customer_Name];
+										if(get_invoice_list.count() == 0 && get_debit_note_list.count() == 0 && input.Customer_Name != null)
 										{
 											alert "There are no unpaid invoices associated with this customer code.";
 										}
 										input.Payment_Received_Line_Item.clear();
-										totalPaymentReceived = 0;
-										totalPaymentReceivedMYR = 0;
-										for each  inv in getInvs
+										total_payment_amount_received = 0;
+										total_payment_amount_received_myr = 0;
+										for each  curr_invoice in get_invoice_list
 										{
-											payRow = Payment_Received.Payment_Received_Line_Item();
-											payRow.Reference_No=inv.Invoice_No;
-											payRow.Description="Payment Received For " + inv.Invoice_For_Usage + " INV " + inv.Invoice_No;
-											payRow.Invoice_No=inv.ID;
-											payRow.Document_Date=inv.Invoice_Date;
-											payRow.Amount=inv.Grand_Total;
-											payRow.Outstanding_Balance=inv.Amount_Due;
-											payRow.Allocation=inv.Amount_Due;
-											payRow.Allocation_MYR=inv.Amount_Due * ifnull(input.Exchange_Rate,1);
-											input.Payment_Received_Line_Item.insert(payRow);
-											totalPaymentReceived = totalPaymentReceived + inv.Amount_Due;
-											totalPaymentReceivedMYR = totalPaymentReceivedMYR + inv.Amount_Due * ifnull(input.Exchange_Rate,1);
+											curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+											curr_pay_row.Reference_No=curr_invoice.Invoice_No;
+											curr_pay_row.Description="Payment Received For " + curr_invoice.Invoice_For_Usage + " INV " + curr_invoice.Invoice_No;
+											curr_pay_row.Invoice_No=curr_invoice.ID;
+											curr_pay_row.Document_Date=curr_invoice.Invoice_Date;
+											curr_pay_row.Amount=curr_invoice.Grand_Total;
+											curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
+											curr_pay_row.Allocation=curr_invoice.Amount_Due;
+											curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+											input.Payment_Received_Line_Item.insert(curr_pay_row);
+											total_payment_amount_received = total_payment_amount_received + curr_invoice.Amount_Due;
+											total_payment_amount_received_myr = total_payment_amount_received_myr + curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
 										}
-										for each  dbNote in getDebitNotes
+										for each  curr_debit_note in get_debit_note_list
 										{
-											payRow = Payment_Received.Payment_Received_Line_Item();
-											payRow.Reference_No=dbNote.Invoice_No;
-											payRow.Description="Payment Received For Debit Note " + dbNote.Invoice_No;
-											payRow.Invoice_No=dbNote.ID;
-											payRow.Document_Date=dbNote.Invoice_Date;
-											payRow.Amount=dbNote.Grand_Total;
-											payRow.Outstanding_Balance=dbNote.Amount_Due;
-											payRow.Allocation=dbNote.Amount_Due;
-											payRow.Allocation_MYR=dbNote.Amount_Due * ifnull(input.Exchange_Rate,1);
-											input.Payment_Received_Line_Item.insert(payRow);
-											totalPaymentReceived = totalPaymentReceived + dbNote.Amount_Due;
-											totalPaymentReceivedMYR = totalPaymentReceivedMYR + dbNote.Amount_Due * ifnull(input.Exchange_Rate,1);
+											curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+											curr_pay_row.Reference_No=curr_debit_note.Invoice_No;
+											curr_pay_row.Description="Payment Received For Debit Note " + curr_debit_note.Invoice_No;
+											curr_pay_row.Debit_Note_No=curr_debit_note.ID;
+											curr_pay_row.Document_Date=curr_debit_note.Invoice_Date;
+											curr_pay_row.Amount=curr_debit_note.Grand_Total;
+											curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
+											curr_pay_row.Allocation=curr_debit_note.Amount_Due;
+											curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+											input.Payment_Received_Line_Item.insert(curr_pay_row);
+											total_payment_amount_received = total_payment_amount_received + curr_debit_note.Amount_Due;
+											total_payment_amount_received_myr = total_payment_amount_received_myr + curr_debit_note.Amount_Due * curr_invoice.Exchange_Rate;
 										}
-										input.Amount_Received = totalPaymentReceived;
-										input.Amount_Received_MYR = totalPaymentReceivedMYR;
+										input.Amount_Received = total_payment_amount_received;
+										input.Amount_Received_MYR = total_payment_amount_received_myr;
 						)
 					}
-					actions  (Payment_Type == "Deposit" && Customer_Code.ID is not null)
+					actions  (Payment_Type == "Deposit" && Customer_Name.ID is not null)
 					{
 						custom deluge script
 						(
 											customerInfo = Customer_Profile[ID == input.Customer_Name];
-										input.Currency = ifnull(customerInfo.Currency,null);
-										getOrganization = Organization_Settings[ID != null];
-										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
-										if(input.Currency == null || input.Currency == "")
-										{
-											input.Exchange_Rate = null;
-										}
-										else if(input.Currency == baseCurrency)
-										{
-											input.Exchange_Rate = 1;
-										}
-										else
-										{
-											try 
-											{
-												exchange_rate_get_response = invokeurl
-												[
-													url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
-													type :GET
-												];
-												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
-												input.Exchange_Rate = exchange_rate;
-											}	catch (e)
-											{
-												info e;
-												input.Exchange_Rate = "";
-											}
-										}
 										tenancyInfo = Tenancy[ID == input.Customer_Code];
 										//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 										subTotal = 0;
@@ -24923,20 +24640,19 @@
 											payRow.Amount=pi.Grand_Total;
 											payRow.Outstanding_Balance=pi.Amount_Due;
 											payRow.Allocation=pi.Amount_Due;
-											payRow.Allocation_MYR=pi.Amount_Due * ifnull(input.Exchange_Rate,1);
+											payRow.Allocation_MYR=pi.Amount_Due * pi.Exchange_Rate;
 											input.Payment_Received_Line_Item.insert(payRow);
 											totalPaymentReceived = totalPaymentReceived + pi.Amount_Due;
-											totalPaymentReceivedMYR = totalPaymentReceivedMYR + pi.Amount_Due * ifnull(input.Exchange_Rate,1);
+											totalPaymentReceivedMYR = totalPaymentReceivedMYR + pi.Amount_Due * pi.Exchange_Rate;
 										}
 										input.Amount_Received = totalPaymentReceived;
 										input.Amount_Received_MYR = totalPaymentReceivedMYR;
-										disable Payment_Received_Line_Item.Allocation;
 						)
 					}
 				}
 
 			}
-			Handle_Submission as "Handle Submission"
+			Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 			{
 				type =  form
 				form = Payment_Received
@@ -24951,14 +24667,14 @@
 						(
 											thisapp.close_form();
 										openUrl("#Report:Payment_Received_Report","same window");
-										totalStillOwing = 0;
-										for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+										total_still_Owing = 0;
+										for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 										{
-											stillOwing = paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
-											paymentReceivedLineItem.Still_Owing=stillOwing;
-											totalStillOwing = totalStillOwing + stillOwing;
+											curr_still_owing = curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+											curr_payment_received_line_item.Still_Owing=curr_still_owing;
+											total_still_Owing = total_still_Owing + curr_still_owing;
 										}
-										input.Total_Still_Owing = totalStillOwing;
+										input.Total_Still_Owing = total_still_Owing;
 						)
 						custom deluge script
 						(
@@ -25005,57 +24721,51 @@
 					{
 						custom deluge script
 						(
-											for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+											for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 										{
-											paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
-											if(paymentReceivedLineItem.Allocation > 0)
+											if(curr_payment_received_line_item.Allocation > 0)
 											{
-												if(paymentReceivedLineItem.Invoice_No != null)
+												curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+												if(curr_payment_received_line_item.Invoice_No != null)
 												{
-													getInvoice = Invoice[ID == paymentReceivedLineItem.Invoice_No];
-													newAmountDue = getInvoice.Amount_Due - paymentReceivedLineItem.Allocation;
-													if(newAmountDue > 0)
+													curr_get_invoice = Invoice[ID == curr_payment_received_line_item.Invoice_No];
+													// Amount Paid and Amount Due Calculation
+													curr_get_invoice.Amount_Paid=curr_get_invoice.Amount_Paid - curr_payment_received_line_item.Allocation;
+													curr_get_invoice.Amount_Due=curr_get_invoice.Amount_Due + curr_payment_received_line_item.Allocation;
+													// Invoice Blueprint status update
+													if(curr_get_invoice.Due_Date > zoho.currentdate)
 													{
-														getInvoice.Amount_Due=newAmountDue;
-														if(getInvoice.Due_Date > zoho.currentdate)
+														if(curr_get_invoice.Amount_Paid == 0)
 														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",getInvoice.ID);
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
 														}
-														else if(getInvoice.Due_Date < zoho.currentdate)
+														else
 														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_get_invoice.ID);
 														}
 													}
 													else
 													{
-														getInvoice.Amount_Due=0;
-														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",getInvoice.ID);
-													}
-													newAmountPaidInv = getInvoice.Amount_Paid + paymentReceivedLineItem.Allocation;
-													if(newAmountPaidInv >= getInvoice.Grand_Total)
-													{
-														getInvoice.Amount_Paid=getInvoice.Grand_Total;
-													}
-													else if(newAmountPaidInv < getInvoice.Grand_Total)
-													{
-														getInvoice.Amount_Paid=newAmountPaidInv;
+														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 													}
 													previoustotalAmountDue = 0;
-													for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && Customer_Code == getInvoice.Customer_Code]
+													for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < curr_get_invoice.Invoice_Date.toStartOfMonth() && Customer_Code == curr_get_invoice.Customer_Code]
 													{
 														previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
 													}
-													getInvoice.Previous_Balance=previoustotalAmountDue;
-													getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-													for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && Customer_Code == getInvoice.Customer_Code]
+													curr_get_invoice.Previous_Balance=previoustotalAmountDue;
+													curr_get_invoice.Total_Amount_Due=curr_get_invoice.Grand_Total;
+													for each  inv in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date.eomonth(0) && Customer_Code == curr_get_invoice.Customer_Code]
 													{
 														thisapp.invoice.invoice_balance_updates(inv.ID);
 													}
 												}
-												else if(paymentReceivedLineItem.Debit_Note_No != null)
+												else if(curr_payment_received_line_item.Debit_Note_No != null)
 												{
-													getDbNote = Debit_Note[ID == paymentReceivedLineItem.Debit_Note_No];
-													newAmountDue = getDbNote.Amount_Due - paymentReceivedLineItem.Allocation;
+													getDbNote = Debit_Note[ID == curr_payment_received_line_item.Debit_Note_No];
+													newAmountDue = getDbNote.Amount_Due - curr_payment_received_line_item.Allocation;
 													if(newAmountDue > 0)
 													{
 														getDbNote.Amount_Due=newAmountDue;
@@ -25073,7 +24783,7 @@
 														getDbNote.Amount_Due=0;
 														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Paid",getDbNote.ID);
 													}
-													newAmountPaidDB = getDbNote.Amount_Paid + paymentReceivedLineItem.Allocation;
+													newAmountPaidDB = getDbNote.Amount_Paid + curr_payment_received_line_item.Allocation;
 													if(newAmountPaidDB >= getDbNote.Grand_Total)
 													{
 														getDbNote.Amount_Paid=getDbNote.Grand_Total;
@@ -25086,9 +24796,8 @@
 											}
 											else
 											{
-												delete from Payment_Received_Line_Item[ID == paymentReceivedLineItem.ID];
+												delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
 											}
-											paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
 										}
 										//thisapp.invoice.recalculate_overdue(input.Customer_Code);
 						)
@@ -25170,33 +24879,7 @@
 				}
 
 			}
-			Disable_Fields12 as "Disable Fields"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on edit
-
-				on load
-				{
-					actions 
-					{
-						custom deluge script
-						(
-											disable Customer_Name;
-										disable Customer_Code;
-										disable Payment_Type;
-										disable Payment_Received_Line_Item.Allocation;
-										disable Payment_Received_Line_Item.Description;
-										disable Paid_To;
-										disable Payment_Date;
-										disable Payment_Method;
-						)
-					}
-				}
-
-			}
-			Handle_Allocation as "Handle Allocation"
+			Handle_Payment_Received_L as "Handle Payment Received Line Item Allocation"
 			{
 				type =  form
 				form = Payment_Received
@@ -25209,33 +24892,50 @@
 					{
 						custom deluge script
 						(
-											if(row.Allocation > row.Outstanding_Balance)
+											if(row.Invoice_No == null && row.Debit_Note_No == null && row.Pro_Forma_Invoice_No == null)
 										{
-											if(input.Payment_Type == "Invoice")
-											{
-												alert "The amount entered is more than the balance due for the selected invoice.";
-											}
-											else if(input.Payment_Type == "Deposit")
-											{
-												alert "The amount entered is more than the balance due for the selected deposit.";
-											}
+											alert "Payment Received line item requires a document reference — invoice, debit note, or pro forma invoice.";
+										}
+										else if(row.Allocation > row.Outstanding_Balance)
+										{
+											alert "The allocation amount entered is more than outstanding balance for the selected payment received line item.";
 											row.Allocation=row.Outstanding_Balance;
 										}
-										if(row.Allocation == null || row.Allocation < 0)
+										else
 										{
-											row.Allocation=0;
-											row.Allocation_MYR=0;
+											if(row.Allocation == null || row.Allocation < 0)
+											{
+												row.Allocation=0;
+												row.Allocation_MYR=0;
+											}
+											else
+											{
+												payment_received_line_item_document_exchange_rate = null;
+												if(row.Invoice_No != null)
+												{
+													payment_received_line_item_document_exchange_rate = row.Invoice_No.Exchange_Rate;
+												}
+												else if(row.Debit_Note_No != null)
+												{
+													payment_received_line_item_document_exchange_rate = row.Debit_Note_No.Exchange_Rate;
+												}
+												else if(row.Pro_Forma_Invoice_No != null)
+												{
+													payment_received_line_item_document_exchange_rate = row.Pro_Forma_Invoice_No.Exchange_Rate;
+												}
+												row.Allocation_MYR=row.Allocation * payment_received_line_item_document_exchange_rate;
+											}
+											// Total payment amount received calculation
+											total_payment_amount_received = 0;
+											total_payment_amount_received_myr = 0;
+											for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+											{
+												total_payment_amount_received = total_payment_amount_received + curr_payment_received_line_item.Allocation;
+												total_payment_amount_received_myr = total_payment_amount_received_myr + curr_payment_received_line_item.Allocation_MYR;
+											}
+											input.Amount_Received = total_payment_amount_received;
+											input.Amount_Received_MYR = total_payment_amount_received_myr;
 										}
-										row.Allocation_MYR=row.Allocation * ifnull(input.Exchange_Rate,1);
-										totalPaymentReceived = 0;
-										totalPaymentReceivedMYR = 0;
-										for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
-										{
-											totalPaymentReceived = totalPaymentReceived + ifnull(paymentReceivedLineItem.Allocation,0);
-											totalPaymentReceivedMYR = totalPaymentReceivedMYR + ifnull(paymentReceivedLineItem.Allocation_MYR,0);
-										}
-										input.Amount_Received = totalPaymentReceived;
-										input.Amount_Received_MYR = totalPaymentReceivedMYR;
 						)
 					}
 				}
@@ -25264,31 +24964,14 @@
 										input.Reference = "";
 										input.Payment_Received_Line_Item.clear();
 										input.Amount_Received = null;
-										input.Currency = null;
-										input.Exchange_Rate = null;
+										input.Payment_Received_Currency = null;
 										input.Amount_Received_MYR = null;
 						)
 					}
 				}
 
 			}
-			Payment_Received_Line_Ite as "Payment Received Line Item Field Rules"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on add or edit
-
-				field rules
-				{
-					actions 
-					{
-					hide add row of Payment_Received_Line_Item;
-					}
-				}
-
-			}
-			Validate_Edit_Submission as "Validate Edit Submission"
+			Validate_Payment_Received as "Validate Payment Received Submission"
 			{
 				type =  form
 				form = Payment_Received
@@ -25301,16 +24984,16 @@
 					{
 						custom deluge script
 						(
-											noPaymentReceivedLineItem = true;
-										for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+											no_curr_payment_received_line_item = true;
+										for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 										{
-											if(paymentReceivedLineItem.Allocation != null)
+											if(curr_payment_received_line_item.Allocation != null)
 											{
-												noPaymentReceivedLineItem = false;
+												no_curr_payment_received_line_item = false;
 												break;
 											}
 										}
-										if(noPaymentReceivedLineItem == true)
+										if(no_curr_payment_received_line_item == true)
 										{
 											if(input.Payment_Type == "Invoice/Debit Note")
 											{
@@ -25327,7 +25010,7 @@
 				}
 
 			}
-			Handle_Deletion as "Handle Deletion"
+			Handle_Successful_Deletio as "Handle Successful Deletion of Payment Received"
 			{
 				type =  form
 				form = Payment_Received
@@ -25340,96 +25023,69 @@
 					{
 						custom deluge script
 						(
-											for each  paymentReceived in input.Payment_Received_Line_Item
+											for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 										{
-											if(paymentReceived.Invoice_No != null)
+											if(curr_payment_received_line_item.Invoice_No != null)
 											{
-												getInvoice = Invoice[ID == paymentReceived.Invoice_No];
-												newAmountPaidInv = getInvoice.Amount_Paid - paymentReceived.Allocation;
-												if(newAmountPaidInv > 0)
+												curr_get_invoice = Invoice[ID == curr_payment_received_line_item.Invoice_No];
+												// Amount Paid and Amount Due Calculation
+												curr_get_invoice.Amount_Paid=curr_get_invoice.Amount_Paid - curr_payment_received_line_item.Allocation;
+												curr_get_invoice.Amount_Due=curr_get_invoice.Amount_Due + curr_payment_received_line_item.Allocation;
+												// Invoice Blueprint status update
+												if(curr_get_invoice.Due_Date > zoho.currentdate)
 												{
-													getInvoice.Amount_Paid=newAmountPaidInv;
+													if(curr_get_invoice.Amount_Paid == 0)
+													{
+														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+													}
+													else
+													{
+														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_get_invoice.ID);
+													}
 												}
 												else
 												{
-													getInvoice.Amount_Paid=0;
+													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 												}
-												newAmountDueInv = getInvoice.Amount_Due + paymentReceived.Allocation;
-												if(newAmountDueInv >= getInvoice.Grand_Total)
-												{
-													getInvoice.Amount_Due=getInvoice.Grand_Total;
-													if(getInvoice.Due_Date > zoho.currentdate)
-													{
-														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",getInvoice.ID);
-													}
-													else
-													{
-														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
-													}
-												}
-												else if(newAmountDueInv < getInvoice.Grand_Total)
-												{
-													getInvoice.Amount_Due=newAmountDueInv;
-													if(getInvoice.Due_Date > zoho.currentdate)
-													{
-														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",getInvoice.ID);
-													}
-													else
-													{
-														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
-													}
-												}
+												// Invoice previous balance calculation
 												previoustotalAmountDue = 0;
-												for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && Customer_Code == getInvoice.Customer_Code]
+												for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < curr_get_invoice.Invoice_Date.toStartOfMonth() && Customer_Code == curr_get_invoice.Customer_Code]
 												{
 													previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
 												}
-												getInvoice.Previous_Balance=previoustotalAmountDue;
-												getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-												for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && Customer_Code == getInvoice.Customer_Code]
+												curr_get_invoice.Previous_Balance=previoustotalAmountDue;
+												curr_get_invoice.Total_Amount_Due=curr_get_invoice.Amount_Due + previoustotalAmountDue;
+												for each  inv in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date.eomonth(0) && Customer_Code == curr_get_invoice.Customer_Code]
 												{
 													thisapp.invoice.invoice_balance_updates(inv.ID);
 												}
 											}
-											else if(paymentReceived.Debit_Note_No != null)
+											else if(curr_payment_received_line_item.Debit_Note_No != null)
 											{
-												getDbNote = Debit_Note[ID == paymentReceived.Debit_Note_No];
-												newAmountPaidDB = getDbNote.Amount_Paid - paymentReceived.Allocation;
-												if(newAmountPaidDB > 0)
+												curr_get_debit_note = Debit_Note[ID == curr_payment_received_line_item.Debit_Note_No];
+												// Amount Paid and Amount Due Calculation
+												curr_get_debit_note.Amount_Paid=curr_get_debit_note.Amount_Paid - curr_payment_received_line_item.Allocation;
+												curr_get_debit_note.Amount_Due=curr_get_debit_note.Amount_Due + curr_payment_received_line_item.Allocation;
+												// Debit Note Blueprint status update
+												if(curr_get_debit_note.Due_Date > zoho.currentdate)
 												{
-													getDbNote.Amount_Paid=newAmountPaidDB;
-													if(getDbNote.Due_Date > zoho.currentdate)
+													if(curr_get_debit_note.Amount_Paid == 0)
 													{
-														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",getDbNote.ID);
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",curr_get_debit_note.ID);
 													}
 													else
 													{
-														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
+														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",curr_get_debit_note.ID);
 													}
 												}
 												else
 												{
-													getDbNote.Amount_Paid=0;
-													if(getDbNote.Due_Date > zoho.currentdate)
-													{
-														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",getDbNote.ID);
-													}
-													else
-													{
-														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
-													}
-												}
-												newAmountDueDB = getDbNote.Amount_Due + paymentReceived.Allocation;
-												if(newAmountDueDB >= getDbNote.Grand_Total)
-												{
-													getDbNote.Amount_Due=getDbNote.Grand_Total;
-												}
-												else if(newAmountDueDB < getDbNote.Grand_Total)
-												{
-													getDbNote.Amount_Due=newAmountDueDB;
+													thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",curr_get_debit_note.ID);
 												}
 											}
-											delete from Payment_Received_Line_Item[ID == paymentReceived.ID];
+											delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
 										}
 										//thisapp.invoice.recalculate_overdue(input.Customer_Code);
 										getJournalEntry = Journal_Entry[Document_No == input.Payment_Received_No];
@@ -25477,215 +25133,6 @@
 										getJournalEntry = Journal_Entry[Document_No == input.Payment_Received_No];
 										delete from Journal_Entry_Line_Item[Journal_Entry == getJournalEntry.ID];
 										delete from Journal_Entry[Document_No == input.Payment_Received_No];
-						)
-					}
-				}
-
-			}
-			Handle_Edit_Form_Submissi as "Handle Edit Form Submission"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on edit
-
-				on success
-				{
-					actions 
-					{
-						custom deluge script
-						(
-											/*
-										for each  paymentReceived in input.Payment_Received_Line_Item
-										{
-											if(paymentReceived.Allocation == 0)
-											{
-												delete from Payment_Received_Line_Item[ID == paymentReceived.ID];
-											}
-										}
-										*/
-										//thisapp.invoice.recalculate_overdue(input.Customer_Code);
-						)
-					}
-					actions  (Payment_Type == "Invoice/Debit Note")
-					{
-						custom deluge script
-						(
-											for each  paymentReceived in input.Payment_Received_Line_Item
-										{
-											getPaymentReceivedLineItem = Payment_Received_Line_Item[ID == paymentReceived.ID];
-											if(getPaymentReceivedLineItem.Allocation != paymentReceived.Allocation)
-											{
-												if(paymentReceived.Invoice_No != null)
-												{
-													getInvoice = Invoice[ID == paymentReceived.Invoice_No];
-													getInvoice.Amount_Due=getInvoice.Amount_Due + getPaymentReceivedLineItem.Allocation - paymentReceived.Allocation;
-													getInvoice.Amount_Paid=getInvoice.Amount_Paid - getPaymentReceivedLineItem.Allocation + paymentReceived.Allocation;
-													if(getInvoice.Amount_Paid == 0)
-													{
-														if(getInvoice.Due_Date > zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",getInvoice.ID);
-														}
-														else if(getInvoice.Due_Date < zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
-														}
-													}
-													else if(getInvoice.Amount_Paid == getInvoice.Grand_Total)
-													{
-														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",getInvoice.ID);
-													}
-													else if(getInvoice.Amount_Paid < getInvoice.Grand_Total)
-													{
-														if(getInvoice.Due_Date > zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",getInvoice.ID);
-														}
-														else if(getInvoice.Due_Date < zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
-														}
-													}
-												}
-												else if(paymentReceived.Debit_Note_No != null)
-												{
-													getDbNote = Debit_Note[ID == paymentReceived.Debit_Note_No];
-													getDbNote.Amount_Due=getDbNote.Amount_Due + getPaymentReceivedLineItem.Allocation - paymentReceived.Allocation;
-													getDbNote.Amount_Paid=getDbNote.Amount_Paid - getPaymentReceivedLineItem.Allocation + paymentReceived.Allocation;
-													if(getDbNote.Amount_Paid == 0)
-													{
-														if(getDbNote.Due_Date > zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",getDbNote.ID);
-														}
-														else if(getDbNote.Due_Date < zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
-														}
-													}
-													else if(getDbNote.Amount_Paid == getDbNote.Grand_Total)
-													{
-														thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Paid",getDbNote.ID);
-														getJournalEntry = Journal_Entry[Debit_Note == getDbNote.ID];
-														if(getJournalEntry.ID != null)
-														{
-															journalEntryLineItem = Collection();
-															row1 = Journal_Entry.Journal_Entry_Line_Item();
-															row1.Account=4662372000000087205;
-															row1.Description="Debit Note " + getDbNote.Invoice_No + " Subtotal & Subtotal Call Charges";
-															row1.Debit=0;
-															row1.Credit=ifnull(getDbNote.Sub_Total,0) + ifnull(getDbNote.Sub_Total_Call_Charges,0);
-															row1.Debit_Note=getDbNote.ID;
-															row2 = Journal_Entry.Journal_Entry_Line_Item();
-															row2.Account=4662372000000092003;
-															row2.Description="Debit Note " + getDbNote.Invoice_No + " Total Tax & Total Tax Call Charges";
-															row2.Debit=0;
-															row2.Credit=ifnull(getDbNote.Total_Tax,0) + ifnull(getDbNote.Total_Tax_Call_Charges,0);
-															row1.Debit_Note=getDbNote.ID;
-															row3 = Journal_Entry.Journal_Entry_Line_Item();
-															row3.Account=4662372000000087209;
-															row3.Description="Debit Note " + getDbNote.Invoice_No + " Grand Total";
-															row3.Debit=ifnull(getDbNote.Grand_Total,0);
-															row3.Credit=0;
-															row1.Debit_Note=getDbNote.ID;
-															journalEntryLineItem.insert(row1,row2,row3);
-															newJournalEntryRecord = insert into Journal_Entry
-															[
-																Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-																Document_No=getDbNote.Invoice_No
-																Added_User=zoho.loginuser
-																Debit_Note=input.ID
-																Date_field=zoho.currentdate
-																Journal_Entry_Line_Item=journalEntryLineItem
-																Sub_Total_Debit=ifnull(getDbNote.Grand_Total,0)
-																Sub_Total_Credit=ifnull(getDbNote.Sub_Total,0)
-																Total_Debit=ifnull(getDbNote.Grand_Total,0)
-																Total_Credit=ifnull(getDbNote.Sub_Total,0) + ifnull(getDbNote.Total_Tax,0)
-																Difference=ifnull(getDbNote.Grand_Total,0) - (ifnull(getDbNote.Sub_Total,0) + ifnull(getDbNote.Total_Tax,0))
-																Created_By_The_System=true
-															];
-														}
-													}
-													else if(getDbNote.Amount_Paid < getDbNote.Grand_Total)
-													{
-														if(getDbNote.Due_Date > zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",getDbNote.ID);
-														}
-														else if(getDbNote.Due_Date < zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",getDbNote.ID);
-														}
-													}
-												}
-											}
-										}
-						)
-					}
-					actions  (Payment_Type == "Deposit")
-					{
-						custom deluge script
-						(
-											for each  paymentReceived in input.Payment_Received_Line_Item
-										{
-											getPaymentReceivedLineItem = Payment_Received_Line_Item[ID == paymentReceived.ID];
-											if(getPaymentReceivedLineItem.Allocation != paymentReceived.Allocation)
-											{
-												getDeposit = Pro_Forma_Invoices[ID == paymentReceived.Pro_Forma_Invoice_No];
-												getDeposit.Amount_Due=getDeposit.Amount_Due + getPaymentReceivedLineItem.Allocation - paymentReceived.Allocation;
-												getDeposit.Amount_Paid=getDeposit.Amount_Paid - getPaymentReceivedLineItem.Allocation + paymentReceived.Allocation;
-												if(getDeposit.Amount_Paid == 0)
-												{
-													if(getDeposit.Due_Date > zoho.currentdate)
-													{
-														getDeposit.Status="Sent";
-													}
-													else if(getDeposit.Due_Date < zoho.currentdate)
-													{
-														getDeposit.Status="Overdue";
-													}
-												}
-												else if(getDeposit.Amount_Paid == getDeposit.Grand_Total)
-												{
-													getDeposit.Status="Paid";
-												}
-												else if(getDeposit.Amount_Paid < getDeposit.Grand_Total)
-												{
-													if(getDeposit.Due_Date > zoho.currentdate)
-													{
-														getDeposit.Status="Partially Paid";
-													}
-													else if(getDeposit.Due_Date < zoho.currentdate)
-													{
-														getDeposit.Status="Overdue";
-													}
-												}
-											}
-										}
-						)
-					}
-				}
-
-			}
-			Pre_Fill_Line_Item_Custom1 as "Pre Fill Line Item Customer and Tenant"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on add or edit
-
-				on validate
-				{
-					actions 
-					{
-						custom deluge script
-						(
-											for each  paymentReceived in input.Payment_Received_Line_Item
-										{
-											paymentReceived.Customer_Name=input.Customer_Name;
-											paymentReceived.Customer_Code=input.Customer_Code;
-										}
 						)
 					}
 				}
@@ -25984,11 +25431,15 @@
 					{
 						custom deluge script
 						(
-											// // Fetch the Announcement image based on the selected announcement
+											// Fetch the Announcement image based on the selected announcement
 										getAnnouncement = Announcement[ID == input.Announcement];
-										if(getAnnouncement != null)
+										if(getAnnouncement != null && getAnnouncement.Announcement_Image != null && getAnnouncement.Announcement_Image != "")
 										{
-											input.Announcement_image = getAnnouncement.Announcement_Image;
+											input.Announcement_image = "<div style='text-align:center'><img src='https://creatorapp.zoho.com" + zoho.appuri + getAnnouncement.Announcement_Image + "' /></div>";
+										}
+										else
+										{
+											input.Announcement_image = "<div> <br /></div>";
 										}
 						)
 					}
@@ -27165,7 +26616,8 @@
 				{
 					actions 
 					{
-					hide add row of Credits_Applied;
+					hide add row of Credits_Applied,Payments_Received_Line_Item;
+					hide delete row of Payments_Received_Line_Item;
 					}
 				}
 
@@ -27254,49 +26706,6 @@
 					actions 
 					{
 						hide System_Section;
-					}
-				}
-
-			}
-			Send_Email4 as "Send Email"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on edit
-					status = inactive
-
-				on success
-				{
-					actions  (Payment_Type == "Invoice/Debit Note")
-					{
-						sendmail
-						(
-							from : "zoho.adminuserid"
-							to : Customer_Email
-							subject : "Payment Received ${Payment_Received_No}"
-							message : "<div>Dear,<br></div><div><br></div><div>Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!<br></div><div><br></div><div>Regards,<br></div><div>XMT Technologies Sdn Bhd<br></div>"
-							attachments : template : Official_Receipt as pdf
-						)
-						custom deluge script
-						(
-											input.Send_Email = false;
-						)
-					}
-					actions  (Payment_Type == "Deposit")
-					{
-						sendmail
-						(
-							from : "zoho.adminuserid"
-							to : Customer_Email
-							subject : "Payment Received ${Payment_Received_No}"
-							message : "<div>Dear,<br></div><div><br></div><div>Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!<br></div><div><br></div><div>Regards,<br></div><div>XMT Technologies Sdn Bhd<br></div>"
-							attachments : template : Deposit_Receipt as pdf
-						)
-						custom deluge script
-						(
-											input.Send_Email = false;
-						)
 					}
 				}
 
@@ -27395,7 +26804,7 @@
 				}
 
 			}
-			Handle_Deletion_Of_Row3 as "Handle Deletion Of Row"
+			Handle_Deletion_of_Paymen as "Handle Deletion of Payment Received Line Item"
 			{
 				type =  form
 				form = Payment_Received
@@ -27408,37 +26817,13 @@
 					{
 						custom deluge script
 						(
-											// totalPaymentReceived = 0;
-										// totalPaymentReceivedMYR = 0;
-										// for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
-										// {
-										// 	totalPaymentReceived = totalPaymentReceived + ifnull(paymentReceivedLineItem.Allocation,0);
-										// 	totalPaymentReceivedMYR = totalPaymentReceivedMYR + ifnull(paymentReceivedLineItem.Allocation_MYR,0);
-										// }
-										input.Amount_Received = input.Amount_Received - ifnull(row.Allocation,0);
-										input.Amount_Received_MYR = input.Amount_Received_MYR - ifnull(row.Allocation_MYR,0);
+											input.Payment_Received_Trigger = !input.Payment_Received_Trigger;
 						)
 					}
 				}
 
 			}
-			Hide_Deletion_Row as "Hide Deletion Row"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on edit
-
-				field rules
-				{
-					actions 
-					{
-					hide delete row of Payment_Received_Line_Item;
-					}
-				}
-
-			}
-			Hide_Additional_Row_Butto as "Hide Additional Row Button"
+			Handle_Field_Rules as "Handle Field Rules"
 			{
 				type =  form
 				form = Payment_Received
@@ -27451,18 +26836,6 @@
 					{
 					hide add row of Payment_Received_Line_Item;
 					}
-				}
-
-			}
-			Hide_Fields17 as "Hide Fields"
-			{
-				type =  form
-				form = Payment_Received
-
-				record event = on add or edit
-
-				field rules
-				{
 					actions 
 					{
 						hide System_Section;
@@ -31657,7 +31030,7 @@
 				}
 
 			}
-			Validation_On_Submission1 as "Validation On Submission"
+			Prevent_creation_of_payme as "Prevent creation of payment received line item"
 			{
 				type =  form
 				form = Payment_Received_Line_Item
@@ -31911,10 +31284,10 @@
 										input.Amount_Due = input.Grand_Total;
 										///////////////////////////////////////////////////////////////////////////////////////////
 										// Apply Credit To Invoices Calculation
-										if(input.ID != null)
+										if(input.ID != null && input.ID != 0)
 										{
 											credits_applied_total = 0;
-											input_invoice = Invoice[ID = input.ID];
+											input_invoice = Invoice[ID == input.ID];
 											if(input.Is_Initialization == true)
 											{
 												input.Is_Initialization = false;
@@ -31945,7 +31318,6 @@
 											input.Credits_Applied_Total = input_invoice.Credits_Applied_Total;
 											input_invoice.Amount_Due=input.Grand_Total - input.Amount_Paid - credits_applied_total;
 											input.Amount_Due = input_invoice.Amount_Due;
-											input.Total_Amount_Due = input.Amount_Due + input.Previous_Balance;
 										}
 						)
 					}
@@ -36363,14 +35735,14 @@
 					{
 						custom deluge script
 						(
-											if(input.Credit_Note == null)
+											if(input.invoice == null)
 										{
 											used_credit_note_id_list = List();
 											for each  curr_apply_credit_to_invoices in Apply_Credit_To_Invoices
 											{
-												if(curr_apply_credit_to_invoices.Credit_Note != null)
+												if(curr_apply_credit_to_invoices.invoice != null)
 												{
-													used_credit_note_id_list.add(curr_apply_credit_to_invoices.Credit_Note);
+													used_credit_note_id_list.add(curr_apply_credit_to_invoices.invoice);
 												}
 											}
 											credit_note_id_with_credits_remaining_list = List();
@@ -36389,7 +35761,7 @@
 													credit_note_selection_list.add(curr_credit_note_id);
 												}
 											}
-											input.Credit_Note:ui.add(credit_note_selection_list);
+											input.invoice:ui.add(credit_note_selection_list);
 										}
 										else
 										{
@@ -36413,7 +35785,7 @@
 					{
 						custom deluge script
 						(
-											disable Credit_Note;
+											disable invoice;
 						)
 					}
 				}
@@ -36454,7 +35826,7 @@
 											alert "Please apply a credit amount to at least one invoice before submitting.";
 											cancel submit;
 										}
-										if(total_amount_credit_applied > input.Credit_Note.Credits_Remaining)
+										if(total_amount_credit_applied > input.invoice.Credits_Remaining)
 										{
 											alert "The total credit applied exceeds the remaining available credit on this credit note.";
 											cancel submit;
@@ -36471,7 +35843,7 @@
 
 				record event = on add or edit
 
-				on user input of Credit_Note
+				on user input of invoice
 				{
 					actions 
 					{
@@ -36558,6 +35930,7 @@
 						(
 											/* Credits Applied Initialization */
 										input.Is_Initialization = true;
+										input.Previous_Balance = 0;
 										input.User_Input_Trigger = !input.User_Input_Trigger;
 										/* Customer Name Trigger Initialization*/
 										input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
@@ -36569,6 +35942,19 @@
 											previous_total_amount_due = previous_total_amount_due + curr_invoice.Amount_Due;
 										}
 										input.Previous_Balance = previous_total_amount_due;
+										/* Payment Received Line Item*/
+										invoice_Payments_Received_Line_Item_list = Payment_Received_Line_Item[Invoice_No == input.ID];
+										for each  curr_invoice_Payments_Received_Line_Item in invoice_Payments_Received_Line_Item_list
+										{
+											curr_invoice_Payments_Received_Line_Item_row = Invoice.Payments_Received_Line_Item();
+											curr_invoice_Payments_Received_Line_Item_row.Amount=curr_invoice_Payments_Received_Line_Item.Amount;
+											curr_invoice_Payments_Received_Line_Item_row.Outstanding_Balance=curr_invoice_Payments_Received_Line_Item.Outstanding_Balance;
+											curr_invoice_Payments_Received_Line_Item_row.Allocation=curr_invoice_Payments_Received_Line_Item.Allocation;
+											curr_invoice_Payments_Received_Line_Item_row.Allocation_MYR=curr_invoice_Payments_Received_Line_Item.Allocation_MYR;
+											curr_invoice_Payments_Received_Line_Item_row.Still_Owing=curr_invoice_Payments_Received_Line_Item.Still_Owing;
+											curr_invoice_Payments_Received_Line_Item_row.Payment_Received=curr_invoice_Payments_Received_Line_Item.Payment_Received;
+											input.Payments_Received_Line_Item.insert(curr_invoice_Payments_Received_Line_Item_row);
+										}
 						)
 					}
 				}
@@ -36613,7 +35999,7 @@
 												insert into Apply_Credit_To_Invoice_Line
 												[
 													Invoice=curr_unpaid_invoice.Invoice
-													Credit_Note=input.Credit_Note
+													Credit_Note=input.invoice
 													Amount_Applied_Date=today
 													Amount_Applied=curr_unpaid_invoice.Credits_To_Apply
 													Added_User=zoho.loginuser
@@ -36638,10 +36024,10 @@
 											}
 										}
 										// Credit note calculation (Credit note form)
-										input_credit_note = Credit_Note[ID = input.Credit_Note];
+										input_credit_note = Credit_Note[ID = input.invoice];
 										// Refund Calculation (Credit note form)
 										input_credit_note.Refund_History=null;
-										refund_note_list = Refund_Note[Reference_Credit_Note = input.Credit_Note];
+										refund_note_list = Refund_Note[Reference_Credit_Note = input.invoice];
 										refund_total = 0;
 										for each  curr_refund_note in refund_note_list
 										{
@@ -36654,7 +36040,7 @@
 										}
 										// Apply Credit To Invoices Calculation (Credit note form)
 										input_credit_note.Credit_Applied_Invoices=null;
-										apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note = input.Credit_Note];
+										apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note = input.invoice];
 										credits_used_total = 0;
 										for each  curr_apply_credit_to_invoice_line in apply_credit_to_invoice_line_list
 										{
@@ -37053,9 +36439,9 @@
 						(
 											// Credits Note fields
 										clear Unpaid_Invoices;
-										input.Credits_Remaining = input.Credit_Note.Credits_Remaining;
+										input.Credits_Remaining = input.invoice.Credits_Remaining;
 										// Invoice selection
-										unpaid_invoice_list = Invoice[Customer == input.Credit_Note.Customer && Amount_Due > 0 && Blueprint.Current_Stage in {"Partially Paid","Sent"}];
+										unpaid_invoice_list = Invoice[Customer == input.invoice.Customer && Amount_Due > 0 && Blueprint.Current_Stage in {"Partially Paid","Sent"}];
 										for each  curr_unpaid_invoice in unpaid_invoice_list
 										{
 											curr_new_invoice_row = Apply_Credit_To_Invoices.Unpaid_Invoices();
@@ -37363,12 +36749,20 @@
 													];
 													exchange_rate = exchange_rate_get_response.get("rates").get(input.Base_Currency);
 													input.Exchange_Rate = exchange_rate;
-												}
-												catch (e)
+												}		catch (e)
 												{
 													info e;
 													input.Exchange_Rate = "";
 												}
+											}
+											if(input.Invoice_Date != null && input.Customer_Code != null)
+											{
+												previoustotalAmountDue = 0;
+												for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+												{
+													previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+												}
+												input.Previous_Balance = previoustotalAmountDue;
 											}
 											customer_info = Customer_Profile[ID == input.Customer];
 											for each  curr_monthly_rental in input.Monthly_Rental
@@ -37392,7 +36786,7 @@
 												if(curr_internet_charges.Business_Segment_Internet_Charges != null)
 												{
 													curr_get_business_units = Business_Unit[Business_Segment == curr_internet_charges.Business_Segment_Internet_Charges].ID.getAll();
-													Internet_Charges.Business_Unit_Internet_Charges:ui.add(curr_get_business_units);
+													curr_internet_charges.Business_Unit_Internet_Charges:ui.add(curr_get_business_units);
 												}
 												curr_internet_charges.Business_Segment_Internet_Charges=curr_bussiness_segment_internet_charges;
 												curr_internet_charges.Business_Unit_Internet_Charges=curr_bussiness_unit_internet_charges;
@@ -37405,7 +36799,7 @@
 												if(curr_call_charges.Business_Segment_Call_Charges != null)
 												{
 													curr_get_business_units = Business_Unit[Business_Segment == curr_call_charges.Business_Segment_Call_Charges].ID.getAll();
-													Call_Charges.Business_Unit_Call_Charges:ui.add(curr_get_business_units);
+													curr_call_charges.Business_Unit_Call_Charges:ui.add(curr_get_business_units);
 												}
 												curr_call_charges.Business_Segment_Call_Charges=curr_bussiness_segment_call_charges;
 												curr_call_charges.Business_Unit_Call_Charges=curr_bussiness_unit_call_charges;
@@ -37737,6 +37131,77 @@
 												curr_call_charges.Business_Unit_Call_Charges=curr_bussiness_unit_call_charges;
 											}
 										}
+						)
+					}
+				}
+
+			}
+			Handle_field_rules1 as "Handle field rules"
+			{
+				type =  form
+				form = Payment_Received
+
+				record event = on edit
+
+				field rules
+				{
+					actions 
+					{
+					hide delete row of Payment_Received_Line_Item;
+					}
+				}
+
+			}
+			Disable_Fields6 as "Disable Fields"
+			{
+				type =  form
+				form = Payment_Received
+
+				record event = on edit
+
+				on load
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											disable Customer_Name;
+										disable Customer_Email;
+										disable Customer_Code;
+										disable Payment_Type;
+										disable Payment_Received_Line_Item.Allocation;
+										disable Payment_Received_Line_Item.Description;
+										disable Paid_To;
+										disable Payment_Date;
+										disable Payment_Method;
+										disable Reference;
+						)
+					}
+				}
+
+			}
+			Handle_Payment_Received_T as "Handle Payment Received Trigger"
+			{
+				type =  form
+				form = Payment_Received
+
+				record event = on add or edit
+
+				on user input of Payment_Received_Trigger
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											total_payment_received = 0;
+										total_payment_received_myr = 0;
+										for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+										{
+											total_payment_received = total_payment_received + curr_payment_received_line_item.Allocation;
+											total_payment_received_myr = total_payment_received_myr + curr_payment_received_line_item.Allocation_MYR;
+										}
+										input.Amount_Received = total_payment_received;
+										input.Amount_Received_MYR = total_payment_received_myr;
 						)
 					}
 				}
@@ -38235,8 +37700,8 @@
             			{
                 			from port : B
                 			to port   : T3
-                			position  : "-93 51"
-                			path      : [-65.15,87.84,-65.15,97.84,-65.15,115.86875,-64.44000610351563,115.86875,-64.44000610351563,133.8975,-64.44000610351563,143.8975]
+                			position  : "-92 70"
+                			path      : [-64.15,106.84,-64.15,116.84,-64.15,125.36875,-64.44000610351563,125.36875,-64.44000610351563,133.8975,-64.44000610351563,143.8975]
             			}
         			}
         			stages
@@ -38259,7 +37724,7 @@
            			{
                			chart data
                			{
-                   			position : "327.3589721679688 317.3726562755277"
+                   			position : "430.3589721679688 297.3726562755277"
                			}
            			}
            			"Approved"
@@ -38280,21 +37745,21 @@
            			{
                			chart data
                			{
-                   			position : "440.875384064622 392.2635868035374"
+                   			position : "845.875384064622 346.2635868035374"
                			}
            			}
            			"Paid"
            			{
                			chart data
                			{
-                   			position : "430.57316531462226 538.8825618035376"
+                   			position : "817.5731653146222 579.8825618035376"
                			}
            			}
            			"Overdue"
            			{
                			chart data
                			{
-                   			position : "417.230140314621 699.4942625000002"
+                   			position : "326.230140314621 760.4942625000002"
                			}
            			}
         			}
@@ -38653,7 +38118,7 @@
          				{
              				from port : R1
              				to port   : L1
-             				path      : [34.81652486358101,347.2790711731385,44.81652486358101,347.2790711731385,181.08774851577488,347.2790711731385,181.08774851577488,343.1765711731385,317.3589721679688,343.1765711731385,327.3589721679688,343.1765711731385]
+             				path      : [34.81652486358101,347.2790711731385,44.81652486358101,347.2790711731385,232.58774851577488,347.2790711731385,232.58774851577488,323.1765711731385,420.3589721679688,323.1765711731385,430.3589721679688,323.1765711731385]
         				}
   				}
     				Resubmit as "Resubmit"
@@ -38730,7 +38195,7 @@
          				{
              				from port : T1
              				to port   : T5
-             				path      : [349.95398898686636,317.3726562755277,349.95398898686636,307.3726562755277,3.086516080978967,307.3726562755277,3.086516080978967,309.42390627552766,3.086516080978967,311.4751562755277,3.086516080978967,321.4751562755277]
+             				path      : [452.95398898686636,297.3726562755277,452.95398898686636,287.3726562755277,3.086516080978967,287.3726562755277,3.086516080978967,299.42390627552766,3.086516080978967,311.4751562755277,3.086516080978967,321.4751562755277]
         				}
   				}
     				Send_For_Approval as "Send For Approval"
@@ -38854,7 +38319,7 @@
              				path      : [-8.962524403801794,548.9907720184509,1.037475596198206,548.9907720184509,73.55168608041006,548.9907720184509,73.55168608041006,544.1529392011482,146.06589656462194,544.1529392011482,156.06589656462194,544.1529392011482]
         				}
   				}
-    				Payment_Received_Partial as "Payment Received Partial"
+    				Payment_Received_Partial1 as "Payment Received Partial from Sent"
     				{
          				type = normal
          				from stage = "Sent"
@@ -38869,10 +38334,10 @@
          				{
              				from port : T3
              				to port   : L1
-             				path      : [192.00944769270149,518.3490243035375,192.00944769270149,508.3490243035375,192.00944769270149,418.0675017011482,311.44241587866173,418.0675017011482,430.875384064622,418.0675017011482,440.875384064622,418.0675017011482]
+             				path      : [192.00944769270149,518.3490243035375,192.00944769270149,508.3490243035375,192.00944769270149,372.0675017011482,513.9424158786618,372.0675017011482,835.875384064622,372.0675017011482,845.875384064622,372.0675017011482]
         				}
   				}
-    				Payment_Received_Full as "Payment Received Full"
+    				Payment_Received_Full_fro2 as "Payment Received Full from Sent"
     				{
          				type = normal
          				from stage = "Sent"
@@ -38887,10 +38352,10 @@
          				{
              				from port : R1
              				to port   : L1
-             				path      : [227.95299882078103,544.1529392011482,237.95299882078103,544.1529392011482,329.26308206770165,544.1529392011482,329.26308206770165,564.6864767011483,420.57316531462226,564.6864767011483,430.57316531462226,564.6864767011483]
+             				path      : [227.95299882078103,544.1529392011482,237.95299882078103,544.1529392011482,522.7630820677016,544.1529392011482,522.7630820677016,605.6864767011483,807.5731653146222,605.6864767011483,817.5731653146222,605.6864767011483]
         				}
   				}
-    				Due_Date_Passed as "Due Date Passed"
+    				Due_Date_Passed_from_Sent as "Due Date Passed from Sent"
     				{
          				type = normal
          				from stage = "Sent"
@@ -38905,10 +38370,10 @@
          				{
              				from port : B3
              				to port   : L1
-             				path      : [192.00944769270149,569.9568540987591,192.00944769270149,579.9568540987591,192.00944769270149,725.298177397611,299.61979400366124,725.298177397611,407.230140314621,725.298177397611,417.230140314621,725.298177397611]
+             				path      : [192.00944769270149,569.9568540987591,192.00944769270149,579.9568540987591,192.00944769270149,786.298177397611,254.11979400366124,786.298177397611,316.230140314621,786.298177397611,326.230140314621,786.298177397611]
         				}
   				}
-    				Remaining_Paid as "Remaining Paid"
+    				Payment_Received_Full_fro1 as "Payment Received Full from Partially Paid"
     				{
          				type = normal
          				from stage = "Partially Paid"
@@ -38923,10 +38388,10 @@
          				{
              				from port : B3
              				to port   : T3
-             				path      : [502.7644079099867,443.871416598759,502.7644079099867,453.871416598759,502.7644079099867,491.37698920114826,465.84822126447915,491.37698920114826,465.84822126447915,528.8825618035376,465.84822126447915,538.8825618035376]
+             				path      : [907.7644079099867,397.871416598759,907.7644079099867,407.871416598759,907.7644079099867,488.87698920114826,852.8482212644791,488.87698920114826,852.8482212644791,569.8825618035376,852.8482212644791,579.8825618035376]
         				}
   				}
-    				Payment_Received as "Payment Received"
+    				Payment_Received_Full_fro as "Payment Received Full from Overdue"
     				{
          				type = normal
          				from stage = "Overdue"
@@ -38941,10 +38406,10 @@
          				{
              				from port : T3
              				to port   : B3
-             				path      : [466.06419437238804,699.4942625000002,466.06419437238804,689.4942625000002,466.06419437238804,644.9923270493797,465.84822126447915,644.9923270493797,465.84822126447915,600.4903915987592,465.84822126447915,590.4903915987592]
+             				path      : [375.06419437238804,760.4942625000002,375.06419437238804,750.4942625000002,375.06419437238804,695.9923270493797,852.8482212644791,695.9923270493797,852.8482212644791,641.4903915987592,852.8482212644791,631.4903915987592]
         				}
   				}
-    				Due_Date_Passed1 as "Due Date Passed"
+    				Due_Date_Passed_from_Part as "Due Date Passed from Partially Paid"
     				{
          				type = normal
          				from stage = "Partially Paid"
@@ -38959,7 +38424,64 @@
          				{
              				from port : R1
              				to port   : R1
-             				path      : [564.6534317553514,418.0675017011482,574.6534317553514,418.0675017011482,574.6534317553514,725.298177397611,549.7758400927532,725.298177397611,524.898248430155,725.298177397611,514.898248430155,725.298177397611]
+             				path      : [969.6534317553514,372.0675017011482,979.6534317553514,372.0675017011482,979.6534317553514,786.298177397611,706.7758400927532,786.298177397611,433.8982484301551,786.298177397611,423.8982484301551,786.298177397611]
+        				}
+  				}
+    				Partially_Paid_to_Sent as "Partially Paid to Sent"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Sent"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B1
+             				to port   : T5
+             				path      : [872.8383920130769,397.871416598759,872.8383920130769,407.871416598759,872.8383920130769,458.1102204511483,209.63848177808785,458.1102204511483,209.63848177808785,508.3490243035375,209.63848177808785,518.3490243035375]
+        				}
+  				}
+    				Paid_to_Sent as "Paid to Sent"
+    				{
+         				type = normal
+         				from stage = "Paid"
+         				to stage = "Sent"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B1
+             				to port   : B5
+             				path      : [835.6648506312412,631.4903915987592,835.6648506312412,641.4903915987592,209.63848177808785,641.4903915987592,209.63848177808785,610.7236228487591,209.63848177808785,579.9568540987591,209.63848177808785,569.9568540987591]
+        				}
+  				}
+    				Overdue_to_Sent as "Overdue to Sent"
+    				{
+         				type = normal
+         				from stage = "Overdue"
+         				to stage = "Sent"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T1
+             				to port   : B4
+             				path      : [348.84149166721,760.4942625000002,348.84149166721,750.4942625000002,348.84149166721,665.2255582993796,200.82396473539467,665.2255582993796,200.82396473539467,579.9568540987591,200.82396473539467,569.9568540987591]
         				}
   				}
         			}
@@ -38976,7 +38498,7 @@
                 			from port : B
                 			to port   : T3
                 			position  : "0 0"
-                			path      : [27.849999999999994,36.84,27.849999999999994,46.84,27.849999999999994,51.92,28.687493896484373,51.92,28.687493896484373,57,28.687493896484373,67]
+                			path      : [27.849999999999994,36.84,27.849999999999994,46.84,27.849999999999994,51.92,28.683345413208006,51.92,28.683345413208006,57,28.683345413208006,67]
             			}
         			}
         			stages
@@ -38992,21 +38514,49 @@
            			{
                			chart data
                			{
-                   			position : "-46 158.5"
+                   			position : "-52 217.5"
                			}
            			}
            			"Approved"
            			{
                			chart data
                			{
-                   			position : "-24 246.5"
+                   			position : "-28 476.5"
                			}
            			}
            			"Rejected"
            			{
                			chart data
                			{
-                   			position : "194 157.5"
+                   			position : "497 221.5"
+               			}
+           			}
+           			"Sent"
+           			{
+               			chart data
+               			{
+                   			position : "208.79623705642427 465"
+               			}
+           			}
+           			"Paid"
+           			{
+               			chart data
+               			{
+                   			position : "460.7962370564243 455"
+               			}
+           			}
+           			"Partially Paid"
+           			{
+               			chart data
+               			{
+                   			position : "450.7962370564243 341"
+               			}
+           			}
+           			"Overdue"
+           			{
+               			chart data
+               			{
+                   			position : "431.7962370564243 578"
                			}
            			}
         			}
@@ -39079,7 +38629,7 @@
          				{
              				from port : B3
              				to port   : T3
-             				path      : [30.190026347806125,210.10782979522162,30.190026347806125,220.10782979522162,30.190026347806125,228.3039148976108,28.09605509536471,228.3039148976108,28.09605509536471,236.5,28.09605509536471,246.5]
+             				path      : [23.971234386136203,269.1091389993232,23.971234386136203,279.1091389993232,23.971234386136203,372.8045694996616,24.112902705838344,372.8045694996616,24.112902705838344,466.5,24.112902705838344,476.5]
         				}
   				}
     				Reject as "Reject"
@@ -39145,7 +38695,7 @@
          				{
              				from port : R1
              				to port   : L1
-             				path      : [106.38005269561225,184.3039148976108,116.38005269561225,184.3039148976108,150.1900263478061,184.3039148976108,150.1900263478061,183.3039148976108,184,183.3039148976108,194,183.3039148976108]
+             				path      : [99.9424687722724,243.3045694996616,109.9424687722724,243.3045694996616,298.4712343861362,243.3045694996616,298.4712343861362,247.3045694996616,487,247.3045694996616,497,247.3045694996616]
         				}
   				}
     				Resubmit as "Resubmit"
@@ -39214,7 +38764,7 @@
          				{
              				from port : T1
              				to port   : T5
-             				path      : [216.59501681889762,157.5,216.59501681889762,147.5,74.65004391301021,147.5,74.65004391301021,148,74.65004391301021,148.5,74.65004391301021,158.5]
+             				path      : [519.5987456854748,221.5,519.5987456854748,211.5,519.5987456854748,207.5,293.94206816451754,207.5,68.28539064356033,207.5,68.28539064356033,217.5]
         				}
   				}
     				Send_For_Approval as "Send For Approval"
@@ -39275,7 +38825,133 @@
          				{
              				from port : B3
              				to port   : T3
-             				path      : [28.687493896484373,118.60782979522162,28.687493896484373,128.60782979522162,28.687493896484373,138.5539148976108,30.190026347806125,138.5539148976108,30.190026347806125,148.5,30.190026347806125,158.5]
+             				path      : [28.683345413208006,118.60913899932318,28.683345413208006,128.6091389993232,28.683345413208006,168.0545694996616,23.971234386136203,168.0545694996616,23.971234386136203,207.5,23.971234386136203,217.5]
+        				}
+  				}
+    				Send_Invoice as "Send Invoice"
+    				{
+         				type = normal
+         				from stage = "Approved"
+         				to stage = "Sent"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [76.22580541167669,502.30456949966157,86.22580541167669,502.30456949966157,142.51102123405047,502.30456949966157,142.51102123405047,490.80456949966157,198.79623705642427,490.80456949966157,208.79623705642427,490.80456949966157]
+        				}
+  				}
+    				Payment_Received_Partial as "Payment Received Partial"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Partially Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T3
+             				to port   : L1
+             				path      : [244.7424727777045,465,244.7424727777045,455,244.7424727777045,366.80456949966157,342.7693549170644,366.80456949966157,440.7962370564243,366.80456949966157,450.7962370564243,366.80456949966157]
+        				}
+  				}
+    				Payment_Received_Full as "Payment Received Full"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [280.68870849898474,490.80456949966157,290.68870849898474,490.80456949966157,370.7424727777045,490.80456949966157,370.7424727777045,480.80456949966157,450.7962370564243,480.80456949966157,460.7962370564243,480.80456949966157]
+        				}
+  				}
+    				Due_Date_Passed as "Due Date Passed"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Overdue"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : L1
+             				path      : [244.7424727777045,516.6091389993232,244.7424727777045,526.6091389993232,244.7424727777045,603.8045694996616,333.2693549170644,603.8045694996616,421.7962370564243,603.8045694996616,431.7962370564243,603.8045694996616]
+        				}
+  				}
+    				Remaining_Paid as "Remaining Paid"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : T3
+             				path      : [512.4924737313788,392.6091389993232,512.4924737313788,402.6091389993232,512.4924737313788,423.8045694996616,496.06747354064396,423.8045694996616,496.06747354064396,445,496.06747354064396,455]
+        				}
+  				}
+    				Due_Date_Passed1 as "Due Date Passed"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Overdue"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : R1
+             				path      : [574.1887104063334,366.80456949966157,584.1887104063334,366.80456949966157,584.1887104063334,603.8045694996616,561.8303768186869,603.8045694996616,539.4720432310404,603.8045694996616,529.4720432310404,603.8045694996616]
+        				}
+  				}
+    				Payment_Received as "Payment Received"
+    				{
+         				type = normal
+         				from stage = "Overdue"
+         				to stage = "Paid"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T3
+             				to port   : B3
+             				path      : [480.63414014373234,578,480.63414014373234,568,480.63414014373234,542.3045694996616,496.06747354064396,542.3045694996616,496.06747354064396,516.6091389993232,496.06747354064396,506.6091389993232]
         				}
   				}
         			}
@@ -39380,7 +39056,8 @@
 							{
 								custom deluge script
 								(
-															listEmail = List();
+															// Document no. is field Invoice_No on Debit_Note; report link name is Debit_Notes.
+														listEmail = List();
 														listEmailID = List();
 														for each  user in User[Role == 4662372000000943011]
 														{
@@ -39390,32 +39067,28 @@
 														}
 														//listEmail.add("test@aplikasi.us");
 														//listEmailID.add(zoho.adminuserid);
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
-														//Send Mail & App Notify To Parts Coordinator
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Invoice_No=" + input.Invoice_No;
 														sendmail
 														[
 															from :zoho.adminuserid
 															to :listEmail
-															subject :"Invoice " + input.Invoice_No + " Approved"
-															message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been successfully approved.As the next step, please submit the approved invoice to the customer at your earliest convenience.Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+															subject :"Debit Note " + input.Invoice_No + " Approved"
+															message :"Dear,<br><br>We are pleased to inform you that Debit Note " + input.Invoice_No + " has been successfully approved. As the next step, please submit it to LHDN, then send it to the customer at your earliest convenience. Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
 														]
-														notifyTitle = "Invoice " + input.Invoice_No + " Approved";
-														notifyMessage = "Invoice " + input.Invoice_No + " has been approved. Thank you! Please submit it to the customer.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+														notifyTitle = "Debit Note " + input.Invoice_No + " Approved";
+														notifyMessage = "Debit Note " + input.Invoice_No + " has been approved. Please submit to LHDN, then send to the customer.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);
 														//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
 								)
 								custom deluge script
 								(
-															previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+															if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														Previous_Balance = previoustotalAmountDue;
-														Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
+															input.Amount_Due = input.Grand_Total;
+															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															{
+																thisapp.invoice.invoice_balance_updates(inv.ID);
+															}
 														}
 								)
 								custom deluge script
@@ -39465,7 +39138,7 @@
 														customer_shipping_state = input.Delivery_State;
 														customer_object = {"customer_name":customer_name,"customer_tin":customer_tin,"customer_registration_number_scheme":customer_registration_number_scheme,"customer_registration_number":customer_registration_number,"customer_sst_registration_number":customer_sst_registration_number,"customer_email":customer_email,"customer_phone":customer_phone,"customer_billing_street_address":customer_billing_street_address,"customer_billing_city":customer_billing_city,"customer_billing_zip":customer_billing_zip,"customer_billing_country_name":customer_billing_country_name,"customer_billing_state":customer_billing_state,"customer_shipping_street_address":customer_shipping_street_address,"customer_shipping_city":customer_shipping_city,"customer_shipping_zip":customer_shipping_zip,"customer_shipping_country_name":customer_shipping_country_name,"customer_shipping_state":customer_shipping_state};
 														customer = customer_object.toString();
-														// Invoice info
+														// Debit note payload (map keys match debit_note_submit_lhdn / Submit_Debit_Note_to_LHDN)
 														line_item_list = {};
 														for each  curr_monthly_rental in input.Monthly_Rental
 														{
@@ -39509,13 +39182,14 @@
 															curr_item = {"item_name":curr_item_name,"item_classification_code_list":curr_item_classification_code_list,"item_description":curr_item_description,"item_quantity":curr_item_quantity,"item_unit_price":curr_item_unit_price,"item_price_extension":curr_item_price_extension,"item_tax_type":curr_item_tax_type,"item_tax_percentage":curr_item_tax_percentage,"item_tax_amount":curr_item_tax_amount};
 															line_item_list.add(curr_item);
 														}
-														invoice_id = input.ID.toString();
 														invoice_get_response = Map();
 														invoice_get_response.put("Invoice_Date",input.Invoice_Date);
 														invoice_get_response.put("Invoice_No",input.Invoice_No);
 														invoice_get_response.put("Payment_Term",input.Payment_Term.Days.toString());
 														invoice_get_response.put("ID",input.ID);
 														invoice_get_response.put("Due_Date",input.Due_Date);
+														invoice_get_response.put("reference_invoice_number",input.Reference_Invoice.Invoice_No);
+														invoice_get_response.put("reference_invoice_uuid",input.Reference_Invoice.Invoice_UUID);
 														invoice_get_response.put("invoice_uuid",input.Invoice_UUID);
 														invoice_get_response.put("invoice_public_link",input.Invoice_Public_Link);
 														invoice_get_response.put("invoice_subtotal",input.Sub_Total);
@@ -39526,12 +39200,11 @@
 														invoice_get_response.put("invoice_exchange_rate",input.Exchange_Rate);
 														invoice_get_response.put("line_items",line_item_list);
 														invoice = invoice_get_response.toString();
-														// Invoice LHDN submission
-														invoice_submit_lhdn_output = thisapp.invoice_submit_lhdn(invoice,organization,customer);
-														info invoice_submit_lhdn_output.get("output").toMap();
+														invoice_submit_lhdn_output = thisapp.debit_note_submit_lhdn(invoice,organization,customer);
+														info invoice_submit_lhdn_output;
 														invoice_submit_lhdn_output = invoice_submit_lhdn_output.get("output").toMap();
 														current_date_time = zoho.currenttime;
-														new_row_invoice_related_list = Invoice.Invoice_Related_List();
+														new_row_invoice_related_list = Debit_Note.Invoice_Related_List();
 														new_row_invoice_related_list.USERNAME=zoho_loginuser;
 														new_row_invoice_related_list.INVOICE_NUMBER=input.Invoice_No;
 														new_row_invoice_related_list.Related_List_Date=current_date_time.toDate();
@@ -39541,7 +39214,6 @@
 														new_row_invoice_related_list.PUBLIC_LINK=invoice_submit_lhdn_output.get("PUBLIC_LINK");
 														new_row_invoice_related_list.STATUS=invoice_submit_lhdn_output.get("STATUS");
 														new_row_invoice_related_list.MESSAGE=invoice_submit_lhdn_output.get("MESSAGE");
-														// Invoice Info
 														new_invoice_uuid = invoice_submit_lhdn_output.get("UUID");
 														new_invoice_uuid_link = invoice_submit_lhdn_output.get("UUID_LINK");
 														new_public_link = invoice_submit_lhdn_output.get("PUBLIC_LINK");
@@ -39565,6 +39237,7 @@
 								custom deluge script
 								(
 															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",input.ID);
+														Status = "Overdue";
 								)
 							}
 							actions  (Due_Date > zoho.currentdate || Due_Date == zoho.currentdate)
@@ -39574,29 +39247,29 @@
 															journalEntryLineItem = Collection();
 														row1 = Journal_Entry.Journal_Entry_Line_Item();
 														row1.Account=4662372000000087205;
-														row1.Description="Invoice " + input.Invoice_No + " Subtotal";
+														row1.Description="Debit Note " + input.Invoice_No + " Subtotal";
 														row1.Debit=0;
 														row1.Credit=ifnull(input.Sub_Total,0);
-														row1.Invoice=input.ID;
+														row1.Debit_Note=input.ID;
 														row2 = Journal_Entry.Journal_Entry_Line_Item();
 														row2.Account=4662372000000941743;
-														row2.Description="Invoice " + input.Invoice_No + " Total Tax";
+														row2.Description="Debit Note " + input.Invoice_No + " Total Tax";
 														row2.Debit=0;
 														row2.Credit=ifnull(input.Total_Tax,0);
-														row2.Invoice=input.ID;
+														row2.Debit_Note=input.ID;
 														row3 = Journal_Entry.Journal_Entry_Line_Item();
 														row3.Account=4662372000000941747;
-														row3.Description="Invoice " + input.Invoice_No + " Grand Total";
+														row3.Description="Debit Note " + input.Invoice_No + " Grand Total";
 														row3.Debit=ifnull(input.Grand_Total,0);
 														row3.Credit=0;
-														row3.Invoice=input.ID;
+														row3.Debit_Note=input.ID;
 														journalEntryLineItem.insert(row1,row2,row3);
 														newJournalEntryRecord = insert into Journal_Entry
 														[
 															Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
 															Document_No=input.Invoice_No
 															Added_User=zoho.loginuser
-															Invoice=input.ID
+															Debit_Note=input.ID
 															Date_field=zoho.currentdate
 															Journal_Entry_Line_Item=journalEntryLineItem
 															Sub_Total_Debit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
@@ -39610,21 +39283,19 @@
 								)
 								custom deluge script
 								(
-															previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+															if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														Previous_Balance = previoustotalAmountDue;
-														Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
+															input.Amount_Due = input.Grand_Total;
+															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															{
+																thisapp.invoice.invoice_balance_updates(inv.ID);
+															}
 														}
 								)
 								custom deluge script
 								(
 															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Approved",input.ID);
+														Status = "Approved";
 								)
 							}
          				}
@@ -39675,32 +39346,28 @@
 														}
 														//listEmailID.add(zoho.adminuserid);
 														//listEmail.add("test@aplikasi.us");
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
-														//Send Mail & App Notify To Parts Coordinator
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Invoice_No=" + input.Invoice_No;
 														sendmail
 														[
 															from :zoho.adminuserid
 															to :listEmail
-															subject :"Invoice " + input.Invoice_No + "  Rejected – Action Required"
-															message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+															subject :"Debit Note " + input.Invoice_No + "  Rejected – Action Required"
+															message :"Dear,<br><br>We are pleased to inform you that Debit Note " + input.Invoice_No + " has been rejected. Please review the reason for the rejection and address any issues promptly to facilitate re-submission. Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
 														]
-														notifyTitle = "Invoice " + input.Invoice_No + " Rejected – Action Required";
-														notifyMessage = "Invoice " + input.Invoice_No + " has been rejected. Please review the reason for rejection.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+														notifyTitle = "Debit Note " + input.Invoice_No + " Rejected – Action Required";
+														notifyMessage = "Debit Note " + input.Invoice_No + " has been rejected. Please review the reason for rejection.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);
 								)
 								custom deluge script
 								(
-															//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+															if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														Previous_Balance = previoustotalAmountDue;
-														Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
+															input.Amount_Due = input.Grand_Total;
+															Status = "Rejected";
+															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															{
+																thisapp.invoice.invoice_balance_updates(inv.ID);
+															}
 														}
 								)
 							}
@@ -39739,6 +39406,44 @@
          				}
          				after
          				{
+							actions 
+							{
+								custom deluge script
+								(
+															listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943015]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmailID.add(zoho.adminuserid);
+														//listEmail.add("test@aplikasi.us");
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Status=Pending+Approval";
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Resubmitted Debit Note " + input.Invoice_No + " Approval Required"
+															message :"Dear,<br><br>This is a notification that Debit Note " + input.Invoice_No + " has been resubmitted after addressing the previous issues. Please review the updated debit note and provide your approval at your earliest convenience. Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Resubmitted Debit Note " + input.Invoice_No + " Approval Required";
+														notifyMessage = "A resubmitted Debit Note " + input.Invoice_No + " is awaiting your approval.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);
+														input.Confirm_resubmission = false;
+														input.Rejection_Reason = "";
+														if(input.Invoice_Date != null && input.Customer_Code != null)
+														{
+															input.Amount_Due = input.Grand_Total;
+															Status = "Pending Approval";
+															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															{
+																thisapp.invoice.invoice_balance_updates(inv.ID);
+															}
+														}
+								)
+							}
          				}
          				chart data
          				{
@@ -39757,6 +39462,52 @@
          				}
          				after
          				{
+							actions 
+							{
+								custom deluge script
+								(
+															if(input.Invoice_Date != null && input.Customer_Code != null)
+														{
+															input.Amount_Due = input.Grand_Total;
+															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															{
+																thisapp.invoice.invoice_balance_updates(inv.ID);
+															}
+														}
+								)
+								custom deluge script
+								(
+															// Debit Note Blueprint — Send For Approval (After, unconditional)
+														//
+														// Notifies Finance approvers (role 4662372000000943015) via in-app push notification
+														// that this debit note needs approval. Email sendmail block is commented out (same as Invoice).
+														//
+														// Uses report Debit_Notes; document no. is field Invoice_No on the Debit_Note form.
+														// Balance / Amount_Due updates are in script_01 — not duplicated here.
+														listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943015]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmailID.add(zoho.adminuserid);
+														//listEmail.add("test@aplikasi.us");
+														notifyTitle = "Debit Note " + input.Invoice_No + " Approval Required";
+														notifyMessage = "Please review and approve Debit Note " + input.Invoice_No + " to complete processing.";
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Status=Pending+Approval";
+														//Send Mail & App Notify
+														// sendmail
+														// [
+														// 	from :zoho.adminuserid
+														// 	to :listEmail
+														// 	subject :"Debit Note " + input.Invoice_No + " Approval Required"
+														// 	message :"Dear,<br><br>We hope this message finds you well. Please review and approve debit note " + input.Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														// ]
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);
+								)
+							}
          				}
          				chart data
          				{
@@ -39779,44 +39530,30 @@
 							{
 								custom deluge script
 								(
-															if(!Charge_Category == "Miscellaneous Charges")
+															if(input.Due_Date > today)
 														{
-															get_invoice_tenant_id = input.Customer_Code;
-															previous_total_amount_due = 0;
-															for each  curr_invoice in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && !Charge_Category == "Miscellaneous Charges" && Customer_Code == get_invoice_tenant_id]
-															{
-																previous_total_amount_due = previous_total_amount_due + curr_invoice.Amount_Due;
-															}
-															Previous_Balance = previous_total_amount_due;
-															Total_Amount_Due = input.Grand_Total;
-															for each  curr_invoice in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && !Charge_Category == "Miscellaneous Charges" && Customer_Code == get_invoice_tenant_id]
-															{
-																thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
-															}
-														}
-														/* Invoice can be either status Sent and status Overdue after sending invoice*/
-														if(input.Due_Date > today)
-														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",input.ID);
+															Status = "Sent";
 														}
 														else
 														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
+															thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",input.ID);
+															Status = "Overdue";
 														}
 								)
 							}
-							actions 
+							actions  (Customer.Credit_Available > 0)
 							{
 								custom deluge script
 								(
 															getCustomerProfile = Customer_Profile[ID == input.Customer];
-														msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
+														msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Debit Note " + input.Invoice_No + "?";
 														customerName = "&Customer_Name=" + input.Customer;
 														customerCode = "&Customer_Code=" + input.Customer_Code;
 														invoice = "&Invoice=" + input.ID;
 														customerEmail = "&Customer_Email=" + input.Customer_E_mail;
 														invoiceNo = "&Invoice_No=" + input.Invoice_No;
-														typeOfAction = "&Type_Of_Action=Mark As Sent";
+														typeOfAction = "&Type_Of_Action=Send Invoice";
 														openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
 								)
 							}
@@ -40800,7 +40537,6 @@
 												Payable_To=input.Payable_To
 												Added_User=zoho.loginuser
 											];
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",input.ID);
 											// Add item row to item subform
 											total_monthly_rental = 0;
 											total_internet_charges = 0;
@@ -40898,8 +40634,7 @@
 											{
 												delete from Invoice[ID == get_invoice.ID];
 											}
-										}
-										catch (error)
+										}catch (error)
 										{
 											errorMessage = error;
 										}
@@ -43528,6 +43263,7 @@
 								Invoice_Currency as "Invoice Currency"
 								Exchange_Rate as "Exchange Rate"
 								Amount_Paid as "Amount Paid"
+								Invoice_UUID as "Invoice UUID"
 							)
 						)
 					)
@@ -43647,8 +43383,6 @@
 								Allocation
 								Payment_Received as "Payment Received"
 								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
-								Customer_Name as "Customer Name"
-								Customer_Code as "Customer Code"
 								Reference_No as "Reference No."
 								Description
 								Allocation_MYR as "Allocation (MYR)"
@@ -45087,7 +44821,7 @@
 							fields
 							(
 								Unpaid_Invoices.Invoice as "Unpaid Invoices"
-								Credit_Note as "Credit Note"
+								invoice
 								Credits_Remaining as "Credits Remaining"
 								Credit_Note_Selection_Trigger
 							)
@@ -45119,7 +44853,7 @@
 							fields
 							(
 								Unpaid_Invoices.Invoice as "Unpaid Invoices"
-								Credit_Note as "Credit Note"
+								invoice
 								Credits_Remaining as "Credits Remaining"
 								Credit_Note_Selection_Trigger
 							)
@@ -46528,6 +46262,7 @@
 								Invoice_Currency as "Invoice Currency"
 								Exchange_Rate as "Exchange Rate"
 								Amount_Paid as "Amount Paid"
+								Invoice_UUID as "Invoice UUID"
 							)
 						)
 					)

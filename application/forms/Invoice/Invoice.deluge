@@ -380,8 +380,8 @@ form Invoice
 	(
     	type = date
 		displayname = "Invoice Date"
-		alloweddays = 0,1,2,3,4,5,6
 		initial value = "${zoho.currentdate}"
+		alloweddays = 0,1,2,3,4,5,6
 	 	row = 4
 	 	column = 2   
 		width = medium
@@ -1226,11 +1226,21 @@ form Invoice
 	 	column = 1   
 		width = medium
 	)
+	Payments_Received_Line_Item
+	(
+		type = grid
+		displayname = "Payments Received Line Item"
+		values  = Payment_Received_Line_Item.ID
+		auto width = false
+	 	row = 11
+	 	column = 1   
+		width = medium
+	)
 	System_Section
 	(
 		type = section
 		displayname = "System Section"
-	 	row = 11
+	 	row = 12
 	 	column = 0   
 		width = medium
 	)
@@ -1239,7 +1249,7 @@ form Invoice
     	type = textarea
 		displayname = "Rejection Reason"
 		height = 100px
-	 	row = 11
+	 	row = 12
 	 	column = 1   
 		width = medium
 	)
@@ -1248,7 +1258,7 @@ form Invoice
     	type = checkbox
 		displayname = "Confirm resubmission?"
 		initial value = false
-	 	row = 11
+	 	row = 12
 	 	column = 1   
 		width = medium
 	)
@@ -1309,7 +1319,7 @@ form Invoice
 			height = 100px
 			width = medium
 		)
-	 	row = 12
+	 	row = 13
 	 	column = 1   
 		width = medium
 	)
@@ -1317,7 +1327,7 @@ form Invoice
 	(
 		type = section
 		displayname = "Decision Section"
-	 	row = 13
+	 	row = 14
 	 	column = 0   
 		width = medium
 	)
@@ -1326,7 +1336,7 @@ form Invoice
     	type = checkbox
 		displayname = "Customer Name Trigger"
 		initial value = false
-	 	row = 13
+	 	row = 14
 	 	column = 1   
 		width = medium
 	)
@@ -1334,7 +1344,7 @@ form Invoice
 	(
     	type = checkbox
 		initial value = false
-	 	row = 13
+	 	row = 14
 	 	column = 1   
 		width = medium
 	)
@@ -1342,7 +1352,7 @@ form Invoice
 	(
     	type = checkbox
 		initial value = false
-	 	row = 13
+	 	row = 14
 	 	column = 1   
 		width = medium
 	)
@@ -1350,7 +1360,7 @@ form Invoice
 	(
     	type = checkbox
 		initial value = false
-	 	row = 13
+	 	row = 14
 	 	column = 1   
 		width = medium
 	)
@@ -1359,7 +1369,7 @@ form Invoice
     	type = checkbox
 		displayname = "Created By The System"
 		initial value = false
-	 	row = 13
+	 	row = 14
 	 	column = 1   
 		width = medium
 	)

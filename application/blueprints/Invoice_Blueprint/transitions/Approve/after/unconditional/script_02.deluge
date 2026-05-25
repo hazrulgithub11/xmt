@@ -1,11 +1,11 @@
 previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														input.Previous_Balance = previoustotalAmountDue;
-														input.Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
-														}
+for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+{
+	previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+}
+input.Previous_Balance = previoustotalAmountDue;
+input.Total_Amount_Due = input.Grand_Total;
+for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+{
+	thisapp.invoice.invoice_balance_updates(inv.ID);
+}
