@@ -98,8 +98,7 @@ Customer_Name_Trigger_Wor as "Customer Name Trigger Workflow"
 							];
 							exchange_rate = exchange_rate_get_response.get("rates").get(input.Base_Currency);
 							input.Exchange_Rate = exchange_rate;
-						}
-						catch (e)
+						}		catch (e)
 						{
 							info e;
 							input.Exchange_Rate = "";
@@ -107,12 +106,17 @@ Customer_Name_Trigger_Wor as "Customer Name Trigger Workflow"
 					}
 					if(input.Invoice_Date != null && input.Customer_Code != null)
 					{
-						previoustotalAmountDue = 0;
-						for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+						previous_balance_of_unpaid_invoices = 0;
+						get_customer_id = input.Customer.ID;
+						if(get_customer_id != null)
 						{
-							previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+							for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+							{
+								previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+							}
 						}
-						input.Previous_Balance = previoustotalAmountDue;
+						input.Previous_Balance = previous_balance_of_unpaid_invoices;
+						input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
 					}
 					customer_info = Customer_Profile[ID == input.Customer];
 					for each  curr_monthly_rental in input.Monthly_Rental

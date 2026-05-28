@@ -1,4 +1,4 @@
-Handle_Submission as "Handle Submission"
+Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 {
 	type =  form
 	form = Payment_Received
@@ -13,14 +13,14 @@ Handle_Submission as "Handle Submission"
 			(
 					thisapp.close_form();
 				openUrl("#Report:Payment_Received_Report","same window");
-				totalStillOwing = 0;
-				for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+				total_still_Owing = 0;
+				for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 				{
-					stillOwing = paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
-					paymentReceivedLineItem.Still_Owing=stillOwing;
-					totalStillOwing = totalStillOwing + stillOwing;
+					curr_still_owing = curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+					curr_payment_received_line_item.Still_Owing=curr_still_owing;
+					total_still_Owing = total_still_Owing + curr_still_owing;
 				}
-				input.Total_Still_Owing = totalStillOwing;
+				input.Total_Still_Owing = total_still_Owing;
 			)
 			custom deluge script
 			(
@@ -67,92 +67,84 @@ Handle_Submission as "Handle Submission"
 		{
 			custom deluge script
 			(
-					for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+					for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 				{
-					paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
-					if(paymentReceivedLineItem.Allocation > 0)
+					if(curr_payment_received_line_item.Allocation > 0)
 					{
-						if(paymentReceivedLineItem.Invoice_No != null)
+						curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+						if(curr_payment_received_line_item.Invoice_No != null)
 						{
-							getInvoice = Invoice[ID == paymentReceivedLineItem.Invoice_No];
-							newAmountDue = getInvoice.Amount_Due - paymentReceivedLineItem.Allocation;
-							if(newAmountDue > 0)
+							curr_get_invoice = Invoice[ID == curr_payment_received_line_item.Invoice_No];
+							// Amount Paid and Amount Due Calculation
+							curr_get_invoice.Amount_Paid=curr_get_invoice.Amount_Paid - curr_payment_received_line_item.Allocation;
+							curr_get_invoice.Amount_Due=curr_get_invoice.Amount_Due + curr_payment_received_line_item.Allocation;
+							// Invoice Blueprint status update
+							if(curr_get_invoice.Due_Date > zoho.currentdate)
 							{
-								getInvoice.Amount_Due=newAmountDue;
-								if(getInvoice.Due_Date > zoho.currentdate)
+								if(curr_get_invoice.Amount_Paid == 0)
 								{
-									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",getInvoice.ID);
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
 								}
-								else if(getInvoice.Due_Date < zoho.currentdate)
+								else
 								{
-									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+									thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_get_invoice.ID);
 								}
 							}
 							else
 							{
-								getInvoice.Amount_Due=0;
-								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",getInvoice.ID);
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 							}
-							newAmountPaidInv = getInvoice.Amount_Paid + paymentReceivedLineItem.Allocation;
-							if(newAmountPaidInv >= getInvoice.Grand_Total)
+							/* Previous balance and Total amount due calculation */
+							previous_balance_of_unpaid_invoices = 0;
+							if(curr_get_invoice.Customer != null && curr_get_invoice.Invoice_Date != null)
 							{
-								getInvoice.Amount_Paid=getInvoice.Grand_Total;
+								get_customer_id = curr_get_invoice.Customer.ID;
+								for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < curr_get_invoice.Invoice_Date && Customer == get_customer_id]
+								{
+									previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+								}
+								/*  Previous balance and Total amount due calculation for future invoices */
+								for each  curr_invoice in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date && Customer == get_customer_id]
+								{
+									thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
+								}
 							}
-							else if(newAmountPaidInv < getInvoice.Grand_Total)
-							{
-								getInvoice.Amount_Paid=newAmountPaidInv;
-							}
-							previoustotalAmountDue = 0;
-							for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && Customer_Code == getInvoice.Customer_Code]
-							{
-								previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-							}
-							getInvoice.Previous_Balance=previoustotalAmountDue;
-							getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-							for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && Customer_Code == getInvoice.Customer_Code]
-							{
-								thisapp.invoice.invoice_balance_updates(inv.ID);
-							}
+							curr_get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
+							curr_get_invoice.Total_Amount_Due=curr_get_invoice.Amount_Due + previous_balance_of_unpaid_invoices;
 						}
-						else if(paymentReceivedLineItem.Debit_Note_No != null)
+						else if(curr_payment_received_line_item.Debit_Note_No != null)
 						{
-							getDbNote = Debit_Note[ID == paymentReceivedLineItem.Debit_Note_No];
-							newAmountDue = getDbNote.Amount_Due - paymentReceivedLineItem.Allocation;
-							if(newAmountDue > 0)
+							curr_get_debit_note = Debit_Note[ID == curr_payment_received_line_item.Debit_Note_No];
+							// Amount Paid and Amount Due Calculation
+							curr_get_debit_note.Amount_Paid=curr_get_debit_note.Amount_Paid - curr_payment_received_line_item.Allocation;
+							curr_get_debit_note.Amount_Due=curr_get_debit_note.Amount_Due + curr_payment_received_line_item.Allocation;
+							// Debit Note Blueprint status update
+							if(curr_get_debit_note.Due_Date > zoho.currentdate)
 							{
-								getDbNote.Amount_Due=newAmountDue;
-								if(getDbNote.Due_Date > zoho.currentdate)
+								if(curr_get_debit_note.Amount_Paid == 0)
 								{
-									getDbNote.Status="Partially Paid";
+									thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",curr_get_debit_note.ID);
 								}
-								else if(getDbNote.Due_Date < zoho.currentdate)
+								else
 								{
-									getDbNote.Status="Overdue";
+									thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",curr_get_debit_note.ID);
+									thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",curr_get_debit_note.ID);
 								}
 							}
 							else
 							{
-								getDbNote.Amount_Due=0;
-								getDbNote.Status="Paid";
-							}
-							newAmountPaidDB = getDbNote.Amount_Paid + paymentReceivedLineItem.Allocation;
-							if(newAmountPaidDB >= getDbNote.Grand_Total)
-							{
-								getDbNote.Amount_Paid=getDbNote.Grand_Total;
-							}
-							else if(newAmountPaidDB < getDbNote.Grand_Total)
-							{
-								getDbNote.Amount_Paid=newAmountPaidDB;
+								thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",curr_get_debit_note.ID);
+								thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",curr_get_debit_note.ID);
 							}
 						}
 					}
 					else
 					{
-						delete from Payment_Received_Line_Item[ID == paymentReceivedLineItem.ID];
+						delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
 					}
-					paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
 				}
-				//thisapp.invoice.recalculate_overdue(input.Customer_Code);
 			)
 		}
 		actions  (Payment_Type == "Deposit")
@@ -164,7 +156,7 @@ Handle_Submission as "Handle Submission"
 					paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
 					if(paymentReceivedLineItem.Allocation > 0)
 					{
-						getDeposit = Pro_Forma_Invoices[ID == paymentReceivedLineItem.Pro_Forma_Invoice_No];
+						getDeposit = Pro_Forma_Invoices_1[ID == paymentReceivedLineItem.Pro_Forma_Invoice_No];
 						newAmountDue = getDeposit.Amount_Due - paymentReceivedLineItem.Allocation;
 						if(newAmountDue > 0)
 						{

@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 27-May-2026 21:17:43
+ * Generated on : 28-May-2026 01:47:54
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -8595,7 +8595,7 @@
 			(
 				type = section
 				displayname = "Reject Section"
-	 			row = 6
+	 			row = 7
 	 			column = 0   
 				width = medium
 			)
@@ -8605,7 +8605,7 @@
 				displayname = "Sub Total Monthly Rental"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8615,7 +8615,7 @@
 				displayname = "Total Tax Monthly Rental"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8625,7 +8625,7 @@
 				displayname = "Grand Total Monthly Rental"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8635,7 +8635,7 @@
 				displayname = "Sub Total Internet Charges"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8645,7 +8645,7 @@
 				displayname = "Total Tax Internet Charges"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8655,7 +8655,7 @@
 				displayname = "Grand Total Internet Charges"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8665,7 +8665,7 @@
 				displayname = "Sub Total Call Charges (Analog, Domestic & Overseas)"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8675,7 +8675,7 @@
 				displayname = "Total Tax Call Charges (Analog, Domestic & Overseas)"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8685,7 +8685,7 @@
 				displayname = "Grand Total Call Charges (Analog, Domestic & Overseas)"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 1   
 				width = medium
 			)
@@ -8694,7 +8694,7 @@
 				type = decimal
 				displayname = "Sub Total"
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8703,7 +8703,7 @@
 				type = decimal
 				displayname = "Total Tax"
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8712,7 +8712,7 @@
 				type = decimal
 				displayname = "Grand Total"
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8722,7 +8722,7 @@
 				displayname = "Grand Total (Base Currency)"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8732,7 +8732,7 @@
 				displayname = "Amount Paid"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8741,7 +8741,7 @@
 				type = decimal
 				displayname = "Credits Applied Total"
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8751,7 +8751,7 @@
 				displayname = "Amount Due"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8760,7 +8760,7 @@
 				type = decimal
 				displayname = "Previous Balance"
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8770,7 +8770,7 @@
 				displayname = "Total Amount Due"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8780,7 +8780,7 @@
 				displayname = "Deposit Amount"
 				format = commadotwestern
 				initial value = 0
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8792,7 +8792,7 @@
     			displayformat = [Account + " - " + Bank_Account_Number]
 				sortorder = ascending
 				height = 60px
-	 			row = 6
+	 			row = 7
 	 			column = 2   
 				width = medium
 			)
@@ -8828,7 +8828,7 @@
 					displayname = "Credits Applied"
 					width = medium
 				)
-	 			row = 7
+	 			row = 8
 	 			column = 1   
 				width = medium
 			)
@@ -8838,7 +8838,7 @@
 				displayname = "Pro Forma Invoice Line Item"
 				values  = Pro_Forma_Invoices_Line_Item.ID
     			bidirectional = Pro_Forma_Invoice
-	 			row = 8
+	 			row = 9
 	 			column = 1   
 				width = medium
 			)
@@ -8855,7 +8855,7 @@
     			type = textarea
 				displayname = "Rejection Reason"
 				height = 100px
-	 			row = 9
+	 			row = 10
 	 			column = 1   
 				width = medium
 			)
@@ -8864,7 +8864,7 @@
     			type = checkbox
 				displayname = "Confirm resubmission?"
 				initial value = false
-	 			row = 9
+	 			row = 10
 	 			column = 1   
 				width = medium
 			)
@@ -8925,7 +8925,7 @@
 					height = 100px
 					width = medium
 				)
-	 			row = 10
+	 			row = 11
 	 			column = 1   
 				width = medium
 			)
@@ -8942,7 +8942,7 @@
     			type = checkbox
 				displayname = "Customer Name Trigger"
 				initial value = false
-	 			row = 11
+	 			row = 12
 	 			column = 1   
 				width = medium
 			)
@@ -8950,7 +8950,7 @@
 			(
     			type = checkbox
 				initial value = false
-	 			row = 11
+	 			row = 12
 	 			column = 1   
 				width = medium
 			)
@@ -8958,7 +8958,7 @@
 			(
     			type = checkbox
 				initial value = false
-	 			row = 11
+	 			row = 12
 	 			column = 1   
 				width = medium
 			)
@@ -8966,7 +8966,7 @@
 			(
     			type = checkbox
 				initial value = false
-	 			row = 11
+	 			row = 12
 	 			column = 1   
 				width = medium
 			)
@@ -8975,7 +8975,7 @@
     			type = checkbox
 				displayname = "Created By The System"
 				initial value = false
-	 			row = 11
+	 			row = 12
 	 			column = 1   
 				width = medium
 			)
@@ -8993,7 +8993,7 @@
 				displayname = "Payment Method"
 				maxchar = 100
 				values = {"Cash","Cheque","IBFT","IBG","Foreign TT"}
-	 			row = 12
+	 			row = 13
 	 			column = 1   
 				width = medium
 			)
@@ -9003,7 +9003,7 @@
 				maxchar = 100
 				values = {"Draft","Pending Approval","Approved","Sent","Rejected","Paid","Drawn","Resubmit","Overdue"}
 				initial value = "Draft"
-	 			row = 12
+	 			row = 13
 	 			column = 1   
 				width = medium
 			)
@@ -9011,7 +9011,7 @@
 			(
     			type = text
 				displayname = "SST ID"
-	 			row = 12
+	 			row = 13
 	 			column = 1   
 				width = medium
 			)
@@ -41105,12 +41105,540 @@
         			form = Pro_Forma_Invoices
         			start
         			{
+            			start stage = "Draft"
+            			chart data
+            			{
+                			from port : B
+                			to port   : T3
+                			position  : "-501.2516249999999 -343.81462500000004"
+                			path      : [-473.40162499999985,-306.97462500000006,-473.40162499999985,-296.97462500000006,-473.40162499999985,-285.27119437500005,-474.6779065625001,-285.27119437500005,-474.6779065625001,-273.5677637500001,-474.6779065625001,-263.5677637500001]
+            			}
         			}
         			stages
         			{
+           			"Draft"
+           			{
+               			chart data
+               			{
+                   			position : "-512.7908092683383 -263.5677637500001"
+               			}
+           			}
+           			"Pending Approval"
+           			{
+               			chart data
+               			{
+                   			position : "-554.0527196875 -62.82900125000003"
+               			}
+           			}
+           			"Rejected"
+           			{
+               			chart data
+               			{
+                   			position : "210.40760214125305 -100.11238381317659"
+               			}
+           			}
+           			"Approved"
+           			{
+               			chart data
+               			{
+                   			position : "-399.7326250000001 173.80112500000007"
+               			}
+           			}
+           			"Sent"
+           			{
+               			chart data
+               			{
+                   			position : "-102.22299999999984 256.7215"
+               			}
+           			}
+           			"Paid"
+           			{
+               			chart data
+               			{
+                   			position : "712.7450000000003 344.70100000000014"
+               			}
+           			}
+           			"Partially Paid"
+           			{
+               			chart data
+               			{
+                   			position : "700.4349414059399 28.262440561823382"
+               			}
+           			}
+           			"Overdue"
+           			{
+               			chart data
+               			{
+                   			position : "103.21909796843977 572.7531250000003"
+               			}
+           			}
         			}
         			transitions
         			{
+    				Send_For_Approval as "Send For Approval"
+    				{
+         				type = normal
+         				from stage = "Draft"
+         				to stage = "Pending Approval"
+         				before
+         				{
+            				transition owner
+            				(
+                				permissions = {"Administrator", "Finance Executive"}
+                				userfields = {Added_User}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Send For Approval' for this Deposit ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)
+         				}
+         				after
+         				{
+							actions 
+							{
+								custom deluge script
+								(
+															listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943015]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmailID.add(zoho.adminuserid);
+														//listEmail.add("test@aplikasi.us");
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Status=Pending+Approval";
+														//Send Mail & App Notify To Parts Coordinator
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Pro Forma Invoice " + input.Invoice_No + " Approval Required"
+															message :"Dear,<br><br>We hope this message finds you well. Please review and approve Pro Forma Invoice " + input.Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Pro Forma Invoice " + input.Invoice_No + " Approval Required";
+														notifyMessage = "Please review and approve Pro Forma Invoice " + input.Invoice_No + " to complete processing.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
+								)
+							}
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : T3
+             				path      : [-474.6779065625001,-211.9586247506769,-474.6779065625001,-201.9586247506769,-474.6779065625001,-137.39381300033847,-478.08148530136384,-137.39381300033847,-478.08148530136384,-72.82900125000003,-478.08148530136384,-62.82900125000003]
+        				}
+  				}
+    				Approve as "Approve"
+    				{
+         				type = normal
+         				from stage = "Pending Approval"
+         				to stage = "Approved"
+         				before
+         				{
+            				transition owner
+            				(
+                				permissions = {"Administrator", "Finance Manager"}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Approve' for this Deposit ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)
+         				}
+         				after
+         				{
+							actions 
+							{
+								custom deluge script
+								(
+															listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943011]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmail.add("test@aplikasi.us");
+														//listEmailID.add(zoho.adminuserid);
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Deposit_No=" + input.Invoice_No;
+														//Send Mail & App Notify To Parts Coordinator
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Deposit " + input.Invoice_No + " Approved"
+															message :"Dear,<br><br>We are pleased to inform you that Deposit " + input.Invoice_No + " has been successfully approved.As the next step, please submit the approved Deposit to the customer at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Pro Forma Invoice " + input.Invoice_No + " Approved";
+														notifyMessage = "Pro Forma Invoice " + input.Invoice_No + " has been approved. Thank you!Please submit it to the customer.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
+								)
+							}
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : T3
+             				path      : [-478.08148530136384,-11.219862250676854,-478.08148530136384,-1.2198622506768544,-478.08148530136384,81.29063137466161,-347.61972229416176,81.29063137466161,-347.61972229416176,163.80112500000007,-347.61972229416176,173.80112500000007]
+        				}
+  				}
+    				Revert_to_Pending_Approva as "Revert to Pending Approval"
+    				{
+         				type = normal
+         				from stage = "Approved"
+         				to stage = "Pending Approval"
+         				before
+         				{
+            				transition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : L1
+             				to port   : L1
+             				path      : [-399.7326250000001,199.60569449966167,-409.7326250000001,199.60569449966167,-564.0527196875,199.60569449966167,-564.0527196875,81.29063137466161,-564.0527196875,-37.024431750338444,-554.0527196875,-37.024431750338444]
+        				}
+  				}
+    				Send_Invoice as "Send Invoice"
+    				{
+         				type = normal
+         				from stage = "Approved"
+         				to stage = "Sent"
+         				before
+         				{
+            				transition criteria = (Invoice_UUID is not null || QR_Invoice_Public_Link is not null)
+         				}
+         				after
+         				{
+							actions 
+							{
+								custom deluge script
+								(
+															/* Pro forma can be either stage Sent or Overdue after sending */
+														if(input.Due_Date > zoho.currentdate)
+														{
+															thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Sent",input.ID);
+														}
+														else
+														{
+															thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Overdue",input.ID);
+														}
+								)
+							}
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [-295.5068195883234,199.60569449966167,-285.5068195883234,199.60569449966167,-198.86490979416163,199.60569449966167,-198.86490979416163,282.52606949966156,-112.22299999999984,282.52606949966156,-102.22299999999984,282.52606949966156]
+        				}
+  				}
+    				Payment_Received_Full_fro as "Payment Received Full from Sent"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Paid"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [-30.330528557439365,282.52606949966156,-20.330528557439365,282.52606949966156,341.2072357212805,282.52606949966156,341.2072357212805,370.5055694996617,702.7450000000003,370.5055694996617,712.7450000000003,370.5055694996617]
+        				}
+  				}
+    				Paid_to_Sent as "Paid to Sent"
+    				{
+         				type = normal
+         				from stage = "Paid"
+         				to stage = "Sent"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B1
+             				to port   : B5
+             				path      : [730.8354121614069,396.3101389993233,730.8354121614069,406.3101389993233,-48.645940464532785,406.3101389993233,-48.645940464532785,362.32038899932326,-48.645940464532785,318.3306389993232,-48.645940464532785,308.3306389993232]
+        				}
+  				}
+    				Due_Date_Passed_from_Sent as "Due Date Passed from Sent"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Overdue"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : L1
+             				path      : [-66.27676427871961,308.3306389993232,-66.27676427871961,318.3306389993232,-66.27676427871961,598.5576944996619,13.471166844860079,598.5576944996619,93.21909796843977,598.5576944996619,103.21909796843977,598.5576944996619]
+        				}
+  				}
+    				Overdue_to_Sent as "Overdue to Sent"
+    				{
+         				type = normal
+         				from stage = "Overdue"
+         				to stage = "Sent"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T1
+             				to port   : B4
+             				path      : [125.8317323308758,572.7531250000003,125.8317323308758,562.7531250000003,125.8317323308758,440.54188199966177,-57.46135237162619,440.54188199966177,-57.46135237162619,318.3306389993232,-57.46135237162619,308.3306389993232]
+        				}
+  				}
+    				Payment_Received_Full_fro1 as "Payment Received Full from Overdue"
+    				{
+         				type = normal
+         				from stage = "Overdue"
+         				to stage = "Paid"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T3
+             				to port   : B3
+             				path      : [152.05700105574783,572.7531250000003,152.05700105574783,562.7531250000003,152.05700105574783,484.53163199966184,748.01623648422,484.53163199966184,748.01623648422,406.3101389993233,748.01623648422,396.3101389993233]
+        				}
+  				}
+    				Payment_Received_Full_fro2 as "Payment Received Full from Partially Paid"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Paid"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : T3
+             				path      : [762.1311780808944,79.87157956114656,762.1311780808944,89.87157956114656,762.1311780808944,212.28628978057336,748.01623648422,212.28628978057336,748.01623648422,334.70100000000014,748.01623648422,344.70100000000014]
+        				}
+  				}
+    				Due_Date_Passed_from_Part as "Due Date Passed from Partially Paid"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Overdue"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : R1
+             				path      : [823.827414755849,54.06701006148497,833.827414755849,54.06701006148497,833.827414755849,598.5576944996619,522.3611594494524,598.5576944996619,210.8949041430559,598.5576944996619,200.8949041430559,598.5576944996619]
+        				}
+  				}
+    				Partially_Paid_to_Sent as "Partially Paid to Sent"
+    				{
+         				type = normal
+         				from stage = "Partially Paid"
+         				to stage = "Sent"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B1
+             				to port   : T5
+             				path      : [727.333686964258,79.87157956114656,727.333686964258,89.87157956114656,727.333686964258,168.29653978057328,-48.645940464532785,168.29653978057328,-48.645940464532785,246.7215,-48.645940464532785,256.7215]
+        				}
+  				}
+    				Payment_Received_Partial as "Payment Received Partial"
+    				{
+         				type = normal
+         				from stage = "Sent"
+         				to stage = "Partially Paid"
+         				before
+         				{
+            				transition criteria = (ID == 0)
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : T3
+             				to port   : L1
+             				path      : [-66.27676427871961,256.7215,-66.27676427871961,246.7215,-66.27676427871961,54.06701006148497,312.0790885636101,54.06701006148497,690.4349414059399,54.06701006148497,700.4349414059399,54.06701006148497]
+        				}
+  				}
+    				Reject as "Reject"
+    				{
+         				type = normal
+         				from stage = "Pending Approval"
+         				to stage = "Rejected"
+         				before
+         				{
+            				transition owner
+            				(
+                				permissions = {"Administrator", "Finance Manager"}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Reject' for this Deposit ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)
+         				}
+         				during
+         				{
+            				action = update_fields
+            				workflow status = true
+            				visible fields = [Rejection_Reason]
+         				}
+         				after
+         				{
+							actions 
+							{
+								custom deluge script
+								(
+															listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943011]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmail.add("test@aplikasi.us");
+														//listEmailID.add(zoho.adminuserid);
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Credit_Note_No=" + input.Invoice_No;
+														//Send Mail & App Notify To Parts Coordinator
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Pro Forma Invoice " + input.Invoice_No + "  Rejected – Action Required"
+															message :"Dear,<br><br>We are pleased to inform you that Pro Forma Invoice " + input.Invoice_No + " has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Pro Forma Invoice " + input.Invoice_No + " Rejected – Action Required";
+														notifyMessage = "Pro Forma Invoice " + input.Invoice_No + " has been rejected. Please review the reason for rejection.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
+								)
+							}
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [-402.11025091522765,-37.024431750338444,-392.11025091522765,-37.024431750338444,-95.8513243869873,-37.024431750338444,-95.8513243869873,-74.307814313515,200.40760214125305,-74.307814313515,210.40760214125305,-74.307814313515]
+        				}
+  				}
+    				Resubmit as "Resubmit"
+    				{
+         				type = normal
+         				from stage = "Rejected"
+         				to stage = "Pending Approval"
+         				before
+         				{
+            				transition owner
+            				(
+                				permissions = {"Administrator", "Finance Executive"}
+                				userfields = {Added_User}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Resubmit' for this Deposit ${Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)
+         				}
+         				during
+         				{
+            				action = update_fields
+            				workflow status = true
+            				visible fields = [Invoice_Info,Total_Section,Reject_Section]
+         				}
+         				after
+         				{
+							actions 
+							{
+								custom deluge script
+								(
+															listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943015]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmail.add("test@aplikasi.us");
+														//listEmailID.add(zoho.adminuserid);
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Status=Pending+Approval";
+														//Send Mail & App Notify
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Resubmitted Pro Forma Invoice " + input.Invoice_No + " Approval Required"
+															message :"Dear,<br><br>This is a notification that Deposit " + input.Invoice_No + " has been resubmitted after addressing the previous issues. Please review the updated Pro Forma Invoice and provide your approval at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Resubmitted Pro Forma Invoice " + input.Invoice_No + " Rejected – Action Required";
+														notifyMessage = "A resubmitted Pro Forma Invoice " + input.Invoice_No + " is waiting your approval.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
+														input.Confirm_resubmission = false;
+														input.Rejection_Reason = "";
+								)
+							}
+         				}
+         				chart data
+         				{
+             				from port : T1
+             				to port   : T5
+             				path      : [233.00634782672782,-100.11238381317659,233.00634782672782,-110.11238381317659,-433.7673290439397,-110.11238381317659,-433.7673290439397,-91.47069253158831,-433.7673290439397,-72.82900125000003,-433.7673290439397,-62.82900125000003]
+        				}
+  				}
         			}
     			}
     			Deposits_Blueprint as "Pro Forma Invoices Blueprint 1"

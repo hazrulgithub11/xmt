@@ -1,21 +1,21 @@
-void invoice.invoice_balance_updates(int invId)
+void invoice.invoice_balance_updates(int invoice_id)
 {
-getInvoice = Invoice[ID == invId];
-if(getInvoice == null)
-{
-	return;
-}
-invoiceDate = getInvoice.Invoice_Date;
-tenantID = getInvoice.Customer_Code;
-previoustotalAmountDue = 0;
-if(invoiceDate != null && tenantID != null)
-{
-	for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoiceDate.toStartOfMonth() && Customer_Code == tenantID]
+	get_invoice = Invoice[ID == invoice_id];
+	if(get_invoice == null)
 	{
-		previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+		return;
 	}
-}
-getInvoice.Previous_Balance=previoustotalAmountDue;
-getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-
+	invoice_date = get_invoice.Invoice_Date;
+	customer_id = get_invoice.Customer.ID;
+	current_amount_due = ifnull(get_invoice.Amount_Due,0);
+	previous_balance_of_unpaid_invoices = 0;
+	if(invoice_date != null && customer_id != null)
+	{
+		for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < invoice_date && Customer == customer_id]
+		{
+			previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+		}
+	}
+	get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
+	get_invoice.Total_Amount_Due=current_amount_due + previous_balance_of_unpaid_invoices;
 }
