@@ -5,7 +5,7 @@ transition owner
              				)
             				confirmation before execution
             				(
-                				message = "Are you sure you want to 'Resubmit' for this Deposit ${Pro_Forma_Invoice_No}?"
+                				message = "Are you sure you want to 'Resubmit' for this Deposit ${Invoice_No}?"
                 				confirm button text = "Yes"
                 				cancel button text = "No"
             				)

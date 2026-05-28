@@ -8,15 +8,15 @@ listEmail = List();
 													}
 													//listEmail.add("test@aplikasi.us");
 													//listEmailID.add(zoho.adminuserid);
-													urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Credit_Note_No=" + input.Pro_Forma_Invoice_No;
+													urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Credit_Note_No=" + input.Invoice_No;
 													//Send Mail & App Notify To Parts Coordinator
 													sendmail
 													[
 														from :zoho.adminuserid
 														to :listEmail
-														subject :"Pro Forma Invoice " + input.Pro_Forma_Invoice_No + "  Rejected – Action Required"
-														message :"Dear,<br><br>We are pleased to inform you that Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														subject :"Pro Forma Invoice " + input.Invoice_No + "  Rejected – Action Required"
+														message :"Dear,<br><br>We are pleased to inform you that Pro Forma Invoice " + input.Invoice_No + " has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
 													]
-													notifyTitle = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Rejected – Action Required";
-													notifyMessage = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " has been rejected. Please review the reason for rejection.";
+													notifyTitle = "Pro Forma Invoice " + input.Invoice_No + " Rejected – Action Required";
+													notifyMessage = "Pro Forma Invoice " + input.Invoice_No + " has been rejected. Please review the reason for rejection.";
 													zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);

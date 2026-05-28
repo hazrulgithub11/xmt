@@ -8,15 +8,15 @@ listEmail = List();
 													}
 													//listEmail.add("test@aplikasi.us");
 													//listEmailID.add(zoho.adminuserid);
-													urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Deposit_No=" + input.Pro_Forma_Invoice_No;
+													urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Deposit_No=" + input.Invoice_No;
 													//Send Mail & App Notify To Parts Coordinator
 													sendmail
 													[
 														from :zoho.adminuserid
 														to :listEmail
-														subject :"Deposit " + input.Pro_Forma_Invoice_No + " Approved"
-														message :"Dear,<br><br>We are pleased to inform you that Deposit " + input.Pro_Forma_Invoice_No + " has been successfully approved.As the next step, please submit the approved Deposit to the customer at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														subject :"Deposit " + input.Invoice_No + " Approved"
+														message :"Dear,<br><br>We are pleased to inform you that Deposit " + input.Invoice_No + " has been successfully approved.As the next step, please submit the approved Deposit to the customer at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
 													]
-													notifyTitle = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approved";
-													notifyMessage = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " has been approved. Thank you!Please submit it to the customer.";
+													notifyTitle = "Pro Forma Invoice " + input.Invoice_No + " Approved";
+													notifyMessage = "Pro Forma Invoice " + input.Invoice_No + " has been approved. Thank you!Please submit it to the customer.";
 													zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);

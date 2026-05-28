@@ -1,4 +1,4 @@
-update Pro_Forma_Invoices_1[ID == input.ID]
+update Pro_Forma_Invoices[ID == input.ID]
 [
 Status = "Pending Approval"
 ]
