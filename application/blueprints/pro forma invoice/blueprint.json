@@ -1,0 +1,335 @@
+{
+  "meta": {
+    "form": "Pro_Forma_Invoices_1",
+    "start_stage": "Draft",
+    "stages": [
+      "Draft",
+      "Pending Approval",
+      "Approved",
+      "Rejected",
+      "Sent",
+      "Paid",
+      "Partially Paid",
+      "Overdue"
+    ],
+    "link_name": "Deposits_Blueprint",
+    "display_name": "Pro Forma Invoices Blueprint 1"
+  },
+  "transitions": [
+    {
+      "link_name": "Approve",
+      "display_name": "Approve",
+      "from_stage": "Pending Approval",
+      "to_stage": "Approved",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [
+              "listEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943011]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Deposit_No=\" + input.Pro_Forma_Invoice_No;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify To Parts Coordinator\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Deposit \" + input.Pro_Forma_Invoice_No + \" Approved\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>We are pleased to inform you that Deposit \" + input.Pro_Forma_Invoice_No + \" has been successfully approved.As the next step, please submit the approved Deposit to the customer at your earliest convenience.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approved\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" has been approved. Thank you!Please submit it to the customer.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);"
+            ],
+            "field_updates": []
+          },
+          {
+            "condition": "Due_Date > zoho.currentdate",
+            "scripts": [],
+            "field_updates": [
+              {
+                "form": "Pro_Forma_Invoices_1",
+                "fields": "Status = \"Approved\""
+              }
+            ]
+          },
+          {
+            "condition": "Due_Date < zoho.currentdate",
+            "scripts": [],
+            "field_updates": [
+              {
+                "form": "Pro_Forma_Invoices_1",
+                "fields": "Status = \"Overdue\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition owner\n            \t\t\t\t(\n                \t\t\t\tpermissions = {\"Administrator\", \"Finance Manager\"}\n             \t\t\t\t)\n            \t\t\t\tconfirmation before execution\n            \t\t\t\t(\n                \t\t\t\tmessage = \"Are you sure you want to 'Approve' for this Deposit ${Pro_Forma_Invoice_No}?\"\n                \t\t\t\tconfirm button text = \"Yes\"\n                \t\t\t\tcancel button text = \"No\"\n            \t\t\t\t)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tcustom deluge script\n\t\t\t\t\t\t\t\t(\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943011]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Deposit_No=\" + input.Pro_Forma_Invoice_No;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify To Parts Coordinator\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Deposit \" + input.Pro_Forma_Invoice_No + \" Approved\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>We are pleased to inform you that Deposit \" + input.Pro_Forma_Invoice_No + \" has been successfully approved.As the next step, please submit the approved Deposit to the customer at your earliest convenience.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approved\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" has been approved. Thank you!Please submit it to the customer.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tactions  (Due_Date > zoho.currentdate)\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Pro_Forma_Invoices_1[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Approved\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tactions  (Due_Date < zoho.currentdate)\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Pro_Forma_Invoices_1[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Overdue\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Reject",
+      "display_name": "Reject",
+      "from_stage": "Pending Approval",
+      "to_stage": "Rejected",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [
+              "listEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943011]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Credit_Note_No=\" + input.Pro_Forma_Invoice_No;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify To Parts Coordinator\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \"  Rejected \u2013 Action Required\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>We are pleased to inform you that Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Rejected \u2013 Action Required\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" has been rejected. Please review the reason for rejection.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);"
+            ],
+            "field_updates": [
+              {
+                "form": "Pro_Forma_Invoices_1",
+                "fields": "Status = \"Rejected\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition owner\n            \t\t\t\t(\n                \t\t\t\tpermissions = {\"Administrator\", \"Finance Manager\"}\n             \t\t\t\t)\n            \t\t\t\tconfirmation before execution\n            \t\t\t\t(\n                \t\t\t\tmessage = \"Are you sure you want to 'Reject' for this Deposit ${Pro_Forma_Invoice_No}?\"\n                \t\t\t\tconfirm button text = \"Yes\"\n                \t\t\t\tcancel button text = \"No\"\n            \t\t\t\t)\n         \t\t\t\t",
+        "during": "\n            \t\t\t\taction = update_fields\n            \t\t\t\tworkflow status = true\n            \t\t\t\tvisible fields = [Rejection_Reason]\n         \t\t\t\t",
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Pro_Forma_Invoices_1[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Rejected\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\tcustom deluge script\n\t\t\t\t\t\t\t\t(\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943011]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Credit_Note_No=\" + input.Pro_Forma_Invoice_No;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify To Parts Coordinator\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \"  Rejected \u2013 Action Required\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>We are pleased to inform you that Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Rejected \u2013 Action Required\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" has been rejected. Please review the reason for rejection.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Resubmit",
+      "display_name": "Resubmit",
+      "from_stage": "Rejected",
+      "to_stage": "Pending Approval",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [
+              "listEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943015]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Status=\" + input.Status;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Resubmitted Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approval Required\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>This is a notification that Deposit \" + input.Pro_Forma_Invoice_No + \" has been resubmitted after addressing the previous issues. Please review the updated Pro Forma Invoice and provide your approval at your earliest convenience.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Resubmitted Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Rejected \u2013 Action Required\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"A resubmitted Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" is waiting your approval.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tinput.Confirm_resubmission = false;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tinput.Rejection_Reason = \"\";"
+            ],
+            "field_updates": [
+              {
+                "form": "Pro_Forma_Invoices_1",
+                "fields": "Status = \"Resubmit\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition owner\n            \t\t\t\t(\n                \t\t\t\tpermissions = {\"Administrator\", \"Finance Executive\"}\n                \t\t\t\tuserfields = {Added_User}\n             \t\t\t\t)\n            \t\t\t\tconfirmation before execution\n            \t\t\t\t(\n                \t\t\t\tmessage = \"Are you sure you want to 'Resubmit' for this Deposit ${Pro_Forma_Invoice_No}?\"\n                \t\t\t\tconfirm button text = \"Yes\"\n                \t\t\t\tcancel button text = \"No\"\n            \t\t\t\t)\n         \t\t\t\t",
+        "during": "\n            \t\t\t\taction = update_fields\n            \t\t\t\tworkflow status = true\n            \t\t\t\tvisible fields = [Main_Section,Total_Section,Reject_Section,Pro_Forma_Invoice_Line_Item]\n         \t\t\t\t",
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Pro_Forma_Invoices_1[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Resubmit\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\tcustom deluge script\n\t\t\t\t\t\t\t\t(\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943015]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Status=\" + input.Status;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Resubmitted Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approval Required\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>This is a notification that Deposit \" + input.Pro_Forma_Invoice_No + \" has been resubmitted after addressing the previous issues. Please review the updated Pro Forma Invoice and provide your approval at your earliest convenience.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Resubmitted Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Rejected \u2013 Action Required\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"A resubmitted Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" is waiting your approval.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tinput.Confirm_resubmission = false;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tinput.Rejection_Reason = \"\";\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Send_For_Approval",
+      "display_name": "Send For Approval",
+      "from_stage": "Draft",
+      "to_stage": "Pending Approval",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [
+              "listEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943015]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Status=Pending+Approval\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify To Parts Coordinator\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approval Required\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>We hope this message finds you well. Please review and approve Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" at your earliest convenience.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approval Required\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"Please review and approve Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" to complete processing.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);"
+            ],
+            "field_updates": [
+              {
+                "form": "Pro_Forma_Invoices_1",
+                "fields": "Status = \"Pending Approval\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition owner\n            \t\t\t\t(\n                \t\t\t\tpermissions = {\"Administrator\", \"Finance Executive\"}\n                \t\t\t\tuserfields = {Added_User}\n             \t\t\t\t)\n            \t\t\t\tconfirmation before execution\n            \t\t\t\t(\n                \t\t\t\tmessage = \"Are you sure you want to 'Send For Approval' for this Deposit ${Pro_Forma_Invoice_No}?\"\n                \t\t\t\tconfirm button text = \"Yes\"\n                \t\t\t\tcancel button text = \"No\"\n            \t\t\t\t)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Pro_Forma_Invoices_1[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Pending Approval\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\tcustom deluge script\n\t\t\t\t\t\t\t\t(\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID = List();\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tfor each  user in User[Role == 4662372000000943015]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\temail = user.Email;\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmail.add(email);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tlistEmailID.add(email.toLowerCase());\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmailID.add(zoho.adminuserid);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//listEmail.add(\"test@aplikasi.us\");\n\t\t\t\t\t\t\t\t\t\t\t\t\t\turlReport = \"https://creatorapp.zoho.com\" + zoho.appuri + \"#Report:All_Pro_Forma_Invoices?Status=Pending+Approval\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t//Send Mail & App Notify To Parts Coordinator\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tsendmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tfrom :zoho.adminuserid\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tto :listEmail\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tsubject :\"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approval Required\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tmessage :\"Dear,<br><br>We hope this message finds you well. Please review and approve Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" at your earliest convenience.Can view the record by click <a href=\" + urlReport + \">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyTitle = \"Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" Approval Required\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tnotifyMessage = \"Please review and approve Pro Forma Invoice \" + input.Pro_Forma_Invoice_No + \" to complete processing.\";\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tzoho.pushNotification(listEmailID,notifyTitle,notifyMessage,\"All_Pro_Forma_Invoices\",input.ID);\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Send_Invoice",
+      "display_name": "Send Invoice",
+      "from_stage": "Approved",
+      "to_stage": "Sent",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [
+              "/* Pro forma can be either stage Sent or Overdue after sending */\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tif(input.Due_Date > zoho.currentdate)\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tthisapp.blueprint.changeStage(\"Pro_Forma_Invoices_1\",\"Deposits_Blueprint\",\"Sent\",input.ID);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tthisapp.blueprint.changeStage(\"Pro_Forma_Invoices_1\",\"Deposits_Blueprint\",\"Overdue\",input.ID);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}"
+            ],
+            "field_updates": []
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (Invoice_UUID is not null && QR_Invoice_Public_Link is not null)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tcustom deluge script\n\t\t\t\t\t\t\t\t(\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t/* Pro forma can be either stage Sent or Overdue after sending */\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tif(input.Due_Date > zoho.currentdate)\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tthisapp.blueprint.changeStage(\"Pro_Forma_Invoices_1\",\"Deposits_Blueprint\",\"Sent\",input.ID);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tthisapp.blueprint.changeStage(\"Pro_Forma_Invoices_1\",\"Deposits_Blueprint\",\"Overdue\",input.ID);\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Payment_Received_Partial",
+      "display_name": "Payment Received Partial",
+      "from_stage": "Sent",
+      "to_stage": "Partially Paid",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Payment_Received_Full_fro1",
+      "display_name": "Payment Received Full from Sent",
+      "from_stage": "Sent",
+      "to_stage": "Paid",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Due_Date_Passed_from_Sent",
+      "display_name": "Due Date Passed from Sent",
+      "from_stage": "Sent",
+      "to_stage": "Overdue",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Payment_Received_Full_fro2",
+      "display_name": "Payment Received Full from Partially Paid",
+      "from_stage": "Partially Paid",
+      "to_stage": "Paid",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Due_Date_Passed_from_Part",
+      "display_name": "Due Date Passed from Partially Paid",
+      "from_stage": "Partially Paid",
+      "to_stage": "Overdue",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Payment_Received_Full_fro",
+      "display_name": "Payment Received Full from Overdue",
+      "from_stage": "Overdue",
+      "to_stage": "Paid",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Revert_to_Pending_Approva",
+      "display_name": "Revert to Pending Approval",
+      "from_stage": "Approved",
+      "to_stage": "Pending Approval",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Overdue_to_Sent",
+      "display_name": "Overdue to Sent",
+      "from_stage": "Overdue",
+      "to_stage": "Sent",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Paid_to_Sent",
+      "display_name": "Paid to Sent",
+      "from_stage": "Paid",
+      "to_stage": "Sent",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Partially_Paid_to_Sent",
+      "display_name": "Partially Paid to Sent",
+      "from_stage": "Partially Paid",
+      "to_stage": "Sent",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    }
+  ]
+}

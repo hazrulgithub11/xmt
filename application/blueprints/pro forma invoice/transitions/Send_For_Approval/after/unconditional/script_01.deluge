@@ -1,0 +1,22 @@
+listEmail = List();
+													listEmailID = List();
+													for each  user in User[Role == 4662372000000943015]
+													{
+														email = user.Email;
+														listEmail.add(email);
+														listEmailID.add(email.toLowerCase());
+													}
+													//listEmailID.add(zoho.adminuserid);
+													//listEmail.add("test@aplikasi.us");
+													urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Status=Pending+Approval";
+													//Send Mail & App Notify To Parts Coordinator
+													sendmail
+													[
+														from :zoho.adminuserid
+														to :listEmail
+														subject :"Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approval Required"
+														message :"Dear,<br><br>We hope this message finds you well. Please review and approve Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+													]
+													notifyTitle = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approval Required";
+													notifyMessage = "Please review and approve Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " to complete processing.";
+													zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);

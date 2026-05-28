@@ -1,0 +1,6 @@
+{
+  "link_name": "Reject",
+  "display_name": "Reject",
+  "from_stage": "Pending Approval",
+  "to_stage": "Rejected"
+}

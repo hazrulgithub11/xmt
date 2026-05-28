@@ -1,0 +1,3 @@
+action = update_fields
+            				workflow status = true
+            				visible fields = [Main_Section,Total_Section,Reject_Section,Pro_Forma_Invoice_Line_Item]

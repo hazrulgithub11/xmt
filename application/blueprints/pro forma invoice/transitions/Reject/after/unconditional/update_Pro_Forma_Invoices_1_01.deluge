@@ -1,0 +1,4 @@
+update Pro_Forma_Invoices_1[ID == input.ID]
+[
+Status = "Rejected"
+]

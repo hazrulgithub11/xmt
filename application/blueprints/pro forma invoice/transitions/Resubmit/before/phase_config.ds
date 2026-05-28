@@ -1,0 +1,11 @@
+transition owner
+            				(
+                				permissions = {"Administrator", "Finance Executive"}
+                				userfields = {Added_User}
+             				)
+            				confirmation before execution
+            				(
+                				message = "Are you sure you want to 'Resubmit' for this Deposit ${Pro_Forma_Invoice_No}?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)

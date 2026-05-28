@@ -1,0 +1,6 @@
+{
+  "link_name": "Payment_Received_Full_fro1",
+  "display_name": "Payment Received Full from Sent",
+  "from_stage": "Sent",
+  "to_stage": "Paid"
+}

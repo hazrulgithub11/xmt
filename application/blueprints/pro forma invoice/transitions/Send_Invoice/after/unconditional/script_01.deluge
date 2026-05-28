@@ -1,0 +1,9 @@
+/* Pro forma can be either stage Sent or Overdue after sending */
+													if(input.Due_Date > zoho.currentdate)
+													{
+														thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Sent",input.ID);
+													}
+													else
+													{
+														thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Overdue",input.ID);
+													}
