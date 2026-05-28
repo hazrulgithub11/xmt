@@ -125,6 +125,7 @@ User_Input_Trigger_Workfl as "User_Input_Trigger_Workflow"
 					input_invoice.Amount_Due=input.Grand_Total - input.Amount_Paid - credits_applied_total;
 					input.Amount_Due = input_invoice.Amount_Due;
 				}
+				input.Total_Amount_Due = ifnull(input.Amount_Due,0) + ifnull(input.Previous_Balance,0);
 			)
 		}
 	}
