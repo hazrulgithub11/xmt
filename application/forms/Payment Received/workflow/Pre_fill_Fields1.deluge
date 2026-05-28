@@ -17,8 +17,6 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 					get_invoice = Invoice[ID == input.Invoice];
 					if(get_invoice.ID != null)
 					{
-						input.Customer_Name = ifnull(get_invoice.Customer,input.Customer_Name);
-						input.Customer_Code = ifnull(get_invoice.Customer_Code,input.Customer_Code);
 						input.Customer_TIN = ifnull(get_invoice.Customer_TIN,input.Customer_TIN);
 						input.Customer_SST = ifnull(get_invoice.Customer_SST_Registration_Number,input.Customer_SST);
 						input.Customer_Email = ifnull(get_invoice.Customer_E_mail,input.Customer_Email);
