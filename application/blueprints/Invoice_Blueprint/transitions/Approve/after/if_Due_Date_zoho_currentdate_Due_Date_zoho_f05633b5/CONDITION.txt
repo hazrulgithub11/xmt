@@ -1,1 +1,0 @@
-Due_Date > zoho.currentdate || Due_Date == zoho.currentdate

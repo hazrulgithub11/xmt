@@ -1,9 +1,0 @@
-getCustomerProfile = Customer_Profile[ID == input.Customer];
-msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
-customerName = "&Customer_Name=" + input.Customer;
-customerCode = "&Customer_Code=" + input.Customer_Code;
-invoice = "&Invoice=" + input.ID;
-customerEmail = "&Customer_Email=" + input.Customer_E_mail;
-invoiceNo = "&Invoice_No=" + input.Invoice_No;
-typeOfAction = "&Type_Of_Action=Mark As Sent";
-openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");

@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +22,18 @@ BLUEPRINT_LINK_NAMES = [
     "Deposits_Blueprint",
     "Debit_Note_Blueprint",
 ]
+
+# On-disk folder name when it differs from the Zoho blueprint link name.
+BLUEPRINT_OUTPUT_DIRS: dict[str, str] = {
+    "Deposits_Blueprint": "pro forma invoice",
+}
+
+BLUEPRINT_FORMS: dict[str, str] = {
+    "Invoice_Blueprint": "Invoice",
+    "Credit_Note_Blueprint": "Credit_Note",
+    "Deposits_Blueprint": "Pro_Forma_Invoices",
+    "Debit_Note_Blueprint": "Debit_Note",
+}
 
 
 def find_blueprint_block(content: str, link_name: str) -> tuple[int, int] | None:
@@ -348,11 +361,13 @@ def write_phase_config_files(t_dir: Path, phase: str, phase_text: str | None) ->
 
 
 def write_blueprint_md(bp_dir: Path, meta: dict, transitions: list[dict]) -> None:
+    link_name = meta.get("link_name", bp_dir.name)
     title = meta.get("display_name") or bp_dir.name.replace("_", " ")
     lines = [
         f"# {title}",
         "",
-        f"- **Link name:** `{bp_dir.name}`",
+        f"- **Link name:** `{link_name}`",
+        f"- **Folder:** `{bp_dir.name}/`",
         f"- **Form:** `{meta.get('form', '?')}`",
         f"- **Start stage:** `{meta.get('start_stage', '?')}`",
         "",
@@ -398,39 +413,77 @@ def write_blueprint_md(bp_dir: Path, meta: dict, transitions: list[dict]) -> Non
     (bp_dir / "BLUEPRINT.md").write_text("\n".join(lines), encoding="utf-8")
 
 
+def blueprint_output_dir(link_name: str) -> Path:
+    return OUT_DIR / BLUEPRINT_OUTPUT_DIRS.get(link_name, link_name)
+
+
+def prune_obsolete_transition_dirs(bp_dir: Path, active_link_names: set[str]) -> list[str]:
+    trans_dir = bp_dir / "transitions"
+    if not trans_dir.is_dir():
+        return []
+    removed = []
+    for child in trans_dir.iterdir():
+        if child.is_dir() and child.name not in active_link_names:
+            shutil.rmtree(child)
+            removed.append(child.name)
+    return removed
+
+
+def extract_blueprint(content: str, link_name: str) -> tuple[dict, list[dict], int] | None:
+    span = find_blueprint_block(content, link_name)
+    if not span:
+        return None
+    block_lines = content.splitlines()[span[0] : span[1] + 1]
+    meta = parse_header(block_lines)
+    meta["link_name"] = link_name
+    title_m = re.search(
+        rf"^\s+{re.escape(link_name)} as \"([^\"]+)\"",
+        content,
+        re.MULTILINE,
+    )
+    if title_m:
+        meta["display_name"] = title_m.group(1)
+    transitions = parse_transitions(block_lines)
+
+    bp_dir = blueprint_output_dir(link_name)
+    bp_dir.mkdir(parents=True, exist_ok=True)
+    (bp_dir / "blueprint.json").write_text(
+        json.dumps({"meta": meta, "transitions": transitions}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    for t in transitions:
+        write_transition_files(bp_dir, t)
+    write_blueprint_md(bp_dir, meta, transitions)
+    prune_obsolete_transition_dirs(bp_dir, {t["link_name"] for t in transitions})
+
+    script_count = sum(
+        len(g.get("scripts") or [])
+        for t in transitions
+        for phase in t["phases"].values()
+        for g in phase
+    )
+    return meta, transitions, script_count
+
+
 def main() -> None:
     content = DS_FILE.read_text(encoding="utf-8", errors="replace")
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     summary = []
     for link_name in BLUEPRINT_LINK_NAMES:
-        span = find_blueprint_block(content, link_name)
-        if not span:
+        result = extract_blueprint(content, link_name)
+        if not result:
             print(f"WARN: {link_name} not found")
             continue
-        block_lines = content.splitlines()[span[0] : span[1] + 1]
-        meta = parse_header(block_lines)
-        meta["link_name"] = link_name
-        transitions = parse_transitions(block_lines)
-
-        bp_dir = OUT_DIR / link_name
-        bp_dir.mkdir(parents=True, exist_ok=True)
-        (bp_dir / "blueprint.json").write_text(
-            json.dumps({"meta": meta, "transitions": transitions}, indent=2) + "\n",
-            encoding="utf-8",
+        _meta, transitions, script_count = result
+        out_dir = blueprint_output_dir(link_name)
+        summary.append(
+            (link_name, out_dir.name, len(transitions), script_count)
         )
-        for t in transitions:
-            write_transition_files(bp_dir, t)
-        write_blueprint_md(bp_dir, meta, transitions)
-
-        script_count = sum(
-            len(g.get("scripts") or [])
-            for t in transitions
-            for phase in t["phases"].values()
-            for g in phase
+        print(
+            f"OK {link_name} -> {out_dir.name}: "
+            f"{len(transitions)} transitions, {script_count} scripts"
         )
-        summary.append((link_name, len(transitions), script_count))
-        print(f"OK {link_name}: {len(transitions)} transitions, {script_count} scripts")
 
     readme = OUT_DIR / "README.md"
     readme.write_text(
@@ -480,15 +533,10 @@ def main() -> None:
                 "|---|---|---:|---:|",
             ]
             + [
-                f"| [{name}]({name}/BLUEPRINT.md) | "
-                + {
-                    "Invoice_Blueprint": "Invoice",
-                    "Credit_Note_Blueprint": "Credit_Note",
-                    "Deposits_Blueprint": "Pro_Forma_Invoices",
-                    "Debit_Note_Blueprint": "Debit_Note",
-                }.get(name, "?")
+                f"| [{name}]({out_name}/BLUEPRINT.md) | "
+                + BLUEPRINT_FORMS.get(name, "?")
                 + f" | {tc} | {sc} |"
-                for name, tc, sc in summary
+                for name, out_name, tc, sc in summary
             ]
             + [
                 "",

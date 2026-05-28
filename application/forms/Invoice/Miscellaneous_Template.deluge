@@ -37,42 +37,29 @@ list Copy_of_All_Invoices_Miscellaneous
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Base_Currency as "Base Currency"
 		Invoice_Currency as "Invoice Currency"
-		Status
 		Supplier
 	)
 	custom actions
 	(
-		"Convert To Debit Note"
-		(
-	  			workflow = Convert_To_Debit_Note
-				show action in view header = true
-				show action in edit record menu = true
-				condition = (Status == "Sent")
-		)
 		"Send Invoice"
 		(
 	  			workflow = Send_Invoice
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Status != "Draft" && Status != "Information Filled" && Status != "Rejected" && Status != "Resubmit" && Status != "Pending Approval")
-		)
-		"Mark As Sent"
-		(
-	  			workflow = Mark_As_Sent
-				show action in view header = true
-				condition = (Status == "Approved")
+				condition = (Blueprint.Current_Stage != "Draft" && Blueprint.Current_Stage != "Rejected" && Blueprint.Current_Stage != "Pending Approval")
 		)
 		"Record Payment"
 		(
 	  			workflow = Record_Payment_Invoice
 				show action in view header = true
-				condition = (Status == "Sent" || Status == "Partially Paid")
+				show action in edit record menu = true
+				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Paid")
 		)
 		"Bulk Approve"
 		(
 	  			workflow = Bulk_Approve_Invoices
 				show action in view header = true
-				condition = (Status == "Pending Approval" || Status == "Resubmit")
+				condition = (Blueprint.Current_Stage == "Pending Approval")
 		)
 	)
 	conditional formatting
@@ -92,7 +79,6 @@ list Copy_of_All_Invoices_Miscellaneous
 				fields
 				(
 					Invoice_No as "Invoice No."
-					Status
 					Supplier
 					Supplier_Name as "Customer Name"
 					Invoice_Date as "Invoice Date"
@@ -133,7 +119,6 @@ list Copy_of_All_Invoices_Miscellaneous
     	(
     	 	header
     	 	(
-    		 	Edit 
     	 	)
     	)
 	)

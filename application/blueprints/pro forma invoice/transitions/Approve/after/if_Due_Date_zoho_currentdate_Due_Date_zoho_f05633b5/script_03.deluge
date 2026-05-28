@@ -1,1 +1,0 @@
-thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Approved",input.ID);

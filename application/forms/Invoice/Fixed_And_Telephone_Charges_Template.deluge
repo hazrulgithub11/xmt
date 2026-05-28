@@ -2,6 +2,7 @@ list Copy_of_All_Invoices
 {
 	displayName = "Fixed And Telephone Charges Template"
 	template = Fixed_And_Telephone_Charges_Invoice
+	print template = Fixed_And_Telephone_Charges_Invoice
 	show all rows from Invoice  [!Charge_Category.contains("Miscellaneous Charges")]  
 	(
 		Customer_Code as "Customer Code"
@@ -22,56 +23,42 @@ list Copy_of_All_Invoices
 		)
 		Due_Date as "Due Date"
 		Enable_Reminder as "Enable Reminder ?"
-		Status
 		Amount_Due as "Amount Due"
-		Amount_Paid as "Amount Paid"
 		Customer_E_mail as "E-mail"
 		Customer.Added_Time as "Added Time"
 		Customer.Modified_User as "Modified User"
 		Customer_Code.Added_User as "Added User"
 		Rejection_Reason as "Rejection Reason"
-		Supplier_Name as "Supplier Name"
-		Customer_Name as "Customer Name"
+		Supplier
+		Supplier_Name as "Customer Name"
 		Charge_Category as "Charge Category"
 		Grand_Total as "Grand Total"
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Base_Currency as "Base Currency"
 		Invoice_Currency as "Invoice Currency"
-		Subscriptions.Exchange_Rate as "Exchange Rate"
+		Amount_Paid as "Amount Paid"
 	)
 	custom actions
 	(
-		"Convert To Debit Note"
-		(
-	  			workflow = Convert_To_Debit_Note
-				show action in view header = true
-				show action in edit record menu = true
-				condition = (Status == "Sent")
-		)
 		"Send Invoice"
 		(
 	  			workflow = Send_Invoice
 				show action in view header = true
-				condition = (Status != "Draft" && Status != "Information Filled" && Status != "Rejected" && Status != "Resubmit")
+				condition = (Blueprint.Current_Stage != "Draft" && Blueprint.Current_Stage != "Rejected" && Blueprint.Current_Stage != "Resubmit")
 		)
-		"Mark As Sent"
+		"Record Payment"
 		(
-	  			workflow = Mark_As_Sent
+	  			workflow = Record_Payment_Invoice
 				show action in view header = true
-				condition = (Status == "Approved")
-		)
-		"Bulk Approve"
-		(
-	  			workflow = Bulk_Approve_Invoices
-				show action in view header = true
-				condition = (Status == "Pending Approval" || Status == "Resubmit")
+				show action in edit record menu = true
+				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Paid")
 		)
 	)
 	conditional formatting
 	(
 		"Overdue"
 		{
-			condition = (Status == "Approved" || Status == "Sent" || Status == "Partially Paid" && Due_Date < zoho.currentdate)
+			condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" && Due_Date < zoho.currentdate)
 			fields = [Due_Date]
 			format = "color:#e64d3b;"
 		}
@@ -90,9 +77,8 @@ list Copy_of_All_Invoices
 				fields
 				(
 					Invoice_No as "Invoice No."
-					Status
-					Supplier_Name as "Supplier Name"
-					Customer_Name as "Customer Name"
+					Supplier
+					Supplier_Name as "Customer Name"
 					Invoice_Date as "Invoice Date"
 					Due_Date as "Due Date"
 					Charge_Category as "Charge Category"
@@ -100,7 +86,7 @@ list Copy_of_All_Invoices
 					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 					Base_Currency as "Base Currency"
 					Invoice_Currency as "Invoice Currency"
-					Subscriptions.Exchange_Rate as "Exchange Rate"
+					Exchange_Rate as "Exchange Rate"
 					Amount_Paid as "Amount Paid"
 				)
 			)
@@ -130,7 +116,6 @@ list Copy_of_All_Invoices
 					Invoice_No as "Invoice No."
 					Invoice_Date as "Invoice Date"
 					Due_Date as "Due Date"
-					Status
 					Customer
 					Customer_E_mail as "E-mail"
 					Customer_Code as "Customer Code"

@@ -1,23 +1,22 @@
 listEmail = List();
-listEmailID = List();
-for each  user in User[Role == 4662372000000943011]
-{
-	email = user.Email;
-	listEmail.add(email);
-	listEmailID.add(email.toLowerCase());
-}
-//listEmail.add("test@aplikasi.us");
-//listEmailID.add(zoho.adminuserid);
-urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
-//Send Mail & App Notify To Parts Coordinator
-sendmail
-[
-	from :zoho.adminuserid
-	to :listEmail
-	subject :"Invoice " + input.Invoice_No + " Approved"
-	message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been successfully approved.As the next step, please submit the approved invoice to the customer at your earliest convenience.Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-]
-notifyTitle = "Invoice " + input.Invoice_No + " Approved";
-notifyMessage = "Invoice " + input.Invoice_No + " has been approved. Thank you! Please submit it to the customer.";
-zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
-//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943011]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmail.add("test@aplikasi.us");
+														//listEmailID.add(zoho.adminuserid);
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Deposit_No=" + input.Pro_Forma_Invoice_No;
+														//Send Mail & App Notify To Parts Coordinator
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Deposit " + input.Pro_Forma_Invoice_No + " Approved"
+															message :"Dear,<br><br>We are pleased to inform you that Deposit " + input.Pro_Forma_Invoice_No + " has been successfully approved.As the next step, please submit the approved Deposit to the customer at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approved";
+														notifyMessage = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " has been approved. Thank you!Please submit it to the customer.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);

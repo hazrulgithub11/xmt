@@ -11,17 +11,17 @@ Disable_Fields11 as "Disable Fields"
 		{
 			custom deluge script
 			(
+					disable Customer_Name;
+				disable Customer_Code;
 					disable Customer_TIN;
 				disable Customer_SST;
+				disable Customer_Email;
 				disable Payment_Received_No;
 				disable Organization;
 				disable Amount_Received;
+				disable Payment_Received_Currency;
 				disable Currency;
-				disable Exchange_Rate;
 				disable Amount_Received_MYR;
-				disable Invoice;
-				disable Debit_Note;
-				disable Pro_Forma_Invoices;
 				disable Single_Record_Payment;
 				disable Total_Still_Owing;
 				disable Payment_Type_Single_Record;
@@ -33,8 +33,6 @@ Disable_Fields11 as "Disable Fields"
 				disable Payment_Received_Line_Item.Outstanding_Balance;
 				disable Payment_Received_Line_Item.Allocation_MYR;
 				disable Payment_Received_Line_Item.Payment_Received;
-				disable Payment_Received_Line_Item.Customer_Code;
-				disable Payment_Received_Line_Item.Customer_Name;
 				disable Payment_Received_Line_Item.Still_Owing;
 				if(input.Payment_Type == "Deposit")
 				{

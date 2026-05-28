@@ -12,36 +12,10 @@ Handle_Customer_Name2 as "Handle Customer Name"
 			custom deluge script
 			(
 					customerInfo = Customer_Profile[ID == input.Customer_Name];
-				input.Currency = ifnull(customerInfo.Currency,null);
-				getOrganization = Organization_Settings[ID != null];
-				baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
-				if(input.Currency == null || input.Currency == "")
+				if(input.Single_Record_Payment != true)
 				{
-					input.Exchange_Rate = null;
+					input.Customer_Code = null;
 				}
-				else if(input.Currency == baseCurrency)
-				{
-					input.Exchange_Rate = 1;
-				}
-				else
-				{
-					try 
-					{
-						exchange_rate_get_response = invokeurl
-						[
-							url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
-							type :GET
-						];
-						exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
-						input.Exchange_Rate = exchange_rate;
-					}
-					catch (e)
-					{
-						info e;
-						input.Exchange_Rate = "";
-					}
-				}
-				input.Customer_Code = null;
 				input.Payment_Method = null;
 				input.Reference = "";
 				input.Customer_Email = ifnull(customerInfo.Email_Address,"");
@@ -50,7 +24,90 @@ Handle_Customer_Name2 as "Handle Customer Name"
 				input.Paid_To = null;
 				input.Payment_Received_Line_Item.clear();
 				input.Amount_Received = 0;
-				input.Amount_Received_MYR = ifnull(input.Amount_Received,0) * ifnull(input.Exchange_Rate,1);
+			)
+		}
+		actions  (Payment_Type == "Invoice/Debit Note" && Customer_Name.ID is not null)
+		{
+			custom deluge script
+			(
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				get_invoice_list = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer == input.Customer_Name];
+				get_debit_note_list = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer == input.Customer_Name];
+				if(get_invoice_list.count() == 0 && get_debit_note_list.count() == 0 && input.Customer_Name != null)
+				{
+					alert "There are no unpaid invoices associated with this customer code.";
+				}
+				input.Payment_Received_Line_Item.clear();
+				total_payment_amount_received = 0;
+				total_payment_amount_received_myr = 0;
+				for each  curr_invoice in get_invoice_list
+				{
+					curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+					curr_pay_row.Reference_No=curr_invoice.Invoice_No;
+					curr_pay_row.Description="Payment Received For " + curr_invoice.Invoice_For_Usage + " INV " + curr_invoice.Invoice_No;
+					curr_pay_row.Invoice_No=curr_invoice.ID;
+					curr_pay_row.Document_Date=curr_invoice.Invoice_Date;
+					curr_pay_row.Amount=curr_invoice.Grand_Total;
+					curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
+					curr_pay_row.Allocation=curr_invoice.Amount_Due;
+					curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+					input.Payment_Received_Line_Item.insert(curr_pay_row);
+					total_payment_amount_received = total_payment_amount_received + curr_invoice.Amount_Due;
+					total_payment_amount_received_myr = total_payment_amount_received_myr + curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+				}
+				for each  curr_debit_note in get_debit_note_list
+				{
+					curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+					curr_pay_row.Reference_No=curr_debit_note.Invoice_No;
+					curr_pay_row.Description="Payment Received For Debit Note " + curr_debit_note.Invoice_No;
+					curr_pay_row.Debit_Note_No=curr_debit_note.ID;
+					curr_pay_row.Document_Date=curr_debit_note.Invoice_Date;
+					curr_pay_row.Amount=curr_debit_note.Grand_Total;
+					curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
+					curr_pay_row.Allocation=curr_debit_note.Amount_Due;
+					curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+					input.Payment_Received_Line_Item.insert(curr_pay_row);
+					total_payment_amount_received = total_payment_amount_received + curr_debit_note.Amount_Due;
+					total_payment_amount_received_myr = total_payment_amount_received_myr + curr_debit_note.Amount_Due * curr_invoice.Exchange_Rate;
+				}
+				input.Amount_Received = total_payment_amount_received;
+				input.Amount_Received_MYR = total_payment_amount_received_myr;
+			)
+		}
+		actions  (Payment_Type == "Deposit" && Customer_Name.ID is not null)
+		{
+			custom deluge script
+			(
+					customerInfo = Customer_Profile[ID == input.Customer_Name];
+				tenancyInfo = Tenancy[ID == input.Customer_Code];
+				//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
+				subTotal = 0;
+				totalTax = 0;
+				getPIs = Pro_Forma_Invoices_1[Status == "Partially Paid" || Status == "Sent" || Status = "Overdue" && Customer_Code == input.Customer_Code];
+				if(getPIs.ID == null && input.Customer_Code != null)
+				{
+					alert "There are no unpaid deposits associated with this customer code.";
+				}
+				input.Payment_Received_Line_Item.clear();
+				totalPaymentReceived = 0;
+				totalPaymentReceivedMYR = 0;
+				for each  pi in getPIs
+				{
+					payRow = Payment_Received.Payment_Received_Line_Item();
+					payRow.Reference_No=pi.Pro_Forma_Invoice_No;
+					payRow.Description="Payment Received For DEP " + pi.Pro_Forma_Invoice_No;
+					payRow.Pro_Forma_Invoice_No=pi.ID;
+					payRow.Document_Date=pi.Pro_Forma_Invoice_Date;
+					payRow.Amount=pi.Grand_Total;
+					payRow.Outstanding_Balance=pi.Amount_Due;
+					payRow.Allocation=pi.Amount_Due;
+					payRow.Allocation_MYR=pi.Amount_Due * pi.Exchange_Rate;
+					input.Payment_Received_Line_Item.insert(payRow);
+					totalPaymentReceived = totalPaymentReceived + pi.Amount_Due;
+					totalPaymentReceivedMYR = totalPaymentReceivedMYR + pi.Amount_Due * pi.Exchange_Rate;
+				}
+				input.Amount_Received = totalPaymentReceived;
+				input.Amount_Received_MYR = totalPaymentReceivedMYR;
 			)
 		}
 	}

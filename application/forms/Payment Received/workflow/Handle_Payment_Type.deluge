@@ -11,6 +11,8 @@ Handle_Payment_Type as "Handle Payment Type"
 		{
 			custom deluge script
 			(
+					if(input.Single_Record_Payment != true)
+				{
 					input.Customer_Name = null;
 				input.Customer_TIN = "";
 				input.Customer_SST = "";
@@ -21,9 +23,9 @@ Handle_Payment_Type as "Handle Payment Type"
 				input.Reference = "";
 				input.Payment_Received_Line_Item.clear();
 				input.Amount_Received = null;
-				input.Currency = null;
-				input.Exchange_Rate = null;
+				input.Payment_Received_Currency = null;
 				input.Amount_Received_MYR = null;
+				}
 			)
 		}
 	}

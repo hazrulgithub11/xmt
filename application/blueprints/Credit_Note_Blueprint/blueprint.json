@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "form": "Credit_Note",
+    "start_stage": "Draft",
+    "stages": [
+      "Draft",
+      "Pending Approval",
+      "Rejected",
+      "Approved",
+      "Open",
+      "Closed"
+    ],
+    "link_name": "Credit_Note_Blueprint",
+    "display_name": "Credit Note Blueprint"
+  },
+  "transitions": [
+    {
+      "link_name": "Approve",
+      "display_name": "Approve",
+      "from_stage": "Pending Approval",
+      "to_stage": "Approved",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [],
+            "field_updates": [
+              {
+                "form": "Credit_Note",
+                "fields": "Status = \"Approved\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n         \t\t\t\t",
+        "during": null,
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Approved\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Reject",
+      "display_name": "Reject",
+      "from_stage": "Pending Approval",
+      "to_stage": "Rejected",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [],
+            "field_updates": [
+              {
+                "form": "Credit_Note",
+                "fields": "Status = \"Rejected\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n         \t\t\t\t",
+        "during": null,
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Rejected\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Resubmit",
+      "display_name": "Resubmit",
+      "from_stage": "Rejected",
+      "to_stage": "Pending Approval",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [],
+            "field_updates": [
+              {
+                "form": "Credit_Note",
+                "fields": "Status = \"Pending Approval\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n         \t\t\t\t",
+        "during": null,
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Pending Approval\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Send_For_Approval",
+      "display_name": "Send For Approval",
+      "from_stage": "Draft",
+      "to_stage": "Pending Approval",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": [
+          {
+            "condition": null,
+            "scripts": [],
+            "field_updates": [
+              {
+                "form": "Credit_Note",
+                "fields": "Status = \"Pending Approval\""
+              }
+            ]
+          }
+        ]
+      },
+      "phase_raw": {
+        "before": "\n         \t\t\t\t",
+        "during": null,
+        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Pending Approval\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Converted_to_Open",
+      "display_name": "Converted to Open",
+      "from_stage": "Approved",
+      "to_stage": "Open",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Converted_to_Closed",
+      "display_name": "Converted to Closed",
+      "from_stage": "Open",
+      "to_stage": "Closed",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Revert_to_Pending_Approva",
+      "display_name": "Revert to Pending Approval",
+      "from_stage": "Approved",
+      "to_stage": "Pending Approval",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n            \t\t\t\ttransition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    }
+  ]
+}

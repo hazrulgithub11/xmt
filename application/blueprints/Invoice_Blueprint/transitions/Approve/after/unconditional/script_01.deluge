@@ -1,23 +1,443 @@
-listEmail = List();
-listEmailID = List();
-for each  user in User[Role == 4662372000000943011]
-{
-	email = user.Email;
-	listEmail.add(email);
-	listEmailID.add(email.toLowerCase());
-}
-//listEmail.add("test@aplikasi.us");
-//listEmailID.add(zoho.adminuserid);
-urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
-//Send Mail & App Notify To Parts Coordinator
-sendmail
-[
-	from :zoho.adminuserid
-	to :listEmail
-	subject :"Invoice " + input.Invoice_No + " Approved"
-	message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been successfully approved.As the next step, please submit the approved invoice to the customer at your earliest convenience.Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-]
-notifyTitle = "Invoice " + input.Invoice_No + " Approved";
-notifyMessage = "Invoice " + input.Invoice_No + " has been approved. Thank you! Please submit it to the customer.";
-zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
-//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
+// LHDN validation (must run first; aborts transition on failure)
+														error_messages = list();
+														get_organization = Organization_Settings[ID != null];
+														organization_environment = get_organization.LHDN_Portal_Environment;
+														system_api_url = "https://api.myinvois.hasil.gov.my/";
+														if(organization_environment == "SANDBOX")
+														{
+															system_api_url = "https://preprod-api.myinvois.hasil.gov.my/";
+														}
+														else
+														{
+															system_api_url = "https://api.myinvois.hasil.gov.my/";
+														}
+														/* Get LHDN Access Token */
+														client_id = get_organization.Client_ID;
+														client_secret = get_organization.Client_Secret;
+														access_token = "";
+														token_header = Map();
+														token_header.put("Content-Type","application/x-www-form-urlencoded");
+														token_params = Map();
+														token_params.put("client_id",client_id);
+														token_params.put("client_secret",client_secret);
+														token_params.put("grant_type","client_credentials");
+														token_params.put("scope","InvoicingAPI");
+														try 
+														{
+															token_response = invokeurl
+															[
+																url :system_api_url + "connect/token"
+																type :POST
+																parameters:token_params
+																headers:token_header
+															];
+															access_token = token_response.toMap().get("access_token");
+														}catch (e)
+														{
+															error_messages.add("Failed to fetch access token from LHDN: " + e.toString());
+														}
+														if(access_token == null || access_token == "")
+														{
+															error_messages.add("Failed to fetch access token from LHDN. Please check your Client ID and Client Secret.");
+														}
+														// Organization TIN Validation via LHDN
+														organization_tin = input.Supplier_TIN;
+														organization_registration_number_scheme = input.Supplier_ID_Type;
+														organization_registration_number = input.Supplier_Registration_Identification_Passport_Number;
+														general_tin_list = {"EI00000000010","EI00000000020","EI00000000030","EI00000000040"};
+														if(access_token != "" && !general_tin_list.contains(organization_tin))
+														{
+															org_validation_headers = Map();
+															org_validation_headers.put("Authorization",access_token);
+															org_validation_headers.put("Content-Type","application/json");
+															org_validation_url = system_api_url + "api/v1.0/taxpayer/validate/" + organization_tin + "?idType=" + organization_registration_number_scheme + "&idValue=" + organization_registration_number;
+															try 
+															{
+																org_validation_response = invokeurl
+																[
+																	url :org_validation_url
+																	type :GET
+																	headers:org_validation_headers
+																];
+																if(org_validation_response != "")
+																{
+																	// If org_validation_response is Empty, it means 200 success. 
+																	error_messages.add("Missing or invalid TIN and Registration Number. Please enter the correct details to proceed.");
+																}
+															}	catch (e)
+															{
+																error_messages.add("Failed to validate organization with LHDN: " + e.toString());
+															}
+														}
+														/* Organization Settings Validation */
+														org_missing_fields = list();
+														if(ifnull(input.Supplier_Name,"") == "")
+														{
+															org_missing_fields.add("name");
+														}
+														if(ifnull(input.Supplier_Telephone_Number,"") == "")
+														{
+															org_missing_fields.add("phone number");
+														}
+														if(org_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing organization details: " + org_missing_fields.toString() + ".");
+														}
+														org_address_missing_fields = list();
+														if(ifnull(input.Supplier_Country,"") == "")
+														{
+															org_address_missing_fields.add("country");
+														}
+														if(ifnull(input.Supplier_State,"") == "")
+														{
+															org_address_missing_fields.add("state");
+														}
+														if(ifnull(input.Supplier_City,"") == "")
+														{
+															org_address_missing_fields.add("city");
+														}
+														if(ifnull(input.Supplier_Street,"") == "")
+														{
+															org_address_missing_fields.add("street address");
+														}
+														if(ifnull(input.Supplier_Postcode,"") == "")
+														{
+															org_address_missing_fields.add("zip code");
+														}
+														if(org_address_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing organization address details: " + org_address_missing_fields.toString() + ".");
+														}
+														// Customer Validation
+														customer_tin = input.Customer_TIN;
+														customer_reg_scheme = input.Customer_ID_Type;
+														customer_reg_number = input.Customer_Registration_Identification_Passport_Number;
+														if(access_token != "" && !general_tin_list.contains(customer_tin))
+														{
+															customer_validation_headers = Map();
+															customer_validation_headers.put("Authorization",access_token);
+															customer_validation_headers.put("Content-Type","application/json");
+															customer_validation_url = system_api_url + "api/v1.0/taxpayer/validate/" + customer_tin + "?idType=" + customer_reg_scheme + "&idValue=" + customer_reg_number;
+															try 
+															{
+																customer_validation_response = invokeurl
+																[
+																	url :customer_validation_url
+																	type :GET
+																	headers:customer_validation_headers
+																];
+																if(customer_validation_response != "")
+																{
+																	// If customer_validation_response is Empty, it means 200 success.
+																	error_messages.add("Missing or invalid customer TIN and Registration Number. Please enter the correct details to proceed.");
+																}
+															}	catch (e)
+															{
+																error_messages.add("Failed to validate customer with LHDN: " + e.toString());
+															}
+														}
+														customer_missing_fields = list();
+														if(ifnull(input.Customer_Name,"") == "")
+														{
+															customer_missing_fields.add("customer name");
+														}
+														if(ifnull(input.Customer_Telephone_Number,"") == "")
+														{
+															customer_missing_fields.add("phone number");
+														}
+														if(customer_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing customer details: " + customer_missing_fields.toString() + ".");
+														}
+														// Billing address
+														customer_billing_missing_fields = list();
+														if(ifnull(input.Customer_Street,"") == "")
+														{
+															customer_billing_missing_fields.add("billing address");
+														}
+														if(ifnull(input.Customer_City,"") == "")
+														{
+															customer_billing_missing_fields.add("city");
+														}
+														if(ifnull(input.Customer_State,"") == "")
+														{
+															customer_billing_missing_fields.add("state");
+														}
+														if(ifnull(input.Customer_Postcode,"") == "")
+														{
+															customer_billing_missing_fields.add("zip code");
+														}
+														if(ifnull(input.Customer_Country,"") == "")
+														{
+															customer_billing_missing_fields.add("country");
+														}
+														if(customer_billing_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing customer billing details: " + customer_billing_missing_fields.toString() + ".");
+														}
+														// Shipping address — only validated if at least one shipping field is populated
+														customer_shipping_street = ifnull(input.Delivery_Street,"");
+														customer_shipping_city = ifnull(input.Delivery_City,"");
+														customer_shipping_state = ifnull(input.Delivery_State,"");
+														customer_shipping_zip = ifnull(input.Delivery_Postcode,"");
+														customer_shipping_country = ifnull(input.Delivery_Country,"");
+														shipping_address_needed = false;
+														if(customer_shipping_street != "" || customer_shipping_city != "" || customer_shipping_state != "" || customer_shipping_zip != "" || customer_shipping_country != "")
+														{
+															shipping_address_needed = true;
+														}
+														if(shipping_address_needed)
+														{
+															customer_shipping_missing_fields = list();
+															if(customer_shipping_street == "")
+															{
+																customer_shipping_missing_fields.add("shipping address");
+															}
+															if(customer_shipping_city == "")
+															{
+																customer_shipping_missing_fields.add("city");
+															}
+															if(customer_shipping_state == "")
+															{
+																customer_shipping_missing_fields.add("state");
+															}
+															if(customer_shipping_zip == "")
+															{
+																customer_shipping_missing_fields.add("zip code");
+															}
+															if(customer_shipping_country == "")
+															{
+																customer_shipping_missing_fields.add("country");
+															}
+															if(customer_shipping_missing_fields.size() > 0)
+															{
+																error_messages.add("Missing customer shipping details: " + customer_shipping_missing_fields.toString() + ".");
+															}
+														}
+														if(error_messages.size() > 0)
+														{
+															error_message = "";
+															for each  msg in error_messages
+															{
+																error_message = error_message + msg + " ";
+															}
+															error_message = error_message.trim();
+															info error_message;
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Pending Approval",input.ID);
+															return;
+														}
+														// Balance updates
+														previoustotalAmountDue = 0;
+														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+														{
+															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+														}
+														input.Previous_Balance = previoustotalAmountDue;
+														input.Total_Amount_Due = input.Grand_Total;
+														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+														{
+															thisapp.invoice.invoice_balance_updates(inv.ID);
+														}
+														// Due-date stage routing
+														if(input.Due_Date < zoho.currentdate)
+														{
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
+														}
+														else
+														{
+															/*
+															journalEntryLineItem = Collection();
+															row1 = Journal_Entry.Journal_Entry_Line_Item();
+															row1.Account=4662372000000087205;
+															row1.Description="Invoice " + input.Invoice_No + " Subtotal";
+															row1.Debit=0;
+															row1.Credit=ifnull(input.Sub_Total,0);
+															row1.Invoice=input.ID;
+															row2 = Journal_Entry.Journal_Entry_Line_Item();
+															row2.Account=4662372000000941743;
+															row2.Description="Invoice " + input.Invoice_No + " Total Tax";
+															row2.Debit=0;
+															row2.Credit=ifnull(input.Total_Tax,0);
+															row2.Invoice=input.ID;
+															row3 = Journal_Entry.Journal_Entry_Line_Item();
+															row3.Account=4662372000000941747;
+															row3.Description="Invoice " + input.Invoice_No + " Grand Total";
+															row3.Debit=ifnull(input.Grand_Total,0);
+															row3.Credit=0;
+															row3.Invoice=input.ID;
+															journalEntryLineItem.insert(row1,row2,row3);
+															newJournalEntryRecord = insert into Journal_Entry
+															[
+																Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+																Document_No=input.Invoice_No
+																Added_User=zoho.loginuser
+																Invoice=input.ID
+																Date_field=zoho.currentdate
+																Journal_Entry_Line_Item=journalEntryLineItem
+																Sub_Total_Debit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
+																Sub_Total_Credit=ifnull(input.Sub_Total,0)
+																Total_Debit=ifnull(input.Grand_Total,0)
+																Total_Credit=ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0)
+																Difference=ifnull(input.Grand_Total,0) - (ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0))
+																Created_By_The_System=true
+															];
+															//thisapp.invoice.recalculate_overdue(input.Customer_Code);
+															*/
+															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Approved",input.ID);
+														}
+														// Submit to LHDN and populate Invoice_UUID / public link
+														zoho_loginuser = zoho.loginuser;
+														app_link_name = "xmt-billing-system";
+														client_id = input.Supplier.Client_ID;
+														client_secret = input.Supplier.Client_Secret;
+														organization_scheme_id = input.Supplier.Scheme_ID;
+														organization_scheme_agency_id = input.Supplier.Scheme_agency_ID;
+														organization_tax_name = input.Supplier.Tax_Name;
+														organization_environment = input.Supplier.LHDN_Portal_Environment;
+														organization_name = input.Supplier_Name;
+														organization_tin = input.Supplier_TIN;
+														organization_registration_number_scheme = input.Supplier_ID_Type;
+														organization_registration_number = input.Supplier_Registration_Identification_Passport_Number;
+														organization_sst_registration_number = input.Supplier_SST_Registration_Number;
+														organization_msic_description = input.Supplier_Business_Activity_Description;
+														organization_email = input.Supplier_E_mail;
+														organization_phone = input.Supplier_Telephone_Number;
+														organization_street_address = input.Supplier_Street;
+														organization_city = input.Supplier_City;
+														organization_zip = input.Supplier_Postcode;
+														organization_country = input.Supplier_Country;
+														organization_state = input.Supplier_State;
+														organization_object = {"client_id":client_id,"client_secret":client_secret,"organization_scheme_id":organization_scheme_id,"organization_scheme_agency_id":organization_scheme_agency_id,"organization_tax_name":organization_tax_name,"organization_environment":organization_environment,"organization_name":organization_name,"organization_tin":organization_tin,"organization_registration_number_scheme":organization_registration_number_scheme,"organization_registration_number":organization_registration_number,"organization_sst_registration_number":organization_sst_registration_number,"organization_msic_description":organization_msic_description,"organization_email":organization_email,"organization_phone":organization_phone,"organization_street_address":organization_street_address,"organization_city":organization_city,"organization_zip":organization_zip,"organization_country":organization_country,"organization_state":organization_state};
+														organization = organization_object.toString();
+														customer_name = input.Customer_Name;
+														customer_tin = input.Customer_TIN;
+														customer_registration_number_scheme = input.Customer_ID_Type;
+														customer_registration_number = input.Customer_Registration_Identification_Passport_Number;
+														customer_sst_registration_number = input.Customer_SST_Registration_Number;
+														customer_email = input.Customer_E_mail;
+														customer_phone = input.Customer_Telephone_Number;
+														customer_billing_street_address = input.Customer_Street;
+														customer_billing_city = input.Customer_City;
+														customer_billing_zip = input.Customer_Postcode;
+														customer_billing_country_name = input.Customer_Country;
+														customer_billing_state = input.Customer_State;
+														customer_shipping_street_address = input.Delivery_Street;
+														customer_shipping_city = input.Delivery_City;
+														customer_shipping_zip = input.Delivery_Postcode;
+														customer_shipping_country_name = input.Delivery_Country;
+														customer_shipping_state = input.Delivery_State;
+														customer_object = {"customer_name":customer_name,"customer_tin":customer_tin,"customer_registration_number_scheme":customer_registration_number_scheme,"customer_registration_number":customer_registration_number,"customer_sst_registration_number":customer_sst_registration_number,"customer_email":customer_email,"customer_phone":customer_phone,"customer_billing_street_address":customer_billing_street_address,"customer_billing_city":customer_billing_city,"customer_billing_zip":customer_billing_zip,"customer_billing_country_name":customer_billing_country_name,"customer_billing_state":customer_billing_state,"customer_shipping_street_address":customer_shipping_street_address,"customer_shipping_city":customer_shipping_city,"customer_shipping_zip":customer_shipping_zip,"customer_shipping_country_name":customer_shipping_country_name,"customer_shipping_state":customer_shipping_state};
+														customer = customer_object.toString();
+														line_item_list = {};
+														for each  curr_monthly_rental in input.Monthly_Rental
+														{
+															curr_item_name = curr_monthly_rental.Item_Code_Monthly_Rental;
+															curr_item_classification_code_list = curr_monthly_rental.Classification_Codes_Monthly_Rental;
+															curr_item_description = "Monthly Rental: " + curr_monthly_rental.Description_Monthly_Rental;
+															curr_item_quantity = curr_monthly_rental.Quantity_Monthly_Rental;
+															curr_item_unit_price = curr_monthly_rental.Unit_Price_Monthly_Rental;
+															curr_item_price_extension = curr_monthly_rental.Sub_Total_Monthly_Rental;
+															curr_item_tax_type = curr_monthly_rental.Tax_Type_Monthly_Rental;
+															curr_item_tax_percentage = curr_monthly_rental.Tax_Pct_Monthly_Rental;
+															curr_item_tax_amount = curr_monthly_rental.Tax_Amount_Monthly_Rental;
+															curr_item = {"item_name":curr_item_name,"item_classification_code_list":curr_item_classification_code_list,"item_description":curr_item_description,"item_quantity":curr_item_quantity,"item_unit_price":curr_item_unit_price,"item_price_extension":curr_item_price_extension,"item_tax_type":curr_item_tax_type,"item_tax_percentage":curr_item_tax_percentage,"item_tax_amount":curr_item_tax_amount};
+															line_item_list.add(curr_item);
+														}
+														for each  curr_internet_charge in input.Internet_Charges
+														{
+															curr_item_name = curr_internet_charge.Item_Code_Internet_Charges;
+															curr_item_classification_code_list = curr_internet_charge.Classification_Codes_Internet_Charges;
+															curr_item_description = "Internet Charge: " + curr_internet_charge.Description_Internet_Charges;
+															curr_item_quantity = curr_internet_charge.Quantity_Internet_Charges;
+															curr_item_unit_price = curr_internet_charge.Unit_Price_Internet_Charges;
+															curr_item_price_extension = curr_internet_charge.Sub_Total_Internet_Charges;
+															curr_item_tax_type = curr_internet_charge.Tax_Type_Internet_Charges;
+															curr_item_tax_percentage = curr_internet_charge.Tax_Pct_Internet_Charges;
+															curr_item_tax_amount = curr_internet_charge.Tax_Amount_Internet_Charges;
+															curr_item = {"item_name":curr_item_name,"item_classification_code_list":curr_item_classification_code_list,"item_description":curr_item_description,"item_quantity":curr_item_quantity,"item_unit_price":curr_item_unit_price,"item_price_extension":curr_item_price_extension,"item_tax_type":curr_item_tax_type,"item_tax_percentage":curr_item_tax_percentage,"item_tax_amount":curr_item_tax_amount};
+															line_item_list.add(curr_item);
+														}
+														for each  curr_call_charge in input.Call_Charges
+														{
+															curr_item_name = curr_call_charge.Item_Code_Call_Charges;
+															curr_item_classification_code_list = curr_call_charge.Classification_Codes_Call_Charges;
+															curr_item_description = "Call Charge: " + curr_call_charge.Description_Call_Charges;
+															curr_item_quantity = curr_call_charge.Quantity_Call_Charges;
+															curr_item_unit_price = curr_call_charge.Unit_Price_Call_Charges;
+															curr_item_price_extension = curr_call_charge.Sub_Total_Call_Charges;
+															curr_item_tax_type = curr_call_charge.Tax_Type_Call_Charges;
+															curr_item_tax_percentage = curr_call_charge.Tax_Pct_Call_Charges;
+															curr_item_tax_amount = curr_call_charge.Tax_Amount_Call_Charges;
+															curr_item = {"item_name":curr_item_name,"item_classification_code_list":curr_item_classification_code_list,"item_description":curr_item_description,"item_quantity":curr_item_quantity,"item_unit_price":curr_item_unit_price,"item_price_extension":curr_item_price_extension,"item_tax_type":curr_item_tax_type,"item_tax_percentage":curr_item_tax_percentage,"item_tax_amount":curr_item_tax_amount};
+															line_item_list.add(curr_item);
+														}
+														invoice_get_response = Map();
+														invoice_get_response.put("Invoice_Date",input.Invoice_Date);
+														invoice_get_response.put("Invoice_No",input.Invoice_No);
+														invoice_get_response.put("Payment_Term",input.Payment_Term.Days.toString());
+														invoice_get_response.put("ID",input.ID);
+														invoice_get_response.put("Due_Date",input.Due_Date);
+														invoice_get_response.put("invoice_uuid",input.Invoice_UUID);
+														invoice_get_response.put("invoice_public_link",input.Invoice_Public_Link);
+														invoice_get_response.put("invoice_subtotal",input.Sub_Total);
+														invoice_get_response.put("invoice_tax_total",input.Total_Tax);
+														invoice_get_response.put("invoice_total",input.Grand_Total);
+														invoice_get_response.put("organization_currency_code",input.Base_Currency);
+														invoice_get_response.put("invoice_currency_code",input.Invoice_Currency);
+														invoice_get_response.put("invoice_exchange_rate",input.Exchange_Rate);
+														invoice_get_response.put("line_items",line_item_list);
+														invoice = invoice_get_response.toString();
+														invoice_submit_lhdn_output = thisapp.invoice_submit_lhdn(invoice,organization,customer);
+														info invoice_submit_lhdn_output.get("output").toMap();
+														invoice_submit_lhdn_output = invoice_submit_lhdn_output.get("output").toMap();
+														current_date_time = zoho.currenttime;
+														new_row_invoice_related_list = Invoice.Invoice_Related_List();
+														new_row_invoice_related_list.USERNAME=zoho_loginuser;
+														new_row_invoice_related_list.INVOICE_NUMBER=input.Invoice_No;
+														new_row_invoice_related_list.Related_List_Date=current_date_time.toDate();
+														new_row_invoice_related_list.Related_List_Time=current_date_time.toTime();
+														new_row_invoice_related_list.SUBMISSION_ID=invoice_submit_lhdn_output.get("SUBMISSION_ID");
+														new_row_invoice_related_list.UUID=invoice_submit_lhdn_output.get("UUID_LINK");
+														new_row_invoice_related_list.PUBLIC_LINK=invoice_submit_lhdn_output.get("PUBLIC_LINK");
+														new_row_invoice_related_list.STATUS=invoice_submit_lhdn_output.get("STATUS");
+														new_row_invoice_related_list.MESSAGE=invoice_submit_lhdn_output.get("MESSAGE");
+														new_invoice_uuid = invoice_submit_lhdn_output.get("UUID");
+														new_invoice_uuid_link = invoice_submit_lhdn_output.get("UUID_LINK");
+														new_public_link = invoice_submit_lhdn_output.get("PUBLIC_LINK");
+														if(new_invoice_uuid != null && new_invoice_uuid != "")
+														{
+															input.Invoice_UUID = new_invoice_uuid;
+														}
+														if(new_invoice_uuid_link != null && new_invoice_uuid_link != "")
+														{
+															input.Invoice_UUID_Link = new_invoice_uuid_link;
+														}
+														if(new_public_link != null && new_public_link != "")
+														{
+															input.Invoice_Public_Link = new_public_link;
+														}
+														input.Invoice_Related_List.insert(new_row_invoice_related_list);
+														// Approval notifications
+														listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943011]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmail.add("test@aplikasi.us");
+														//listEmailID.add(zoho.adminuserid);
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Invoice_No=" + input.Invoice_No;
+														//Send Mail & App Notify To Parts Coordinator
+														sendmail
+														[
+															from :zoho.adminuserid
+															to :listEmail
+															subject :"Invoice " + input.Invoice_No + " Approved"
+															message :"Dear,<br><br>We are pleased to inform you that Invoice " + input.Invoice_No + " has been successfully approved.As the next step, please submit the approved invoice to the customer at your earliest convenience.Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														]
+														notifyTitle = "Invoice " + input.Invoice_No + " Approved";
+														notifyMessage = "Invoice " + input.Invoice_No + " has been approved. Thank you! Please submit it to the customer.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+														//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);

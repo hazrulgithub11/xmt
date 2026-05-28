@@ -1,8 +1,30 @@
 if(input.Invoice_Date != null && input.Customer_Code != null)
-{
-	input.Amount_Due = input.Grand_Total;
-	for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-	{
-		thisapp.invoice.invoice_balance_updates(inv.ID);
-	}
-}
+														{
+															input.Amount_Due = input.Grand_Total;
+															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															{
+																thisapp.invoice.invoice_balance_updates(inv.ID);
+															}
+														}
+														listEmail = List();
+														listEmailID = List();
+														for each  user in User[Role == 4662372000000943015]
+														{
+															email = user.Email;
+															listEmail.add(email);
+															listEmailID.add(email.toLowerCase());
+														}
+														//listEmailID.add(zoho.adminuserid);
+														//listEmail.add("test@aplikasi.us");
+														notifyTitle = "Debit Note " + input.Invoice_No + " Approval Required";
+														notifyMessage = "Please review and approve Debit Note " + input.Invoice_No + " to complete processing.";
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Status=Pending+Approval";
+														//Send Mail & App Notify
+														// sendmail
+														// [
+														// 	from :zoho.adminuserid
+														// 	to :listEmail
+														// 	subject :"Debit Note " + input.Invoice_No + " Approval Required"
+														// 	message :"Dear,<br><br>We hope this message finds you well. Please review and approve debit note " + input.Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+														// ]
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);

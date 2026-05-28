@@ -1,0 +1,6 @@
+{
+  "link_name": "Payment_Received_Partial1",
+  "display_name": "Payment Received Partial from Sent",
+  "from_stage": "Sent",
+  "to_stage": "Partially Paid"
+}

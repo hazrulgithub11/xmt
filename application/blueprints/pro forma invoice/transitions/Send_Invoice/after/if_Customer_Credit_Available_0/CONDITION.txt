@@ -1,1 +1,1 @@
-Customer_Name.Credit_Available > 0
+Customer.Credit_Available > 0

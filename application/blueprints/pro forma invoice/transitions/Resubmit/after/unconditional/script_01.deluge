@@ -6,31 +6,19 @@ listEmail = List();
 															listEmail.add(email);
 															listEmailID.add(email.toLowerCase());
 														}
-														//listEmailID.add(zoho.adminuserid);
 														//listEmail.add("test@aplikasi.us");
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Status=" + input.Blueprint.Current_Stage;
+														//listEmailID.add(zoho.adminuserid);
+														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Status=" + input.Status;
 														//Send Mail & App Notify
 														sendmail
 														[
 															from :zoho.adminuserid
 															to :listEmail
-															subject :"Resubmitted Invoice " + input.Invoice_No + " Approval Required"
-															message :"Dear,<br><br>This is a notification that Invoice " + input.Invoice_No + " has been resubmitted after addressing the previous issues. Please review the updated invoice and provide your approval at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+															subject :"Resubmitted Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approval Required"
+															message :"Dear,<br><br>This is a notification that Deposit " + input.Pro_Forma_Invoice_No + " has been resubmitted after addressing the previous issues. Please review the updated Pro Forma Invoice and provide your approval at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
 														]
-														notifyTitle = "Resubmitted Invoice " + input.Invoice_No + " Rejected – Action Required";
-														notifyMessage = "A resubmitted Invoice " + input.Invoice_No + " is awaiting your approval.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+														notifyTitle = "Resubmitted Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Rejected – Action Required";
+														notifyMessage = "A resubmitted Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " is waiting your approval.";
+														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
 														input.Confirm_resubmission = false;
 														input.Rejection_Reason = "";
-														//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														input.Previous_Balance = previoustotalAmountDue;
-														input.Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
-														}
