@@ -30,18 +30,21 @@ Load_of_the_form_Initiali as "Load of the form Initialization"
 					input.Previous_Balance = balance_result.get("Previous_Balance");
 					input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
 				}
-				/* Payment Received Line Item*/
-				invoice_Payments_Received_Line_Item_list = Payment_Received_Line_Item[Invoice_No == input.ID];
-				for each  curr_invoice_Payments_Received_Line_Item in invoice_Payments_Received_Line_Item_list
+				/* Payment Received Line Item — only for saved invoices */
+				if(input.ID != null && input.ID != 0)
 				{
-					curr_invoice_Payments_Received_Line_Item_row = Invoice.Payments_Received_Line_Item();
-					curr_invoice_Payments_Received_Line_Item_row.Amount=curr_invoice_Payments_Received_Line_Item.Amount;
-					curr_invoice_Payments_Received_Line_Item_row.Outstanding_Balance=curr_invoice_Payments_Received_Line_Item.Outstanding_Balance;
-					curr_invoice_Payments_Received_Line_Item_row.Allocation=curr_invoice_Payments_Received_Line_Item.Allocation;
-					curr_invoice_Payments_Received_Line_Item_row.Allocation_MYR=curr_invoice_Payments_Received_Line_Item.Allocation_MYR;
-					curr_invoice_Payments_Received_Line_Item_row.Still_Owing=curr_invoice_Payments_Received_Line_Item.Still_Owing;
-					curr_invoice_Payments_Received_Line_Item_row.Payment_Received=curr_invoice_Payments_Received_Line_Item.Payment_Received;
-					input.Payments_Received_Line_Item.insert(curr_invoice_Payments_Received_Line_Item_row);
+					invoice_Payments_Received_Line_Item_list = Payment_Received_Line_Item[Invoice_No == input.ID];
+					for each  curr_invoice_Payments_Received_Line_Item in invoice_Payments_Received_Line_Item_list
+					{
+						curr_invoice_Payments_Received_Line_Item_row = Invoice.Payments_Received_Line_Item();
+						curr_invoice_Payments_Received_Line_Item_row.Amount=curr_invoice_Payments_Received_Line_Item.Amount;
+						curr_invoice_Payments_Received_Line_Item_row.Outstanding_Balance=curr_invoice_Payments_Received_Line_Item.Outstanding_Balance;
+						curr_invoice_Payments_Received_Line_Item_row.Allocation=curr_invoice_Payments_Received_Line_Item.Allocation;
+						curr_invoice_Payments_Received_Line_Item_row.Allocation_MYR=curr_invoice_Payments_Received_Line_Item.Allocation_MYR;
+						curr_invoice_Payments_Received_Line_Item_row.Still_Owing=curr_invoice_Payments_Received_Line_Item.Still_Owing;
+						curr_invoice_Payments_Received_Line_Item_row.Payment_Received=curr_invoice_Payments_Received_Line_Item.Payment_Received;
+						input.Payments_Received_Line_Item.insert(curr_invoice_Payments_Received_Line_Item_row);
+					}
 				}
 			)
 		}
