@@ -101,15 +101,15 @@ Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 							if(curr_get_invoice.Customer != null && curr_get_invoice.Invoice_Date != null)
 							{
 								get_customer_id = curr_get_invoice.Customer.ID;
-								for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < curr_get_invoice.Invoice_Date && Customer == get_customer_id]
+								for each  curr_invoice in Invoice[Amount_Due > 0 && Added_Time < zoho.currenttime && Customer == get_customer_id]
 								{
 									previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
 								}
 								/*  Previous balance and Total amount due calculation for future invoices */
-								for each  curr_invoice in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date && Customer == get_customer_id]
+								/*for each  curr_invoice in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date && Customer == get_customer_id]
 								{
 									thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
-								}
+								}*/
 							}
 							curr_get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
 							curr_get_invoice.Total_Amount_Due=curr_get_invoice.Amount_Due + previous_balance_of_unpaid_invoices;
@@ -151,72 +151,37 @@ Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 		{
 			custom deluge script
 			(
-					for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+					for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 				{
-					paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
-					if(paymentReceivedLineItem.Allocation > 0)
+					curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+					if(curr_payment_received_line_item.Allocation > 0)
 					{
-						getDeposit = Pro_Forma_Invoices_1[ID == paymentReceivedLineItem.Pro_Forma_Invoice_No];
-						newAmountDue = getDeposit.Amount_Due - paymentReceivedLineItem.Allocation;
-						if(newAmountDue > 0)
+						curr_get_pro_forma = Pro_Forma_Invoices[ID == curr_payment_received_line_item.Pro_Forma_Invoice_No];
+						// Amount Paid and Amount Due Calculation
+						curr_get_pro_forma.Amount_Paid=curr_get_pro_forma.Amount_Paid - curr_payment_received_line_item.Allocation;
+						curr_get_pro_forma.Amount_Due=curr_get_pro_forma.Amount_Due + curr_payment_received_line_item.Allocation;
+						// Pro Forma Invoice Blueprint status update
+						if(curr_get_pro_forma.Due_Date > zoho.currentdate)
 						{
-							getDeposit.Amount_Due=newAmountDue;
-							if(getDeposit.Due_Date > zoho.currentdate)
+							if(curr_get_pro_forma.Amount_Paid == 0)
 							{
-								getDeposit.Status="Partially Paid";
+								thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
 							}
-							else if(getDeposit.Due_Date < zoho.currentdate)
+							else
 							{
-								getDeposit.Status="Overdue";
+								thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
+								thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Partially Paid",curr_get_pro_forma.ID);
 							}
 						}
 						else
 						{
-							getDeposit.Amount_Due=0;
-							getDeposit.Status="Paid";
-							journalEntryLineItem = Collection();
-							row1 = Journal_Entry.Journal_Entry_Line_Item();
-							row1.Account=input.Paid_To;
-							row1.Description="Pro Forma Invoice " + getDeposit.Pro_Forma_Invoice_No + " To " + input.Paid_To.Account + "-" + input.Paid_To.Bank_Account_Number;
-							row1.Debit=ifnull(getDeposit.Grand_Total,0);
-							row1.Credit=0;
-							row1.Deposits=getDeposit.ID;
-							row2 = Journal_Entry.Journal_Entry_Line_Item();
-							row2.Account=4662372000000087213;
-							row2.Description="Pro Forma Invoice " + getDeposit.Pro_Forma_Invoice_No + " Xkomm Security Deposit";
-							row2.Debit=0;
-							row2.Credit=ifnull(getDeposit.Grand_Total,0);
-							row2.Deposits=getDeposit.ID;
-							journalEntryLineItem.insert(row1,row2);
-							newJournalEntryRecord = insert into Journal_Entry
-							[
-								Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-								Document_No=getDeposit.Pro_Forma_Invoice_No
-								Added_User=zoho.loginuser
-								Deposits=getDeposit.ID
-								Date_field=zoho.currentdate
-								Journal_Entry_Line_Item=journalEntryLineItem
-								Sub_Total_Debit=ifnull(getDeposit.Sub_Total,0)
-								Sub_Total_Credit=ifnull(getDeposit.Grand_Total,0) - ifnull(getDeposit.Total_Tax,0)
-								Total_Debit=ifnull(getDeposit.Grand_Total,0)
-								Total_Credit=ifnull(getDeposit.Grand_Total,0)
-								Difference=ifnull(getDeposit.Grand_Total,0) - ifnull(getDeposit.Grand_Total,0)
-								Created_By_The_System=true
-							];
-						}
-						newAmountPaid = getDeposit.Amount_Paid + paymentReceivedLineItem.Allocation;
-						if(newAmountPaid >= getDeposit.Grand_Total)
-						{
-							getDeposit.Amount_Paid=getDeposit.Grand_Total;
-						}
-						else if(newAmountPaid < getDeposit.Grand_Total)
-						{
-							getDeposit.Amount_Paid=newAmountPaid;
+							thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
+							thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",curr_get_pro_forma.ID);
 						}
 					}
 					else
 					{
-						delete from Payment_Received_Line_Item[ID == paymentReceivedLineItem.ID];
+						delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
 					}
 				}
 			)

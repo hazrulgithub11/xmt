@@ -3,10 +3,14 @@
 // Form: Pro_Forma_Invoices
 
 paymentType = "Payment_Type=Deposit";
-				customerName = "&Customer_Name=" + input.Customer_Name;
-				customerCode = "&Customer_Code=" + input.Customer_Code;
-				singlePaymentRecord = "&Single_Record_Payment=true";
-				paymentTypeSingleRecord = "&Payment_Type_Single_Record=Pro Forma Invoice";
-				pi = "&Pro_Forma_Invoices=" + input.ID;
-				url = "#Form:Payment_Received?" + paymentType + customerName + customerCode + singlePaymentRecord + paymentTypeSingleRecord + pi;
-				openUrl(url,"popup window","height=100%,width=100%");
+customerName = "&Customer_Name=" + input.Customer;
+customerCode = "&Customer_Code=" + input.Customer_Code;
+customerTIN = "&Customer_TIN=" + ifnull(input.Customer_TIN,"");
+customerSST = "&Customer_SST=" + ifnull(input.Customer_SST_Registration_Number,"");
+customerEmail = "&Customer_Email=" + ifnull(input.Customer_E_mail,"");
+paymentReceivedCurrency = "&Payment_Received_Currency=" + ifnull(input.Invoice_Currency,"");
+singlePaymentRecord = "&Single_Record_Payment=true";
+paymentTypeSingleRecord = "&Payment_Type_Single_Record=Pro Forma Invoice";
+pi = "&Pro_Forma_Invoices=" + input.ID;
+url = "#Form:Payment_Received?" + paymentType + customerName + customerCode + customerTIN + customerSST + customerEmail + paymentReceivedCurrency + singlePaymentRecord + paymentTypeSingleRecord + pi;
+openUrl(url,"popup window","height=100%,width=100%");

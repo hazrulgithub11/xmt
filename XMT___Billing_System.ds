@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 28-May-2026 01:47:54
+ * Generated on : 28-May-2026 21:21:12
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -5661,8 +5661,8 @@
 			Deposits
 			(
 				type = picklist	
-				values  = Pro_Forma_Invoices_1.ID
-    			displayformat = [Pro_Forma_Invoice_No]
+				values  = Pro_Forma_Invoices.ID
+    			displayformat = [Invoice_No]
 				sortorder = ascending
 	 			row = 1
 	 			column = 1   
@@ -5867,8 +5867,8 @@
 			Deposits
 			(
 				type = picklist	
-				values  = Pro_Forma_Invoices_1.ID
-    			displayformat = [Pro_Forma_Invoice_No]
+				values  = Pro_Forma_Invoices.ID
+    			displayformat = [Invoice_No]
 				sortorder = ascending
 	 			row = 1
 	 			column = 1   
@@ -6538,8 +6538,8 @@
 			(
 				type = picklist	
 				displayname = "Pro Forma Invoices"
-				values  = Pro_Forma_Invoices_1.ID
-    			displayformat = [Pro_Forma_Invoice_No]
+				values  = Pro_Forma_Invoices.ID
+    			displayformat = [Invoice_No]
 				sortorder = ascending
 	 			row = 4
 	 			column = 2   
@@ -6585,7 +6585,7 @@
 				Deposit_Receipt
 				{
 							displayname = "Deposit Receipt"
-							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_6707418100000024","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"1728874515218_Picture1.png","imageId":"img_67368158000000715","imageType":"upload","fileId":"6069490000000049011"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_6753594200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67535935","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"8,43,21,19,9","id":"u_elem_67033553000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67667373000000715","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_6707418100000024","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_67033543000000715","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_81632338000000715","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_67368158000000715","size":"F","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000049011&imgFileName=1728874515218_Picture1.png","parWidth":"100%","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_6734721399999976","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 100%","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_13724668000001907","height":"58"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_81582813000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_8158280100000024","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b>DEPOSIT RECEIPT<\/b><\/font><\/h1>\n  <\/div>"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_82374528000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_8237451200000048","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"7,56,29,8","id":"u_elem_8642564100000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_30751460000014305","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Name"},{"Related_Fields":["Country"],"Label_Name":"Customer_Name"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Name"},{"Related_Fields":["State"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745897962320161","content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n            width=\"50%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right\"\n            width=\"50%\"><\/td>\n     <\/tr>\n     <tr>\n      <td><br /><span\n              style=\"font-weight: 400; font-style: normal\"><font\n              face=\"arimo\" style=\"font-size: 10px\"\n            color=\"#000000\">${Customer_Name.Business_Street}<\/font><\/span><span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span><br /><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Postcode},&nbsp;<span\n              style=\"font-weight: 400; font-style: normal\">&nbsp;<span> <span>${Customer_Name.City},&nbsp;<\/span><\/span><\/span><span><span><br /><\/span> <\/span><span\n              style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">${Customer_Name.State}<\/span><span\n                  style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">&nbsp;,&nbsp;<span> <font\n                    face=\"arimo\"><font\n                    color=\"#000000\">${Customer_Name.Country}<span>&nbsp;<\/span><\/font><\/font><span><font\n                      face=\"arimo\"><font\n            color=\"#000000\">&nbsp;&nbsp;<\/font><\/font><\/span> <\/span><\/span><br /><\/font><\/td>\n      <td><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font style=\"\"><br /><\/font><\/td>\n      <td><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Payment_Date"},{"Label_Name":"Payment_Received_No"}],"id":"u_elem_11745897962321041","content":"<div style=\"border-width: 0px\">\n   <table\n    style=\"text-align: center; margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right\" width=\"45%\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Payment Date<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">${Payment_Date}<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          width=\"45%\" style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Receipt No.<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">${Payment_Received_No}<\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_31296930000019073","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"2,90,8","id":"u_elem_9746556200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3188222000000477","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9749436","height":"25"}},{"type":"columns","element":{"split":"60,40","id":"u_elem_4799869699999809","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4875513","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Related_Fields":["Currency"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745897962322401","content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font style=\"font-size: 12px\"\n            color=\"#000000\">&nbsp; &nbsp; &nbsp;<\/font><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">TOTAL ${Customer_Name.Currency}<span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>PAID :<\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font color=\"#000000\" style=\"\"><font\n              style=\"font-size: 10px\"\n              face=\"arimo\">${Amount_Received} <\/font><span style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""}]}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_324970","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"7,85,8","id":"u_elem_41560137999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_33083030000019073","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4161705899999976","height":"25"}},{"id":"u_elem_11745897962326971","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Payment_Received_Line_Item","labelText":"Payment Received Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payment_Received_Line_Item","refFields":[{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Document Date","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Document_Date"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Pro Forma Invoice No.","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Pro_Forma_Invoice_No"},{"valueStyle":"                  ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Amount"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Allocation","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Allocation"},{"valueStyle":"         text-align: center         ","fieldLayoutType":"2","labelText":"Still Owing","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Still_Owing"}],"labelTextStyle":""}},{"type":"spacer","element":{"id":"u_elem_4327278099999905","height":"25"}},{"type":"columns","element":{"split":"51,47,2","id":"u_elem_4263726099999905","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_41638990999999046","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Total_Still_Owing"}],"id":"u_elem_11745897962349441","content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">Total&nbsp; ${<span>\n\n<span>Customer_Name.Currency<\/span>\n\n<\/span>} <span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n      <td\n          width=\"20%\"\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><br /><\/td>\n      <td\n          width=\"20%\"\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n          style=\"font-size: 10px\">\u200b<\/font><br /><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"font-size: 10px\"> ${Amount_Received} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"\">&nbsp;${Total_Still_Owing} <span style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4347748299999952","height":"25"}}],"style":""}]}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_34001430000019073","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_4436061600000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4440055100000024","height":"25"}},{"type":"text","element":{"id":"u_elem_4436061299999952","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\">This is a computer generated document and therefore no signature is required<\/font><\/font> <\/font><\/h1>\n  <\/div>"}}],"style":""}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
+							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_6707418100000024","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"1728874515218_Picture1.png","imageId":"img_67368158000000715","imageType":"upload","fileId":"6069490000000049011"}],"imageId":"","isFooterEnabled":false,"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_6753594200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67535935","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"8,43,21,19,9","id":"u_elem_67033553000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_67667373000000715","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_6707418100000024","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_67033543000000715","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_81632338000000715","height":"25"}}],"style":""},{"colElements":[{"type":"image","element":{"imageId":"img_67368158000000715","size":"F","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000049011&imgFileName=1728874515218_Picture1.png","parWidth":"100%","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_6734721399999976","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 100%","formCompId":""}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_13724668000001907","height":"58"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_81582813000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_8158280100000024","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n      style=\"font-size: 24px\" face=\"arimo\"><b>DEPOSIT RECEIPT<\/b><\/font><\/h1>\n  <\/div>"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_82374528000000715","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_8237451200000048","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"7,56,29,8","id":"u_elem_8642564100000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_30751460000014305","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer_Name"},{"Related_Fields":["City"],"Label_Name":"Customer_Name"},{"Related_Fields":["Country"],"Label_Name":"Customer_Name"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Name"},{"Related_Fields":["State"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745897962320161","content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n            width=\"50%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right\"\n            width=\"50%\"><\/td>\n     <\/tr>\n     <tr>\n      <td><br /><span\n              style=\"font-weight: 400; font-style: normal\"><font\n              face=\"arimo\" style=\"font-size: 10px\"\n            color=\"#000000\">${Customer_Name.Business_Street}<\/font><\/span><span\n          style=\"color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span><br /><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">&nbsp;<span\n                style=\"font-weight: 400; font-style: normal\">&nbsp; <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> ${Customer_Name.Postcode},&nbsp;<span\n              style=\"font-weight: 400; font-style: normal\">&nbsp;<span> <span>${Customer_Name.City},&nbsp;<\/span><\/span><\/span><span><span><br /><\/span> <\/span><span\n              style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">${Customer_Name.State}<\/span><span\n                  style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 400; font-style: normal\">&nbsp;,&nbsp;<span> <font\n                    face=\"arimo\"><font\n                    color=\"#000000\">${Customer_Name.Country}<span>&nbsp;<\/span><\/font><\/font><span><font\n                      face=\"arimo\"><font\n            color=\"#000000\">&nbsp;&nbsp;<\/font><\/font><\/span> <\/span><\/span><br /><\/font><\/td>\n      <td><font\n            color=\"#000000\" style=\"font-size: 10px\"\n            face=\"arimo\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><font style=\"\"><br /><\/font><\/td>\n      <td><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Payment_Date"},{"Label_Name":"Payment_Received_No"}],"id":"u_elem_11745897962321041","content":"<div style=\"border-width: 0px\">\n   <table\n    style=\"text-align: center; margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right\" width=\"45%\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Payment Date<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">${Payment_Date}<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          width=\"45%\" style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\"\n          face=\"arimo\">Receipt No.<\/font><\/td>\n      <td width=\"5%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n          face=\"arimo\">:<\/font><\/td>\n      <td width=\"50%\"\n            style=\"text-align: right\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">${Payment_Received_No}<\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_31296930000019073","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"2,90,8","id":"u_elem_9746556200000048","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_3188222000000477","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9749436","height":"25"}},{"type":"columns","element":{"split":"60,40","id":"u_elem_4799869699999809","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4875513","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Related_Fields":["Currency"],"Label_Name":"Customer_Name"}],"id":"u_elem_11745897962322401","content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font style=\"font-size: 12px\"\n            color=\"#000000\">&nbsp; &nbsp; &nbsp;<\/font><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">TOTAL ${Customer_Name.Currency}<span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span>PAID :<\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"33%\"><font color=\"#000000\" style=\"\"><font\n              style=\"font-size: 10px\"\n              face=\"arimo\">${Amount_Received} <\/font><span style=\"font-size: 12px; font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""}]}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_324970","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"7,85,8","id":"u_elem_41560137999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_33083030000019073","height":"25"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4161705899999976","height":"25"}},{"id":"u_elem_12445276194897792","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"Payment_Received_Line_Item","labelText":"Payment Received Line Item","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Payment_Received_Line_Item","refFields":[{"valueStyle":"text-align: center","fieldLayoutType":"2","labelText":"Document Date","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Document_Date"},{"valueStyle":"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255)","fieldLayoutType":"2","labelText":"Pro Forma Invoice No.","labelStyle":"background-color: rgb(29, 80, 142); color: rgb(255, 255, 255); font-weight: bold; text-align: center","Label_Name":"Pro_Forma_Invoice_No"},{"fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; background-color: rgb(29, 80, 142)","Label_Name":"Description"},{"valueStyle":"text-align: center","fieldLayoutType":"2","labelText":"Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Amount"},{"valueStyle":"text-align: center","fieldLayoutType":"2","labelText":"Allocation","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Allocation"},{"valueStyle":"text-align: center","fieldLayoutType":"2","labelText":"Still Owing","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Still_Owing"}],"labelTextStyle":""}},{"type":"spacer","element":{"id":"u_elem_4327278099999905","height":"25"}},{"type":"columns","element":{"split":"51,47,2","id":"u_elem_4263726099999905","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_41638990999999046","height":"25"}}],"style":""},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Amount_Received"},{"Label_Name":"Total_Still_Owing"}],"id":"u_elem_11745897962349441","content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\">Total&nbsp; ${<span> <span>Customer_Name.Currency<\/span> <\/span>} <span\n          style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font><\/td>\n      <td\n          width=\"20%\"\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><br /><\/td>\n      <td\n          width=\"20%\"\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"><font\n          style=\"font-size: 10px\">\u200b<\/font><br /><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none; border-right: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"font-size: 10px\"> ${Amount_Received} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n      <td\n          style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51); border-left: none\"\n            width=\"20%\"><font style=\"font-size: 10px\" face=\"arimo\"><font\n              color=\"#000000\"\n                style=\"\">&nbsp;${Total_Still_Owing} <span style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4347748299999952","height":"25"}}],"style":""}]}}],"style":""},{"colElements":[{"type":"spacer","element":{"id":"u_elem_34001430000019073","height":"25"}}],"style":""}]}},{"type":"columns","element":{"split":"100","id":"u_elem_4436061600000024","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4440055100000024","height":"25"}},{"type":"text","element":{"id":"u_elem_4436061299999952","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"font-size: 10px\">\u200b<\/font>\u200b<\/font> <font style=\"\">This is a computer generated document and therefore no signature is required<\/font><\/font> <\/font><\/h1>\n  <\/div>"}}],"style":""}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
 				}
 				Official_Receipt
 				{
@@ -6656,8 +6656,8 @@
 			(
 				type = picklist	
 				displayname = "Pro Forma Invoice No."
-				values  = Pro_Forma_Invoices_1.ID
-    			displayformat = [Pro_Forma_Invoice_No]
+				values  = Pro_Forma_Invoices.ID
+    			displayformat = [Invoice_No]
 				sortorder = ascending
 	 			row = 1
 	 			column = 1   
@@ -6815,7 +6815,6 @@
 			must have Supplier
 			(
 				type = picklist	
-				displayname = "c"
 				values  = Organization_Settings.ID
     			displayformat = [Organization_Name]
 				sortorder = ascending
@@ -8837,7 +8836,6 @@
 				type = grid
 				displayname = "Pro Forma Invoice Line Item"
 				values  = Pro_Forma_Invoices_Line_Item.ID
-    			bidirectional = Pro_Forma_Invoice
 	 			row = 9
 	 			column = 1   
 				width = medium
@@ -9045,10 +9043,6 @@
 					)
 				}
 			}
-			blueprint components
-			{
-				stages = {"Draft","Pending Approval","Approved","Rejected","Sent","Paid","Partially Paid","Overdue"}
-			}
 		print template
 			{
 				PI_TEST_Footer
@@ -9220,9 +9214,8 @@
 			(
 				type = picklist	
 				displayname = "Pro Forma Invoice"
-				values  = Pro_Forma_Invoices_1.ID
-    			bidirectional = Pro_Forma_Invoice_Line_Item
-    			displayformat = [Pro_Forma_Invoice_No]
+				values  = Pro_Forma_Invoices.ID
+    			displayformat = [Invoice_No]
 				sortorder = ascending
 	 			row = 1
 	 			column = 1   
@@ -10769,8 +10762,8 @@
 			(
 				type = picklist	
 				displayname = "Pro Forma Invoices"
-				values  = Pro_Forma_Invoices_1[Customer.ID == input.Customer_Name].ID
-    			displayformat = [Pro_Forma_Invoice_No]
+				values  = Pro_Forma_Invoices.ID
+    			displayformat = [Invoice_No]
 				sortorder = ascending
 	 			row = 1
 	 			column = 2   
@@ -13487,12 +13480,12 @@
 				Outstanding_Balance as "Outstanding Balance"
 				Allocation
 				Payment_Received as "Payment Received"
-				Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 				Reference_No as "Reference No."
 				Description
 				Allocation_MYR as "Allocation (MYR)"
 				Still_Owing as "Still Owing"
 				Debit_Note_No as "Debit Note No."
+				Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 			)
 		}
 		default list Deposit_Payment_Received_Report
@@ -13581,7 +13574,6 @@
 				Quantity
 				Total
 				Customer_Name as "Customer Name"
-				Pro_Forma_Invoice as "Pro Forma Invoice"
 				Item_Code as "Item Code"
 				Customer_Code as "Customer Code"
 				Sub_Total as "Sub Total"
@@ -13591,6 +13583,7 @@
 				Total_MYR as "Total (MYR)"
 				Business_Segment as "Business Segment"
 				Business_Unit as "Business Unit"
+				Pro_Forma_Invoice as "Pro Forma Invoice"
 			)
 		}
 		default list All_Pro_Forma_Invoices
@@ -13789,7 +13782,6 @@
 			(
 				Description
 				Invoice
-				Deposits
 				Payment_Received as "Payment Received"
 				Credit
 				Debit
@@ -13797,6 +13789,7 @@
 				Journal_Entry as "Journal Entry"
 				Credit_Note as "Credit Note"
 				Debit_Note as "Debit Note"
+				Deposits
 			)
 		}
 		default list All_Journal_Entries
@@ -13886,7 +13879,6 @@
 				Outstanding_Balance as "Outstanding Balance"
 				Allocation
 				Payment_Received as "Payment Received"
-				Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 			)
 		}
 		default list All_Business_Segments
@@ -14063,7 +14055,6 @@
 				Outstanding_Balance as "Outstanding Balance"
 				Allocation
 				Payment_Received as "Payment Received"
-				Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 			)
 		}
 		list Copy_of_All_Pro_Forma_Invoices
@@ -14439,7 +14430,6 @@
 					display = total	
 				)
 				Payment_Received as "Payment Received"
-				Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 				Description
 				Payment_Received.Paid_To as "Paid To"
 			)
@@ -15245,7 +15235,7 @@
 			displayName = "Copy of Debit Note Report"
 			show all rows from Pro_Forma_Invoices    
 			(
-				Supplier as "c"
+				Supplier
 				Supplier_Business_Activity_Description as "Business Activity Description"
 				Supplier_TIN as "Tax Identification Number(TIN)"
 				Supplier_ID_Type as "ID Type"
@@ -15297,13 +15287,96 @@
 				Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
 			)
 		}
+		list Pro_Forma_Invoices_New
+		{
+			displayName = "Pro Forma Invoices New"
+			show all rows from Pro_Forma_Invoices    
+			(
+				Supplier
+				Supplier_Business_Activity_Description as "Business Activity Description"
+				Supplier_TIN as "Tax Identification Number(TIN)"
+				Supplier_ID_Type as "ID Type"
+				Supplier_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+				Supplier_SST_Registration_Number as "SST Registration Number"
+				Supplier_Telephone_Number as "Telephone Number"
+				(
+					displayformat = plainnumber 
+					linktodial = enable
+				)
+				Supplier_E_mail as "E-mail"
+				Supplier_Name as "Name"
+				Supplier_Street as "Street"
+				Supplier_Postcode as "Postcode"
+				Supplier_City as "City"
+				Supplier_State as "State"
+				Supplier_Country as "Country"
+				Customer
+				Customer_Code as "Customer Code"
+				Customer_TIN as "Tax Identification Number(TIN)"
+				Customer_ID_Type as "ID Type"
+				Customer_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+				Customer_SST_Registration_Number as "SST Registration Number"
+				Customer_Telephone_Number as "Telephone Number"
+				(
+					displayformat = plainnumber 
+					linktodial = enable
+				)
+				Customer_E_mail as "E-mail"
+				Customer_Name as "Name"
+				Customer_Street as "Street"
+				Customer_Postcode as "Postcode"
+				Customer_City as "City"
+				Customer_State as "State"
+				Customer_Country as "Country"
+				Delivery_Street as "Delivery Street"
+				Delivery_Postcode as "Delivery Postcode"
+				Delivery_City as "Delivery City"
+				Delivery_State as "Delivery State"
+				Delivery_Country as "Delivery Country"
+				Invoice_No as "Invoice No."
+				Invoice_UUID as "Invoice UUID"
+				Invoice_UUID_Link as "Invoice UUID Link"
+				Invoice_Public_Link as "Invoice Public Link"
+				QR_Invoice_Public_Link as "QR Invoice Public Link"
+				Invoice_Date as "Invoice Date"
+				Payment_Term as "Payment Term"
+				Due_Date as "Due Date"
+				Charge_Category as "Charge Category"
+				Attachment
+				Send_Email as "Send Email"
+				Base_Currency as "Base Currency"
+				Invoice_Currency as "Invoice Currency"
+				Exchange_Rate as "Exchange Rate"
+				Sub_Total_Monthly_Rental as "Sub Total Monthly Rental"
+				Total_Tax_Monthly_Rental as "Total Tax Monthly Rental"
+				Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
+				Sub_Total_Internet_Charges as "Sub Total Internet Charges"
+				Total_Tax_Internet_Charges as "Total Tax Internet Charges"
+				Grand_Total_Internet_Charges as "Grand Total Internet Charges"
+				Sub_Total_Call_Charges as "Sub Total Call Charges (Analog, Domestic & Overseas)"
+				Total_Tax_Call_Charges as "Total Tax Call Charges (Analog, Domestic & Overseas)"
+				Grand_Total_Call_Charges as "Grand Total Call Charges (Analog, Domestic & Overseas)"
+				Sub_Total as "Sub Total"
+				Total_Tax as "Total Tax"
+				Grand_Total as "Grand Total"
+				Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+				Amount_Paid as "Amount Paid"
+				Amount_Due as "Amount Due"
+				Payable_To as "Payable To"
+				Reference_Invoice as "Reference Invoice"
+				Rejection_Reason as "Rejection Reason"
+				Confirm_resubmission as "Confirm resubmission?"
+				Customer_Name_Trigger as "Customer Name Trigger"
+				User_Input_Trigger
+			)
+		}
 	}
 	pages
 	{
 		page Admin_Dashboard(string endDate, string filterYear, string prefixDateDuration, string startDate)
 		{
 			displayname = "Admin Dashboard"
-			Content="<zml    \t\t\n\t\t\n\t\t\n\t\t\n\t\t\n>\n\t<layout>\n\t<row>\n\t<column\n   \t\t width='100%'\n   \t>\n\t<form \n\telementName='Form'\n\n\tappLinkName = 'thisapp'\n\tlinkName = 'Date_form'\n\theightType = 'auto'\n\tsearchString = 'End_Date=${endDate}|Start_Date=${startDate}|Prefix_Date_Duration=${prefixDateDuration}'\n\turlType = 'none'\n\tzc_Header = 'false'\n/> \n</column>\n</row><row>\n\t<column\n   \t\t width='34%'\n   \t>\n\t<row>\n\t<column\n   \t\t width='100%'\n   \t>\n\t<panel elementName='Panel'\n \n\t\n\ttitle = 'Invoices'\n\t\n\t\ttitleColor = '#444444'\n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Draft&amp;Status_op=19' \n\t\tcomponentLinkName = 'All_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'money.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#0ABB51'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Total Receivables'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column>\n</row><row>\n\t<column\n   \t\t width='100%'\n   \t>\n\t<panel elementName='Panel 8'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n\t\twidth = '100%'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\n>\n\t<text \n\n\tsize = '20px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Refund Note'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column>\n</row>\n</column><column\n   \t\t width='34%'\n   \t>\n\t<panel elementName='Panel 1'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'ExecuteFunction'\n\n\t\tparameters = 'All_Invoices' \n\t\tfunctionName = 'FilterOverdueRec'  \n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'overdue.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tcolor = '#D4181D'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#D4181D'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#D4181D'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Overdue Invoices'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column><column\n   \t\t width='32%'\n   \t>\n\t<panel elementName='Panel 2'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Pending+Approval' \n\t\tcomponentLinkName = 'All_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = '976438.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tcolor = '#FF8318'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#FF8318'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#FF8318'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Pending Approval Invoices'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column>\n</row><row>\n\t<column\n   \t\t width='33%'\n   \t>\n\t<panel elementName='Panel 3'\n \n\t\n\ttitle = 'Deposits'\n\t\n\t\ttitleColor = '#444444'\n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Draft&amp;Status_op=19' \n\t\tcomponentLinkName = 'All_Pro_Forma_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'deposits.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n    action = 'OpenReport'\n\t\tcomponentLinkName = 'All_Pro_Forma_Invoices'\n\t\ttarget = 'new-window'\n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Status != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices_1.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Status != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices_1.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#0ABB51'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Total Deposits'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column><column\n   \t\t width='33%'\n   \t>\n\t<panel elementName='Panel 4'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'ExecuteFunction'\n\n\t\tparameters = 'All_Deposits' \n\t\tfunctionName = 'FilterOverdueRec'  \n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'overdue_deposit.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Status == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices_1.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tcolor = '#D4181D'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Status == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices_1.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#D4181D'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#D4181D'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Overdue Deposits'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column><column\n   \t\t width='34%'\n   \t>\n\t<panel elementName='Panel 5'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Pending+Approval' \n\t\tcomponentLinkName = 'All_Pro_Forma_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'pending_deposit.jpg'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Status == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices_1.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tcolor = '#FF8318'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Status == &quot;Pending Approval&quot;'\n\t  value = 'thisapp.Pro_Forma_Invoices_1.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#FF8318'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#FF8318'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Pending Approval Deposits'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column>\n</row>\n</layout>\n</zml>"
+			Content="<zml    \t\t\n\t\t\n\t\t\n\t\t\n\t\t\n>\n\t<layout>\n\t<row>\n\t<column\n   \t\t width='100%'\n   \t>\n\t<form \n\telementName='Form'\n\n\tappLinkName = 'thisapp'\n\tlinkName = 'Date_form'\n\theightType = 'auto'\n\tsearchString = 'End_Date=${endDate}|Start_Date=${startDate}|Prefix_Date_Duration=${prefixDateDuration}'\n\turlType = 'none'\n\tzc_Header = 'false'\n/> \n</column>\n</row><row>\n\t<column\n   \t\t width='34%'\n   \t>\n\t<panel elementName='Panel'\n \n\t\n\ttitle = 'Invoices'\n\t\n\t\ttitleColor = '#444444'\n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Draft&amp;Status_op=19' \n\t\tcomponentLinkName = 'All_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'money.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tpadding = '0px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\tbgColor = 'transparent'\n        bgColorType = 'noFill'\n\tcornerRadius = '0px'\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n    borderColor = '#0ABB51'\n    borderWidth = '0px'\n\n\t\tcriteria = 'Blueprint.Current_Stage != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#0ABB51'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Total Receivables'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column><column\n   \t\t width='34%'\n   \t>\n\t<panel elementName='Panel 1'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'ExecuteFunction'\n\n\t\tparameters = 'All_Invoices' \n\t\tfunctionName = 'FilterOverdueRec'  \n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'overdue.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tcolor = '#D4181D'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Sent&quot; &amp;&amp; Due_Date &lt; zoho.currentdate &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#D4181D'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#D4181D'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Overdue Invoices'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column><column\n   \t\t width='32%'\n   \t>\n\t<panel elementName='Panel 2'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Pending+Approval' \n\t\tcomponentLinkName = 'All_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = '976438.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tcolor = '#FF8318'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Pending Approval&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Invoice.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#FF8318'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#FF8318'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Pending Approval Invoices'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column>\n</row><row>\n\t<column\n   \t\t width='34%'\n   \t>\n\t<panel elementName='Panel 3'\n \n\t\n\ttitle = 'Deposits'\n\t\n\t\ttitleColor = '#444444'\n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Draft&amp;Status_op=19' \n\t\tcomponentLinkName = 'All_Pro_Forma_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'deposits.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n    action = 'OpenReport'\n\t\tcomponentLinkName = 'All_Pro_Forma_Invoices'\n\t\ttarget = 'new-window'\n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tpadding = '0px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\tbgColor = 'transparent'\n        bgColorType = 'noFill'\n\tcornerRadius = '0px'\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n    borderColor = '#0ABB51'\n    borderWidth = '0px'\n\n\t\tcriteria = 'Blueprint.Current_Stage != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tpadding = '0px'\n\tcolor = '#0ABB51'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\tbgColor = 'transparent'\n        bgColorType = 'noFill'\n\tcornerRadius = '0px'\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n\n\t\tcriteria = 'Blueprint.Current_Stage != &quot;Draft&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#0ABB51'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '10px'\n\tcolor = '#0ABB51'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Total Deposits'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column><column\n   \t\t width='32%'\n   \t>\n\t<panel elementName='Panel 4'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'ExecuteFunction'\n\n\t\tparameters = 'All_Deposits' \n\t\tfunctionName = 'FilterOverdueRec'  \n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'overdue_deposit.png'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tpadding = '0px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\tbgColor = 'transparent'\n        bgColorType = 'noFill'\n\tcornerRadius = '0px'\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n    borderColor = '#D4181D'\n    borderWidth = '0px'\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Sent&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#D4181D'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tpadding = '0px'\n\tcolor = '#D4181D'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\tbgColor = 'transparent'\n        bgColorType = 'noFill'\n\tcornerRadius = '0px'\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n    borderColor = '#D4181D'\n    borderWidth = '0px'\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Sent&quot; &amp;&amp; Added_Time &gt; thisapp.startDate(input.startDate) &amp;&amp; Added_Time &lt; thisapp.endDate(input.endDate)'\n\t  value = 'thisapp.Pro_Forma_Invoices.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#D4181D'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#D4181D'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Overdue Deposits'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column><column\n   \t\t width='34%'\n   \t>\n\t<panel elementName='Panel 5'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n    action = 'OpenReport'\n\t\tparameters = 'Status=Pending+Approval' \n\t\tcomponentLinkName = 'All_Pro_Forma_Invoices'\n\t\ttarget = 'same-window'\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\tpadding = '5px'\n\n>\n\t<pr \n\t>\n\t<pc \n\t\n>\n\t<image  \n\t\tmarginRight = '3px' \n\n\tcolor = '#FFFFFF'\n\twidth = '52px'\n\theight = '52px'\n\ttype = 'gallery'\n\tvalue = 'pending_deposit.jpg'\n\tcornerRadius = '0px'\n/>\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '0px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Count:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginBottom = '0px'\n\tmarginTop = '3px'\n\tpadding = '0px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\tbgColor = 'transparent'\n        bgColorType = 'noFill'\n\tcornerRadius = '0px'\n\n\n\tdisplayType = 'actual'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n    borderColor = '#FF8318'\n    borderWidth = '0px'\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Pending Approval&quot;'\n\t  value = 'thisapp.Pro_Forma_Invoices.ID.count'\n>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginLeft = '0px'\n\tmarginRight = '3px' \n\tmarginTop = '10px'\n\tcolor = '#FF8318'\n\tsize = '28px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Amount:'\n>\n</text>\n\n</pc><pc \n\t\n>\n\t<text \n\n\tmarginLeft = '10px'\n\tmarginRight = '0px' \n\tmarginBottom = '0px'\n\tmarginTop = '10px'\n\tpadding = '0px'\n\tcolor = '#FF8318'\n\tsize = '24px'\n\tbold = 'true' \n\ttype = 'Form Data'\n\n\tbgColor = 'transparent'\n        bgColorType = 'noFill'\n\tcornerRadius = '0px'\n\n\n\tdisplayType = 'actual'\n\tdecimalPlaces = '2'\n\tthousandsSeperator = 'LOCALE'\n\tdecimalSeperator = 'DOT'\n\tnumberScale = 'none'\n\n\n\n    borderColor = '#FF8318'\n    borderWidth = '0px'\n\n\t\tcriteria = 'Blueprint.Current_Stage == &quot;Pending Approval&quot;'\n\t  value = 'thisapp.Pro_Forma_Invoices.Grand_Total_Base_Currency.sum'\n>\n\t\t<prefix \n\t\t\tsize='24px'\n\t\t\tcolor='#FF8318'\n\t\t\tbold='true'\n\t\t\t\t\t\n\t\t\tvalue='RM '\n\t\t/>\n</text>\n\n</pc>\n</pr><pr \n\t>\n\t<pc \n\t\n>\n\t<text \n\n\tmarginTop = '3px'\n\tcolor = '#FF8318'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'Pending Approval Deposits'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column>\n</row><row>\n\t<column\n   \t\t width='100%'\n   \t>\n\t<panel elementName='Panel 6'\n \n >\n\t<pr \n\t\t\twidth='fill'\n\t\theight='fill'\n>\n\t<pc \n\t\tpadding = '20px'\n\tbgColor = '#FFFFFF'\n\n\t\twidth = '100%'\n\t\thAlign = 'center'\n\t\tvAlign = 'middle'\n>\n\t<pr \n\t\t\twidth='auto'\n\t\theight='auto'\n>\n\t<pc \n\t\n>\n\t<text \n\n\tcolor = '#333333'\n\tsize = '16px'\n\ttype = 'Text'\n\n\n\n\n\n\n\n\t  value = 'New employees this month'\n>\n</text>\n\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>\n</column>\n</row>\n</layout>\n</zml>"
 			script
 			{
 				/* Write your script logic here. You can assign values to the page variables you've created in the previous tab. Enter 'input.' to list the created page variables. */
@@ -17589,7 +17662,7 @@
                  	subInfo = Subscription[ID == subId];
                  	currency = subInfo.Currency;
                  	exchangeRate = subInfo.Exchange_Rate;
-                 	piGrandTotal = Pro_Forma_Invoices_1[ID == subInfo.Pro_Forma_Invoices].Grand_Total;
+                 	piGrandTotal = Pro_Forma_Invoices[ID == subInfo.Pro_Forma_Invoices].Grand_Total;
                  	totalDepositAmount = totalDepositAmount + ifnull(piGrandTotal,0);
                  	finalBillingDate = subInfo.Final_Billing_Date;
                  	lastBillingDate = subInfo.Latest_Billing_Date;
@@ -20653,6 +20726,7 @@
                  	}
                  	invoice_date = get_invoice.Invoice_Date;
                  	customer_id = get_invoice.Customer.ID;
+                 	current_amount_due = ifnull(get_invoice.Amount_Due,0);
                  	previous_balance_of_unpaid_invoices = 0;
                  	if(invoice_date != null && customer_id != null)
                  	{
@@ -20662,7 +20736,7 @@
                  		}
                  	}
                  	get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
-                 	get_invoice.Total_Amount_Due=get_invoice.Amount_Due + previous_balance_of_unpaid_invoices;
+                 	get_invoice.Total_Amount_Due=current_amount_due + previous_balance_of_unpaid_invoices;
                  }
 				 void invoice.recalculate_overdue(int tenantId, int invId)
                  {
@@ -24853,17 +24927,27 @@
 										}
 										if(input.Invoice_Date != null && input.Customer_Code != null)
 										{
-											previoustotalAmountDue = 0;
-											for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+											previous_balance_of_unpaid_invoices = 0;
+											if(input.Customer != null)
 											{
-												previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+												get_customer_id = input.Customer.ID;
+												if(get_customer_id != null)
+												{
+													for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+													{
+														previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+													}
+												}
 											}
-											input.Previous_Balance = previoustotalAmountDue;
+											input.Previous_Balance = previous_balance_of_unpaid_invoices;
+											input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
 										}
 										if(input.Customer_Code == null)
 										{
 											input.Due_Date = null;
 											input.Enable_Reminder = "";
+											input.Previous_Balance = 0;
+											input.Total_Amount_Due = ifnull(input.Amount_Due,0);
 										}
 						)
 					}
@@ -24883,20 +24967,24 @@
 					{
 						custom deluge script
 						(
-											previoustotalAmountDue = 0;
-										if(input.Invoice_Date != null && input.Customer_Code != null)
+											previous_balance_of_unpaid_invoices = 0;
+										if(input.Invoice_Date != null && input.Customer != null)
 										{
-											for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+											get_customer_id = input.Customer.ID;
+											if(get_customer_id != null)
 											{
-												previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-											}
-											for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-											{
-												thisapp.invoice.invoice_balance_updates(inv.ID);
+												for each  x in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+												{
+													previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + x.Amount_Due;
+												}
+												for each  inv in Invoice[Invoice_Date > input.Invoice_Date && Customer == get_customer_id]
+												{
+													thisapp.invoice.invoice_balance_updates(inv.ID);
+												}
 											}
 										}
-										input.Previous_Balance = previoustotalAmountDue;
-										input.Total_Amount_Due = input.Grand_Total;
+										input.Previous_Balance = previous_balance_of_unpaid_invoices;
+										input.Total_Amount_Due = input.Amount_Due + previous_balance_of_unpaid_invoices;
 						)
 					}
 					actions 
@@ -25205,12 +25293,20 @@
 											}
 											if(input.Customer_Code != null)
 											{
-												previoustotalAmountDue = 0;
-												for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+												previous_balance_of_unpaid_invoices = 0;
+												if(input.Customer != null)
 												{
-													previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+													get_customer_id = input.Customer.ID;
+													if(get_customer_id != null)
+													{
+														for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+														{
+															previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+														}
+													}
 												}
-												input.Previous_Balance = previoustotalAmountDue;
+												input.Previous_Balance = previous_balance_of_unpaid_invoices;
+												input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
 											}
 										}
 						)
@@ -25618,14 +25714,14 @@
 										}
 										else if(input.Payment_Type_Single_Record == "Pro Forma Invoice")
 										{
-											get_pro_forma_invoice_list = Pro_Forma_Invoices_1[ID == input.Pro_Forma_Invoices];
+											get_pro_forma_invoice_list = Pro_Forma_Invoices[ID == input.Pro_Forma_Invoices];
 											for each  curr_pro_forma_invoice in get_pro_forma_invoice_list
 											{
 												curr_pay_row = Payment_Received.Payment_Received_Line_Item();
-												curr_pay_row.Reference_No=curr_pro_forma_invoice.Pro_Forma_Invoice_No;
+												curr_pay_row.Reference_No=curr_pro_forma_invoice.Invoice_No;
 												curr_pay_row.Pro_Forma_Invoice_No=curr_pro_forma_invoice.ID;
-												curr_pay_row.Description="Payment Received For DEP " + curr_pro_forma_invoice.Pro_Forma_Invoice_No;
-												curr_pay_row.Document_Date=curr_pro_forma_invoice.Pro_Forma_Invoice_Date;
+												curr_pay_row.Description="Payment Received For DEP " + curr_pro_forma_invoice.Invoice_No;
+												curr_pay_row.Document_Date=curr_pro_forma_invoice.Invoice_Date;
 												curr_pay_row.Amount=curr_pro_forma_invoice.Grand_Total;
 												curr_pay_row.Outstanding_Balance=curr_pro_forma_invoice.Amount_Due;
 												curr_pay_row.Allocation=curr_pro_forma_invoice.Amount_Due;
@@ -25845,7 +25941,7 @@
 										//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 										subTotal = 0;
 										totalTax = 0;
-										getPIs = Pro_Forma_Invoices_1[Status == "Partially Paid" || Status == "Sent" || Status = "Overdue" && Customer_Code == input.Customer_Code];
+										getPIs = Pro_Forma_Invoices[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage = "Overdue" && Customer_Code == input.Customer_Code];
 										if(getPIs.ID == null && input.Customer_Code != null)
 										{
 											alert "There are no unpaid deposits associated with this customer code.";
@@ -25856,10 +25952,10 @@
 										for each  pi in getPIs
 										{
 											payRow = Payment_Received.Payment_Received_Line_Item();
-											payRow.Reference_No=pi.Pro_Forma_Invoice_No;
-											payRow.Description="Payment Received For DEP " + pi.Pro_Forma_Invoice_No;
+											payRow.Reference_No=pi.Invoice_No;
+											payRow.Description="Payment Received For DEP " + pi.Invoice_No;
 											payRow.Pro_Forma_Invoice_No=pi.ID;
-											payRow.Document_Date=pi.Pro_Forma_Invoice_Date;
+											payRow.Document_Date=pi.Invoice_Date;
 											payRow.Amount=pi.Grand_Total;
 											payRow.Outstanding_Balance=pi.Amount_Due;
 											payRow.Allocation=pi.Amount_Due;
@@ -25974,19 +26070,22 @@
 														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 													}
 													/* Previous balance and Total amount due calculation */
-													get_customer_id = curr_get_invoice.Customer.ID;
 													previous_balance_of_unpaid_invoices = 0;
-													for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < curr_get_invoice.Invoice_Date && Customer == get_customer_id]
+													if(curr_get_invoice.Customer != null && curr_get_invoice.Invoice_Date != null)
 													{
-														previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+														get_customer_id = curr_get_invoice.Customer.ID;
+														for each  curr_invoice in Invoice[Amount_Due > 0 && Added_Time < zoho.currenttime && Customer == get_customer_id]
+														{
+															previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+														}
+														/*  Previous balance and Total amount due calculation for future invoices */
+														/*for each  curr_invoice in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date && Customer == get_customer_id]
+														{
+															thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
+														}*/
 													}
 													curr_get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
 													curr_get_invoice.Total_Amount_Due=curr_get_invoice.Amount_Due + previous_balance_of_unpaid_invoices;
-													/*  Previous balance and Total amount due calculation for future invoices */
-													for each  curr_invoice in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date && Customer == get_customer_id]
-													{
-														thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
-													}
 												}
 												else if(curr_payment_received_line_item.Debit_Note_No != null)
 												{
@@ -26025,72 +26124,37 @@
 					{
 						custom deluge script
 						(
-											for each  paymentReceivedLineItem in input.Payment_Received_Line_Item
+											for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 										{
-											paymentReceivedLineItem.Still_Owing=paymentReceivedLineItem.Outstanding_Balance - paymentReceivedLineItem.Allocation;
-											if(paymentReceivedLineItem.Allocation > 0)
+											curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+											if(curr_payment_received_line_item.Allocation > 0)
 											{
-												getDeposit = Pro_Forma_Invoices_1[ID == paymentReceivedLineItem.Pro_Forma_Invoice_No];
-												newAmountDue = getDeposit.Amount_Due - paymentReceivedLineItem.Allocation;
-												if(newAmountDue > 0)
+												curr_get_pro_forma = Pro_Forma_Invoices[ID == curr_payment_received_line_item.Pro_Forma_Invoice_No];
+												// Amount Paid and Amount Due Calculation
+												curr_get_pro_forma.Amount_Paid=curr_get_pro_forma.Amount_Paid - curr_payment_received_line_item.Allocation;
+												curr_get_pro_forma.Amount_Due=curr_get_pro_forma.Amount_Due + curr_payment_received_line_item.Allocation;
+												// Pro Forma Invoice Blueprint status update
+												if(curr_get_pro_forma.Due_Date > zoho.currentdate)
 												{
-													getDeposit.Amount_Due=newAmountDue;
-													if(getDeposit.Due_Date > zoho.currentdate)
+													if(curr_get_pro_forma.Amount_Paid == 0)
 													{
-														getDeposit.Status="Partially Paid";
+														thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
 													}
-													else if(getDeposit.Due_Date < zoho.currentdate)
+													else
 													{
-														getDeposit.Status="Overdue";
+														thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
+														thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Partially Paid",curr_get_pro_forma.ID);
 													}
 												}
 												else
 												{
-													getDeposit.Amount_Due=0;
-													getDeposit.Status="Paid";
-													journalEntryLineItem = Collection();
-													row1 = Journal_Entry.Journal_Entry_Line_Item();
-													row1.Account=input.Paid_To;
-													row1.Description="Pro Forma Invoice " + getDeposit.Pro_Forma_Invoice_No + " To " + input.Paid_To.Account + "-" + input.Paid_To.Bank_Account_Number;
-													row1.Debit=ifnull(getDeposit.Grand_Total,0);
-													row1.Credit=0;
-													row1.Deposits=getDeposit.ID;
-													row2 = Journal_Entry.Journal_Entry_Line_Item();
-													row2.Account=4662372000000087213;
-													row2.Description="Pro Forma Invoice " + getDeposit.Pro_Forma_Invoice_No + " Xkomm Security Deposit";
-													row2.Debit=0;
-													row2.Credit=ifnull(getDeposit.Grand_Total,0);
-													row2.Deposits=getDeposit.ID;
-													journalEntryLineItem.insert(row1,row2);
-													newJournalEntryRecord = insert into Journal_Entry
-													[
-														Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-														Document_No=getDeposit.Pro_Forma_Invoice_No
-														Added_User=zoho.loginuser
-														Deposits=getDeposit.ID
-														Date_field=zoho.currentdate
-														Journal_Entry_Line_Item=journalEntryLineItem
-														Sub_Total_Debit=ifnull(getDeposit.Sub_Total,0)
-														Sub_Total_Credit=ifnull(getDeposit.Grand_Total,0) - ifnull(getDeposit.Total_Tax,0)
-														Total_Debit=ifnull(getDeposit.Grand_Total,0)
-														Total_Credit=ifnull(getDeposit.Grand_Total,0)
-														Difference=ifnull(getDeposit.Grand_Total,0) - ifnull(getDeposit.Grand_Total,0)
-														Created_By_The_System=true
-													];
-												}
-												newAmountPaid = getDeposit.Amount_Paid + paymentReceivedLineItem.Allocation;
-												if(newAmountPaid >= getDeposit.Grand_Total)
-												{
-													getDeposit.Amount_Paid=getDeposit.Grand_Total;
-												}
-												else if(newAmountPaid < getDeposit.Grand_Total)
-												{
-													getDeposit.Amount_Paid=newAmountPaid;
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",curr_get_pro_forma.ID);
 												}
 											}
 											else
 											{
-												delete from Payment_Received_Line_Item[ID == paymentReceivedLineItem.ID];
+												delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
 											}
 										}
 						)
@@ -26321,7 +26385,7 @@
 						(
 											for each  paymentReceived in input.Payment_Received_Line_Item
 										{
-											getDeposit = Pro_Forma_Invoices_1[ID == paymentReceived.Pro_Forma_Invoice_No];
+											getDeposit = Pro_Forma_Invoices[ID == paymentReceived.Pro_Forma_Invoice_No];
 											newAmountPaid = getDeposit.Amount_Paid - paymentReceived.Allocation;
 											getDeposit.Amount_Due=getDeposit.Amount_Due + paymentReceived.Allocation;
 											if(newAmountPaid > 0)
@@ -26329,11 +26393,13 @@
 												getDeposit.Amount_Paid=newAmountPaid;
 												if(getDeposit.Due_Date > zoho.currentdate)
 												{
-													getDeposit.Status="Partially Paid";
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",getDeposit.ID);
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Partially Paid",getDeposit.ID);
 												}
 												else
 												{
-													getDeposit.Status="Overdue";
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",getDeposit.ID);
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",getDeposit.ID);
 												}
 											}
 											else
@@ -26341,11 +26407,12 @@
 												getDeposit.Amount_Paid=0;
 												if(getDeposit.Due_Date > zoho.currentdate)
 												{
-													getDeposit.Status="Sent";
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",getDeposit.ID);
 												}
 												else
 												{
-													getDeposit.Status="Overdue";
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",getDeposit.ID);
+													thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",getDeposit.ID);
 												}
 											}
 											delete from Payment_Received_Line_Item[ID == paymentReceived.ID];
@@ -27380,7 +27447,7 @@
 											for each  customerCode in customerCodes
 											{
 												invoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
-												proformaInvoiceValue = ifnull(Pro_Forma_Invoices_1[Pro_Forma_Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+												proformaInvoiceValue = ifnull(Pro_Forma_Invoices[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 												debitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 												totalInvoiceValue = totalInvoiceValue + invoiceValue;
 												totalProformaInvoiceValue = totalProformaInvoiceValue + proformaInvoiceValue;
@@ -27390,7 +27457,7 @@
 										else
 										{
 											totalInvoiceValue = ifnull(Invoice[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
-											totalProformaInvoiceValue = ifnull(Pro_Forma_Invoices_1[Pro_Forma_Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Status == "Sent" || Status == "Overdue" || Status == "Partially Paid"].sum(Amount_Due),0);
+											totalProformaInvoiceValue = ifnull(Pro_Forma_Invoices[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 											totalDebitNoteValue = ifnull(Debit_Note[Invoice_Date < input.Start_Date && Customer == input.Customer_Name && Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" || Blueprint.Current_Stage == "Partially Paid"].sum(Amount_Due),0);
 										}
 										totalAmountOpeningBalance = totalInvoiceValue + totalProformaInvoiceValue + totalDebitNoteValue;
@@ -27687,7 +27754,7 @@
 						custom deluge script
 						(
 											getInvoices = Invoice[Customer == input.ID].ID.getAll();
-										getPIs = Pro_Forma_Invoices_1[Customer == input.ID].ID.getAll();
+										getPIs = Pro_Forma_Invoices[Customer == input.ID].ID.getAll();
 										getDNs = Debit_Note[Customer == input.ID].ID.getAll();
 										getPRs = Payment_Received[Customer_Name == input.ID].ID.getAll();
 										getCNs = Credit_Note[Customer == input.ID].ID.getAll();
@@ -27894,8 +27961,8 @@
 													emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
 												}
 											}
-											getPI = Pro_Forma_Invoices_1[ID == recId];
-											downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + getPI.ID + "/" + getPI.Pro_Forma_Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
+											getPI = Pro_Forma_Invoices[ID == recId];
+											downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + getPI.ID + "/" + getPI.Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
 											piFile = invokeurl
 											[
 												url :downloadPITempUrl
@@ -31801,7 +31868,7 @@
 											getJournalEntryLineItems = Journal_Entry_Line_Item[Account == input.ID].ID.getAll();
 										getTenants = Tenancy[Payable_To.contains(input.ID)].ID.getAll();
 										getSubs = Subscription[Payable_To1.contains(input.ID)].ID.getAll();
-										getPIs = Pro_Forma_Invoices_1[Payable_To1.contains(input.ID)].ID.getAll();
+										getPIs = Pro_Forma_Invoices[Payable_To.contains(input.ID)].ID.getAll();
 										getPRs = Payment_Received[Paid_To == input.ID].ID.getAll();
 										get_invoice_list = Invoice[Payable_To == input.ID].ID.getAll();
 										get_credit_note_list = Credit_Note[Payable_To == input.ID].ID.getAll();
@@ -31854,7 +31921,7 @@
 										get_credit_note_list = Credit_Note[Customer == input.ID].ID.getAll();
 										get_debit_note_list = Debit_Note[Customer == input.ID].ID.getAll();
 										get_refund_note_list = Refund_Note[Customer == input.ID].ID.getAll();
-										get_pro_forma_invoices_list = Pro_Forma_Invoices_1[Customer == input.ID].ID.getAll();
+										get_pro_forma_invoices_list = Pro_Forma_Invoices[Customer == input.ID].ID.getAll();
 										get_payment_received_list = Payment_Received[Customer_Name == input.ID].ID.getAll();
 										message = "This Customer Profile can’t be deleted because it is used in the following module(s):\n\n";
 										hasDependency = false;
@@ -31922,7 +31989,7 @@
 										get_debit_note_list = Debit_Note[Customer_Code == input.ID].ID.getAll();
 										get_refund_note_list = Refund_Note[Customer_Code == input.ID].ID.getAll();
 										get_subscription_list = Subscription[Customer_Code == input.ID].ID.getAll();
-										get_pro_forma_invoices_list = Pro_Forma_Invoices_1[Customer_Code == input.ID].ID.getAll();
+										get_pro_forma_invoices_list = Pro_Forma_Invoices[Customer_Code == input.ID].ID.getAll();
 										get_payment_received_list = Payment_Received[Customer_Code == input.ID].ID.getAll();
 										message = "This tenancy can’t be deleted because it is used in the following module(s):\n\n";
 										hasDependency = false;
@@ -32291,6 +32358,7 @@
 											input_invoice.Amount_Due=input.Grand_Total - input.Amount_Paid - credits_applied_total;
 											input.Amount_Due = input_invoice.Amount_Due;
 										}
+										input.Total_Amount_Due = ifnull(input.Amount_Due,0) + ifnull(input.Previous_Balance,0);
 						)
 					}
 				}
@@ -37647,12 +37715,17 @@
 											}
 											if(input.Invoice_Date != null && input.Customer_Code != null)
 											{
-												previoustotalAmountDue = 0;
-												for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
+												previous_balance_of_unpaid_invoices = 0;
+												get_customer_id = input.Customer.ID;
+												if(get_customer_id != null)
 												{
-													previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+													for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+													{
+														previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+													}
 												}
-												input.Previous_Balance = previoustotalAmountDue;
+												input.Previous_Balance = previous_balance_of_unpaid_invoices;
+												input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
 											}
 											customer_info = Customer_Profile[ID == input.Customer];
 											for each  curr_monthly_rental in input.Monthly_Rental
@@ -41325,11 +41398,11 @@
 															/* Pro forma can be either stage Sent or Overdue after sending */
 														if(input.Due_Date > zoho.currentdate)
 														{
-															thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Sent",input.ID);
+															thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",input.ID);
 														}
 														else
 														{
-															thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Overdue",input.ID);
+															thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",input.ID);
 														}
 								)
 							}
@@ -41637,574 +41710,6 @@
              				from port : T1
              				to port   : T5
              				path      : [233.00634782672782,-100.11238381317659,233.00634782672782,-110.11238381317659,-433.7673290439397,-110.11238381317659,-433.7673290439397,-91.47069253158831,-433.7673290439397,-72.82900125000003,-433.7673290439397,-62.82900125000003]
-        				}
-  				}
-        			}
-    			}
-    			Deposits_Blueprint as "Pro Forma Invoices Blueprint 1"
-    			{
-        			type = Blueprint
-        			form = Pro_Forma_Invoices_1
-        			start
-        			{
-            			start stage = "Draft"
-            			chart data
-            			{
-                			from port : B
-                			to port   : T3
-                			position  : "1 -81"
-                			path      : [28.849999999999994,-44.16,28.849999999999994,-34.16,28.849999999999994,-14.579999999999998,28.687493896484373,-14.579999999999998,28.687493896484373,5,28.687493896484373,15]
-            			}
-        			}
-        			stages
-        			{
-           			"Draft"
-           			{
-               			chart data
-               			{
-                   			position : "-9.429557292630339 15"
-               			}
-           			}
-           			"Pending Approval"
-           			{
-               			chart data
-               			{
-                   			position : "-47 250.5"
-               			}
-           			}
-           			"Approved"
-           			{
-               			chart data
-               			{
-                   			position : "31 445.5"
-               			}
-           			}
-           			"Rejected"
-           			{
-               			chart data
-               			{
-                   			position : "446 193.5"
-               			}
-           			}
-           			"Sent"
-           			{
-               			chart data
-               			{
-                   			position : "252.79623705642427 519"
-               			}
-           			}
-           			"Paid"
-           			{
-               			chart data
-               			{
-                   			position : "957.7962370564243 588"
-               			}
-           			}
-           			"Partially Paid"
-           			{
-               			chart data
-               			{
-                   			position : "946.7962370564243 264"
-               			}
-           			}
-           			"Overdue"
-           			{
-               			chart data
-               			{
-                   			position : "424.7962370564243 777"
-               			}
-           			}
-        			}
-        			transitions
-        			{
-    				Approve as "Approve"
-    				{
-         				type = normal
-         				from stage = "Pending Approval"
-         				to stage = "Approved"
-         				before
-         				{
-            				transition owner
-            				(
-                				permissions = {"Administrator", "Finance Manager"}
-             				)
-            				confirmation before execution
-            				(
-                				message = "Are you sure you want to 'Approve' for this Deposit ${Pro_Forma_Invoice_No}?"
-                				confirm button text = "Yes"
-                				cancel button text = "No"
-            				)
-         				}
-         				after
-         				{
-							actions 
-							{
-								custom deluge script
-								(
-															listEmail = List();
-														listEmailID = List();
-														for each  user in User[Role == 4662372000000943011]
-														{
-															email = user.Email;
-															listEmail.add(email);
-															listEmailID.add(email.toLowerCase());
-														}
-														//listEmail.add("test@aplikasi.us");
-														//listEmailID.add(zoho.adminuserid);
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Deposit_No=" + input.Pro_Forma_Invoice_No;
-														//Send Mail & App Notify To Parts Coordinator
-														sendmail
-														[
-															from :zoho.adminuserid
-															to :listEmail
-															subject :"Deposit " + input.Pro_Forma_Invoice_No + " Approved"
-															message :"Dear,<br><br>We are pleased to inform you that Deposit " + input.Pro_Forma_Invoice_No + " has been successfully approved.As the next step, please submit the approved Deposit to the customer at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-														]
-														notifyTitle = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approved";
-														notifyMessage = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " has been approved. Thank you!Please submit it to the customer.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
-								)
-							}
-							actions  (Due_Date > zoho.currentdate)
-							{
-							update Pro_Forma_Invoices_1[ID == input.ID]
-							[
-								Status = "Approved"
-							]
-							}
-							actions  (Due_Date < zoho.currentdate)
-							{
-							update Pro_Forma_Invoices_1[ID == input.ID]
-							[
-								Status = "Overdue"
-							]
-							}
-         				}
-         				chart data
-         				{
-             				from port : B3
-             				to port   : T3
-             				path      : [29.190026347806125,302.1078297952216,29.190026347806125,312.1078297952216,29.190026347806125,373.8039148976108,83.0960550953647,373.8039148976108,83.0960550953647,435.5,83.0960550953647,445.5]
-        				}
-  				}
-    				Reject as "Reject"
-    				{
-         				type = normal
-         				from stage = "Pending Approval"
-         				to stage = "Rejected"
-         				before
-         				{
-            				transition owner
-            				(
-                				permissions = {"Administrator", "Finance Manager"}
-             				)
-            				confirmation before execution
-            				(
-                				message = "Are you sure you want to 'Reject' for this Deposit ${Pro_Forma_Invoice_No}?"
-                				confirm button text = "Yes"
-                				cancel button text = "No"
-            				)
-         				}
-         				during
-         				{
-            				action = update_fields
-            				workflow status = true
-            				visible fields = [Rejection_Reason]
-         				}
-         				after
-         				{
-							actions 
-							{
-							update Pro_Forma_Invoices_1[ID == input.ID]
-							[
-								Status = "Rejected"
-							]
-								custom deluge script
-								(
-															listEmail = List();
-														listEmailID = List();
-														for each  user in User[Role == 4662372000000943011]
-														{
-															email = user.Email;
-															listEmail.add(email);
-															listEmailID.add(email.toLowerCase());
-														}
-														//listEmail.add("test@aplikasi.us");
-														//listEmailID.add(zoho.adminuserid);
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Credit_Note_No=" + input.Pro_Forma_Invoice_No;
-														//Send Mail & App Notify To Parts Coordinator
-														sendmail
-														[
-															from :zoho.adminuserid
-															to :listEmail
-															subject :"Pro Forma Invoice " + input.Pro_Forma_Invoice_No + "  Rejected – Action Required"
-															message :"Dear,<br><br>We are pleased to inform you that Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " has been rejected.Please review the reason for the rejection and address any issues promptly to facilitate re-submission.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-														]
-														notifyTitle = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Rejected – Action Required";
-														notifyMessage = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " has been rejected. Please review the reason for rejection.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
-								)
-							}
-         				}
-         				chart data
-         				{
-             				from port : R1
-             				to port   : L1
-             				path      : [105.38005269561225,276.3039148976108,115.38005269561225,276.3039148976108,275.6900263478061,276.3039148976108,275.6900263478061,219.3039148976108,436,219.3039148976108,446,219.3039148976108]
-        				}
-  				}
-    				Resubmit as "Resubmit"
-    				{
-         				type = normal
-         				from stage = "Rejected"
-         				to stage = "Pending Approval"
-         				before
-         				{
-            				transition owner
-            				(
-                				permissions = {"Administrator", "Finance Executive"}
-                				userfields = {Added_User}
-             				)
-            				confirmation before execution
-            				(
-                				message = "Are you sure you want to 'Resubmit' for this Deposit ${Pro_Forma_Invoice_No}?"
-                				confirm button text = "Yes"
-                				cancel button text = "No"
-            				)
-         				}
-         				during
-         				{
-            				action = update_fields
-            				workflow status = true
-            				visible fields = [Main_Section,Total_Section,Reject_Section,Pro_Forma_Invoice_Line_Item]
-         				}
-         				after
-         				{
-							actions 
-							{
-							update Pro_Forma_Invoices_1[ID == input.ID]
-							[
-								Status = "Resubmit"
-							]
-								custom deluge script
-								(
-															listEmail = List();
-														listEmailID = List();
-														for each  user in User[Role == 4662372000000943015]
-														{
-															email = user.Email;
-															listEmail.add(email);
-															listEmailID.add(email.toLowerCase());
-														}
-														//listEmail.add("test@aplikasi.us");
-														//listEmailID.add(zoho.adminuserid);
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Status=" + input.Status;
-														//Send Mail & App Notify
-														sendmail
-														[
-															from :zoho.adminuserid
-															to :listEmail
-															subject :"Resubmitted Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approval Required"
-															message :"Dear,<br><br>This is a notification that Deposit " + input.Pro_Forma_Invoice_No + " has been resubmitted after addressing the previous issues. Please review the updated Pro Forma Invoice and provide your approval at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-														]
-														notifyTitle = "Resubmitted Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Rejected – Action Required";
-														notifyMessage = "A resubmitted Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " is waiting your approval.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
-														input.Confirm_resubmission = false;
-														input.Rejection_Reason = "";
-								)
-							}
-         				}
-         				chart data
-         				{
-             				from port : T1
-             				to port   : T5
-             				path      : [468.5950168188976,193.5,468.5950168188976,183.5,73.65004391301021,183.5,73.65004391301021,212,73.65004391301021,240.5,73.65004391301021,250.5]
-        				}
-  				}
-    				Send_For_Approval as "Send For Approval"
-    				{
-         				type = normal
-         				from stage = "Draft"
-         				to stage = "Pending Approval"
-         				before
-         				{
-            				transition owner
-            				(
-                				permissions = {"Administrator", "Finance Executive"}
-                				userfields = {Added_User}
-             				)
-            				confirmation before execution
-            				(
-                				message = "Are you sure you want to 'Send For Approval' for this Deposit ${Pro_Forma_Invoice_No}?"
-                				confirm button text = "Yes"
-                				cancel button text = "No"
-            				)
-         				}
-         				after
-         				{
-							actions 
-							{
-							update Pro_Forma_Invoices_1[ID == input.ID]
-							[
-								Status = "Pending Approval"
-							]
-								custom deluge script
-								(
-															listEmail = List();
-														listEmailID = List();
-														for each  user in User[Role == 4662372000000943015]
-														{
-															email = user.Email;
-															listEmail.add(email);
-															listEmailID.add(email.toLowerCase());
-														}
-														//listEmailID.add(zoho.adminuserid);
-														//listEmail.add("test@aplikasi.us");
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Pro_Forma_Invoices?Status=Pending+Approval";
-														//Send Mail & App Notify To Parts Coordinator
-														sendmail
-														[
-															from :zoho.adminuserid
-															to :listEmail
-															subject :"Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approval Required"
-															message :"Dear,<br><br>We hope this message finds you well. Please review and approve Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-														]
-														notifyTitle = "Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " Approval Required";
-														notifyMessage = "Please review and approve Pro Forma Invoice " + input.Pro_Forma_Invoice_No + " to complete processing.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Pro_Forma_Invoices",input.ID);
-								)
-							}
-         				}
-         				chart data
-         				{
-             				from port : B3
-             				to port   : T3
-             				path      : [28.687493896484373,66.60782979522162,28.687493896484373,76.60782979522162,28.687493896484373,158.5539148976108,29.190026347806125,158.5539148976108,29.190026347806125,240.5,29.190026347806125,250.5]
-        				}
-  				}
-    				Send_Invoice as "Send Invoice"
-    				{
-         				type = normal
-         				from stage = "Approved"
-         				to stage = "Sent"
-         				before
-         				{
-            				transition criteria = (Invoice_UUID is not null && QR_Invoice_Public_Link is not null)
-         				}
-         				after
-         				{
-							actions 
-							{
-								custom deluge script
-								(
-															/* Pro forma can be either stage Sent or Overdue after sending */
-														if(input.Due_Date > zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Sent",input.ID);
-														}
-														else
-														{
-															thisapp.blueprint.changeStage("Pro_Forma_Invoices_1","Deposits_Blueprint","Overdue",input.ID);
-														}
-								)
-							}
-         				}
-         				chart data
-         				{
-             				from port : R1
-             				to port   : L1
-             				path      : [135.1921101907294,471.3039148976108,145.1921101907294,471.3039148976108,193.99417362357684,471.3039148976108,193.99417362357684,544.8039148976108,242.79623705642427,544.8039148976108,252.79623705642427,544.8039148976108]
-        				}
-  				}
-    				Payment_Received_Partial as "Payment Received Partial"
-    				{
-         				type = normal
-         				from stage = "Sent"
-         				to stage = "Partially Paid"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : T3
-             				to port   : L1
-             				path      : [288.7397881845038,519,288.7397881845038,509,288.7397881845038,289.8039148976108,612.7680126204641,289.8039148976108,936.7962370564243,289.8039148976108,946.7962370564243,289.8039148976108]
-        				}
-  				}
-    				Payment_Received_Full_fro1 as "Payment Received Full from Sent"
-    				{
-         				type = normal
-         				from stage = "Sent"
-         				to stage = "Paid"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : R1
-             				to port   : L1
-             				path      : [324.68333931258337,544.8039148976108,334.68333931258337,544.8039148976108,641.2397881845038,544.8039148976108,641.2397881845038,613.8039148976108,947.7962370564243,613.8039148976108,957.7962370564243,613.8039148976108]
-        				}
-  				}
-    				Due_Date_Passed_from_Sent as "Due Date Passed from Sent"
-    				{
-         				type = normal
-         				from stage = "Sent"
-         				to stage = "Overdue"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : B3
-             				to port   : L1
-             				path      : [288.7397881845038,570.6078297952216,288.7397881845038,580.6078297952216,288.7397881845038,802.8039148976108,351.76801262046405,802.8039148976108,414.7962370564243,802.8039148976108,424.7962370564243,802.8039148976108]
-        				}
-  				}
-    				Payment_Received_Full_fro2 as "Payment Received Full from Partially Paid"
-    				{
-         				type = normal
-         				from stage = "Partially Paid"
-         				to stage = "Paid"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : B3
-             				to port   : T3
-             				path      : [1008.685260901789,315.6078297952216,1008.685260901789,325.6078297952216,1008.685260901789,451.8039148976108,993.0712930062812,451.8039148976108,993.0712930062812,578,993.0712930062812,588]
-        				}
-  				}
-    				Due_Date_Passed_from_Part as "Due Date Passed from Partially Paid"
-    				{
-         				type = normal
-         				from stage = "Partially Paid"
-         				to stage = "Overdue"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : R1
-             				to port   : R1
-             				path      : [1070.5742847471538,289.8039148976108,1080.5742847471538,289.8039148976108,1080.5742847471538,802.8039148976108,806.5193149595561,802.8039148976108,532.4643451719584,802.8039148976108,522.4643451719584,802.8039148976108]
-        				}
-  				}
-    				Payment_Received_Full_fro as "Payment Received Full from Overdue"
-    				{
-         				type = normal
-         				from stage = "Overdue"
-         				to stage = "Paid"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : T3
-             				to port   : B3
-             				path      : [473.6302911141913,777,473.6302911141913,767,473.6302911141913,708.3039148976109,993.0712930062812,708.3039148976109,993.0712930062812,649.6078297952216,993.0712930062812,639.6078297952216]
-        				}
-  				}
-    				Revert_to_Pending_Approva as "Revert to Pending Approval"
-    				{
-         				type = normal
-         				from stage = "Approved"
-         				to stage = "Pending Approval"
-         				before
-         				{
-            				transition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : L1
-             				to port   : L1
-             				path      : [31,471.3039148976108,21,471.3039148976108,-57,471.3039148976108,-57,373.8039148976108,-57,276.3039148976108,-47,276.3039148976108]
-        				}
-  				}
-    				Overdue_to_Sent as "Overdue to Sent"
-    				{
-         				type = normal
-         				from stage = "Overdue"
-         				to stage = "Sent"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : T1
-             				to port   : B4
-             				path      : [447.4075884090133,777,447.4075884090133,767,447.4075884090133,673.8039148976109,297.554305227197,673.8039148976109,297.554305227197,580.6078297952216,297.554305227197,570.6078297952216]
-        				}
-  				}
-    				Paid_to_Sent as "Paid to Sent"
-    				{
-         				type = normal
-         				from stage = "Paid"
-         				to stage = "Sent"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : B1
-             				to port   : B5
-             				path      : [975.8879223730432,639.6078297952216,975.8879223730432,649.6078297952216,306.3688222698902,649.6078297952216,306.3688222698902,615.1078297952216,306.3688222698902,580.6078297952216,306.3688222698902,570.6078297952216]
-        				}
-  				}
-    				Partially_Paid_to_Sent as "Partially Paid to Sent"
-    				{
-         				type = normal
-         				from stage = "Partially Paid"
-         				to stage = "Sent"
-         				before
-         				{
-            				transition criteria = (ID == 0)
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : B1
-             				to port   : T5
-             				path      : [973.7592450048792,315.6078297952216,973.7592450048792,325.6078297952216,973.7592450048792,417.3039148976108,306.3688222698902,417.3039148976108,306.3688222698902,509,306.3688222698902,519]
         				}
   				}
         			}
@@ -43487,11 +42992,8 @@
 											Difference=ifnull(input.Grand_Total,0) - ifnull(input.Grand_Total,0)
 											Created_By_The_System=true
 										];
+										// Update Status to Drawn
 					)
-					update Pro_Forma_Invoices_1[ID == input.ID]
-					[
-						Status = "Drawn"
-					]
 					}
 				}
 			}
@@ -43665,7 +43167,7 @@
 					{
 					on click
 					(
-						thisapp.blueprint.executeTransition("Pro_Forma_Invoices_1","Deposits_Blueprint","Approve",input.ID);
+						thisapp.blueprint.executeTransition("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Approve",input.ID);
 					)
 					}
 				}
@@ -46605,6 +46107,7 @@
 								Exchange_Rate as "Exchange Rate"
 								Amount_Paid as "Amount Paid"
 								Invoice_UUID as "Invoice UUID"
+								Previous_Balance as "Previous Balance"
 							)
 						)
 					)
@@ -46674,7 +46177,6 @@
 								Outstanding_Balance as "Outstanding Balance"
 								Allocation
 								Payment_Received as "Payment Received"
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 							)
 						)
 					)
@@ -46722,12 +46224,12 @@
 								Outstanding_Balance as "Outstanding Balance"
 								Allocation
 								Payment_Received as "Payment Received"
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 								Reference_No as "Reference No."
 								Description
 								Allocation_MYR as "Allocation (MYR)"
 								Still_Owing as "Still Owing"
 								Debit_Note_No as "Debit Note No."
+								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 							)
 						)
 					)
@@ -46825,7 +46327,6 @@
 		     				related field = Payment_Received_Line_Item.Payment_Received
 							fields
 							(
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 								Document_Date as "Document Date"
 								Amount
 								Outstanding_Balance as "Outstanding Balance"
@@ -46941,7 +46442,6 @@
 								Quantity
 								Total
 								Customer_Name as "Customer Name"
-								Pro_Forma_Invoice as "Pro Forma Invoice"
 								Item_Code as "Item Code"
 								Customer_Code as "Customer Code"
 								Sub_Total as "Sub Total"
@@ -46951,6 +46451,7 @@
 								Total_MYR as "Total (MYR)"
 								Business_Segment as "Business Segment"
 								Business_Unit as "Business Unit"
+								Pro_Forma_Invoice as "Pro Forma Invoice"
 							)
 						)
 					)
@@ -47037,96 +46538,38 @@
 								Status
 								Customer as "Customer Name"
 								Customer_E_mail as "Customer Email"
-								Customer_TIN as "Customer TIN"
-								Customer_SST_Registration_Number as "Customer SST"
-								Customer_Code as "Customer Code"
 							)
 						)
 						datablock2
 						(
 							layout type = -2
+		     				title = "Supplier"
+		     				related field = Supplier
 							fields
 							(
-								Rejection_Reason as "Rejection Reason"
+								Organization_Name as "Organization Name"
+								Company_Email as "Company Email"
+								Finance_Email as "Finance Email"
+								Company_Registration_Number_Scheme as "Company Registration Number Scheme"
+								Company_Registration_Number as "Company Registration Number"
+								MSIC_Description as "MSIC Description"
+								Company_Phone_Number as "Company Phone Number"
 							)
 						)
 						datablock3
 						(
 							layout type = -2
-		     				title = "Bill Information"
+		     				title = "Customer Name"
+		     				related field = Customer
 							fields
 							(
-								Grand_Total as "Grand Total"
-								Grand_Total_Base_Currency as "Grand Total (Base Currency)"
-							)
-						)
-						datablock4
-						(
-							layout type = -1
-		     				title = "Deposits Line Item"
-		     				related field = Pro_Forma_Invoice_Line_Item
-							fields
-							(
-								Item as "nvoic"
-								Item_Code as "Item Code"
-								Description
-								Unit_Price as "Unit Price"
-								Quantity
-								Total
-							)
-						)
-						datablock8
-						(
-							layout type = -1
-		     				title = "Payment Received"
-		     				related field = Payment_Received_Line_Item.Pro_Forma_Invoice_No
-							fields
-							(
-								Payment_Received as "Payment Received"
-								Allocation
-							)
-						)
-						datablock9
-						(
-							layout type = -2
-							fields
-							(
-								Amount_Due as "Amount Due"
-								Amount_Paid as "Amount Paid"
-							)
-						)
-						datablock5
-						(
-							layout type = -1
-		     				title = "Journal Entry"
-		     				related field = Journal_Entry_Line_Item.Deposits
-							fields
-							(
-								Account
-								Debit
-								Credit
-							)
-						)
-						datablock6
-						(
-							layout type = -1
-		     				related field = Journal_Entry.Deposits
-							fields
-							(
-								Total_Debit as "Total Debit"
-								Total_Credit as "Total Credit"
-							)
-						)
-						datablock7
-						(
-							layout type = -2
-		     				title = "System Information"
-							fields
-							(
-								Customer.Added_Time as "Added Time"
-								Customer.Added_User as "Added User"
-								Customer.Modified_Time as "Modified Time"
-								Customer_Code.Modified_User as "Modified User"
+								Customer_Name as "Customer Name"
+								Customer_Registration_Number as "Customer Registration Number"
+								Customer_Registration_Number_Scheme as "Customer Registration Number Scheme"
+								Customer_TIN as "Customer TIN"
+								Customer_SST as "Customer SST"
+								Business_Street as "Business Address"
+								City
 							)
 						)
 					)
@@ -47234,6 +46677,7 @@
 								Account
 								Journal_Entry as "Journal Entry"
 								Credit_Note as "Credit Note"
+								Deposits
 							)
 						)
 					)
@@ -47275,7 +46719,6 @@
 							(
 								Description
 								Invoice
-								Deposits
 								Payment_Received as "Payment Received"
 								Credit
 								Debit
@@ -47283,6 +46726,7 @@
 								Journal_Entry as "Journal Entry"
 								Credit_Note as "Credit Note"
 								Debit_Note as "Debit Note"
+								Deposits
 							)
 						)
 					)
@@ -47621,7 +47065,6 @@
 								Reference_No as "Reference No."
 								Description
 								Invoice_No as "Invoice No."
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 								Amount
 							)
 						)
@@ -47654,7 +47097,6 @@
 								Outstanding_Balance as "Outstanding Balance"
 								Allocation
 								Payment_Received as "Payment Received"
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 							)
 						)
 					)
@@ -47702,7 +47144,6 @@
 								Outstanding_Balance as "Outstanding Balance"
 								Allocation
 								Payment_Received as "Payment Received"
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 							)
 						)
 					)
@@ -48224,7 +47665,6 @@
 								Outstanding_Balance as "Outstanding Balance"
 								Allocation
 								Payment_Received as "Payment Received"
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 							)
 						)
 					)
@@ -48275,7 +47715,6 @@
 								Outstanding_Balance as "Outstanding Balance"
 								Allocation
 								Payment_Received as "Payment Received"
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 							)
 						)
 					)
@@ -49066,7 +48505,6 @@
 								Outstanding_Balance as "Outstanding Balance"
 								Allocation
 								Payment_Received as "Payment Received"
-								Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 							)
 						)
 					)
@@ -50353,7 +49791,7 @@
 							layout type = -1
 							fields
 							(
-								Supplier as "c"
+								Supplier
 								Supplier_Business_Activity_Description as "Business Activity Description"
 								Supplier_TIN as "Tax Identification Number(TIN)"
 								Supplier_ID_Type as "ID Type"
@@ -50404,7 +49842,7 @@
 							layout type = -2
 							fields
 							(
-								Supplier as "c"
+								Supplier
 								Supplier_Business_Activity_Description as "Business Activity Description"
 								Supplier_TIN as "Tax Identification Number(TIN)"
 								Supplier_ID_Type as "ID Type"
@@ -50454,6 +49892,151 @@
 								Sub_Total_Monthly_Rental as "Sub Total Monthly Rental"
 								Total_Tax_Monthly_Rental as "Total Tax Monthly Rental"
 								Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+    				)
+				)
+			}
+			report Pro_Forma_Invoices_New
+			{
+				quickview
+				(
+					layout
+					(
+		 				type = -1
+						datablock1
+						(
+							layout type = -1
+							fields
+							(
+								Supplier
+								Supplier_Business_Activity_Description as "Business Activity Description"
+								Supplier_TIN as "Tax Identification Number(TIN)"
+								Supplier_ID_Type as "ID Type"
+								Supplier_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+								Supplier_SST_Registration_Number as "SST Registration Number"
+								Supplier_Telephone_Number as "Telephone Number"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+						record
+						(
+							Edit   	   
+							Duplicate   	   
+							Delete   	   
+    					)
+    				)
+    				action
+    				(
+						on click
+						(
+							View Record   	   
+    					)
+						on right click
+						(
+							Edit   	   
+							Delete   	   
+							Duplicate   	   
+							View Record   	   
+    					)
+     				)
+				)
+
+				detailview
+				(
+					layout
+					(
+		 				type = 1
+						datablock1
+						(
+							layout type = -2
+							fields
+							(
+								Supplier
+								Supplier_Business_Activity_Description as "Business Activity Description"
+								Supplier_TIN as "Tax Identification Number(TIN)"
+								Supplier_ID_Type as "ID Type"
+								Supplier_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+								Supplier_SST_Registration_Number as "SST Registration Number"
+								Supplier_Telephone_Number as "Telephone Number"
+								Supplier_E_mail as "E-mail"
+								Supplier_Name as "Name"
+								Supplier_Street as "Street"
+								Supplier_Postcode as "Postcode"
+								Supplier_City as "City"
+								Supplier_State as "State"
+								Supplier_Country as "Country"
+								Customer
+								Customer_Code as "Customer Code"
+								Customer_TIN as "Tax Identification Number(TIN)"
+								Customer_ID_Type as "ID Type"
+								Customer_Registration_Identification_Passport_Number as "Registration / Identification / Passport Number"
+								Customer_SST_Registration_Number as "SST Registration Number"
+								Customer_Telephone_Number as "Telephone Number"
+								Customer_E_mail as "E-mail"
+								Customer_Name as "Name"
+								Customer_Street as "Street"
+								Customer_Postcode as "Postcode"
+								Customer_City as "City"
+								Customer_State as "State"
+								Customer_Country as "Country"
+								Delivery_Street as "Delivery Street"
+								Delivery_Postcode as "Delivery Postcode"
+								Delivery_City as "Delivery City"
+								Delivery_State as "Delivery State"
+								Delivery_Country as "Delivery Country"
+								Invoice_No as "Invoice No."
+								Invoice_UUID as "Invoice UUID"
+								Invoice_UUID_Link as "Invoice UUID Link"
+								Invoice_Public_Link as "Invoice Public Link"
+								QR_Invoice_Public_Link as "QR Invoice Public Link"
+								Invoice_Date as "Invoice Date"
+								Payment_Term as "Payment Term"
+								Due_Date as "Due Date"
+								Charge_Category as "Charge Category"
+								Attachment
+								Send_Email as "Send Email"
+								Base_Currency as "Base Currency"
+								Invoice_Currency as "Invoice Currency"
+								Exchange_Rate as "Exchange Rate"
+								Sub_Total_Monthly_Rental as "Sub Total Monthly Rental"
+								Total_Tax_Monthly_Rental as "Total Tax Monthly Rental"
+								Grand_Total_Monthly_Rental as "Grand Total Monthly Rental"
+								Sub_Total_Internet_Charges as "Sub Total Internet Charges"
+								Total_Tax_Internet_Charges as "Total Tax Internet Charges"
+								Grand_Total_Internet_Charges as "Grand Total Internet Charges"
+								Sub_Total_Call_Charges as "Sub Total Call Charges (Analog, Domestic & Overseas)"
+								Total_Tax_Call_Charges as "Total Tax Call Charges (Analog, Domestic & Overseas)"
+								Grand_Total_Call_Charges as "Grand Total Call Charges (Analog, Domestic & Overseas)"
+								Sub_Total as "Sub Total"
+								Total_Tax as "Total Tax"
+								Grand_Total as "Grand Total"
+								Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+								Amount_Paid as "Amount Paid"
+								Amount_Due as "Amount Due"
+								Payable_To as "Payable To"
+								Reference_Invoice as "Reference Invoice"
+								Rejection_Reason as "Rejection Reason"
+								Confirm_resubmission as "Confirm resubmission?"
+								Customer_Name_Trigger as "Customer Name Trigger"
+								User_Input_Trigger
 							)
 						)
 					)
@@ -50689,6 +50272,22 @@
 				{
 					icon = "shopping-receipt"
 				}
+				form  Pro_Forma_Invoices
+				{
+					icon = "tech-desktop"
+				}
+				report Copy_of_Debit_Note_Report
+				{
+					icon = "tech-desktop"
+				}
+				report All_Pro_Forma_Invoices
+				{
+					icon = "tech-gopro"
+				}
+				report Copy_of_All_Pro_Forma_Invoices
+				{
+					icon = "travel-world"
+				}
 			}
 			space Space
 			{
@@ -50794,17 +50393,13 @@
 						icon = "tech-desktop"
 					}
 				}
-				section Pro_Forma_Invoices1
+				section Pro_Forma_Invoices
 				{
 					displayname = "Pro Forma Invoices"
-					icon = "tech-desktop"
-					report All_Pro_Forma_Invoices
+					icon = "tech-gopro"
+					report Pro_Forma_Invoices_New
 					{
 						icon = "tech-gopro"
-					}
-					report Copy_of_All_Pro_Forma_Invoices
-					{
-						icon = "travel-world"
 					}
 				}
 				section Payments_Received
@@ -50872,11 +50467,6 @@
 				{
 					displayname = "Invoices"
 					icon = "shopping-receipt"
-				}
-				section Pro_Forma_Invoices
-				{
-					displayname = "Pro Forma Invoices"
-					icon = "tech-gopro"
 				}
 				section TEST_Debtor_Aging_Report
 				{
@@ -51153,19 +50743,6 @@
 						icon = "health-notebook"
 					}
 					report Apply_Credit_To_Invoice_Line_Report
-					{
-						icon = "tech-desktop"
-					}
-				}
-				section Copy_of_Debit_Note
-				{
-					displayname = "Copy of Debit Note"
-					icon = "shopping-pos"
-					form  Pro_Forma_Invoices
-					{
-						icon = "tech-desktop"
-					}
-					report Copy_of_Debit_Note_Report
 					{
 						icon = "tech-desktop"
 					}

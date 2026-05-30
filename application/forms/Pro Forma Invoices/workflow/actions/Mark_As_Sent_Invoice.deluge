@@ -2,11 +2,11 @@
 // Link name: Mark_As_Sent_Invoice
 // Form: Pro_Forma_Invoices
 
-if(input.Due_Date > today)
-				{
-					input.Status = "Sent";
-				}
-				else
-				{
-					input.Status = "Overdue";
-				}
+if(input.Due_Date > zoho.currentdate)
+{
+	thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",input.ID);
+}
+else
+{
+	thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",input.ID);
+}

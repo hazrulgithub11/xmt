@@ -1,10 +1,10 @@
 list All_Pro_Forma_Invoices
 {
 	displayName = "Pro Forma Invoices"
-	show all rows from Pro_Forma_Invoices    
+	show all rows from Pro_Forma_Invoices_1    
 	(
 		Customer_Code as "Customer Code"
-		Customer_Name as "Customer Name"
+		Customer as "Customer Name"
 		Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 		Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
 		Payment_Method as "Payment Method"
@@ -14,17 +14,17 @@ list All_Pro_Forma_Invoices
 		)
 		Status
 		Due_Date as "Due Date"
-		Customer_SST as "Customer SST"
+		Customer_SST_Registration_Number as "Customer SST"
 		Customer_TIN as "Customer TIN"
-		Customer_Email as "Customer Email"
+		Customer_E_mail as "Customer Email"
 		Rejection_Reason as "Rejection Reason"
-		Grand_Total_MYR as "Grand Total(MYR)"
+		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		(
 			display = total	
 		)
-		Customer_Name.Added_Time as "Added Time"
-		Customer_Name.Added_User as "Added User"
-		Customer_Name.Modified_Time as "Modified Time"
+		Customer.Added_Time as "Added Time"
+		Customer.Added_User as "Added User"
+		Customer.Modified_Time as "Modified Time"
 		Customer_Code.Modified_User as "Modified User"
 		Amount_Due as "Amount Due"
 		Amount_Paid as "Amount Paid"
@@ -185,16 +185,16 @@ list All_Pro_Forma_Invoices
 				(
 					Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
 					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
-					Customer_Name as "Customer Name"
+					Customer as "Customer Name"
 					Customer_Code as "Customer Code"
 					Payment_Method as "Payment Method"
 					Status
 					Payment_Term as "Payment Term"
 					Due_Date as "Due Date"
 					Grand_Total as "Grand Total"
-					Grand_Total_MYR as "Grand Total(MYR)"
-					Customer_Name.Added_Time as "Added Time"
-					Customer_Name.Modified_Time as "Modified Time"
+					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+					Customer.Added_Time as "Added Time"
+					Customer.Modified_Time as "Modified Time"
 				)
 			)
 		)
@@ -240,90 +240,38 @@ list All_Pro_Forma_Invoices
 					Payment_Term as "Payment Term"
 					Due_Date as "Due Date"
 					Status
-					Customer_Name as "Customer Name"
-					Customer_Email as "Customer Email"
-					Customer_TIN as "Customer TIN"
-					Customer_SST as "Customer SST"
-					Customer_Code as "Customer Code"
+					Customer as "Customer Name"
+					Customer_E_mail as "Customer Email"
 				)
 			)
 			datablock2
 			(
+		     	title = "Supplier"
+		     	related field = Supplier
 				fields
 				(
-					Rejection_Reason as "Rejection Reason"
+					Organization_Name as "Organization Name"
+					Company_Email as "Company Email"
+					Finance_Email as "Finance Email"
+					Company_Registration_Number_Scheme as "Company Registration Number Scheme"
+					Company_Registration_Number as "Company Registration Number"
+					MSIC_Description as "MSIC Description"
+					Company_Phone_Number as "Company Phone Number"
 				)
 			)
 			datablock3
 			(
-		     	title = "Bill Information"
+		     	title = "Customer Name"
+		     	related field = Customer
 				fields
 				(
-					Grand_Total as "Grand Total"
-					Grand_Total_MYR as "Grand Total(MYR)"
-				)
-			)
-			datablock4
-			(
-		     	title = "Deposits Line Item"
-		     	related field = Pro_Forma_Invoice_Line_Item
-				fields
-				(
-					Item as "nvoic"
-					Item_Code as "Item Code"
-					Description
-					Unit_Price as "Unit Price"
-					Quantity
-					Total
-				)
-			)
-			datablock8
-			(
-		     	title = "Payment Received"
-		     	related field = Payment_Received_Line_Item.Pro_Forma_Invoice_No
-				fields
-				(
-					Payment_Received as "Payment Received"
-					Allocation
-				)
-			)
-			datablock9
-			(
-				fields
-				(
-					Amount_Due as "Amount Due"
-					Amount_Paid as "Amount Paid"
-				)
-			)
-			datablock5
-			(
-		     	title = "Journal Entry"
-		     	related field = Journal_Entry_Line_Item.Deposits
-				fields
-				(
-					Account
-					Debit
-					Credit
-				)
-			)
-			datablock6
-			(
-		     	related field = Journal_Entry.Deposits
-				fields
-				(
-					Total_Debit as "Total Debit"
-					Total_Credit as "Total Credit"
-				)
-			)
-			datablock7
-			(
-		     	title = "System Information"
-				fields
-				(
-					Customer_Name.Added_Time as "Added Time"
-					Customer_Name.Added_User as "Added User"
-					Customer_Name.Modified_Time as "Modified Time"
-					Customer_Code.Modified_User as "Modified User"
+					Customer_Name as "Customer Name"
+					Customer_Registration_Number as "Customer Registration Number"
+					Customer_Registration_Number_Scheme as "Customer Registration Number Scheme"
+					Customer_TIN as "Customer TIN"
+					Customer_SST as "Customer SST"
+					Business_Street as "Business Address"
+					City
 				)
 			)
 		)

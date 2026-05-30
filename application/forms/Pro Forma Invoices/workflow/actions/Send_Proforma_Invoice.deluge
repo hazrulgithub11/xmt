@@ -2,71 +2,69 @@
 // Link name: Send_Proforma_Invoice
 // Form: Pro_Forma_Invoices
 
-// --- on click block 1 ---
-// otherMp = Map();
-				// mp = Map();
-				// mp.put("Send_Email",true);
-				// zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"All_Pro_Forma_Invoices",input.ID,mp,otherMp,"zoho_creator_connection");
-				getEmailTemplate = Email_Templates[Template_Type == "Pro Forma Invoices" && Status == "Active"];
-				toAddresses = input.Customer_Email;
-				emailSubject = getEmailTemplate.Subject_field;
-				emailBody = getEmailTemplate.Body;
-				placeholders = getEmailTemplate.Placeholders;
-				recId = input.ID;
-				getRecordPI = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Pro_Forma_Invoices",recId,"zoho_creator_connection");
-				if(getRecordPI.get("code") == 3000)
+// --- on click block 1 (always: send email with PDF) ---
+getEmailTemplate = Email_Templates[Template_Type == "Pro Forma Invoices" && Status == "Active"];
+toAddresses = input.Customer_E_mail;
+emailSubject = getEmailTemplate.Subject_field;
+emailBody = getEmailTemplate.Body;
+placeholders = getEmailTemplate.Placeholders;
+recId = input.ID;
+getRecordPI = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"Pro_Forma_Invoices_New",recId,"zoho_creator_connection");
+if(getRecordPI.get("code") == 3000)
+{
+	piData = getRecordPI.get("data");
+}
+for each  placeholder in placeholders
+{
+	if(piData.get(placeholder).size() != null)
+	{
+		listData = piData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
+		placeHolderValue = "";
+		idx = 0;
+		for each  data in listData
+		{
+			if(data.contains("display_value:"))
+			{
+				if(idx > 0)
 				{
-					piData = getRecordPI.get("data");
+					placeHolderValue = placeHolderValue + ",";
 				}
-				for each  placeholder in placeholders
-				{
-					if(piData.get(placeholder).size() != null)
-					{
-						listData = piData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
-						placeHolderValue = "";
-						idx = 0;
-						for each  data in listData
-						{
-							if(data.contains("display_value:"))
-							{
-								if(idx > 0)
-								{
-									placeHolderValue = placeHolderValue + ",";
-								}
-								placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
-								idx = idx + 1;
-							}
-						}
-						emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-						emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-					}
-					else
-					{
-						emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
-						emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
-					}
-				}
-				downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + recId + "/" + input.Pro_Forma_Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
-				piFile = invokeurl
-				[
-					url :downloadPITempUrl
-					type :GET
-				];
-				piFile.setparamname("file");
-				sendmail
-				[
-					from :zoho.adminuserid
-					to :toAddresses
-					subject :emailSubject
-					message :emailBody
-					Attachments :file:piFile
-				]
-// --- on click block 2 ---
-if(input.Due_Date > today)
-				{
-					input.Status = "Sent";
-				}
-				else
-				{
-					input.Status = "Overdue";
-				}
+				placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
+				idx = idx + 1;
+			}
+		}
+		emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+		emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+	}
+	else
+	{
+		emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
+		emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
+	}
+}
+downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + recId + "/" + input.Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
+piFile = invokeurl
+[
+	url :downloadPITempUrl
+	type :GET
+];
+piFile.setparamname("file");
+sendmail
+[
+	from :zoho.adminuserid
+	to :toAddresses
+	subject :emailSubject
+	message :emailBody
+	Attachments :file:piFile
+]
+
+// --- on click block 2 (only when Approved: move blueprint to Sent or Overdue) ---
+// In Creator UI: add this as a second "on click" block with condition Blueprint.Current_Stage == "Approved"
+if(input.Due_Date > zoho.currentdate)
+{
+	thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",input.ID);
+}
+else
+{
+	thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",input.ID);
+}

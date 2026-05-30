@@ -3,27 +3,27 @@ list Copy_of_All_Pro_Forma_Invoices
 	displayName = "Templates"
 	template = Proforma_Invoice
 	print template = Proforma_Invoice
-	show all rows from Pro_Forma_Invoices    
+	show all rows from Pro_Forma_Invoices_1    
 	(
 		Customer_Code as "Customer Code"
-		Customer_Name as "Customer Name"
+		Customer as "Customer Name"
 		Pro_Forma_Invoice_No as "Pro Forma Invoice No."
 		Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
 		Payment_Method as "Payment Method"
 		Grand_Total as "Grand Total"
 		Status
 		Due_Date as "Due Date"
-		Customer_SST as "Customer SST"
+		Customer_SST_Registration_Number as "Customer SST"
 		Customer_TIN as "Customer TIN"
-		Customer_Email as "Customer Email"
+		Customer_E_mail as "Customer Email"
 		Rejection_Reason as "Rejection Reason"
-		Grand_Total_MYR as "Grand Total(MYR)"
+		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		(
 			display = total	
 		)
-		Customer_Name.Added_Time as "Added Time"
-		Customer_Name.Added_User as "Added User"
-		Customer_Name.Modified_Time as "Modified Time"
+		Customer.Added_Time as "Added Time"
+		Customer.Added_User as "Added User"
+		Customer.Modified_Time as "Modified Time"
 		Customer_Code.Modified_User as "Modified User"
 		Amount_Due as "Amount Due"
 		Amount_Paid as "Amount Paid"
@@ -97,15 +97,15 @@ list Copy_of_All_Pro_Forma_Invoices
 				(
 					Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
 					Pro_Forma_Invoice_No as "Pro Forma Invoice No."
-					Customer_Name as "Customer Name"
+					Customer as "Customer Name"
 					Customer_Code as "Customer Code"
 					Payment_Method as "Payment Method"
 					Status
 					Due_Date as "Due Date"
 					Grand_Total as "Grand Total"
-					Grand_Total_MYR as "Grand Total(MYR)"
-					Customer_Name.Added_Time as "Added Time"
-					Customer_Name.Modified_Time as "Modified Time"
+					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
+					Customer.Added_Time as "Added Time"
+					Customer.Modified_Time as "Modified Time"
 				)
 			)
 		)
@@ -147,10 +147,10 @@ list Copy_of_All_Pro_Forma_Invoices
 					Pro_Forma_Invoice_Date as "Pro Forma Invoice Date"
 					Due_Date as "Due Date"
 					Status
-					Customer_Name as "Customer Name"
-					Customer_Email as "Customer Email"
+					Customer as "Customer Name"
+					Customer_E_mail as "Customer Email"
 					Customer_TIN as "Customer TIN"
-					Customer_SST as "Customer SST"
+					Customer_SST_Registration_Number as "Customer SST"
 				)
 			)
 		)

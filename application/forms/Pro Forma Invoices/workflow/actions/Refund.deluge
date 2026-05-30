@@ -3,33 +3,33 @@
 // Form: Pro_Forma_Invoices
 
 journalEntryLineItem = Collection();
-				row1 = Journal_Entry.Journal_Entry_Line_Item();
-				row1.Account=4662372000000087213;
-				row1.Description="Deposit " + input.Pro_Forma_Invoice_No + " Xkomm Security Deposit";
-				row1.Debit=ifnull(input.Grand_Total,0);
-				row1.Credit=0;
-				row1.Deposits=input.ID;
-				row2 = Journal_Entry.Journal_Entry_Line_Item();
-				getPRLineItem = Payment_Received_Line_Item[Pro_Forma_Invoice_No == input.ID];
-				getPR = Payment_Received[ID == getPRLineItem.Payment_Received];
-				row2.Account=getPR.Paid_To;
-				row2.Description="Deposit " + input.Pro_Forma_Invoice_No + " to " + getPR.Paid_To.Account + "-" + getPR.Paid_To.Bank_Account_Number;
-				row2.Debit=0;
-				row2.Credit=ifnull(input.Grand_Total,0);
-				row2.Deposits=input.ID;
-				journalEntryLineItem.insert(row1,row2);
-				newJournalEntryRecord = insert into Journal_Entry
-				[
-					Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-					Document_No=input.Pro_Forma_Invoice_No
-					Added_User=zoho.loginuser
-					Deposits=input.ID
-					Date_field=zoho.currentdate
-					Journal_Entry_Line_Item=journalEntryLineItem
-					Sub_Total_Debit=ifnull(input.Sub_Total,0)
-					Sub_Total_Credit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
-					Total_Debit=ifnull(input.Grand_Total,0)
-					Total_Credit=ifnull(input.Grand_Total,0)
-					Difference=ifnull(input.Grand_Total,0) - ifnull(input.Grand_Total,0)
-					Created_By_The_System=true
-				];
+row1 = Journal_Entry.Journal_Entry_Line_Item();
+row1.Account = 4662372000000087213;
+row1.Description = "Pro Forma Invoice " + input.Invoice_No + " Xkomm Security Deposit";
+row1.Debit = ifnull(input.Grand_Total,0);
+row1.Credit = 0;
+row1.Deposits = input.ID;
+row2 = Journal_Entry.Journal_Entry_Line_Item();
+getPRLineItem = Payment_Received_Line_Item[Pro_Forma_Invoice_No == input.ID];
+getPR = Payment_Received[ID == getPRLineItem.Payment_Received];
+row2.Account = getPR.Paid_To;
+row2.Description = "Pro Forma Invoice " + input.Invoice_No + " to " + getPR.Paid_To.Account + "-" + getPR.Paid_To.Bank_Account_Number;
+row2.Debit = 0;
+row2.Credit = ifnull(input.Grand_Total,0);
+row2.Deposits = input.ID;
+journalEntryLineItem.insert(row1,row2);
+newJournalEntryRecord = insert into Journal_Entry
+[
+	Journal_Entry_No = thisapp.journal_entry.generate_journal_no()
+	Document_No = input.Invoice_No
+	Added_User = zoho.loginuser
+	Deposits = input.ID
+	Date_field = zoho.currentdate
+	Journal_Entry_Line_Item = journalEntryLineItem
+	Sub_Total_Debit = ifnull(input.Sub_Total,0)
+	Sub_Total_Credit = ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
+	Total_Debit = ifnull(input.Grand_Total,0)
+	Total_Credit = ifnull(input.Grand_Total,0)
+	Difference = ifnull(input.Grand_Total,0) - ifnull(input.Grand_Total,0)
+	Created_By_The_System = true
+];
