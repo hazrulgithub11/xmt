@@ -96,23 +96,7 @@ Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
 								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 							}
-							/* Previous balance and Total amount due calculation */
-							previous_balance_of_unpaid_invoices = 0;
-							if(curr_get_invoice.Customer != null && curr_get_invoice.Invoice_Date != null)
-							{
-								get_customer_id = curr_get_invoice.Customer.ID;
-								for each  curr_invoice in Invoice[Amount_Due > 0 && Added_Time < zoho.currenttime && Customer == get_customer_id]
-								{
-									previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
-								}
-								/*  Previous balance and Total amount due calculation for future invoices */
-								/*for each  curr_invoice in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date && Customer == get_customer_id]
-								{
-									thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
-								}*/
-							}
-							curr_get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
-							curr_get_invoice.Total_Amount_Due=curr_get_invoice.Amount_Due + previous_balance_of_unpaid_invoices;
+							thisapp.invoice.recalculate_balances_from(curr_get_invoice.ID);
 						}
 						else if(curr_payment_received_line_item.Debit_Note_No != null)
 						{

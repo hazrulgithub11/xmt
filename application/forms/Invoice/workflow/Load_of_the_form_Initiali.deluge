@@ -18,13 +18,27 @@ Load_of_the_form_Initiali as "Load of the form Initialization"
 				/* Customer Name Trigger Initialization*/
 				input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
 				/* Get Previous Balance of all unpaid invoices */
-				get_customer_id = input.Customer.ID;
-				previous_balance_of_unpaid_invoices = 0;
-				for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+				if(input.ID != null)
 				{
-					previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+					thisapp.invoice.invoice_balance_updates(input.ID);
+					get_invoice = Invoice[ID == input.ID];
+					input.Previous_Balance = get_invoice.Previous_Balance;
+					input.Total_Amount_Due = get_invoice.Total_Amount_Due;
 				}
-				input.Previous_Balance = previous_balance_of_unpaid_invoices;
+				else if(input.Invoice_Date != null && input.Customer != null)
+				{
+					get_customer_id = input.Customer.ID;
+					previous_balance_of_unpaid_invoices = 0;
+					if(get_customer_id != null)
+					{
+						for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+						{
+							previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+						}
+					}
+					input.Previous_Balance = previous_balance_of_unpaid_invoices;
+					input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
+				}
 				/* Payment Received Line Item*/
 				invoice_Payments_Received_Line_Item_list = Payment_Received_Line_Item[Invoice_No == input.ID];
 				for each  curr_invoice_Payments_Received_Line_Item in invoice_Payments_Received_Line_Item_list

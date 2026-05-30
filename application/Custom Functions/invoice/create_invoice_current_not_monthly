@@ -602,13 +602,6 @@ void invoice.create_invoice_current_not_monthly(int subId, int billingCycle, int
 	//doNo = thisapp.generate_delivery_order_no();
 	organizationInfo = Organization_Settings[ID != null];
 	customerProfileInfo = Customer_Profile[ID == customer];
-	/*
-                                                   	//Previous Code
-                                                   	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
-                                                   	totalAmountDue = totalDue + grandTotal;*/
-	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
-	//info "grandTotalMYR:" + grandTotalMYR;
-	//info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
 	payableTo = payableTo.distinct();
 	for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
 	{
@@ -669,8 +662,6 @@ void invoice.create_invoice_current_not_monthly(int subId, int billingCycle, int
 			Total_Tax_Monthly_Rental=0
 			Grand_Total_Monthly_Rental=0
 			Amount_Due=grandTotal
-			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
 			Amount_Paid=0
 			Deposit_Amount=totalDepositAmount
 			Base_Currency=currency
@@ -693,6 +684,7 @@ void invoice.create_invoice_current_not_monthly(int subId, int billingCycle, int
 	}
 	if(errorMsg == "")
 	{
+		thisapp.invoice.recalculate_balances_from(createInvoice);
 		//info "createInvoice:" + createInvoice;
 		thisapp.subscription.update_subscription_next_and_last_billing_date(subsListId,billFor,billingCycle,actualBillingDate,monthlyBillingDate,billEvery);
 		getInvoice = Invoice[ID == createInvoice];

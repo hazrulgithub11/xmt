@@ -1,7 +1,7 @@
 void invoice.invoice_balance_updates(int invoice_id)
 {
 	get_invoice = Invoice[ID == invoice_id];
-	if(get_invoice == null)
+	if(get_invoice.ID == null || get_invoice.ID == 0)
 	{
 		return;
 	}

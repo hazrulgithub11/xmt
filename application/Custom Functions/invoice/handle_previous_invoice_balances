@@ -1,22 +1,23 @@
 map invoice.handle_previous_invoice_balances(date actualBillingDate, int billingCycle, int tenantID, float grandTotal)
 {
 	mp = Map();
-	previoustotalAmountDue = 0;
+	previousBalance = 0;
 	if(actualBillingDate != null && tenantID != null)
 	{
-		for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && Customer_Code == tenantID]
+		tenantInfo = Tenancy[ID == tenantID];
+		if(tenantInfo != null && tenantInfo.Customer_Name != null)
 		{
-			previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+			customer_id = tenantInfo.Customer_Name.ID;
+			for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate && Customer == customer_id]
+			{
+				previousBalance = previousBalance + curr_invoice.Amount_Due;
+			}
 		}
 	}
-	previousBalance = previoustotalAmountDue;
-	overdueCharges = previoustotalAmountDue;
-	totalAmountDue = previoustotalAmountDue + grandTotal;
-	//info "overdueCharges:" + previoustotalAmountDue;
+	overdueCharges = previousBalance;
+	totalAmountDue = ifnull(grandTotal,0) + previousBalance;
 	mp.put("Previous_Balance",previousBalance);
-	// 	mp.put("Payment_Received",paymentReceived);
 	mp.put("Overdue_Charges",overdueCharges);
 	mp.put("Total_Amount_Due",totalAmountDue);
-	//mp.put("Previous_Invoice",previousInvoice);
 	return mp;
 }

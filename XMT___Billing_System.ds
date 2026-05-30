@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 29-May-2026 20:34:28
+ * Generated on : 29-May-2026 23:04:56
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -16703,12 +16703,6 @@
                  	//doNo = thisapp.generate_delivery_order_no();
                  	organizationInfo = Organization_Settings[ID != null];
                  	customerProfileInfo = Customer_Profile[ID == customer];
-                 	/*
-                                                                    	//Previous Code
-                                                                    	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
-                                                                    	totalAmountDue = totalDue + grandTotal;*/
-                 	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
-                 	info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
                  	payableTo = payableTo.distinct();
                  	errorMsg = "";
                  	try 
@@ -16741,8 +16735,6 @@
                  			Total_Tax_Monthly_Rental=0
                  			Grand_Total_Monthly_Rental=0
                  			Amount_Due=grandTotal
-                 			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-                 			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
                  			Amount_Paid=0
                  			Deposit_Amount=totalDepositAmount
                  			Base_Currency=currency
@@ -16764,6 +16756,7 @@
                  	}
                  	if(errorMsg == "")
                  	{
+                 		thisapp.invoice.recalculate_balances_from(createInvoice);
                  		info "createInvoice:" + createInvoice;
                  		if(actualBillingDate == tenantFinalBillingDate && billingCycle == 1)
                  		{
@@ -17476,12 +17469,6 @@
                  	//doNo = thisapp.generate_delivery_order_no();
                  	organizationInfo = Organization_Settings[ID != null];
                  	customerProfileInfo = Customer_Profile[ID == customer];
-                 	/*
-                                                                    	//Previous Code
-                                                                    	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
-                                                                    	totalAmountDue = totalDue + grandTotal;*/
-                 	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
-                 	//info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
                  	payableTo = payableTo.distinct();
                  	for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
                  	{
@@ -17540,8 +17527,6 @@
                  			Total_Tax_Monthly_Rental=0
                  			Grand_Total_Monthly_Rental=0
                  			Amount_Due=grandTotal
-                 			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-                 			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
                  			Amount_Paid=0
                  			Deposit_Amount=totalDepositAmount
                  			Base_Currency=currency
@@ -17563,6 +17548,7 @@
                  	}
                  	if(errorMsg == "")
                  	{
+                 		thisapp.invoice.recalculate_balances_from(createInvoice);
                  		//info "createInvoice:" + createInvoice;
                  		if(!subSubmission)
                  		{
@@ -18316,13 +18302,6 @@
                  	//doNo = thisapp.generate_delivery_order_no();
                  	organizationInfo = Organization_Settings[ID != null];
                  	customerProfileInfo = Customer_Profile[ID == customer];
-                 	/*
-                                                                    	//Previous Code
-                                                                    	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
-                                                                    	totalAmountDue = totalDue + grandTotal;*/
-                 	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
-                 	//info "grandTotalMYR:" + grandTotalMYR;
-                 	//info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
                  	payableTo = payableTo.distinct();
                  	for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
                  	{
@@ -18383,8 +18362,6 @@
                  			Total_Tax_Monthly_Rental=0
                  			Grand_Total_Monthly_Rental=0
                  			Amount_Due=grandTotal
-                 			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-                 			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
                  			Amount_Paid=0
                  			Deposit_Amount=totalDepositAmount
                  			Base_Currency=currency
@@ -18407,6 +18384,7 @@
                  	}
                  	if(errorMsg == "")
                  	{
+                 		thisapp.invoice.recalculate_balances_from(createInvoice);
                  		//info "createInvoice:" + createInvoice;
                  		thisapp.subscription.update_subscription_next_and_last_billing_date(subsListId,billFor,billingCycle,actualBillingDate,monthlyBillingDate,billEvery);
                  		getInvoice = Invoice[ID == createInvoice];
@@ -19250,12 +19228,6 @@
                  	//doNo = thisapp.generate_delivery_order_no();
                  	organizationInfo = Organization_Settings[ID != null];
                  	customerProfileInfo = Customer_Profile[ID == customer];
-                 	/*
-                                                                    	//Previous Code
-                                                                    	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
-                                                                    	totalAmountDue = totalDue + grandTotal;*/
-                 	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
-                 	//info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
                  	payableTo = payableTo.distinct();
                  	for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
                  	{
@@ -19314,8 +19286,6 @@
                  			Total_Tax_Monthly_Rental=0
                  			Grand_Total_Monthly_Rental=0
                  			Amount_Due=grandTotal
-                 			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-                 			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
                  			Amount_Paid=0
                  			Deposit_Amount=totalDepositAmount
                  			Base_Currency=currency
@@ -19337,6 +19307,7 @@
                  	}
                  	if(errorMsg == "")
                  	{
+                 		thisapp.invoice.recalculate_balances_from(createInvoice);
                  		//info "createInvoice:" + createInvoice;
                  		if(!subSubmission)
                  		{
@@ -20201,15 +20172,8 @@
                  	//doNo = thisapp.generate_delivery_order_no();
                  	organizationInfo = Organization_Settings[ID != null];
                  	customerProfileInfo = Customer_Profile[ID == customer];
-                 	/*
-                                                                    	//Previous Code
-                                                                    	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
-                                                                    	totalAmountDue = totalDue + grandTotal;*/
-                 	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
                  	subsListId = List();
                  	subsListId.add(subId);
-                 	//info "grandTotal:" + grandTotal;
-                 	//info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
                  	payableTo = payableTo.distinct();
                  	for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
                  	{
@@ -20268,8 +20232,6 @@
                  			Total_Tax_Monthly_Rental=0
                  			Grand_Total_Monthly_Rental=0
                  			Amount_Due=grandTotal
-                 			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-                 			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
                  			Amount_Paid=0
                  			Deposit_Amount=totalDepositAmount
                  			Base_Currency=currency
@@ -20295,6 +20257,7 @@
                  	}
                  	if(errorMsg == "")
                  	{
+                 		thisapp.invoice.recalculate_balances_from(createInvoice);
                  		//info "createInvoice:" + createInvoice;
                  		thisapp.subscription.update_subscription_next_and_last_billing_date(subsListId,billFor,billingCycle,actualBillingDate,monthlyBillingDate,billEvery);
                  		getInvoice = Invoice[ID == createInvoice];
@@ -20435,7 +20398,6 @@
                  	tenantInfo = Tenancy[ID == tenantID];
                  	billEvery = tenantInfo.Bill_Every;
                  	customerProfileInfo = Customer_Profile[ID == customer];
-                 	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
                  	//doNo = thisapp.generate_delivery_order_no();
                  	errorMsg = "";
                  	getOrganization = Organization_Settings[ID != null];
@@ -20467,8 +20429,6 @@
                  			Grand_Total_Call_Charges=0
                  			Amount_Due=grandTotal
                  			Amount_Paid=0
-                 			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-                 			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
                  			Deposit_Amount=totalDepositAmount
                  			Base_Currency=currency
                  			Exchange_Rate=exchangeRate
@@ -20489,6 +20449,7 @@
                  	}
                  	if(errorMsg == "")
                  	{
+                 		thisapp.invoice.recalculate_balances_from(createInvoice);
                  		try 
                  		{
                  			//info "run duplicate function run succesfully";
@@ -20773,23 +20734,24 @@
 				 map invoice.handle_previous_invoice_balances(date actualBillingDate, int billingCycle, int tenantID, float grandTotal)
                  {
                  	mp = Map();
-                 	previoustotalAmountDue = 0;
+                 	previousBalance = 0;
                  	if(actualBillingDate != null && tenantID != null)
                  	{
-                 		for each  inv in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate.toStartOfMonth() && Customer_Code == tenantID]
+                 		tenantInfo = Tenancy[ID == tenantID];
+                 		if(tenantInfo != null && tenantInfo.Customer_Name != null)
                  		{
-                 			previoustotalAmountDue = previoustotalAmountDue + inv.Amount_Due;
+                 			customer_id = tenantInfo.Customer_Name.ID;
+                 			for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < actualBillingDate && Customer == customer_id]
+                 			{
+                 				previousBalance = previousBalance + curr_invoice.Amount_Due;
+                 			}
                  		}
                  	}
-                 	previousBalance = previoustotalAmountDue;
-                 	overdueCharges = previoustotalAmountDue;
-                 	totalAmountDue = previoustotalAmountDue + grandTotal;
-                 	//info "overdueCharges:" + previoustotalAmountDue;
+                 	overdueCharges = previousBalance;
+                 	totalAmountDue = ifnull(grandTotal,0) + previousBalance;
                  	mp.put("Previous_Balance",previousBalance);
-                 	// 	mp.put("Payment_Received",paymentReceived);
                  	mp.put("Overdue_Charges",overdueCharges);
                  	mp.put("Total_Amount_Due",totalAmountDue);
-                 	//mp.put("Previous_Invoice",previousInvoice);
                  	return mp;
                  }
 				 void invoice.invoice_balance_updates(int invoice_id)
@@ -20805,13 +20767,31 @@
                  	previous_balance_of_unpaid_invoices = 0;
                  	if(invoice_date != null && customer_id != null)
                  	{
-                 		for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < invoice_date && Customer == customer_id]
+                 		for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoice_date && Customer == customer_id && ID != invoice_id]
                  		{
                  			previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
                  		}
                  	}
                  	get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
                  	get_invoice.Total_Amount_Due=current_amount_due + previous_balance_of_unpaid_invoices;
+                 }
+				 void invoice.recalculate_balances_from(int invoice_id)
+                 {
+                 	thisapp.invoice.invoice_balance_updates(invoice_id);
+                 	get_invoice = Invoice[ID == invoice_id];
+                 	if(get_invoice == null || get_invoice.Invoice_Date == null || get_invoice.Customer == null)
+                 	{
+                 		return;
+                 	}
+                 	customer_id = get_invoice.Customer.ID;
+                 	if(customer_id == null)
+                 	{
+                 		return;
+                 	}
+                 	for each  inv in Invoice[Invoice_Date > get_invoice.Invoice_Date && Customer == customer_id]
+                 	{
+                 		thisapp.invoice.invoice_balance_updates(inv.ID);
+                 	}
                  }
 				 void invoice.recalculate_overdue(int tenantId, int invId)
                  {
@@ -24630,9 +24610,18 @@
 											getJournalEntry = Journal_Entry[Document_No == input.Invoice_No];
 										delete from Journal_Entry_Line_Item[Journal_Entry == getJournalEntry.ID];
 										delete from Journal_Entry[Document_No == input.Invoice_No];
-										for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+										if(input.Invoice_Date != null && input.Customer_Code != null)
 										{
-											thisapp.invoice.invoice_balance_updates(inv.ID);
+											tenantInfo = Tenancy[ID == input.Customer_Code];
+											if(tenantInfo != null && tenantInfo.Customer_Name != null)
+											{
+												customer_id = tenantInfo.Customer_Name.ID;
+												earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
+												if(earliest_later_invoice.ID != null)
+												{
+													thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
+												}
+											}
 										}
 						)
 					}
@@ -25002,20 +24991,10 @@
 										}
 										if(input.Invoice_Date != null && input.Customer_Code != null)
 										{
-											previous_balance_of_unpaid_invoices = 0;
-											if(input.Customer != null)
-											{
-												get_customer_id = input.Customer.ID;
-												if(get_customer_id != null)
-												{
-													for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
-													{
-														previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
-													}
-												}
-											}
-											input.Previous_Balance = previous_balance_of_unpaid_invoices;
-											input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
+											thisapp.invoice.invoice_balance_updates(input.ID);
+											get_invoice = Invoice[ID == input.ID];
+											input.Previous_Balance = get_invoice.Previous_Balance;
+											input.Total_Amount_Due = get_invoice.Total_Amount_Due;
 										}
 										if(input.Customer_Code == null)
 										{
@@ -25042,24 +25021,7 @@
 					{
 						custom deluge script
 						(
-											previous_balance_of_unpaid_invoices = 0;
-										if(input.Invoice_Date != null && input.Customer != null)
-										{
-											get_customer_id = input.Customer.ID;
-											if(get_customer_id != null)
-											{
-												for each  x in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
-												{
-													previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + x.Amount_Due;
-												}
-												for each  inv in Invoice[Invoice_Date > input.Invoice_Date && Customer == get_customer_id]
-												{
-													thisapp.invoice.invoice_balance_updates(inv.ID);
-												}
-											}
-										}
-										input.Previous_Balance = previous_balance_of_unpaid_invoices;
-										input.Total_Amount_Due = input.Amount_Due + previous_balance_of_unpaid_invoices;
+											thisapp.invoice.recalculate_balances_from(input.ID);
 						)
 					}
 					actions 
@@ -25368,20 +25330,10 @@
 											}
 											if(input.Customer_Code != null)
 											{
-												previous_balance_of_unpaid_invoices = 0;
-												if(input.Customer != null)
-												{
-													get_customer_id = input.Customer.ID;
-													if(get_customer_id != null)
-													{
-														for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
-														{
-															previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
-														}
-													}
-												}
-												input.Previous_Balance = previous_balance_of_unpaid_invoices;
-												input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
+												thisapp.invoice.invoice_balance_updates(input.ID);
+												get_invoice = Invoice[ID == input.ID];
+												input.Previous_Balance = get_invoice.Previous_Balance;
+												input.Total_Amount_Due = get_invoice.Total_Amount_Due;
 											}
 										}
 						)
@@ -26144,23 +26096,7 @@
 														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
 														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 													}
-													/* Previous balance and Total amount due calculation */
-													previous_balance_of_unpaid_invoices = 0;
-													if(curr_get_invoice.Customer != null && curr_get_invoice.Invoice_Date != null)
-													{
-														get_customer_id = curr_get_invoice.Customer.ID;
-														for each  curr_invoice in Invoice[Amount_Due > 0 && Added_Time < zoho.currenttime && Customer == get_customer_id]
-														{
-															previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
-														}
-														/*  Previous balance and Total amount due calculation for future invoices */
-														/*for each  curr_invoice in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date && Customer == get_customer_id]
-														{
-															thisapp.invoice.invoice_balance_updates(curr_invoice.ID);
-														}*/
-													}
-													curr_get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
-													curr_get_invoice.Total_Amount_Due=curr_get_invoice.Amount_Due + previous_balance_of_unpaid_invoices;
+													thisapp.invoice.recalculate_balances_from(curr_get_invoice.ID);
 												}
 												else if(curr_payment_received_line_item.Debit_Note_No != null)
 												{
@@ -26410,18 +26346,7 @@
 													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
 													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 												}
-												// Invoice previous balance calculation
-												previoustotalAmountDue = 0;
-												for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < curr_get_invoice.Invoice_Date.toStartOfMonth() && Customer_Code == curr_get_invoice.Customer_Code]
-												{
-													previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-												}
-												curr_get_invoice.Previous_Balance=previoustotalAmountDue;
-												curr_get_invoice.Total_Amount_Due=curr_get_invoice.Amount_Due + previoustotalAmountDue;
-												for each  inv in Invoice[Invoice_Date > curr_get_invoice.Invoice_Date.eomonth(0) && Customer_Code == curr_get_invoice.Customer_Code]
-												{
-													thisapp.invoice.invoice_balance_updates(inv.ID);
-												}
+												thisapp.invoice.recalculate_balances_from(curr_get_invoice.ID);
 											}
 											else if(curr_payment_received_line_item.Debit_Note_No != null)
 											{
@@ -26738,21 +26663,7 @@
 										];
 										getInvoice = Invoice[ID == input.Invoice];
 										//info getInvoice.Invoice_No;
-										if(!getInvoice.Charge_Category == "Miscellaneous Charges")
-										{
-											//info "run these code";
-											previoustotalAmountDue = 0;
-											for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && !Charge_Category == "Miscellaneous Charges" && Customer_Code == getInvoice.Customer_Code]
-											{
-												previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-											}
-											getInvoice.Previous_Balance=previoustotalAmountDue;
-											getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-											for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && !Charge_Category == "Miscellaneous Charges" && Customer_Code == getInvoice.Customer_Code]
-											{
-												thisapp.invoice.invoice_balance_updates(inv.ID);
-											}
-										}
+										thisapp.invoice.recalculate_balances_from(getInvoice.ID);
 										thisapp.close_form();
 					)
 					}
@@ -36968,13 +36879,27 @@
 										/* Customer Name Trigger Initialization*/
 										input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
 										/* Get Previous Balance of all unpaid invoices */
-										get_customer_id = input.Customer.ID;
-										previous_balance_of_unpaid_invoices = 0;
-										for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+										if(input.ID != null)
 										{
-											previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+											thisapp.invoice.invoice_balance_updates(input.ID);
+											get_invoice = Invoice[ID == input.ID];
+											input.Previous_Balance = get_invoice.Previous_Balance;
+											input.Total_Amount_Due = get_invoice.Total_Amount_Due;
 										}
-										input.Previous_Balance = previous_balance_of_unpaid_invoices;
+										else if(input.Invoice_Date != null && input.Customer != null)
+										{
+											get_customer_id = input.Customer.ID;
+											previous_balance_of_unpaid_invoices = 0;
+											if(get_customer_id != null)
+											{
+												for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
+												{
+													previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+												}
+											}
+											input.Previous_Balance = previous_balance_of_unpaid_invoices;
+											input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
+										}
 										/* Payment Received Line Item*/
 										invoice_Payments_Received_Line_Item_list = Payment_Received_Line_Item[Invoice_No == input.ID];
 										for each  curr_invoice_Payments_Received_Line_Item in invoice_Payments_Received_Line_Item_list
@@ -37790,17 +37715,10 @@
 											}
 											if(input.Invoice_Date != null && input.Customer_Code != null)
 											{
-												previous_balance_of_unpaid_invoices = 0;
-												get_customer_id = input.Customer.ID;
-												if(get_customer_id != null)
-												{
-													for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
-													{
-														previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
-													}
-												}
-												input.Previous_Balance = previous_balance_of_unpaid_invoices;
-												input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
+												thisapp.invoice.invoice_balance_updates(input.ID);
+												get_invoice = Invoice[ID == input.ID];
+												input.Previous_Balance = get_invoice.Previous_Balance;
+												input.Total_Amount_Due = get_invoice.Total_Amount_Due;
 											}
 											customer_info = Customer_Profile[ID == input.Customer];
 											for each  curr_monthly_rental in input.Monthly_Rental
@@ -40690,17 +40608,7 @@
 															return;
 														}
 														// Balance updates
-														previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														input.Previous_Balance = previoustotalAmountDue;
-														input.Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
-														}
+														thisapp.invoice.recalculate_balances_from(input.ID);
 														// Due-date stage routing
 														if(input.Due_Date < zoho.currentdate)
 														{
@@ -40813,17 +40721,7 @@
 								custom deluge script
 								(
 															//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														input.Previous_Balance = previoustotalAmountDue;
-														input.Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
-														}
+														thisapp.invoice.recalculate_balances_from(input.ID);
 														listEmail = List();
 														listEmailID = List();
 														for each  user in User[Role == 4662372000000943011]
@@ -40912,17 +40810,7 @@
 														input.Confirm_resubmission = false;
 														input.Rejection_Reason = "";
 														//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														input.Previous_Balance = previoustotalAmountDue;
-														input.Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
-														}
+														thisapp.invoice.recalculate_balances_from(input.ID);
 								)
 							}
          				}
@@ -40948,17 +40836,7 @@
 								custom deluge script
 								(
 															//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														previoustotalAmountDue = 0;
-														for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-														{
-															previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-														}
-														input.Previous_Balance = previoustotalAmountDue;
-														input.Total_Amount_Due = input.Grand_Total;
-														for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-														{
-															thisapp.invoice.invoice_balance_updates(inv.ID);
-														}
+														thisapp.invoice.recalculate_balances_from(input.ID);
 														listEmail = List();
 														listEmailID = List();
 														for each  user in User[Role == 4662372000000943015]
@@ -42120,9 +41998,11 @@
 														if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
 															input.Amount_Due = input.Grand_Total;
-															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															customer_id = input.Customer.ID;
+															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
+															if(earliest_later_invoice.ID != null)
 															{
-																thisapp.invoice.invoice_balance_updates(inv.ID);
+																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
 															}
 														}
 														if(input.Due_Date < zoho.currentdate)
@@ -42238,9 +42118,11 @@
 														{
 															input.Amount_Due = input.Grand_Total;
 															Status = "Rejected";
-															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															customer_id = input.Customer.ID;
+															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
+															if(earliest_later_invoice.ID != null)
 															{
-																thisapp.invoice.invoice_balance_updates(inv.ID);
+																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
 															}
 														}
 														listEmail = List();
@@ -42332,9 +42214,11 @@
 														{
 															input.Amount_Due = input.Grand_Total;
 															Status = "Pending Approval";
-															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															customer_id = input.Customer.ID;
+															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
+															if(earliest_later_invoice.ID != null)
 															{
-																thisapp.invoice.invoice_balance_updates(inv.ID);
+																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
 															}
 														}
 								)
@@ -42364,9 +42248,11 @@
 															if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
 															input.Amount_Due = input.Grand_Total;
-															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
+															customer_id = input.Customer.ID;
+															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
+															if(earliest_later_invoice.ID != null)
 															{
-																thisapp.invoice.invoice_balance_updates(inv.ID);
+																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
 															}
 														}
 														listEmail = List();
@@ -42739,17 +42625,7 @@
 					)
 					on click
 					(
-						previoustotalAmountDue = 0;
-										for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-										{
-											previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-										}
-										input.Previous_Balance = previoustotalAmountDue;
-										input.Total_Amount_Due = input.Grand_Total;
-										for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-										{
-											thisapp.invoice.invoice_balance_updates(inv.ID);
-										}
+						thisapp.invoice.recalculate_balances_from(input.ID);
 					)
 					}
 					actions  ((Blueprint.Current_Stage == "Approved" && Customer.Credit_Available <= 0) || (Blueprint.Current_Stage == "Approved" && Customer.Credit_Available is null))
@@ -42858,17 +42734,7 @@
 					)
 					on click
 					(
-						previoustotalAmountDue = 0;
-										for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < input.Invoice_Date.toStartOfMonth() && Customer_Code == input.Customer_Code]
-										{
-											previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-										}
-										input.Previous_Balance = previoustotalAmountDue;
-										input.Total_Amount_Due = input.Grand_Total;
-										for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-										{
-											thisapp.invoice.invoice_balance_updates(inv.ID);
-										}
+						thisapp.invoice.recalculate_balances_from(input.ID);
 					)
 					on click
 					(

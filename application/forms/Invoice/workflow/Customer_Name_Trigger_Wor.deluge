@@ -104,20 +104,13 @@ Customer_Name_Trigger_Wor as "Customer Name Trigger Workflow"
 							input.Exchange_Rate = "";
 						}
 					}
-					if(input.Invoice_Date != null && input.Customer_Code != null)
-					{
-						previous_balance_of_unpaid_invoices = 0;
-						get_customer_id = input.Customer.ID;
-						if(get_customer_id != null)
-						{
-							for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
-							{
-								previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
-							}
-						}
-						input.Previous_Balance = previous_balance_of_unpaid_invoices;
-						input.Total_Amount_Due = ifnull(input.Amount_Due,0) + previous_balance_of_unpaid_invoices;
-					}
+				if(input.Invoice_Date != null && input.Customer_Code != null && input.ID != null && input.ID != 0)
+				{
+					thisapp.invoice.invoice_balance_updates(input.ID);
+					get_invoice = Invoice[ID == input.ID];
+					input.Previous_Balance = get_invoice.Previous_Balance;
+					input.Total_Amount_Due = get_invoice.Total_Amount_Due;
+				}
 					customer_info = Customer_Profile[ID == input.Customer];
 					for each  curr_monthly_rental in input.Monthly_Rental
 					{

@@ -1,32 +1,34 @@
 listEmail = List();
-														listEmailID = List();
-														for each  user in User[Role == 4662372000000943015]
-														{
-															email = user.Email;
-															listEmail.add(email);
-															listEmailID.add(email.toLowerCase());
-														}
-														//listEmailID.add(zoho.adminuserid);
-														//listEmail.add("test@aplikasi.us");
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Status=Pending+Approval";
-														sendmail
-														[
-															from :zoho.adminuserid
-															to :listEmail
-															subject :"Resubmitted Debit Note " + input.Invoice_No + " Approval Required"
-															message :"Dear,<br><br>This is a notification that Debit Note " + input.Invoice_No + " has been resubmitted after addressing the previous issues. Please review the updated debit note and provide your approval at your earliest convenience. Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-														]
-														notifyTitle = "Resubmitted Debit Note " + input.Invoice_No + " Approval Required";
-														notifyMessage = "A resubmitted Debit Note " + input.Invoice_No + " is awaiting your approval.";
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);
-														input.Confirm_resubmission = false;
-														input.Rejection_Reason = "";
-														if(input.Invoice_Date != null && input.Customer_Code != null)
-														{
-															input.Amount_Due = input.Grand_Total;
-															Status = "Pending Approval";
-															for each  inv in Invoice[Invoice_Date > input.Invoice_Date.eomonth(0) && Customer_Code == input.Customer_Code]
-															{
-																thisapp.invoice.invoice_balance_updates(inv.ID);
-															}
-														}
+listEmailID = List();
+for each  user in User[Role == 4662372000000943015]
+{
+	email = user.Email;
+	listEmail.add(email);
+	listEmailID.add(email.toLowerCase());
+}
+//listEmailID.add(zoho.adminuserid);
+//listEmail.add("test@aplikasi.us");
+urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?Status=Pending+Approval";
+sendmail
+[
+	from :zoho.adminuserid
+	to :listEmail
+	subject :"Resubmitted Debit Note " + input.Invoice_No + " Approval Required"
+	message :"Dear,<br><br>This is a notification that Debit Note " + input.Invoice_No + " has been resubmitted after addressing the previous issues. Please review the updated debit note and provide your approval at your earliest convenience. Can view the record by clicking <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+]
+notifyTitle = "Resubmitted Debit Note " + input.Invoice_No + " Approval Required";
+notifyMessage = "A resubmitted Debit Note " + input.Invoice_No + " is awaiting your approval.";
+zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);
+input.Confirm_resubmission = false;
+input.Rejection_Reason = "";
+if(input.Invoice_Date != null && input.Customer_Code != null)
+{
+	input.Amount_Due = input.Grand_Total;
+	Status = "Pending Approval";
+	customer_id = input.Customer.ID;
+	earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
+	if(earliest_later_invoice.ID != null)
+	{
+		thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
+	}
+}

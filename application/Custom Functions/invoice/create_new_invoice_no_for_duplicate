@@ -4,7 +4,6 @@ void invoice.create_new_invoice_no_for_duplicate(int tenantID, int customer, str
 	tenantInfo = Tenancy[ID == tenantID];
 	billEvery = tenantInfo.Bill_Every;
 	customerProfileInfo = Customer_Profile[ID == customer];
-	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
 	//doNo = thisapp.generate_delivery_order_no();
 	errorMsg = "";
 	getOrganization = Organization_Settings[ID != null];
@@ -36,8 +35,6 @@ void invoice.create_new_invoice_no_for_duplicate(int tenantID, int customer, str
 			Grand_Total_Call_Charges=0
 			Amount_Due=grandTotal
 			Amount_Paid=0
-			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
 			Deposit_Amount=totalDepositAmount
 			Base_Currency=currency
 			Exchange_Rate=exchangeRate
@@ -58,6 +55,7 @@ void invoice.create_new_invoice_no_for_duplicate(int tenantID, int customer, str
 	}
 	if(errorMsg == "")
 	{
+		thisapp.invoice.recalculate_balances_from(createInvoice);
 		try 
 		{
 			//info "run duplicate function run succesfully";

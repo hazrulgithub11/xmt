@@ -163,21 +163,7 @@ Send_Invoice_To_Customer as "Send Invoice To Customer"
 				];
 				getInvoice = Invoice[ID == input.Invoice];
 				//info getInvoice.Invoice_No;
-				if(!getInvoice.Charge_Category == "Miscellaneous Charges")
-				{
-					//info "run these code";
-					previoustotalAmountDue = 0;
-					for each  x in Invoice[Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && !Charge_Category == "Miscellaneous Charges" && Customer_Code == getInvoice.Customer_Code]
-					{
-						previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-					}
-					getInvoice.Previous_Balance=previoustotalAmountDue;
-					getInvoice.Total_Amount_Due=getInvoice.Grand_Total;
-					for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && !Charge_Category == "Miscellaneous Charges" && Customer_Code == getInvoice.Customer_Code]
-					{
-						thisapp.invoice.invoice_balance_updates(inv.ID);
-					}
-				}
+				thisapp.invoice.recalculate_balances_from(getInvoice.ID);
 				thisapp.close_form();
 		)
 		}

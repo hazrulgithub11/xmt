@@ -11,24 +11,7 @@ Successful_form_submissio as "Successful form submission of invoice"
 		{
 			custom deluge script
 			(
-					previous_balance_of_unpaid_invoices = 0;
-				if(input.Invoice_Date != null && input.Customer != null)
-				{
-					get_customer_id = input.Customer.ID;
-					if(get_customer_id != null)
-					{
-						for each  x in Invoice[Amount_Due > 0 && Invoice_Date < input.Invoice_Date && Customer == get_customer_id]
-						{
-							previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + x.Amount_Due;
-						}
-						for each  inv in Invoice[Invoice_Date > input.Invoice_Date && Customer == get_customer_id]
-						{
-							thisapp.invoice.invoice_balance_updates(inv.ID);
-						}
-					}
-				}
-				input.Previous_Balance = previous_balance_of_unpaid_invoices;
-				input.Total_Amount_Due = input.Amount_Due + previous_balance_of_unpaid_invoices;
+				thisapp.invoice.recalculate_balances_from(input.ID);
 			)
 		}
 		actions 
