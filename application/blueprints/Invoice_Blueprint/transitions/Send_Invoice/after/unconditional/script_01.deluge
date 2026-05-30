@@ -1,21 +1,31 @@
-/* Invoice can be either status Sent and status Overdue after sending invoice*/
-														if(input.Due_Date > today)
-														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
-														}
-														else
-														{
-															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
-														}
-														if(input.Customer.Credit_Available > 0)
-														{
-															getCustomerProfile = Customer_Profile[ID == input.Customer];
-															msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
-															customerName = "&Customer_Name=" + input.Customer;
-															customerCode = "&Customer_Code=" + input.Customer_Code;
-															invoice = "&Invoice=" + input.ID;
-															customerEmail = "&Customer_Email=" + input.Customer_E_mail;
-															invoiceNo = "&Invoice_No=" + input.Invoice_No;
-															typeOfAction = "&Type_Of_Action=Mark As Sent";
-															openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
-														}
+if(input.Invoice_UUID == null || input.Invoice_UUID == "" || input.Invoice_UUID == null || input.Invoice_UUID == "")
+{
+	info "Ensure to submit invoice to LHDN";
+	thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Approved",input.ID);
+}
+else
+{
+	/* Invoice can be either status Sent and status Overdue after sending invoice*/
+	if(input.Due_Date > today)
+	{
+		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
+	}
+	else
+	{
+		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
+	}
+	// Must run after Sent/Overdue — previous balance only counts those stages.
+	thisapp.invoice.recalculate_balances_from(input.ID);
+	if(input.Customer.Credit_Available > 0)
+	{
+		getCustomerProfile = Customer_Profile[ID == input.Customer];
+		msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
+		customerName = "&Customer_Name=" + input.Customer;
+		customerCode = "&Customer_Code=" + input.Customer_Code;
+		invoice = "&Invoice=" + input.ID;
+		customerEmail = "&Customer_Email=" + input.Customer_E_mail;
+		invoiceNo = "&Invoice_No=" + input.Invoice_No;
+		typeOfAction = "&Type_Of_Action=Mark As Sent";
+		openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
+	}
+}

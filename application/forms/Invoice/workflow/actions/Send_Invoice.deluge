@@ -193,9 +193,6 @@ else
 }
 
 // --- Block 2, on click 3 ---
-thisapp.invoice.recalculate_balances_from(input.ID);
-
-// --- Block 2, on click 4 ---
 if(input.Due_Date > today)
 {
 	thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
@@ -204,6 +201,9 @@ else
 {
 	thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
 }
+// --- Block 2, on click 4 ---
+// Must run after Sent/Overdue — previous balance only counts those stages.
+thisapp.invoice.recalculate_balances_from(input.ID);
 
 // --- Block 3, on click 1 ---
 getCustomerProfile = Customer_Profile[ID == input.Customer];
