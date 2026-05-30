@@ -1,0 +1,20 @@
+Handle_Deletion_of_Paymen as "Handle Deletion of Payment Received Line Item"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on delete row of Payment_Received_Line_Item
+	{
+		actions 
+		{
+			custom deluge script
+			(
+								input.Payment_Received_Trigger = !input.Payment_Received_Trigger;
+			)
+		}
+	}
+
+}
+

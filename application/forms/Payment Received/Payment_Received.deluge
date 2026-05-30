@@ -173,7 +173,7 @@ form Payment_Received
 	 	column = 1   
 		width = medium
 	)
-	Total_Still_Owing
+	must have Total_Still_Owing
 	(
 		type = decimal
 		displayname = "Total Still Owing"

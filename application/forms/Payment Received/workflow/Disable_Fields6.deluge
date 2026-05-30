@@ -1,0 +1,29 @@
+Disable_Fields6 as "Disable Fields"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on edit
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+								disable Customer_Name;
+							disable Customer_Email;
+							disable Customer_Code;
+							disable Payment_Type;
+							disable Payment_Received_Line_Item.Allocation;
+							disable Payment_Received_Line_Item.Description;
+							disable Paid_To;
+							disable Payment_Date;
+							disable Payment_Method;
+							disable Reference;
+			)
+		}
+	}
+
+}
+

@@ -1,65 +1,81 @@
-// Record action: Send Payment Receveid Deposit
-// Link name: Send_Payment_Receveid_Dep
-// Form: Payment_Received
-
-// --- on click block 1 ---
-// otherMp = Map();
-				// mp = Map();
-				// mp.put("Send_Email",true);
-				// zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"Payment_Received_Report",input.ID,mp,otherMp,"zoho_creator_connection");
-				getEmailTemplate = Email_Templates[Template_Type == "Payment Received" && Status == "Active"];
-				toAddresses = input.Customer_Email;
-				emailSubject = getEmailTemplate.Subject_field;
-				emailBody = getEmailTemplate.Body;
-				placeholders = getEmailTemplate.Placeholders;
-				recId = input.ID;
-				getRecordPaymentReceived = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"Deposit_Payment_Received_Report1",recId,"zoho_creator_connection");
-				if(getRecordPaymentReceived.get("code") == 3000)
-				{
-					paymentReceveidData = getRecordPaymentReceived.get("data");
-					for each  placeholder in placeholders
-					{
-						if(paymentReceveidData.get(placeholder).size() != null)
-						{
-							listData = paymentReceveidData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
-							placeHolderValue = "";
-							idx = 0;
-							for each  data in listData
+Send_Payment_Receveid_Dep as "Send Payment Receveid Deposit"
+{
+	type =  functions
+	form = Payment_Received
+	execution type = for each record	
+	on start
+	{
+		actions 
+		{
+		on click
+		(
+			// otherMp = Map();
+							// mp = Map();
+							// mp.put("Send_Email",true);
+							// zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"Payment_Received_Report",input.ID,mp,otherMp,"zoho_creator_connection");
+							getEmailTemplate = Email_Templates[Template_Type == "Payment Received" && Status == "Active"];
+							toAddresses = input.Customer_Email;
+							emailSubject = getEmailTemplate.Subject_field;
+							emailBody = getEmailTemplate.Body;
+							placeholders = getEmailTemplate.Placeholders;
+							recId = input.ID;
+							getRecordPaymentReceived = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"Deposit_Payment_Received_Report1",recId,"zoho_creator_connection");
+							if(getRecordPaymentReceived.get("code") == 3000)
 							{
-								if(data.contains("display_value:"))
+								paymentReceveidData = getRecordPaymentReceived.get("data");
+								for each  placeholder in placeholders
 								{
-									if(idx > 0)
+									if(paymentReceveidData.get(placeholder).size() != null)
 									{
-										placeHolderValue = placeHolderValue + ",";
+										listData = paymentReceveidData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
+										placeHolderValue = "";
+										idx = 0;
+										for each  data in listData
+										{
+											if(data.contains("display_value:"))
+											{
+												if(idx > 0)
+												{
+													placeHolderValue = placeHolderValue + ",";
+												}
+												placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
+												idx = idx + 1;
+											}
+										}
+										emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+										emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
 									}
-									placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
-									idx = idx + 1;
+									else
+									{
+										emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",paymentReceveidData.get(placeholder));
+										emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",paymentReceveidData.get(placeholder));
+									}
 								}
+								downloadPRTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Deposit_Payment_Received_Report1/" + recId + "/" + input.Payment_Received_No + "/3dybBdYXtp0BM2h6FQAAttg67C4wN7z8zyq1r3jm0TfSmaG9emgT5nn6MmV3YF9Q28nYg7ZJeje1O9un5ZAC3Eyhg68BEOBhqBFb";
+								prFile = invokeurl
+								[
+									url :downloadPRTempUrl
+									type :GET
+								];
+								prFile.setparamname("file");
+								sendmail
+								[
+									from :zoho.adminuserid
+									to :toAddresses
+									subject :emailSubject
+									message :emailBody
+									Attachments :file:prFile
+								]
 							}
-							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-						}
-						else
-						{
-							emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",paymentReceveidData.get(placeholder));
-							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",paymentReceveidData.get(placeholder));
-						}
-					}
-					downloadPRTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Deposit_Payment_Received_Report1/" + recId + "/" + input.Payment_Received_No + "/3dybBdYXtp0BM2h6FQAAttg67C4wN7z8zyq1r3jm0TfSmaG9emgT5nn6MmV3YF9Q28nYg7ZJeje1O9un5ZAC3Eyhg68BEOBhqBFb";
-					prFile = invokeurl
-					[
-						url :downloadPRTempUrl
-						type :GET
-					];
-					prFile.setparamname("file");
-					sendmail
-					[
-						from :zoho.adminuserid
-						to :toAddresses
-						subject :emailSubject
-						message :emailBody
-						Attachments :file:prFile
-					]
-				}
-// --- on click block 2 ---
-input.Receipt_Sent = true;
+		)
+		}
+		actions  (Receipt_Sent == false)
+		{
+		on click
+		(
+			input.Receipt_Sent = true;
+		)
+		}
+	}
+}
+

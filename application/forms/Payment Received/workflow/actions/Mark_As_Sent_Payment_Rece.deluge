@@ -1,5 +1,17 @@
-// Record action: Mark As Sent Payment Received
-// Link name: Mark_As_Sent_Payment_Rece
-// Form: Payment_Received
+Mark_As_Sent_Payment_Rece as "Mark As Sent Payment Received"
+{
+	type =  functions
+	form = Payment_Received
+	execution type = for each record	
+	on start
+	{
+		actions  (Receipt_Sent == false)
+		{
+		on click
+		(
+			input.Receipt_Sent = true;
+		)
+		}
+	}
+}
 
-input.Receipt_Sent = true;

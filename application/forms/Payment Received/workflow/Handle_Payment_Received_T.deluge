@@ -1,0 +1,34 @@
+Handle_Payment_Received_T as "Handle Payment Received Trigger"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on user input of Payment_Received_Trigger
+	{
+		actions 
+		{
+			custom deluge script
+			(
+								total_payment_received = 0;
+							total_payment_received_myr = 0;
+							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+							{
+								total_payment_received = total_payment_received + curr_payment_received_line_item.Allocation;
+								total_payment_received_myr = total_payment_received_myr + curr_payment_received_line_item.Allocation_MYR;
+							}
+							input.Amount_Received = total_payment_received;
+							input.Amount_Received_MYR = total_payment_received_myr;
+							total_still_Owing = 0;
+							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+							{
+								total_still_Owing = total_still_Owing + ifnull(curr_payment_received_line_item.Outstanding_Balance,0) - ifnull(curr_payment_received_line_item.Allocation,0);
+							}
+							input.Total_Still_Owing = total_still_Owing;
+			)
+		}
+	}
+
+}
+

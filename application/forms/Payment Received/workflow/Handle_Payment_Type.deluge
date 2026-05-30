@@ -11,21 +11,21 @@ Handle_Payment_Type as "Handle Payment Type"
 		{
 			custom deluge script
 			(
-					if(input.Single_Record_Payment != true)
-				{
-					input.Customer_Name = null;
-				input.Customer_TIN = "";
-				input.Customer_SST = "";
-				input.Customer_Email = "";
-				input.Customer_Code = null;
-				input.Payment_Method = "";
-				input.Paid_To = null;
-				input.Reference = "";
-				input.Payment_Received_Line_Item.clear();
-				input.Amount_Received = null;
-				input.Payment_Received_Currency = null;
-				input.Amount_Received_MYR = null;
-				}
+								if(input.Single_Record_Payment != true)
+							{
+								input.Customer_Name = null;
+								input.Customer_TIN = "";
+								input.Customer_SST = "";
+								input.Customer_Email = "";
+								input.Customer_Code = null;
+								input.Payment_Method = "";
+								input.Paid_To = null;
+								input.Reference = "";
+								input.Payment_Received_Line_Item.clear();
+								input.Amount_Received = null;
+								input.Payment_Received_Currency = null;
+								input.Amount_Received_MYR = null;
+							}
 			)
 		}
 	}

@@ -1,0 +1,46 @@
+Validate_Payment_Received as "Validate Payment Received Submission"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+								no_curr_payment_received_line_item = true;
+							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+							{
+								if(curr_payment_received_line_item.Allocation != null)
+								{
+									no_curr_payment_received_line_item = false;
+									break;
+								}
+							}
+							if(no_curr_payment_received_line_item == true)
+							{
+								if(input.Payment_Type == "Invoice/Debit Note")
+								{
+									alert "Cannot record payment: No available invoices / debit notes to apply this payment. Please ensure there is an open invoice / debit note for this customer before submitting.";
+								}
+								else if(input.Payment_Type == "Deposit")
+								{
+									alert "Cannot record payment: No available deposits to apply this payment. Please ensure there is an open deposits for this customer before submitting.";
+								}
+								cancel submit;
+							}
+							total_still_Owing = 0;
+							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+							{
+								total_still_Owing = total_still_Owing + ifnull(curr_payment_received_line_item.Outstanding_Balance,0) - ifnull(curr_payment_received_line_item.Allocation,0);
+							}
+							input.Total_Still_Owing = total_still_Owing;
+			)
+		}
+	}
+
+}
+

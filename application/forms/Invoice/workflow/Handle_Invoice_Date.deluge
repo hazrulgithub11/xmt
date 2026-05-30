@@ -23,12 +23,18 @@ Handle_Invoice_Date as "Handle Invoice Date"
 					{
 						input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
 					}
-					if(input.Customer_Code != null && input.ID != null && input.ID != 0)
+					if(input.Customer != null)
 					{
-						thisapp.invoice.invoice_balance_updates(input.ID);
-						get_invoice = Invoice[ID == input.ID];
-						input.Previous_Balance = get_invoice.Previous_Balance;
-						input.Total_Amount_Due = get_invoice.Total_Amount_Due;
+						if(input.ID != null && input.ID != 0)
+						{
+							balance_result = thisapp.invoice.invoice_balance_updates(input.ID,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
+						}
+						else
+						{
+							balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
+						}
+						input.Previous_Balance = balance_result.get("Previous_Balance");
+						input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
 					}
 				}
 			)

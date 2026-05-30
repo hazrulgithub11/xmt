@@ -1,4 +1,4 @@
-Hide_Additional_Row_Butto as "Hide Additional Row Button"
+Handle_Field_Rules as "Handle Field Rules"
 {
 	type =  form
 	form = Payment_Received
@@ -10,6 +10,10 @@ Hide_Additional_Row_Butto as "Hide Additional Row Button"
 		actions 
 		{
 		hide add row of Payment_Received_Line_Item;
+		}
+		actions 
+		{
+			hide System_Section;
 		}
 	}
 

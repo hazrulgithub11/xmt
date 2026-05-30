@@ -1,0 +1,17 @@
+Field_Rules_when_Payment_ as "Field Rules when Payment Type is null"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add
+
+	field rules
+	{
+		actions  (Payment_Type is null || Payment_Type == "")
+		{
+			hide Customer_Name,Customer_TIN,Customer_SST,Customer_Code,Payment_Date,Payment_Method,Paid_To,Reference,Payment_Received_Line_Item,Amount_Received,Amount_Received_MYR,Customer_Email,Payment_Received_Currency,Payment_Received_No,Total_Still_Owing;
+		}
+	}
+
+}
+

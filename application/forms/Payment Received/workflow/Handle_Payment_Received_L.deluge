@@ -1,0 +1,69 @@
+Handle_Payment_Received_L as "Handle Payment Received Line Item Allocation"
+{
+	type =  form
+	form = Payment_Received
+
+	record event = on add or edit
+
+	on user input of Payment_Received_Line_Item.Allocation
+	{
+		actions 
+		{
+			custom deluge script
+			(
+								if(row.Invoice_No == null && row.Debit_Note_No == null && row.Pro_Forma_Invoice_No == null)
+							{
+								alert "Payment Received line item requires a document reference — invoice, debit note, or pro forma invoice.";
+							}
+							else if(row.Allocation > row.Outstanding_Balance)
+							{
+								alert "The allocation amount entered is more than outstanding balance for the selected payment received line item.";
+								row.Allocation=row.Outstanding_Balance;
+							}
+							else
+							{
+								if(row.Allocation == null || row.Allocation < 0)
+								{
+									row.Allocation=0;
+									row.Allocation_MYR=0;
+								}
+								else
+								{
+									payment_received_line_item_document_exchange_rate = null;
+									if(row.Invoice_No != null)
+									{
+										payment_received_line_item_document_exchange_rate = row.Invoice_No.Exchange_Rate;
+									}
+									else if(row.Debit_Note_No != null)
+									{
+										payment_received_line_item_document_exchange_rate = row.Debit_Note_No.Exchange_Rate;
+									}
+									else if(row.Pro_Forma_Invoice_No != null)
+									{
+										payment_received_line_item_document_exchange_rate = row.Pro_Forma_Invoice_No.Exchange_Rate;
+									}
+									row.Allocation_MYR=row.Allocation * payment_received_line_item_document_exchange_rate;
+								}
+								// Total payment amount received calculation
+								total_payment_amount_received = 0;
+								total_payment_amount_received_myr = 0;
+								for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+								{
+									total_payment_amount_received = total_payment_amount_received + curr_payment_received_line_item.Allocation;
+									total_payment_amount_received_myr = total_payment_amount_received_myr + curr_payment_received_line_item.Allocation_MYR;
+								}
+								input.Amount_Received = total_payment_amount_received;
+								input.Amount_Received_MYR = total_payment_amount_received_myr;
+								total_still_Owing = 0;
+								for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+								{
+									total_still_Owing = total_still_Owing + ifnull(curr_payment_received_line_item.Outstanding_Balance,0) - ifnull(curr_payment_received_line_item.Allocation,0);
+								}
+								input.Total_Still_Owing = total_still_Owing;
+							}
+			)
+		}
+	}
+
+}
+

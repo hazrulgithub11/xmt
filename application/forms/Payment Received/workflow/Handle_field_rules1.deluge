@@ -1,4 +1,4 @@
-Hide_Deletion_Row as "Hide Deletion Row"
+Handle_field_rules1 as "Handle field rules"
 {
 	type =  form
 	form = Payment_Received
