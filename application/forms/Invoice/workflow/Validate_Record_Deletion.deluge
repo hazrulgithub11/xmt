@@ -11,27 +11,27 @@ Validate_Record_Deletion as "Validate Record Deletion"
 		{
 			custom deluge script
 			(
-					// Payments Received
-				getPaymentsReceived = Payment_Received_Line_Item[Invoice_No == input.ID].ID.getAll();
-				if(getPaymentsReceived.size() > 0)
-				{
-					alert "This invoice has payment applied to it. Hence, it cannot be deleted.";
-					cancel delete;
-				}
-				// Reference Debit Note 
-				reference_debit_note_list = Debit_Note[Reference_Invoice == input.ID].ID.getAll();
-				if(reference_debit_note_list.size() > 0)
-				{
-					alert "Debit Notes have been applied to this Invoice. You must delete all the associated payments to delete the Invoice.";
-					cancel delete;
-				}
-				// Reference Credit Note
-				reference_credit_note_list = Apply_Credit_To_Invoice_Line[Invoice == input.ID].ID.getAll();
-				if(reference_credit_note_list.size() > 0)
-				{
-					alert "This invoice has credits applied to it. Hence, it cannot be deleted.";
-					cancel delete;
-				}
+								// Payments Received
+							get_payment_received_line_items = Payment_Received_Line_Item[Invoice_No == input.ID].ID.getAll();
+							if(get_payment_received_line_items.size() > 0)
+							{
+								alert "This invoice has payment applied to it. Hence, it cannot be deleted.";
+								cancel delete;
+							}
+							// Reference Debit Note 
+							reference_debit_note_list = Debit_Note[Reference_Invoice == input.ID].ID.getAll();
+							if(reference_debit_note_list.size() > 0)
+							{
+								alert "Debit Notes have been applied to this Invoice. You must delete all the associated payments to delete the Invoice.";
+								cancel delete;
+							}
+							// Reference Credit Note
+							reference_credit_note_list = Apply_Credit_To_Invoice_Line[Invoice == input.ID].ID.getAll();
+							if(reference_credit_note_list.size() > 0)
+							{
+								alert "This invoice has credits applied to it. Hence, it cannot be deleted.";
+								cancel delete;
+							}
 			)
 		}
 	}

@@ -1,0 +1,1 @@
+transition criteria = (Invoice_UUID is not null && QR_Invoice_Public_Link is not null)

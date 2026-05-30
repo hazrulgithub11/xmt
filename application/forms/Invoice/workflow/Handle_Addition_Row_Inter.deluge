@@ -11,25 +11,25 @@ Handle_Addition_Row_Inter as "Handle Addition Row Internet Charges"
 		{
 			custom deluge script
 			(
-					clear row.Business_Segment_Internet_Charges;
-				clear row.Business_Unit_Internet_Charges;
-				customerInfo = Customer_Profile[ID == input.Customer];
-				if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
-				{
-					row.Business_Segment_Internet_Charges:ui.add(customerInfo.Business_Segment);
-				}
-				else
-				{
-					clear row.Business_Segment_Internet_Charges;
-					clear row.Business_Unit_Internet_Charges;
-				}
+								clear row.Business_Segment_Internet_Charges;
+							clear row.Business_Unit_Internet_Charges;
+							customerInfo = Customer_Profile[ID == input.Customer];
+							if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+							{
+								row.Business_Segment_Internet_Charges:ui.add(customerInfo.Business_Segment);
+							}
+							else
+							{
+								clear row.Business_Segment_Internet_Charges;
+								clear row.Business_Unit_Internet_Charges;
+							}
 			)
 		}
 		actions 
 		{
 			custom deluge script
 			(
-					input.User_Input_Trigger = !input.User_Input_Trigger;
+								input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

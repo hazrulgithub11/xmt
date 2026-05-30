@@ -11,12 +11,12 @@ Hide_Fields11 as "Hide Fields"
 		{
 			custom deluge script
 			(
-					hide Invoice;
-				hide Customer_Code;
-				hide Customer_Name;
-				hide Customer_Email;
-				hide Type_Of_Action;
-				hide Invoice_No;
+								hide Invoice;
+							hide Customer_Code;
+							hide Customer_Name;
+							hide Customer_Email;
+							hide Type_Of_Action;
+							hide Invoice_No;
 			)
 		}
 	}

@@ -140,8 +140,8 @@ Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 								{
 									curr_get_pro_forma = Pro_Forma_Invoices[ID == curr_payment_received_line_item.Pro_Forma_Invoice_No];
 									// Amount Paid and Amount Due Calculation
-								curr_get_pro_forma.Amount_Paid=curr_get_pro_forma.Amount_Paid + curr_payment_received_line_item.Allocation;
-								curr_get_pro_forma.Amount_Due=curr_get_pro_forma.Amount_Due - curr_payment_received_line_item.Allocation;
+									curr_get_pro_forma.Amount_Paid=curr_get_pro_forma.Amount_Paid + curr_payment_received_line_item.Allocation;
+									curr_get_pro_forma.Amount_Due=curr_get_pro_forma.Amount_Due - curr_payment_received_line_item.Allocation;
 									// Pro Forma Invoice Blueprint status update
 									if(ifnull(curr_get_pro_forma.Amount_Due,0) <= 0)
 									{

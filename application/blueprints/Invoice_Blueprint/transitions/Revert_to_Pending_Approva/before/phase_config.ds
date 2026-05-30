@@ -1,1 +1,11 @@
-transition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)
+transition owner
+            				(
+                				permissions = {"Administrator", "Finance Manager"}
+             				)
+            				transition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)
+            				confirmation before execution
+            				(
+                				message = "This invoice is approved but LHDN e-invoice data is incomplete (missing Invoice UUID or public link). Revert ${Invoice_No} to Pending Approval so it can be corrected and approved again?"
+                				confirm button text = "Yes"
+                				cancel button text = "No"
+            				)

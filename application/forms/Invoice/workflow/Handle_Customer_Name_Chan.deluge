@@ -11,7 +11,7 @@ Handle_Customer_Name_Chan as "Handle Customer Name Changes"
 		{
 			custom deluge script
 			(
-					input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+								input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
 			)
 		}
 	}

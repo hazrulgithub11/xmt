@@ -1,4 +1,4 @@
-if(input.Invoice_Date != null && input.Customer_Code != null)
+	if(input.Invoice_Date != null && input.Customer_Code != null)
 {
 	input.Amount_Due = input.Grand_Total;
 	customer_id = input.Customer.ID;
@@ -24,9 +24,9 @@ urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:Debit_Notes?S
 //Send Mail & App Notify
 // sendmail
 // [
-// 	from :zoho.adminuserid
-// 	to :listEmail
-// 	subject :"Debit Note " + input.Invoice_No + " Approval Required"
-// 	message :"Dear,<br><br>We hope this message finds you well. Please review and approve debit note " + input.Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+//  from :zoho.adminuserid
+//  to :listEmail
+//  subject :"Debit Note " + input.Invoice_No + " Approval Required"
+//  message :"Dear,<br><br>We hope this message finds you well. Please review and approve debit note " + input.Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
 // ]
 zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"Debit_Notes",input.ID);

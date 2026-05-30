@@ -11,25 +11,25 @@ Handle_Addition_Row_Call_ as "Handle Addition Row Call Charges"
 		{
 			custom deluge script
 			(
-					clear row.Business_Segment_Call_Charges;
-				clear row.Business_Unit_Call_Charges;
-				customerInfo = Customer_Profile[ID == input.Customer];
-				if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
-				{
-					row.Business_Segment_Call_Charges:ui.add(customerInfo.Business_Segment);
-				}
-				else
-				{
-					clear row.Business_Segment_Call_Charges;
-					clear row.Business_Unit_Call_Charges;
-				}
+								clear row.Business_Segment_Call_Charges;
+							clear row.Business_Unit_Call_Charges;
+							customerInfo = Customer_Profile[ID == input.Customer];
+							if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+							{
+								row.Business_Segment_Call_Charges:ui.add(customerInfo.Business_Segment);
+							}
+							else
+							{
+								clear row.Business_Segment_Call_Charges;
+								clear row.Business_Unit_Call_Charges;
+							}
 			)
 		}
 		actions 
 		{
 			custom deluge script
 			(
-					input.User_Input_Trigger = !input.User_Input_Trigger;
+								input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

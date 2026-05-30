@@ -11,32 +11,32 @@ Handle_Invoice_Date as "Handle Invoice Date"
 		{
 			custom deluge script
 			(
-					if(input.Invoice_Date == null)
-				{
-					input.Invoice_For_Usage = "";
-					input.Due_Date = null;
-				}
-				else
-				{
-					input.Invoice_For_Usage = thisapp.invoice.get_invoice_usage(input.Invoice_Date);
-					if(input.Payment_Term != null)
-					{
-						input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
-					}
-					if(input.Customer != null)
-					{
-						if(input.ID != null && input.ID != 0)
-						{
-							balance_result = thisapp.invoice.invoice_balance_updates(input.ID,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
-						}
-						else
-						{
-							balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
-						}
-						input.Previous_Balance = balance_result.get("Previous_Balance");
-						input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
-					}
-				}
+								if(input.Invoice_Date == null)
+							{
+								input.Invoice_For_Usage = "";
+								input.Due_Date = null;
+							}
+							else
+							{
+								input.Invoice_For_Usage = thisapp.invoice.get_invoice_usage(input.Invoice_Date);
+								if(input.Payment_Term != null)
+								{
+									input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
+								}
+								if(input.Customer != null)
+								{
+									if(input.ID != null && input.ID != 0)
+									{
+										balance_result = thisapp.invoice.invoice_balance_updates(input.ID,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
+									}
+									else
+									{
+										balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
+									}
+									input.Previous_Balance = balance_result.get("Previous_Balance");
+									input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
+								}
+							}
 			)
 		}
 	}

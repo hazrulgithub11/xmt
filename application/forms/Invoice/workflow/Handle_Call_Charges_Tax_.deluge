@@ -11,9 +11,9 @@ Handle_Call_Charges_Tax_ as "Handle Call Charges Tax "
 		{
 			custom deluge script
 			(
-					row.Tax_Type_Call_Charges=row.Tax_Call_Charges.Tax_Type;
-				row.Tax_Pct_Call_Charges=row.Tax_Call_Charges.Tax_Percentage;
-				input.User_Input_Trigger = !input.User_Input_Trigger;
+								row.Tax_Type_Call_Charges=row.Tax_Call_Charges.Tax_Type;
+							row.Tax_Pct_Call_Charges=row.Tax_Call_Charges.Tax_Percentage;
+							input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

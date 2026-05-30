@@ -1,5 +1,17 @@
-// Record action: Send Email
-// Link name: Send_Email5
-// Form: Invoice
+Send_Email5 as "Send Email"
+{
+	type =  functions
+	form = Invoice
+	execution type = for each record    
+	on start
+	{
+		actions 
+		{
+		on click
+		(
+			openUrl("#Form:Email_Input_Form?Record_ID=" + input.ID + "&Document_Type=Invoice","popup");
+		)
+		}
+	}
+}
 
-openUrl("#Form:Email_Input_Form?Record_ID=" + input.ID + "&Document_Type=Invoice","popup");

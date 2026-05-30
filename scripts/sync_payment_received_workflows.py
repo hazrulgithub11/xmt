@@ -4,13 +4,17 @@
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ds_deluge_utils import normalize_deluge_block
 
 ROOT = Path(__file__).resolve().parents[1]
 DS_FILE = ROOT / "XMT___Billing_System.ds"
 OUT_DIR = ROOT / "application" / "forms" / "Payment Received" / "workflow"
 ACTIONS_DIR = OUT_DIR / "actions"
-WORKFLOW_PREFIX = "\t\t\t"  # nesting level in .ds
+WORKFLOW_PREFIX = "\t\t\t"
 
 
 def find_block_end(lines: list[str], start: int) -> int:
@@ -26,20 +30,6 @@ def find_block_end(lines: list[str], start: int) -> int:
         if block_start is not None and depth == 0:
             return i
     raise ValueError(f"Unclosed block starting at line {start + 1}")
-
-
-def dedent_block(block_lines: list[str]) -> str:
-    non_empty = [line for line in block_lines if line.strip()]
-    if not non_empty:
-        return "\n\n"
-    min_indent = min(len(line) - len(line.lstrip("\t")) for line in non_empty)
-    out: list[str] = []
-    for line in block_lines:
-        if line.strip():
-            out.append(line[min_indent:] if len(line) >= min_indent else line.lstrip())
-        else:
-            out.append("")
-    return "\n".join(out).rstrip() + "\n\n"
 
 
 def extract_payment_received_workflows(content: str) -> dict[str, tuple[str, bool]]:
@@ -67,7 +57,7 @@ def extract_payment_received_workflows(content: str) -> dict[str, tuple[str, boo
             i = end + 1
             continue
         is_action = bool(re.search(r"type\s*=\s*functions", block_text))
-        workflows[link_name] = (dedent_block(block_lines), is_action)
+        workflows[link_name] = (normalize_deluge_block(block_lines), is_action)
         i = end + 1
     return workflows
 

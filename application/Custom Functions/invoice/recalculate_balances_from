@@ -1,23 +1,22 @@
 void invoice.recalculate_balances_from(int invoice_id)
 {
-	thisapp.invoice.invoice_balance_updates(invoice_id,null,null,null);
-	get_invoice = Invoice[ID == invoice_id];
-	if(get_invoice == null || get_invoice.Invoice_Date == null || get_invoice.Customer == null)
-	{
-		return;
-	}
-	customer_id = get_invoice.Customer.ID;
-	if(customer_id == null)
-	{
-		return;
-	}
-	for each  inv in Invoice[Invoice_Date > get_invoice.Invoice_Date && Customer == customer_id]
-	{
-		thisapp.invoice.invoice_balance_updates(inv.ID,null,null,null);
-	}
-	// When date moves later, invoices between the old and new date must be recalculated too.
-	for each  inv in Invoice[Invoice_Date < get_invoice.Invoice_Date && Customer == customer_id && ID != invoice_id]
-	{
-		thisapp.invoice.invoice_balance_updates(inv.ID,null,null,null);
-	}
+thisapp.invoice.invoice_balance_updates(invoice_id,null,null,null);
+get_invoice = Invoice[ID == invoice_id];
+if(get_invoice == null || get_invoice.Invoice_Date == null || get_invoice.Customer == null)
+{
+	return;
+}
+customer_id = get_invoice.Customer.ID;
+if(customer_id == null)
+{
+	return;
+}
+for each  inv in Invoice[Invoice_Date > get_invoice.Invoice_Date && Customer == customer_id]
+{
+	thisapp.invoice.invoice_balance_updates(inv.ID,null,null,null);
+}
+for each  inv in Invoice[Invoice_Date < get_invoice.Invoice_Date && Customer == customer_id && ID != invoice_id]
+{
+	thisapp.invoice.invoice_balance_updates(inv.ID,null,null,null);
+}
 }

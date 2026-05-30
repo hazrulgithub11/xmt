@@ -22,23 +22,12 @@
       "phases": {
         "before": [],
         "during": [],
-        "after": [
-          {
-            "condition": null,
-            "scripts": [],
-            "field_updates": [
-              {
-                "form": "Credit_Note",
-                "fields": "Status = \"Approved\""
-              }
-            ]
-          }
-        ]
+        "after": []
       },
       "phase_raw": {
         "before": "\n         \t\t\t\t",
         "during": null,
-        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Approved\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+        "after": "\n         \t\t\t\t"
       }
     },
     {
@@ -49,23 +38,12 @@
       "phases": {
         "before": [],
         "during": [],
-        "after": [
-          {
-            "condition": null,
-            "scripts": [],
-            "field_updates": [
-              {
-                "form": "Credit_Note",
-                "fields": "Status = \"Rejected\""
-              }
-            ]
-          }
-        ]
+        "after": []
       },
       "phase_raw": {
         "before": "\n         \t\t\t\t",
         "during": null,
-        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Rejected\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+        "after": "\n         \t\t\t\t"
       }
     },
     {
@@ -76,23 +54,12 @@
       "phases": {
         "before": [],
         "during": [],
-        "after": [
-          {
-            "condition": null,
-            "scripts": [],
-            "field_updates": [
-              {
-                "form": "Credit_Note",
-                "fields": "Status = \"Pending Approval\""
-              }
-            ]
-          }
-        ]
+        "after": []
       },
       "phase_raw": {
         "before": "\n         \t\t\t\t",
         "during": null,
-        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Pending Approval\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+        "after": "\n         \t\t\t\t"
       }
     },
     {
@@ -103,23 +70,12 @@
       "phases": {
         "before": [],
         "during": [],
-        "after": [
-          {
-            "condition": null,
-            "scripts": [],
-            "field_updates": [
-              {
-                "form": "Credit_Note",
-                "fields": "Status = \"Pending Approval\""
-              }
-            ]
-          }
-        ]
+        "after": []
       },
       "phase_raw": {
         "before": "\n         \t\t\t\t",
         "during": null,
-        "after": "\n\t\t\t\t\t\t\tactions \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\tupdate Credit_Note[ID == input.ID]\n\t\t\t\t\t\t\t[\n\t\t\t\t\t\t\t\tStatus = \"Pending Approval\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t}\n         \t\t\t\t"
+        "after": "\n         \t\t\t\t"
       }
     },
     {
@@ -133,7 +89,7 @@
         "after": []
       },
       "phase_raw": {
-        "before": "\n         \t\t\t\t",
+        "before": "\n            \t\t\t\ttransition criteria = (Invoice_UUID is not null && QR_Invoice_Public_Link is not null)\n         \t\t\t\t",
         "during": null,
         "after": "\n         \t\t\t\t"
       }

@@ -2,7 +2,7 @@ Mark_As_Sent_Payment_Rece as "Mark As Sent Payment Received"
 {
 	type =  functions
 	form = Payment_Received
-	execution type = for each record	
+	execution type = for each record    
 	on start
 	{
 		actions  (Receipt_Sent == false)

@@ -11,10 +11,10 @@ Handle_Payment_Term as "Handle Payment Term"
 		{
 			custom deluge script
 			(
-					if(input.Invoice_Date != null && input.Payment_Term != null)
-				{
-					input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
-				}
+								if(input.Invoice_Date != null && input.Payment_Term != null)
+							{
+								input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
+							}
 			)
 		}
 	}

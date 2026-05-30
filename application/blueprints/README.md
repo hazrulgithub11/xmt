@@ -42,7 +42,6 @@ lives in form workflows, schedules, and custom functions that call:
 |---|---|---:|---:|
 | [Credit_Note_Blueprint](Credit_Note_Blueprint/BLUEPRINT.md) | Credit_Note | 7 | 0 |
 | [Invoice_Blueprint](Invoice_Blueprint/BLUEPRINT.md) | Invoice | 15 | 5 |
-| [Deposits_Blueprint](pro forma invoice/BLUEPRINT.md) | Pro_Forma_Invoices | 15 | 6 |
 | [Debit_Note_Blueprint](Debit_Note_Blueprint/BLUEPRINT.md) | Debit_Note | 15 | 5 |
 
 ## Invoice Blueprint (largest)

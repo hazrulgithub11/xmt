@@ -2,7 +2,7 @@ Send_Payment_Received_Inv as "Send Payment Received Invoice / Debit Note"
 {
 	type =  functions
 	form = Payment_Received
-	execution type = for each record	
+	execution type = for each record    
 	on start
 	{
 		actions 

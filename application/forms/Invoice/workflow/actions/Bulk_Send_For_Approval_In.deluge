@@ -1,5 +1,17 @@
-// Record action: Bulk Send For Approval Invoice
-// Link name: Bulk_Send_For_Approval_In
-// Form: Invoice
+Bulk_Send_For_Approval_In as "Bulk Send For Approval Invoice"
+{
+	type =  functions
+	form = Invoice
+	execution type = for each record    
+	on start
+	{
+		actions 
+		{
+		on click
+		(
+			thisapp.blueprint.executeTransition("Invoice","Invoice_Blueprint","Send_For_Approval",input.ID);
+		)
+		}
+	}
+}
 
-thisapp.blueprint.executeTransition("Invoice","Invoice_Blueprint","Send_For_Approval",input.ID);

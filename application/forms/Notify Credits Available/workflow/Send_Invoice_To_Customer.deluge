@@ -10,107 +10,107 @@ Send_Invoice_To_Customer as "Send Invoice To Customer"
 		on click
 		(
 			//otherMp = Map();
-				//mp = Map();
-				//mp.put("Send_Email",true);
-				//info zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"All_Invoices",input.Invoice,mp,otherMp,"zoho_creator_connection");
-				getEmailTemplate = Email_Templates[Template_Type == "Invoice" && Status == "Active"];
-				getInvoice = Invoice[ID == input.Invoice];
-				toAddresses = getInvoice.Customer_E_mail;
-				emailSubject = getEmailTemplate.Subject_field;
-				emailBody = getEmailTemplate.Body;
-				placeholders = getEmailTemplate.Placeholders;
-				recId = getInvoice.ID;
-				invNo = getInvoice.Invoice_No;
-				getRecordInv = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Invoices",recId,"zoho_creator_connection");
-				if(getRecordInv.get("code") == 3000)
-				{
-					invData = getRecordInv.get("data");
-				}
-				for each  placeholder in placeholders
-				{
-					if(invData.get(placeholder).size() != null)
-					{
-						listData = invData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
-						placeHolderValue = "";
-						idx = 0;
-						for each  data in listData
-						{
-							if(data.contains("display_value:"))
+							//mp = Map();
+							//mp.put("Send_Email",true);
+							//info zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"All_Invoices",input.Invoice,mp,otherMp,"zoho_creator_connection");
+							getEmailTemplate = Email_Templates[Template_Type == "Invoice" && Status == "Active"];
+							getInvoice = Invoice[ID == input.Invoice];
+							toAddresses = getInvoice.Customer_E_mail;
+							emailSubject = getEmailTemplate.Subject_field;
+							emailBody = getEmailTemplate.Body;
+							placeholders = getEmailTemplate.Placeholders;
+							recId = getInvoice.ID;
+							invNo = getInvoice.Invoice_No;
+							getRecordInv = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Invoices",recId,"zoho_creator_connection");
+							if(getRecordInv.get("code") == 3000)
 							{
-								if(idx > 0)
-								{
-									placeHolderValue = placeHolderValue + ",";
-								}
-								placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
-								idx = idx + 1;
+								invData = getRecordInv.get("data");
 							}
-						}
-						emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-						emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-					}
-					else
-					{
-						emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
-						emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
-					}
-				}
-				if(getInvoice.Charge_Category == "Miscellaneous Charges")
-				{
-					downloadMiscInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices_Miscellaneous/" + recId + "/" + invNo + "/eJwAxwnzTyqvYzDYbM1rhs6uEM6p9W5M2vR2HwQNwZA2AQJym6P9BVDB2WpRgmnNXgx7P8fjxKGpaYmgM334Vsx22wCKN0tgn0qW";
-					miscInvFile = invokeurl
-					[
-						url :downloadMiscInvTempUrl
-						type :GET
-					];
-					miscInvFile.setparamname("file");
-					sendmail
-					[
-						from :zoho.adminuserid
-						to :toAddresses
-						subject :emailSubject
-						message :emailBody
-						Attachments :file:miscInvFile
-					]
-				}
-				else
-				{
-					downloadFixInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices/" + recId + "/" + invNo + "/pbRFqPOxMz2gJjH1YjYdfpNgB21gTOaGfNhCffKKn4KOMA7Ag0NHJub4jWXTggKVYuHSuPB7dBSFPseK4WR5vNfQGz7Gj3XbZAZx";
-					fixInvFile = invokeurl
-					[
-						url :downloadFixInvTempUrl
-						type :GET
-					];
-					fixInvFile.setparamname("file");
-					sendmail
-					[
-						from :zoho.adminuserid
-						to :toAddresses
-						subject :emailSubject
-						message :emailBody
-						Attachments :file:fixInvFile
-					]
-				}
+							for each  placeholder in placeholders
+							{
+								if(invData.get(placeholder).size() != null)
+								{
+									listData = invData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
+									placeHolderValue = "";
+									idx = 0;
+									for each  data in listData
+									{
+										if(data.contains("display_value:"))
+										{
+											if(idx > 0)
+											{
+												placeHolderValue = placeHolderValue + ",";
+											}
+											placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
+											idx = idx + 1;
+										}
+									}
+									emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+									emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+								}
+								else
+								{
+									emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
+									emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
+								}
+							}
+							if(getInvoice.Charge_Category == "Miscellaneous Charges")
+							{
+								downloadMiscInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices_Miscellaneous/" + recId + "/" + invNo + "/eJwAxwnzTyqvYzDYbM1rhs6uEM6p9W5M2vR2HwQNwZA2AQJym6P9BVDB2WpRgmnNXgx7P8fjxKGpaYmgM334Vsx22wCKN0tgn0qW";
+								miscInvFile = invokeurl
+								[
+									url :downloadMiscInvTempUrl
+									type :GET
+								];
+								miscInvFile.setparamname("file");
+								sendmail
+								[
+									from :zoho.adminuserid
+									to :toAddresses
+									subject :emailSubject
+									message :emailBody
+									Attachments :file:miscInvFile
+								]
+							}
+							else
+							{
+								downloadFixInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices/" + recId + "/" + invNo + "/pbRFqPOxMz2gJjH1YjYdfpNgB21gTOaGfNhCffKKn4KOMA7Ag0NHJub4jWXTggKVYuHSuPB7dBSFPseK4WR5vNfQGz7Gj3XbZAZx";
+								fixInvFile = invokeurl
+								[
+									url :downloadFixInvTempUrl
+									type :GET
+								];
+								fixInvFile.setparamname("file");
+								sendmail
+								[
+									from :zoho.adminuserid
+									to :toAddresses
+									subject :emailSubject
+									message :emailBody
+									Attachments :file:fixInvFile
+								]
+							}
 		)
 		on click
 		(
 			// getInvoice = Invoice[ID == input.Invoice];
-				// info getInvoice.Invoice_No;
-				// if(!getInvoice.Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges"))
-				// {
-				// 	info "run these code";
-				// 	previoustotalAmountDue = 0;
-				// 	for each  x in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == getInvoice.Customer_Code]
-				// 	{
-				// 		previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
-				// 	}
-				// 	getInvoice.Previous_Balance=previoustotalAmountDue;
-				// 	getInvoice.Overdue_Charges=getInvoice.Previous_Balance - getInvoice.Amount_Paid - getInvoice.Total_Amount_Credit_Applied;
-				// 	getInvoice.Total_Amount_Due=getInvoice.Overdue_Charges + getInvoice.Grand_Total;
-				// 	for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == getInvoice.Customer_Code]
-				// 	{
-				// 		thisapp.invoice.invoice_balance_updates(inv.ID);
-				// 	}
-				// }
+							// info getInvoice.Invoice_No;
+							// if(!getInvoice.Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges"))
+							// {
+							//  info "run these code";
+							//  previoustotalAmountDue = 0;
+							//  for each  x in Invoice[Status in {"Sent","Overdue","Partially Paid"} && Invoice_Date < getInvoice.Invoice_Date.toStartOfMonth() && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == getInvoice.Customer_Code]
+							//  {
+							//      previoustotalAmountDue = previoustotalAmountDue + x.Amount_Due;
+							//  }
+							//  getInvoice.Previous_Balance=previoustotalAmountDue;
+							//  getInvoice.Overdue_Charges=getInvoice.Previous_Balance - getInvoice.Amount_Paid - getInvoice.Total_Amount_Credit_Applied;
+							//  getInvoice.Total_Amount_Due=getInvoice.Overdue_Charges + getInvoice.Grand_Total;
+							//  for each  inv in Invoice[Invoice_Date > getInvoice.Invoice_Date.eomonth(0) && !Charges_Categories1.Charge_Category.containsIgnoreCase("Miscellaneous Charges") && Customer_Code == getInvoice.Customer_Code]
+							//  {
+							//      thisapp.invoice.invoice_balance_updates(inv.ID);
+							//  }
+							// }
 		)
 		}
 		actions 
@@ -118,53 +118,53 @@ Send_Invoice_To_Customer as "Send Invoice To Customer"
 		on click
 		(
 			getInvoice = Invoice[ID == input.Invoice];
-				if(getInvoice.Due_Date > today)
-				{
-					thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",getInvoice.ID);
-				}
-				else
-				{
-					thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
-				}
-				journalEntryLineItem = Collection();
-				row1 = Journal_Entry.Journal_Entry_Line_Item();
-				row1.Account=4662372000000087205;
-				row1.Description="Invoice " + getInvoice.Invoice_No + " Subtotal";
-				row1.Debit=0;
-				row1.Credit=ifnull(getInvoice.Sub_Total,0);
-				row1.Invoice=getInvoice.ID;
-				row2 = Journal_Entry.Journal_Entry_Line_Item();
-				row2.Account=4662372000000941743;
-				row2.Description="Invoice " + getInvoice.Invoice_No + " Total Tax";
-				row2.Debit=0;
-				row2.Credit=ifnull(getInvoice.Total_Tax,0);
-				row2.Invoice=getInvoice.ID;
-				row3 = Journal_Entry.Journal_Entry_Line_Item();
-				row3.Account=4662372000000941747;
-				row3.Description="Invoice " + getInvoice.Invoice_No + " Grand Total";
-				row3.Debit=ifnull(getInvoice.Grand_Total,0);
-				row3.Credit=0;
-				row3.Invoice=getInvoice.ID;
-				journalEntryLineItem.insert(row1,row2,row3);
-				newJournalEntryRecord = insert into Journal_Entry
-				[
-					Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-					Document_No=getInvoice.Invoice_No
-					Added_User=zoho.loginuser
-					Invoice=getInvoice.ID
-					Date_field=zoho.currentdate
-					Journal_Entry_Line_Item=journalEntryLineItem
-					Sub_Total_Debit=ifnull(getInvoice.Grand_Total,0) - ifnull(getInvoice.Total_Tax,0)
-					Sub_Total_Credit=ifnull(getInvoice.Sub_Total,0)
-					Total_Debit=ifnull(getInvoice.Grand_Total,0)
-					Total_Credit=ifnull(getInvoice.Sub_Total,0) + ifnull(getInvoice.Total_Tax,0)
-					Difference=ifnull(getInvoice.Grand_Total,0) - (ifnull(getInvoice.Sub_Total,0) + ifnull(getInvoice.Total_Tax,0))
-					Created_By_The_System=true
-				];
-				getInvoice = Invoice[ID == input.Invoice];
-				//info getInvoice.Invoice_No;
-				thisapp.invoice.recalculate_balances_from(getInvoice.ID);
-				thisapp.close_form();
+							if(getInvoice.Due_Date > today)
+							{
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",getInvoice.ID);
+							}
+							else
+							{
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",getInvoice.ID);
+							}
+							journalEntryLineItem = Collection();
+							row1 = Journal_Entry.Journal_Entry_Line_Item();
+							row1.Account=4662372000000087205;
+							row1.Description="Invoice " + getInvoice.Invoice_No + " Subtotal";
+							row1.Debit=0;
+							row1.Credit=ifnull(getInvoice.Sub_Total,0);
+							row1.Invoice=getInvoice.ID;
+							row2 = Journal_Entry.Journal_Entry_Line_Item();
+							row2.Account=4662372000000941743;
+							row2.Description="Invoice " + getInvoice.Invoice_No + " Total Tax";
+							row2.Debit=0;
+							row2.Credit=ifnull(getInvoice.Total_Tax,0);
+							row2.Invoice=getInvoice.ID;
+							row3 = Journal_Entry.Journal_Entry_Line_Item();
+							row3.Account=4662372000000941747;
+							row3.Description="Invoice " + getInvoice.Invoice_No + " Grand Total";
+							row3.Debit=ifnull(getInvoice.Grand_Total,0);
+							row3.Credit=0;
+							row3.Invoice=getInvoice.ID;
+							journalEntryLineItem.insert(row1,row2,row3);
+							newJournalEntryRecord = insert into Journal_Entry
+							[
+								Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+								Document_No=getInvoice.Invoice_No
+								Added_User=zoho.loginuser
+								Invoice=getInvoice.ID
+								Date_field=zoho.currentdate
+								Journal_Entry_Line_Item=journalEntryLineItem
+								Sub_Total_Debit=ifnull(getInvoice.Grand_Total,0) - ifnull(getInvoice.Total_Tax,0)
+								Sub_Total_Credit=ifnull(getInvoice.Sub_Total,0)
+								Total_Debit=ifnull(getInvoice.Grand_Total,0)
+								Total_Credit=ifnull(getInvoice.Sub_Total,0) + ifnull(getInvoice.Total_Tax,0)
+								Difference=ifnull(getInvoice.Grand_Total,0) - (ifnull(getInvoice.Sub_Total,0) + ifnull(getInvoice.Total_Tax,0))
+								Created_By_The_System=true
+							];
+							getInvoice = Invoice[ID == input.Invoice];
+							//info getInvoice.Invoice_No;
+							thisapp.invoice.recalculate_balances_from(getInvoice.ID);
+							thisapp.close_form();
 		)
 		}
 	}

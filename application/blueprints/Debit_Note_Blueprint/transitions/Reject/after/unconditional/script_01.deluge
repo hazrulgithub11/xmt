@@ -1,4 +1,4 @@
-if(input.Invoice_Date != null && input.Customer_Code != null)
+	if(input.Invoice_Date != null && input.Customer_Code != null)
 {
 	input.Amount_Due = input.Grand_Total;
 	Status = "Rejected";

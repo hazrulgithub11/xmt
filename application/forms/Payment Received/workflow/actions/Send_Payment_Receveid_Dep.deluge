@@ -2,7 +2,7 @@ Send_Payment_Receveid_Dep as "Send Payment Receveid Deposit"
 {
 	type =  functions
 	form = Payment_Received
-	execution type = for each record	
+	execution type = for each record    
 	on start
 	{
 		actions 

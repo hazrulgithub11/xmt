@@ -11,7 +11,7 @@ Handle_Exchange_Rate as "Handle Exchange Rate"
 		{
 			custom deluge script
 			(
-					input.User_Input_Trigger = !input.User_Input_Trigger;
+								input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

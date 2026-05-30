@@ -9,7 +9,8 @@ Disable_Addition_And_Dele as "Disable Addition And Deletion Row"
 	{
 		actions 
 		{
-		hide add row of Credits_Applied;
+		hide add row of Credits_Applied,Payments_Received_Line_Item;
+		hide delete row of Payments_Received_Line_Item;
 		}
 	}
 

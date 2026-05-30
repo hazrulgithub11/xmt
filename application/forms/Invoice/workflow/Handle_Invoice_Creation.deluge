@@ -11,13 +11,11 @@ Handle_Invoice_Creation as "Handle Invoice Creation"
 		{
 			custom deluge script
 			(
-					invNo = thisapp.invoice.generate_invoice_number();
-				update Invoice[ID == input.ID]
-				[
-					Invoice_No = invNo
-				];
-				// Invoice_Blueprint start stage is already "Draft" on form add.
-				// changeStage to Draft here fails and blocks Invoice_No from saving.
+								invNo = thisapp.invoice.generate_invoice_number();
+							update Invoice[ID == input.ID]
+							[
+								Invoice_No=invNo
+							];
 			)
 		}
 	}

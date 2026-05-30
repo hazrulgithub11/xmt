@@ -1,40 +1,40 @@
 string payment_received.generate_payment_received_no_deposit()
 {
-	prefix = "DEP" + zoho.currentdate.getYear().toString().subText(2,4);
-	paymentReceivedInfo = Payment_Received[Payment_Received_No.containsIgnoreCase(prefix) && Payment_Received_No != "" && Payment_Type == "Deposit"] sort by Payment_Received_No desc;
-	if(paymentReceivedInfo.ID == null)
-	{
-		count = 0;
-	}
-	else
-	{
-		count = paymentReceivedInfo.Payment_Received_No.getsuffix(prefix).toLong();
-	}
-	count = count + 1;
-	if(count < 10)
-	{
-		pad = "00000";
-	}
-	else if(count < 100)
-	{
-		pad = "0000";
-	}
-	else if(count < 1000)
-	{
-		pad = "000";
-	}
-	else if(count < 10000)
-	{
-		pad = "00";
-	}
-	else if(count < 100000)
-	{
-		pad = "0";
-	}
-	else
-	{
-		pad = "";
-	}
-	paymentReceivedNo = prefix + pad + count;
-	return paymentReceivedNo;
+prefix = "DEP" + zoho.currentdate.getYear().toString().subText(2,4);
+paymentReceivedInfo = Payment_Received[Payment_Received_No.containsIgnoreCase(prefix) && Payment_Received_No != "" && Payment_Type == "Deposit"] sort by Payment_Received_No desc;
+if(paymentReceivedInfo.ID == null)
+{
+	count = 0;
+}
+else
+{
+	count = paymentReceivedInfo.Payment_Received_No.getsuffix(prefix).toLong();
+}
+count = count + 1;
+if(count < 10)
+{
+	pad = "00000";
+}
+else if(count < 100)
+{
+	pad = "0000";
+}
+else if(count < 1000)
+{
+	pad = "000";
+}
+else if(count < 10000)
+{
+	pad = "00";
+}
+else if(count < 100000)
+{
+	pad = "0";
+}
+else
+{
+	pad = "";
+}
+paymentReceivedNo = prefix + pad + count;
+return paymentReceivedNo;
 }

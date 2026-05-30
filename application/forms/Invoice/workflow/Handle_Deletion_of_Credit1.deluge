@@ -11,7 +11,7 @@ Handle_Deletion_of_Credit1 as "Handle Deletion of Credits Applied"
 		{
 			custom deluge script
 			(
-					input.User_Input_Trigger = !input.User_Input_Trigger;
+								input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

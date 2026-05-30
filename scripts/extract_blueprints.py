@@ -10,7 +10,11 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ds_deluge_utils import normalize_deluge_body
 
 ROOT = Path(__file__).resolve().parents[1]
 DS_FILE = ROOT / "XMT___Billing_System.ds"
@@ -137,7 +141,8 @@ def extract_deluge_script_bodies(section_text: str) -> list[str]:
                 if depth == 0:
                     end = i
                     break
-        body = section_text[paren + 1 : end].strip()
+        body = section_text[paren + 1 : end]
+        body = body.lstrip("\n").rstrip()
         scripts.append(body)
         pos = end + 1
     return scripts
@@ -146,19 +151,7 @@ def extract_deluge_script_bodies(section_text: str) -> list[str]:
 def extract_deluge_scripts(section_text: str) -> list[str]:
     scripts = []
     for body in extract_deluge_script_bodies(section_text):
-        # Normalize excessive leading tabs from .ds export
-        body_lines = body.splitlines()
-        if body_lines:
-            min_indent = min(
-                len(line) - len(line.lstrip("\t"))
-                for line in body_lines
-                if line.strip()
-            )
-            body_lines = [
-                (line[min_indent:] if line.strip() else line)
-                for line in body_lines
-            ]
-        scripts.append("\n".join(body_lines).strip())
+        scripts.append(normalize_deluge_body(body))
     return scripts
 
 

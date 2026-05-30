@@ -21,11 +21,11 @@ Hide_Fields10 as "Hide Fields"
 							hide Payment_Received_Line_Item.Pro_Forma_Invoice_No;
 							// if(input.Payment_Type != "Deposit")
 							// {
-							// 	hide Payment_Received_Line_Item.Deposit_No;
+							//  hide Payment_Received_Line_Item.Deposit_No;
 							// }
 							// if(input.Payment_Type != "Invoice/Debit Note")
 							// {
-							// 	hide Payment_Received_Line_Item.Reference_No;
+							//  hide Payment_Received_Line_Item.Reference_No;
 							// }
 			)
 		}
