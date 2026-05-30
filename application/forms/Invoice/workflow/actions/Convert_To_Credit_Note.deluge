@@ -43,7 +43,6 @@ errorMessage = "";
 						Delivery_State=input.Delivery_State
 						Invoice_No=thisapp.credit_note.generate_credit_note_no()
 						Subscriptions=input.Subscriptions
-						Status="Draft"
 						Invoice_Date=zoho.currentdate
 						Invoice_For_Usage=input.Invoice_For_Usage
 						Payment_Term=input.Payment_Term

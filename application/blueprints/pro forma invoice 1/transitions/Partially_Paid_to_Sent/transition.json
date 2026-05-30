@@ -1,6 +1,0 @@
-{
-  "link_name": "Partially_Paid_to_Sent",
-  "display_name": "Partially Paid to Sent",
-  "from_stage": "Partially Paid",
-  "to_stage": "Sent"
-}

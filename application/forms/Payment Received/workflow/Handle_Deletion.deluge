@@ -77,8 +77,10 @@ Handle_Deletion as "Handle Deletion"
 							{
 								getDbNote.Status="Overdue";
 							}
+
 						}
 						else
+
 						{
 							getDbNote.Amount_Paid=0;
 							if(getDbNote.Due_Date > zoho.currentdate)

@@ -1,6 +1,0 @@
-{
-  "link_name": "Send_Invoice",
-  "display_name": "Send Invoice",
-  "from_stage": "Approved",
-  "to_stage": "Sent"
-}

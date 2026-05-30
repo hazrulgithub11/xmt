@@ -1,85 +1,539 @@
 void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycle, int tenantID, date monthlyBillingDate, date actualBillingDate, bool createSecondInvoice, date secondMonthlyBillingDate, date secondActualBillingDate, bool subSubmission)
 {
-tenantInfo = Tenancy[ID == tenantID];
-tenantFinalBillingDate = tenantInfo.Final_Billing_Date;
-tenantNextBillingDate = tenantInfo.Next_Billing_Date;
-tenantLastBillingDate = tenantInfo.Latest_Billing_Date;
-customer = tenantInfo.Customer_Name;
-customerEmailAddress = customer.Email_Address;
-customerInfo = Customer_Profile[ID == customer];
-currency = customerInfo.Currency;
-billFor = tenantInfo.Bill_For;
-billEvery = tenantInfo.Bill_Every;
-enableReminder = tenantInfo.Enable_Reminder;
-sumSubTotal = 0;
-totalTax = 0;
-grandTotal = 0;
-grandTotalMYR = 0;
-totalDepositAmount = 0;
-invoiceLineItemCollection = Collection();
-payableTo = List();
-//info "billingCycle"+ billingCycle;
-if(actualBillingDate < monthlyBillingDate.toStartOfMonth())
-{
-	actualBillingDate = monthlyBillingDate;
-}
-dueDate = actualBillingDate.addDay(tenantInfo.Payment_Term.Days);
-if(monthlyBillingDate == actualBillingDate)
-{
-	newNextBillingDate = actualBillingDate.addMonth(billingCycle);
-	if(billEvery != "Last Day Of Month")
+	tenantInfo = Tenancy[ID == tenantID];
+	tenantFinalBillingDate = tenantInfo.Final_Billing_Date;
+	tenantNextBillingDate = tenantInfo.Next_Billing_Date;
+	tenantLastBillingDate = tenantInfo.Latest_Billing_Date;
+	customer = tenantInfo.Customer_Name;
+	customerEmailAddress = customer.Email_Address;
+	customerInfo = Customer_Profile[ID == customer];
+	currency = customerInfo.Currency;
+	billFor = tenantInfo.Bill_For;
+	billEvery = tenantInfo.Bill_Every;
+	enableReminder = tenantInfo.Enable_Reminder;
+	sumSubTotal = 0;
+	totalTax = 0;
+	grandTotal = 0;
+	grandTotalMYR = 0;
+	totalDepositAmount = 0;
+	invoiceLineItemCollection = Collection();
+	payableTo = List();
+	//info "billingCycle"+ billingCycle;
+	if(actualBillingDate < monthlyBillingDate.toStartOfMonth())
 	{
-		billEveryInt = billEvery.toLong();
+		actualBillingDate = monthlyBillingDate;
+	}
+	dueDate = actualBillingDate.addDay(tenantInfo.Payment_Term.Days);
+	if(monthlyBillingDate == actualBillingDate)
+	{
+		newNextBillingDate = actualBillingDate.addMonth(billingCycle);
+		if(billEvery != "Last Day Of Month")
+		{
+			billEveryInt = billEvery.toLong();
+		}
+		else
+		{
+			billEveryInt = newNextBillingDate.eomonth(0).getDay();
+		}
+		if(newNextBillingDate.getDay() != billEveryInt && newNextBillingDate.getMonth() != 2 && billEvery != "Last Day Of Month")
+		{
+			newNextBillingDate = toDate(billEvery + "-" + newNextBillingDate.getMonth() + "-" + newNextBillingDate.getYear(),"dd-MM-yyyy");
+		}
 	}
 	else
 	{
-		billEveryInt = newNextBillingDate.eomonth(0).getDay();
+		newNextBillingDate = monthlyBillingDate.addMonth(billingCycle);
 	}
-	if(newNextBillingDate.getDay() != billEveryInt && newNextBillingDate.getMonth() != 2 && billEvery != "Last Day Of Month")
+	if(billEvery == "Last Day Of Month")
 	{
-		newNextBillingDate = toDate(billEvery + "-" + newNextBillingDate.getMonth() + "-" + newNextBillingDate.getYear(),"dd-MM-yyyy");
+		newNextBillingDate = newNextBillingDate.eomonth(0);
 	}
-}
-else
-{
-	newNextBillingDate = monthlyBillingDate.addMonth(billingCycle);
-}
-if(billEvery == "Last Day Of Month")
-{
-	newNextBillingDate = newNextBillingDate.eomonth(0);
-}
-//Create Invoice Bill For Current Duration
-invoiceUsage = thisapp.invoice.get_invoice_usage(actualBillingDate);
-for each  subId in subsListId
-{
-	subInfo = Subscription[ID == subId];
-	exchangeRate = subInfo.Exchange_Rate;
-	piGrandTotal = Pro_Forma_Invoices[ID == subInfo.Pro_Forma_Invoices].Grand_Total;
-	totalDepositAmount = totalDepositAmount + ifnull(piGrandTotal,0);
-	nextBillingDate = subInfo.Next_Billing_Date;
-	finalBillingDate = subInfo.Final_Billing_Date;
-	lastBillingDate = subInfo.Latest_Billing_Date;
-	contractStartDate = subInfo.Contract_Start_Date;
-	contractEndDate = subInfo.Contract_End_Date;
-	contractPeriod = subInfo.Contract_Period;
-	prorate = subInfo.Prorate;
-	//info "Customer PO No: " + subInfo.Customer_PO_No;
-	//info "contractEndDate: " + contractEndDate;
-	//info "actualBillingDate: " + actualBillingDate;
-	//info "monthlyBillingDate: " + monthlyBillingDate;
-	//info "newNextBillingDate: " + newNextBillingDate;
-	//info "finalBillingDate: " + finalBillingDate;
-	//info "billingCycle: " + billingCycle;
-	payableTo.addAll(subInfo.Payable_To1);
-	/*Actuall Billing Date Not Equal To Monthly Billing Date */
-	if(actualBillingDate != monthlyBillingDate || (actualBillingDate == monthlyBillingDate && lastBillingDate == null && actualBillingDate != finalBillingDate && contractStartDate.getDay() != actualBillingDate.getDay()))
+	//Create Invoice Bill For Current Duration
+	invoiceUsage = thisapp.invoice.get_invoice_usage(actualBillingDate);
+	for each  subId in subsListId
 	{
-		//info "first invoice of subscription";
-		//dueDate = actualBillingDate.addDay(tenantInfo.Payment_Term.Days);
-		//info "billingCycleDaysUsed"+billingCycleMonthsUsed;
-		if(prorate)
+		subInfo = Subscription[ID == subId];
+		exchangeRate = subInfo.Exchange_Rate;
+		piGrandTotal = Pro_Forma_Invoices[ID == subInfo.Pro_Forma_Invoices].Grand_Total;
+		totalDepositAmount = totalDepositAmount + ifnull(piGrandTotal,0);
+		nextBillingDate = subInfo.Next_Billing_Date;
+		finalBillingDate = subInfo.Final_Billing_Date;
+		lastBillingDate = subInfo.Latest_Billing_Date;
+		contractStartDate = subInfo.Contract_Start_Date;
+		contractEndDate = subInfo.Contract_End_Date;
+		contractPeriod = subInfo.Contract_Period;
+		prorate = subInfo.Prorate;
+		//info "Customer PO No: " + subInfo.Customer_PO_No;
+		//info "contractEndDate: " + contractEndDate;
+		//info "actualBillingDate: " + actualBillingDate;
+		//info "monthlyBillingDate: " + monthlyBillingDate;
+		//info "newNextBillingDate: " + newNextBillingDate;
+		//info "finalBillingDate: " + finalBillingDate;
+		//info "billingCycle: " + billingCycle;
+		payableTo.addAll(subInfo.Payable_To1);
+		/*Actuall Billing Date Not Equal To Monthly Billing Date */
+		if(actualBillingDate != monthlyBillingDate || (actualBillingDate == monthlyBillingDate && lastBillingDate == null && actualBillingDate != finalBillingDate && contractStartDate.getDay() != actualBillingDate.getDay()))
 		{
-			//info "prorate";
+			//info "first invoice of subscription";
+			//dueDate = actualBillingDate.addDay(tenantInfo.Payment_Term.Days);
+			//info "billingCycleDaysUsed"+billingCycleMonthsUsed;
+			if(prorate)
+			{
+				//info "prorate";
+				for each  subLineItem in subInfo.Subcription_Line_Items
+				{
+					tenancy = subLineItem.Tenant_Code;
+					customer = subLineItem.Customer;
+					item = subLineItem.Item;
+					itemInfo = Transaction_Type[ID == item];
+					itemCode = subLineItem.Item_Code;
+					//chargesCategory = itemInfo.Charges_Category;
+					//chargesCategory = itemInfo.Charges_Category1;
+					description = subLineItem.Description;
+					unitPrice = subLineItem.Unit_Price;
+					//quantity = subLineItem.Quantity;
+					quantity = subLineItem.Quantity1;
+					tax = subLineItem.Tax;
+					taxPct = ifnull(subLineItem.Tax_Pct,0);
+					businessSegment = subLineItem.Business_Segment;
+					businessUnit = subLineItem.Business_Unit;
+					circuitId = subLineItem.Circuit_ID;
+					circuitIdType = subLineItem.Circuit_ID_Type;
+					subLineItemId = subLineItem.ID;
+					//prorateUnitPrice = unitPrice / (billingCycle * 30);
+					//info "unitprice divide cycle days" + billingCycle * 30;
+					/*if(billingCycle == 1 && <variable> <opr> <expression>)
+                                                   					{
+                                                   						//subTotal = unitPrice * quantity + prorateSubTotal;
+                                                   						//subTotal = prorateUnitPrice * (30 - actualBillingDate.getDay()) * quantity;
+                                                   						subTotal = prorateSubTotal;
+                                                   					}
+                                                   					else
+                                                   					{
+                                                   
+                                                   						//subTotal = prorateUnitPrice * (30 - actualBillingDate.getDay() + 30 * monthsBetween(actualBillingDate,newNextBillingDate)) * quantity;
+                                                   					}
+                                                   					//Determine billing cycle months used
+                                                   					if(subInfo.Next_Billing_Date == null)
+                                                   					{
+                                                   						info "run final billing date prorate for contract end date end before next billing date";
+                                                   						invoiceUsage = thisapp.invoice.get_invoice_usage(contractStartDate);
+                                                   						//if contract end date is less than next billing date, it will calculate total days use from start to finish
+                                                   						if(contractStartDate.getDay() == contractEndDate.getDay())
+                                                   						{
+                                                   							quantity = contractPeriod;
+                                                   							subTotal = unitPrice * contractPeriod;
+                                                   						}
+                                                   						else
+                                                   						{
+                                                   							if(monthsBetween(contractStartDate,contractEndDate) < 1)
+                                                   							{
+                                                   								prorateUnitPrice = unitPrice / 30;
+                                                   								daysQuantity = daysBetween(contractStartDate,contractEndDate);
+                                                   								subTotal = prorateUnitPrice * daysQuantity;
+                                                   								unitPrice = prorateUnitPrice * daysQuantity;
+                                                   								quantity = 1;
+                                                   							}
+                                                   							else
+                                                   							{
+                                                   								monthsQuantity = monthsBetween(contractStartDate,contractEndDate);
+                                                   								daysQuantity = contractEndDate.getDay() / contractEndDate.eomonth(0).getDay();
+                                                   								quantity = (monthsQuantity + daysQuantity).round(2);
+                                                   								subTotal = unitPrice * quantity;
+                                                   							}
+                                                   						}
+                                                   					}
+                                                   					else
+                                                   					{
+                                                   						prorateUnitPrice = unitPrice / subInfo.Contract_Start_Date.eomonth(0).getDay();
+                                                   						info "prorateUnitPrice" + prorateUnitPrice;
+                                                   						if(subInfo.Contract_Start_Date.getDay() == 1 || (billEvery == "Last Day Of Month" && subInfo.Contract_Start_Date.getDay() == subInfo.Contract_Start_Date.eomonth(0).getDay()))
+                                                   						{
+                                                   							prorateMonth = unitPrice;
+                                                   						}
+                                                   						else
+                                                   						{
+                                                   							daysUsed = contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1;
+                                                   							prorateMonth = prorateUnitPrice * daysUsed;
+                                                   							info "daysUsed:" + daysUsed;
+                                                   						}
+                                                   						prorateSubTotal = prorateMonth * quantityProrate
+                                                   						info "prorateSubTotal:" + prorateSubTotal;
+                                                   						if(actualBillingDate == today)
+                                                   						{
+                                                   							billingCycleMonthsUsed = thisapp.invoice.get_billing_cycle_months_used(contractStartDate,subInfo.Next_Billing_Date,billEvery);
+                                                   						}
+                                                   						else
+                                                   						{
+                                                   							billingCycleMonthsUsed = thisapp.invoice.get_billing_cycle_months_used(contractStartDate,newNextBillingDate,billEvery);
+                                                   						}
+                                                   						if(billingCycleMonthsUsed == billingCycle)
+                                                   						{
+                                                   							billingCycleMonthsUsed = billingCycleMonthsUsed - 1;
+                                                   						}
+                                                   						subTotal = unitPrice * quantity * billingCycleMonthsUsed + prorateSubTotal;
+                                                   						info "next billing date not null";
+                                                   						if(contractStartDate < monthlyBillingDate.toStartOfMonth())
+                                                   						{
+                                                   							info "contractStartDate < monthlyBillingDate";
+                                                   							invoiceUsage = thisapp.invoice.get_invoice_usage(contractStartDate);
+                                                   							daysQuantity = (contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1) / contractStartDate.eomonth(0).getDay();
+                                                   							monthsQuantity = thisapp.invoice.get_billing_cycle_months_used(contractStartDate,newNextBillingDate,billEvery);
+                                                   							quantity = (monthsQuantity + daysQuantity).round(2);
+                                                   							subTotal = unitPrice * quantity;
+                                                   						}
+                                                   						else
+                                                   						{
+                                                   							info "contractStartDate == monthlyBillingDate";
+                                                   							prorateUnitPrice = unitPrice / subInfo.Contract_Start_Date.eomonth(0).getDay();
+                                                   							info "prorateUnitPrice" + prorateUnitPrice;
+                                                   							if(subInfo.Contract_Start_Date.getDay() == 1 || (billEvery == "Last Day Of Month" && subInfo.Contract_Start_Date.getDay() == subInfo.Contract_Start_Date.eomonth(0).getDay()))
+                                                   							{
+                                                   								prorateMonth = unitPrice;
+                                                   							}
+                                                   							else
+                                                   							{
+                                                   								daysUsed = contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1;
+                                                   								prorateMonth = prorateUnitPrice * daysUsed;
+                                                   							}
+                                                   							subTotal = prorateMonth;
+                                                   							unitPrice = prorateMonth;
+                                                   						}
+                                                   					}*/
+					prorateUnitPrice = unitPrice / contractStartDate.eomonth(0).getDay();
+					daysUsed = contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1;
+					subTotal = prorateUnitPrice * daysUsed;
+					unitPrice = subTotal;
+					quantity = 1;
+					//info "quantity:" + quantity;
+					//info "billingCycleMonthsUsed: " + billingCycleMonthsUsed;
+					//info "subTotal: " + subTotal;
+					//info "subtotal" + subTotal;
+					taxAmount = subTotal * taxPct / 100;
+					total = subTotal + taxAmount;
+					totalMYR = total * exchangeRate;
+					/*
+                                                   					invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   					invoiceLineItem.Customer_PO_No=subId;
+                                                   					invoiceLineItem.Item=item;
+                                                   					invoiceLineItem.Item_Code=itemCode;
+                                                   					invoiceLineItem.Description=description;
+                                                   					invoiceLineItem.Unit_Price=unitPrice;
+                                                   					//invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Sub_Total=subTotal;
+                                                   					invoiceLineItem.Tax=tax;
+                                                   					invoiceLineItem.Tax_Pct=taxPct;
+                                                   					invoiceLineItem.Tax_Amount=taxAmount;
+                                                   					invoiceLineItem.Total=total;
+                                                   					invoiceLineItem.Business_Segment=businessSegment;
+                                                   					invoiceLineItem.Business_Unit=businessUnit;
+                                                   					invoiceLineItem.Circuit_ID=circuitId;
+                                                   					invoiceLineItem.Circuit_ID_Type=circuitIdType;
+                                                   					invoiceLineItem.Sub_Line_Item=subLineItemId;
+                                                   					invoiceLineItem.Tenancy=tenancy;
+                                                   					invoiceLineItem.Customer=customer;
+                                                   					invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   					*/
+					sumSubTotal = sumSubTotal + subTotal;
+					totalTax = totalTax + taxAmount;
+					grandTotal = grandTotal + total;
+					grandTotalMYR = grandTotalMYR + totalMYR;
+				}
+			}
+			else
+			{
+				//info "not prorate";
+				for each  subLineItem in subInfo.Subcription_Line_Items
+				{
+					tenancy = subLineItem.Tenant_Code;
+					customer = subLineItem.Customer;
+					item = subLineItem.Item;
+					itemInfo = Transaction_Type[ID == item];
+					itemCode = subLineItem.Item_Code;
+					description = subLineItem.Description;
+					unitPrice = subLineItem.Unit_Price;
+					//quantity = subLineItem.Quantity;
+					quantity = subLineItem.Quantity1;
+					tax = subLineItem.Tax;
+					taxPct = ifnull(subLineItem.Tax_Pct,0);
+					businessSegment = subLineItem.Business_Segment;
+					businessUnit = subLineItem.Business_Unit;
+					circuitId = subLineItem.Circuit_ID;
+					circuitIdType = subLineItem.Circuit_ID_Type;
+					subLineItemId = subLineItem.ID;
+					subTotal = unitPrice * quantity;
+					taxAmount = subTotal * taxPct / 100;
+					total = subTotal + taxAmount;
+					totalMYR = total * exchangeRate;
+					/*
+                                                   					invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   					invoiceLineItem.Customer_PO_No=subId;
+                                                   					invoiceLineItem.Item=item;
+                                                   					invoiceLineItem.Item_Code=itemCode;
+                                                   					invoiceLineItem.Description=description;
+                                                   					invoiceLineItem.Unit_Price=unitPrice;
+                                                   					//invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Sub_Total=subTotal;
+                                                   					invoiceLineItem.Tax=tax;
+                                                   					invoiceLineItem.Tax_Pct=taxPct;
+                                                   					invoiceLineItem.Tax_Amount=taxAmount;
+                                                   					invoiceLineItem.Total=total;
+                                                   					invoiceLineItem.Business_Segment=businessSegment;
+                                                   					invoiceLineItem.Business_Unit=businessUnit;
+                                                   					invoiceLineItem.Circuit_ID=circuitId;
+                                                   					invoiceLineItem.Circuit_ID_Type=circuitIdType;
+                                                   					invoiceLineItem.Sub_Line_Item=subLineItemId;
+                                                   					invoiceLineItem.Tenancy=tenancy;
+                                                   					invoiceLineItem.Customer=customer;
+                                                   					invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   					*/
+					sumSubTotal = sumSubTotal + subTotal;
+					totalTax = totalTax + taxAmount;
+					grandTotal = grandTotal + total;
+					grandTotalMYR = grandTotalMYR + totalMYR;
+				}
+			}
+		}
+		//Actuall Billing Date Equal To Final Billing Date
+		else if(actualBillingDate == finalBillingDate)
+		{
+			//info "run final billing";
+			//No Prorate on final billing
+			/*if(finalBillingDate == contractEndDate)
+                                                   			{
+                                                   				for each  subLineItem in subInfo.Subcription_Line_Items
+                                                   				{
+                                                   					tenancy = subLineItem.Tenant_Code;
+                                                   					customer = subLineItem.Customer;
+                                                   					item = subLineItem.Item;
+                                                   					itemInfo = Transaction_Type[ID == item];
+                                                   					itemCode = subLineItem.Item_Code;
+                                                   					description = subLineItem.Description;
+                                                   					unitPrice = subLineItem.Unit_Price;
+                                                   					//quantity = subLineItem.Quantity;
+                                                   					quantity = subLineItem.Quantity1;
+                                                   					tax = ifnull(subLineItem.Tax,null);
+                                                   					taxPct = ifnull(subLineItem.Tax_Pct,0);
+                                                   					businessSegment = subLineItem.Business_Segment;
+                                                   					businessUnit = subLineItem.Business_Unit;
+                                                   					circuitId = subLineItem.Circuit_ID;
+                                                   					circuitIdType = subLineItem.Circuit_ID_Type;
+                                                   					subLineItemId = subLineItem.ID;
+                                                   					subTotal = unitPrice * quantity;
+                                                   					taxAmount = subTotal * taxPct / 100;
+                                                   					total = subTotal + ifnull(taxAmount,0);
+                                                   					totalMYR = total * exchangeRate;
+                                                   					invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   					invoiceLineItem.Customer_PO_No=subId;
+                                                   					invoiceLineItem.Item=item;
+                                                   					invoiceLineItem.Item_Code=itemCode;
+                                                   					invoiceLineItem.Description=description;
+                                                   					invoiceLineItem.Unit_Price=unitPrice;
+                                                   					//invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Quantity1=quantity;
+                                                   					invoiceLineItem.Sub_Total=subTotal;
+                                                   					invoiceLineItem.Tax=tax;
+                                                   					invoiceLineItem.Tax_Pct=taxPct;
+                                                   					invoiceLineItem.Tax_Amount=taxAmount;
+                                                   					invoiceLineItem.Total=total;
+                                                   					invoiceLineItem.Business_Segment=businessSegment;
+                                                   					invoiceLineItem.Business_Unit=businessUnit;
+                                                   					invoiceLineItem.Circuit_ID=circuitId;
+                                                   					invoiceLineItem.Circuit_ID_Type=circuitIdType;
+                                                   					invoiceLineItem.Sub_Line_Item=subLineItemId;
+                                                   					invoiceLineItem.Tenancy=tenancy;
+                                                   					invoiceLineItem.Customer=customer;
+                                                   					invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   					sumSubTotal = sumSubTotal + subTotal;
+                                                   					totalTax = totalTax + taxAmount;
+                                                   					grandTotal = grandTotal + total;
+                                                   					grandTotalMYR = grandTotalMYR + totalMYR;
+                                                   				}
+                                                   			}
+                                                   			else
+                                                   			{
+                                                   				//Prorate on final billing
+                                                   				info "actualBillingDate: " + actualBillingDate;
+                                                   				info "contractEndDate: " + contractEndDate;
+                                                   				info "billEvery: " + billEvery;
+                                                   				for each  subLineItem1 in subInfo.Subcription_Line_Items
+                                                   				{
+                                                   					tenancy = subLineItem1.Tenant_Code;
+                                                   					customer = subLineItem1.Customer;
+                                                   					item = subLineItem1.Item;
+                                                   					itemInfo = Transaction_Type[ID == item];
+                                                   					itemCode = subLineItem1.Item_Code;
+                                                   					description = subLineItem1.Description;
+                                                   					unitPrice = subLineItem1.Unit_Price;
+                                                   					quantity = subLineItem1.Quantity;
+                                                   					tax = ifnull(subLineItem1.Tax,null);
+                                                   					taxPct = ifnull(subLineItem1.Tax_Pct,0);
+                                                   					businessSegment = subLineItem1.Business_Segment;
+                                                   					businessUnit = subLineItem1.Business_Unit;
+                                                   					circuitId = subLineItem1.Circuit_ID;
+                                                   					circuitIdType = subLineItem1.Circuit_ID_Type;
+                                                   					subLineItemId = subLineItem1.ID;
+                                                   					prorateUnitPrice = unitPrice / actualBillingDate.eomonth(0).getDay();
+                                                   					prorateMonth = prorateUnitPrice * contractEndDate.getDay();
+                                                   					prorateSubTotal = prorateMonth * quantity;
+                                                   					subTotal = prorateSubTotal;
+                                                   					info "prorateUnitPrice:" + prorateUnitPrice;
+                                                   					info "prorateMonth:" + prorateMonth;
+                                                   					info "subTotal:" + subTotal;
+                                                   					taxAmount = subTotal * taxPct / 100;
+                                                   					total = subTotal + taxAmount;
+                                                   					totalMYR = total * exchangeRate;
+                                                   					invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   					invoiceLineItem.Customer_PO_No=subId;
+                                                   					invoiceLineItem.Item=item;
+                                                   					invoiceLineItem.Item_Code=itemCode;
+                                                   					invoiceLineItem.Description=description;
+                                                   					invoiceLineItem.Unit_Price=subTotal;
+                                                   					//invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Quantity1=quantity;
+                                                   					invoiceLineItem.Sub_Total=subTotal;
+                                                   					invoiceLineItem.Tax=tax;
+                                                   					invoiceLineItem.Tax_Pct=taxPct;
+                                                   					invoiceLineItem.Tax_Amount=taxAmount;
+                                                   					invoiceLineItem.Total=total;
+                                                   					invoiceLineItem.Business_Segment=businessSegment;
+                                                   					invoiceLineItem.Business_Unit=businessUnit;
+                                                   					invoiceLineItem.Circuit_ID=circuitId;
+                                                   					invoiceLineItem.Circuit_ID_Type=circuitIdType;
+                                                   					invoiceLineItem.Sub_Line_Item=subLineItemId;
+                                                   					invoiceLineItem.Tenancy=tenancy;
+                                                   					invoiceLineItem.Customer=customer;
+                                                   					invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   					sumSubTotal = sumSubTotal + subTotal;
+                                                   					totalTax = totalTax + taxAmount;
+                                                   					grandTotal = grandTotal + total;
+                                                   					grandTotalMYR = grandTotalMYR + totalMYR;
+                                                   					info "totalMYR:" + totalMYR;
+                                                   					info "grandTotalMYR:" + grandTotalMYR;
+                                                   				}
+                                                   			}*/
+			if((contractEndDate.getDay() == contractEndDate.eomonth(0).getDay() && nextBillingDate != null) || (nextBillingDate == null && !prorate))
+			{
+				for each  subLineItem in subInfo.Subcription_Line_Items
+				{
+					tenancy = subLineItem.Tenant_Code;
+					customer = subLineItem.Customer;
+					item = subLineItem.Item;
+					itemInfo = Transaction_Type[ID == item];
+					itemCode = subLineItem.Item_Code;
+					description = subLineItem.Description;
+					unitPrice = subLineItem.Unit_Price;
+					//quantity = subLineItem.Quantity;
+					quantity = subLineItem.Quantity1;
+					tax = ifnull(subLineItem.Tax,null);
+					taxPct = ifnull(subLineItem.Tax_Pct,0);
+					businessSegment = subLineItem.Business_Segment;
+					businessUnit = subLineItem.Business_Unit;
+					circuitId = subLineItem.Circuit_ID;
+					circuitIdType = subLineItem.Circuit_ID_Type;
+					subLineItemId = subLineItem.ID;
+					subTotal = unitPrice * quantity;
+					taxAmount = subTotal * taxPct / 100;
+					total = subTotal + ifnull(taxAmount,0);
+					totalMYR = total * exchangeRate;
+					/*
+                                                   					invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   					invoiceLineItem.Customer_PO_No=subId;
+                                                   					invoiceLineItem.Item=item;
+                                                   					invoiceLineItem.Item_Code=itemCode;
+                                                   					invoiceLineItem.Description=description;
+                                                   					invoiceLineItem.Unit_Price=unitPrice;
+                                                   					//invoiceLineItem.Quantity=quantity;
+                                                   					//info "quantity:" + quantity;
+                                                   					invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Sub_Total=subTotal;
+                                                   					invoiceLineItem.Tax=tax;
+                                                   					invoiceLineItem.Tax_Pct=taxPct;
+                                                   					invoiceLineItem.Tax_Amount=taxAmount;
+                                                   					invoiceLineItem.Total=total;
+                                                   					invoiceLineItem.Business_Segment=businessSegment;
+                                                   					invoiceLineItem.Business_Unit=businessUnit;
+                                                   					invoiceLineItem.Circuit_ID=circuitId;
+                                                   					invoiceLineItem.Circuit_ID_Type=circuitIdType;
+                                                   					invoiceLineItem.Sub_Line_Item=subLineItemId;
+                                                   					invoiceLineItem.Tenancy=tenancy;
+                                                   					invoiceLineItem.Customer=customer;
+                                                   					invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   					*/
+					sumSubTotal = sumSubTotal + subTotal;
+					totalTax = totalTax + taxAmount;
+					grandTotal = grandTotal + total;
+					grandTotalMYR = grandTotalMYR + totalMYR;
+				}
+			}
+			else
+			{
+				for each  subLineItem1 in subInfo.Subcription_Line_Items
+				{
+					tenancy = subLineItem1.Tenant_Code;
+					customer = subLineItem1.Customer;
+					item = subLineItem1.Item;
+					itemInfo = Transaction_Type[ID == item];
+					itemCode = subLineItem1.Item_Code;
+					description = subLineItem1.Description;
+					unitPrice = subLineItem1.Unit_Price;
+					quantity = subLineItem1.Quantity1;
+					tax = ifnull(subLineItem1.Tax,null);
+					taxPct = ifnull(subLineItem1.Tax_Pct,0);
+					businessSegment = subLineItem1.Business_Segment;
+					businessUnit = subLineItem1.Business_Unit;
+					circuitId = subLineItem1.Circuit_ID;
+					circuitIdType = subLineItem1.Circuit_ID_Type;
+					subLineItemId = subLineItem1.ID;
+					prorateUnitPrice = unitPrice / contractEndDate.eomonth(0).getDay();
+					prorateSubTotal = prorateUnitPrice * contractEndDate.getDay();
+					//prorateSubTotal = prorateMonth * quantity;
+					subTotal = prorateSubTotal;
+					unitPrice = subTotal;
+					//info "prorateUnitPrice:" + prorateUnitPrice;
+					//info "prorateMonth:" + prorateMonth;
+					//info "subTotal:" + subTotal;
+					taxAmount = subTotal * taxPct / 100;
+					total = subTotal + taxAmount;
+					totalMYR = total * exchangeRate;
+					/*
+                                                   					invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   					invoiceLineItem.Customer_PO_No=subId;
+                                                   					invoiceLineItem.Item=item;
+                                                   					invoiceLineItem.Item_Code=itemCode;
+                                                   					invoiceLineItem.Description=description;
+                                                   					invoiceLineItem.Unit_Price=subTotal;
+                                                   					//invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Quantity=quantity;
+                                                   					invoiceLineItem.Sub_Total=subTotal;
+                                                   					invoiceLineItem.Tax=tax;
+                                                   					invoiceLineItem.Tax_Pct=taxPct;
+                                                   					invoiceLineItem.Tax_Amount=taxAmount;
+                                                   					invoiceLineItem.Total=total;
+                                                   					invoiceLineItem.Business_Segment=businessSegment;
+                                                   					invoiceLineItem.Business_Unit=businessUnit;
+                                                   					invoiceLineItem.Circuit_ID=circuitId;
+                                                   					invoiceLineItem.Circuit_ID_Type=circuitIdType;
+                                                   					invoiceLineItem.Sub_Line_Item=subLineItemId;
+                                                   					invoiceLineItem.Tenancy=tenancy;
+                                                   					invoiceLineItem.Customer=customer;
+                                                   					invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   					*/
+					sumSubTotal = sumSubTotal + subTotal;
+					totalTax = totalTax + taxAmount;
+					grandTotal = grandTotal + total;
+					grandTotalMYR = grandTotalMYR + totalMYR;
+					//info "totalMYR:" + totalMYR;
+					//info "grandTotalMYR:" + grandTotalMYR;
+				}
+			}
+		}
+		//Actuall Billing Date Equal To Monthly Billing Date
+		else if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
+		{
+			//info "invoice create as normal";
 			for each  subLineItem in subInfo.Subcription_Line_Items
 			{
 				tenancy = subLineItem.Tenant_Code;
@@ -100,195 +554,34 @@ for each  subId in subsListId
 				circuitId = subLineItem.Circuit_ID;
 				circuitIdType = subLineItem.Circuit_ID_Type;
 				subLineItemId = subLineItem.ID;
-				//prorateUnitPrice = unitPrice / (billingCycle * 30);
-				//info "unitprice divide cycle days" + billingCycle * 30;
-				/*if(billingCycle == 1 && <variable> <opr> <expression>)
-                                                  					{
-                                                  						//subTotal = unitPrice * quantity + prorateSubTotal;
-                                                  						//subTotal = prorateUnitPrice * (30 - actualBillingDate.getDay()) * quantity;
-                                                  						subTotal = prorateSubTotal;
-                                                  					}
-                                                  					else
-                                                  					{
-
-                                                  						//subTotal = prorateUnitPrice * (30 - actualBillingDate.getDay() + 30 * monthsBetween(actualBillingDate,newNextBillingDate)) * quantity;
-                                                  					}
-                                                  					//Determine billing cycle months used
-                                                  					if(subInfo.Next_Billing_Date == null)
-                                                  					{
-                                                  						info "run final billing date prorate for contract end date end before next billing date";
-                                                  						invoiceUsage = thisapp.invoice.get_invoice_usage(contractStartDate);
-                                                  						//if contract end date is less than next billing date, it will calculate total days use from start to finish
-                                                  						if(contractStartDate.getDay() == contractEndDate.getDay())
-                                                  						{
-                                                  							quantity = contractPeriod;
-                                                  							subTotal = unitPrice * contractPeriod;
-                                                  						}
-                                                  						else
-                                                  						{
-                                                  							if(monthsBetween(contractStartDate,contractEndDate) < 1)
-                                                  							{
-                                                  								prorateUnitPrice = unitPrice / 30;
-                                                  								daysQuantity = daysBetween(contractStartDate,contractEndDate);
-                                                  								subTotal = prorateUnitPrice * daysQuantity;
-                                                  								unitPrice = prorateUnitPrice * daysQuantity;
-                                                  								quantity = 1;
-                                                  							}
-                                                  							else
-                                                  							{
-                                                  								monthsQuantity = monthsBetween(contractStartDate,contractEndDate);
-                                                  								daysQuantity = contractEndDate.getDay() / contractEndDate.eomonth(0).getDay();
-                                                  								quantity = (monthsQuantity + daysQuantity).round(2);
-                                                  								subTotal = unitPrice * quantity;
-                                                  							}
-                                                  						}
-                                                  					}
-                                                  					else
-                                                  					{
-                                                  						prorateUnitPrice = unitPrice / subInfo.Contract_Start_Date.eomonth(0).getDay();
-                                                  						info "prorateUnitPrice" + prorateUnitPrice;
-                                                  						if(subInfo.Contract_Start_Date.getDay() == 1 || (billEvery == "Last Day Of Month" && subInfo.Contract_Start_Date.getDay() == subInfo.Contract_Start_Date.eomonth(0).getDay()))
-                                                  						{
-                                                  							prorateMonth = unitPrice;
-                                                  						}
-                                                  						else
-                                                  						{
-                                                  							daysUsed = contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1;
-                                                  							prorateMonth = prorateUnitPrice * daysUsed;
-                                                  							info "daysUsed:" + daysUsed;
-                                                  						}
-                                                  						prorateSubTotal = prorateMonth * quantityProrate
-                                                  						info "prorateSubTotal:" + prorateSubTotal;
-                                                  						if(actualBillingDate == today)
-                                                  						{
-                                                  							billingCycleMonthsUsed = thisapp.invoice.get_billing_cycle_months_used(contractStartDate,subInfo.Next_Billing_Date,billEvery);
-                                                  						}
-                                                  						else
-                                                  						{
-                                                  							billingCycleMonthsUsed = thisapp.invoice.get_billing_cycle_months_used(contractStartDate,newNextBillingDate,billEvery);
-                                                  						}
-                                                  						if(billingCycleMonthsUsed == billingCycle)
-                                                  						{
-                                                  							billingCycleMonthsUsed = billingCycleMonthsUsed - 1;
-                                                  						}
-                                                  						subTotal = unitPrice * quantity * billingCycleMonthsUsed + prorateSubTotal;
-                                                  						info "next billing date not null";
-                                                  						if(contractStartDate < monthlyBillingDate.toStartOfMonth())
-                                                  						{
-                                                  							info "contractStartDate < monthlyBillingDate";
-                                                  							invoiceUsage = thisapp.invoice.get_invoice_usage(contractStartDate);
-                                                  							daysQuantity = (contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1) / contractStartDate.eomonth(0).getDay();
-                                                  							monthsQuantity = thisapp.invoice.get_billing_cycle_months_used(contractStartDate,newNextBillingDate,billEvery);
-                                                  							quantity = (monthsQuantity + daysQuantity).round(2);
-                                                  							subTotal = unitPrice * quantity;
-                                                  						}
-                                                  						else
-                                                  						{
-                                                  							info "contractStartDate == monthlyBillingDate";
-                                                  							prorateUnitPrice = unitPrice / subInfo.Contract_Start_Date.eomonth(0).getDay();
-                                                  							info "prorateUnitPrice" + prorateUnitPrice;
-                                                  							if(subInfo.Contract_Start_Date.getDay() == 1 || (billEvery == "Last Day Of Month" && subInfo.Contract_Start_Date.getDay() == subInfo.Contract_Start_Date.eomonth(0).getDay()))
-                                                  							{
-                                                  								prorateMonth = unitPrice;
-                                                  							}
-                                                  							else
-                                                  							{
-                                                  								daysUsed = contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1;
-                                                  								prorateMonth = prorateUnitPrice * daysUsed;
-                                                  							}
-                                                  							subTotal = prorateMonth;
-                                                  							unitPrice = prorateMonth;
-                                                  						}
-                                                  					}*/
-				prorateUnitPrice = unitPrice / contractStartDate.eomonth(0).getDay();
-				daysUsed = contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1;
-				subTotal = prorateUnitPrice * daysUsed;
-				unitPrice = subTotal;
-				quantity = 1;
-				//info "quantity:" + quantity;
-				//info "billingCycleMonthsUsed: " + billingCycleMonthsUsed;
-				//info "subTotal: " + subTotal;
-				//info "subtotal" + subTotal;
-				taxAmount = subTotal * taxPct / 100;
-				total = subTotal + taxAmount;
-				totalMYR = total * exchangeRate;
-				/*
-                                                  					invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  					invoiceLineItem.Customer_PO_No=subId;
-                                                  					invoiceLineItem.Item=item;
-                                                  					invoiceLineItem.Item_Code=itemCode;
-                                                  					invoiceLineItem.Description=description;
-                                                  					invoiceLineItem.Unit_Price=unitPrice;
-                                                  					//invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Sub_Total=subTotal;
-                                                  					invoiceLineItem.Tax=tax;
-                                                  					invoiceLineItem.Tax_Pct=taxPct;
-                                                  					invoiceLineItem.Tax_Amount=taxAmount;
-                                                  					invoiceLineItem.Total=total;
-                                                  					invoiceLineItem.Business_Segment=businessSegment;
-                                                  					invoiceLineItem.Business_Unit=businessUnit;
-                                                  					invoiceLineItem.Circuit_ID=circuitId;
-                                                  					invoiceLineItem.Circuit_ID_Type=circuitIdType;
-                                                  					invoiceLineItem.Sub_Line_Item=subLineItemId;
-                                                  					invoiceLineItem.Tenancy=tenancy;
-                                                  					invoiceLineItem.Customer=customer;
-                                                  					invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  					*/
-				sumSubTotal = sumSubTotal + subTotal;
-				totalTax = totalTax + taxAmount;
-				grandTotal = grandTotal + total;
-				grandTotalMYR = grandTotalMYR + totalMYR;
-			}
-		}
-		else
-		{
-			//info "not prorate";
-			for each  subLineItem in subInfo.Subcription_Line_Items
-			{
-				tenancy = subLineItem.Tenant_Code;
-				customer = subLineItem.Customer;
-				item = subLineItem.Item;
-				itemInfo = Transaction_Type[ID == item];
-				itemCode = subLineItem.Item_Code;
-				description = subLineItem.Description;
-				unitPrice = subLineItem.Unit_Price;
-				//quantity = subLineItem.Quantity;
-				quantity = subLineItem.Quantity1;
-				tax = subLineItem.Tax;
-				taxPct = ifnull(subLineItem.Tax_Pct,0);
-				businessSegment = subLineItem.Business_Segment;
-				businessUnit = subLineItem.Business_Unit;
-				circuitId = subLineItem.Circuit_ID;
-				circuitIdType = subLineItem.Circuit_ID_Type;
-				subLineItemId = subLineItem.ID;
 				subTotal = unitPrice * quantity;
 				taxAmount = subTotal * taxPct / 100;
 				total = subTotal + taxAmount;
 				totalMYR = total * exchangeRate;
 				/*
-                                                  					invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  					invoiceLineItem.Customer_PO_No=subId;
-                                                  					invoiceLineItem.Item=item;
-                                                  					invoiceLineItem.Item_Code=itemCode;
-                                                  					invoiceLineItem.Description=description;
-                                                  					invoiceLineItem.Unit_Price=unitPrice;
-                                                  					//invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Sub_Total=subTotal;
-                                                  					invoiceLineItem.Tax=tax;
-                                                  					invoiceLineItem.Tax_Pct=taxPct;
-                                                  					invoiceLineItem.Tax_Amount=taxAmount;
-                                                  					invoiceLineItem.Total=total;
-                                                  					invoiceLineItem.Business_Segment=businessSegment;
-                                                  					invoiceLineItem.Business_Unit=businessUnit;
-                                                  					invoiceLineItem.Circuit_ID=circuitId;
-                                                  					invoiceLineItem.Circuit_ID_Type=circuitIdType;
-                                                  					invoiceLineItem.Sub_Line_Item=subLineItemId;
-                                                  					invoiceLineItem.Tenancy=tenancy;
-                                                  					invoiceLineItem.Customer=customer;
-                                                  					invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  					*/
+                                                   				invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   				invoiceLineItem.Customer_PO_No=subId;
+                                                   				invoiceLineItem.Item=item;
+                                                   				invoiceLineItem.Item_Code=itemCode;
+                                                   				invoiceLineItem.Description=description;
+                                                   				invoiceLineItem.Unit_Price=unitPrice;
+                                                   				//invoiceLineItem.Quantity=quantity;
+                                                   				invoiceLineItem.Quantity=quantity;
+                                                   				invoiceLineItem.Sub_Total=subTotal;
+                                                   				invoiceLineItem.Tax=tax;
+                                                   				invoiceLineItem.Tax_Pct=taxPct;
+                                                   				invoiceLineItem.Tax_Amount=taxAmount;
+                                                   				invoiceLineItem.Total=total;
+                                                   				//invoiceLineItem.Charges_Category1=chargesCategory;
+                                                   				invoiceLineItem.Business_Segment=businessSegment;
+                                                   				invoiceLineItem.Business_Unit=businessUnit;
+                                                   				invoiceLineItem.Circuit_ID=circuitId;
+                                                   				invoiceLineItem.Circuit_ID_Type=circuitIdType;
+                                                   				invoiceLineItem.Sub_Line_Item=subLineItemId;
+                                                   				invoiceLineItem.Tenancy=tenancy;
+                                                   				invoiceLineItem.Customer=customer;
+                                                   				invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   				*/
 				sumSubTotal = sumSubTotal + subTotal;
 				totalTax = totalTax + taxAmount;
 				grandTotal = grandTotal + total;
@@ -296,539 +589,244 @@ for each  subId in subsListId
 			}
 		}
 	}
-	//Actuall Billing Date Equal To Final Billing Date
-	else if(actualBillingDate == finalBillingDate)
-	{
-		//info "run final billing";
-		//No Prorate on final billing
-		/*if(finalBillingDate == contractEndDate)
-                                                  			{
-                                                  				for each  subLineItem in subInfo.Subcription_Line_Items
-                                                  				{
-                                                  					tenancy = subLineItem.Tenant_Code;
-                                                  					customer = subLineItem.Customer;
-                                                  					item = subLineItem.Item;
-                                                  					itemInfo = Transaction_Type[ID == item];
-                                                  					itemCode = subLineItem.Item_Code;
-                                                  					description = subLineItem.Description;
-                                                  					unitPrice = subLineItem.Unit_Price;
-                                                  					//quantity = subLineItem.Quantity;
-                                                  					quantity = subLineItem.Quantity1;
-                                                  					tax = ifnull(subLineItem.Tax,null);
-                                                  					taxPct = ifnull(subLineItem.Tax_Pct,0);
-                                                  					businessSegment = subLineItem.Business_Segment;
-                                                  					businessUnit = subLineItem.Business_Unit;
-                                                  					circuitId = subLineItem.Circuit_ID;
-                                                  					circuitIdType = subLineItem.Circuit_ID_Type;
-                                                  					subLineItemId = subLineItem.ID;
-                                                  					subTotal = unitPrice * quantity;
-                                                  					taxAmount = subTotal * taxPct / 100;
-                                                  					total = subTotal + ifnull(taxAmount,0);
-                                                  					totalMYR = total * exchangeRate;
-                                                  					invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  					invoiceLineItem.Customer_PO_No=subId;
-                                                  					invoiceLineItem.Item=item;
-                                                  					invoiceLineItem.Item_Code=itemCode;
-                                                  					invoiceLineItem.Description=description;
-                                                  					invoiceLineItem.Unit_Price=unitPrice;
-                                                  					//invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Quantity1=quantity;
-                                                  					invoiceLineItem.Sub_Total=subTotal;
-                                                  					invoiceLineItem.Tax=tax;
-                                                  					invoiceLineItem.Tax_Pct=taxPct;
-                                                  					invoiceLineItem.Tax_Amount=taxAmount;
-                                                  					invoiceLineItem.Total=total;
-                                                  					invoiceLineItem.Business_Segment=businessSegment;
-                                                  					invoiceLineItem.Business_Unit=businessUnit;
-                                                  					invoiceLineItem.Circuit_ID=circuitId;
-                                                  					invoiceLineItem.Circuit_ID_Type=circuitIdType;
-                                                  					invoiceLineItem.Sub_Line_Item=subLineItemId;
-                                                  					invoiceLineItem.Tenancy=tenancy;
-                                                  					invoiceLineItem.Customer=customer;
-                                                  					invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  					sumSubTotal = sumSubTotal + subTotal;
-                                                  					totalTax = totalTax + taxAmount;
-                                                  					grandTotal = grandTotal + total;
-                                                  					grandTotalMYR = grandTotalMYR + totalMYR;
-                                                  				}
-                                                  			}
-                                                  			else
-                                                  			{
-                                                  				//Prorate on final billing
-                                                  				info "actualBillingDate: " + actualBillingDate;
-                                                  				info "contractEndDate: " + contractEndDate;
-                                                  				info "billEvery: " + billEvery;
-                                                  				for each  subLineItem1 in subInfo.Subcription_Line_Items
-                                                  				{
-                                                  					tenancy = subLineItem1.Tenant_Code;
-                                                  					customer = subLineItem1.Customer;
-                                                  					item = subLineItem1.Item;
-                                                  					itemInfo = Transaction_Type[ID == item];
-                                                  					itemCode = subLineItem1.Item_Code;
-                                                  					description = subLineItem1.Description;
-                                                  					unitPrice = subLineItem1.Unit_Price;
-                                                  					quantity = subLineItem1.Quantity;
-                                                  					tax = ifnull(subLineItem1.Tax,null);
-                                                  					taxPct = ifnull(subLineItem1.Tax_Pct,0);
-                                                  					businessSegment = subLineItem1.Business_Segment;
-                                                  					businessUnit = subLineItem1.Business_Unit;
-                                                  					circuitId = subLineItem1.Circuit_ID;
-                                                  					circuitIdType = subLineItem1.Circuit_ID_Type;
-                                                  					subLineItemId = subLineItem1.ID;
-                                                  					prorateUnitPrice = unitPrice / actualBillingDate.eomonth(0).getDay();
-                                                  					prorateMonth = prorateUnitPrice * contractEndDate.getDay();
-                                                  					prorateSubTotal = prorateMonth * quantity;
-                                                  					subTotal = prorateSubTotal;
-                                                  					info "prorateUnitPrice:" + prorateUnitPrice;
-                                                  					info "prorateMonth:" + prorateMonth;
-                                                  					info "subTotal:" + subTotal;
-                                                  					taxAmount = subTotal * taxPct / 100;
-                                                  					total = subTotal + taxAmount;
-                                                  					totalMYR = total * exchangeRate;
-                                                  					invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  					invoiceLineItem.Customer_PO_No=subId;
-                                                  					invoiceLineItem.Item=item;
-                                                  					invoiceLineItem.Item_Code=itemCode;
-                                                  					invoiceLineItem.Description=description;
-                                                  					invoiceLineItem.Unit_Price=subTotal;
-                                                  					//invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Quantity1=quantity;
-                                                  					invoiceLineItem.Sub_Total=subTotal;
-                                                  					invoiceLineItem.Tax=tax;
-                                                  					invoiceLineItem.Tax_Pct=taxPct;
-                                                  					invoiceLineItem.Tax_Amount=taxAmount;
-                                                  					invoiceLineItem.Total=total;
-                                                  					invoiceLineItem.Business_Segment=businessSegment;
-                                                  					invoiceLineItem.Business_Unit=businessUnit;
-                                                  					invoiceLineItem.Circuit_ID=circuitId;
-                                                  					invoiceLineItem.Circuit_ID_Type=circuitIdType;
-                                                  					invoiceLineItem.Sub_Line_Item=subLineItemId;
-                                                  					invoiceLineItem.Tenancy=tenancy;
-                                                  					invoiceLineItem.Customer=customer;
-                                                  					invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  					sumSubTotal = sumSubTotal + subTotal;
-                                                  					totalTax = totalTax + taxAmount;
-                                                  					grandTotal = grandTotal + total;
-                                                  					grandTotalMYR = grandTotalMYR + totalMYR;
-                                                  					info "totalMYR:" + totalMYR;
-                                                  					info "grandTotalMYR:" + grandTotalMYR;
-                                                  				}
-                                                  			}*/
-		if((contractEndDate.getDay() == contractEndDate.eomonth(0).getDay() && nextBillingDate != null) || (nextBillingDate == null && !prorate))
-		{
-			for each  subLineItem in subInfo.Subcription_Line_Items
-			{
-				tenancy = subLineItem.Tenant_Code;
-				customer = subLineItem.Customer;
-				item = subLineItem.Item;
-				itemInfo = Transaction_Type[ID == item];
-				itemCode = subLineItem.Item_Code;
-				description = subLineItem.Description;
-				unitPrice = subLineItem.Unit_Price;
-				//quantity = subLineItem.Quantity;
-				quantity = subLineItem.Quantity1;
-				tax = ifnull(subLineItem.Tax,null);
-				taxPct = ifnull(subLineItem.Tax_Pct,0);
-				businessSegment = subLineItem.Business_Segment;
-				businessUnit = subLineItem.Business_Unit;
-				circuitId = subLineItem.Circuit_ID;
-				circuitIdType = subLineItem.Circuit_ID_Type;
-				subLineItemId = subLineItem.ID;
-				subTotal = unitPrice * quantity;
-				taxAmount = subTotal * taxPct / 100;
-				total = subTotal + ifnull(taxAmount,0);
-				totalMYR = total * exchangeRate;
-				/*
-                                                  					invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  					invoiceLineItem.Customer_PO_No=subId;
-                                                  					invoiceLineItem.Item=item;
-                                                  					invoiceLineItem.Item_Code=itemCode;
-                                                  					invoiceLineItem.Description=description;
-                                                  					invoiceLineItem.Unit_Price=unitPrice;
-                                                  					//invoiceLineItem.Quantity=quantity;
-                                                  					//info "quantity:" + quantity;
-                                                  					invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Sub_Total=subTotal;
-                                                  					invoiceLineItem.Tax=tax;
-                                                  					invoiceLineItem.Tax_Pct=taxPct;
-                                                  					invoiceLineItem.Tax_Amount=taxAmount;
-                                                  					invoiceLineItem.Total=total;
-                                                  					invoiceLineItem.Business_Segment=businessSegment;
-                                                  					invoiceLineItem.Business_Unit=businessUnit;
-                                                  					invoiceLineItem.Circuit_ID=circuitId;
-                                                  					invoiceLineItem.Circuit_ID_Type=circuitIdType;
-                                                  					invoiceLineItem.Sub_Line_Item=subLineItemId;
-                                                  					invoiceLineItem.Tenancy=tenancy;
-                                                  					invoiceLineItem.Customer=customer;
-                                                  					invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  					*/
-				sumSubTotal = sumSubTotal + subTotal;
-				totalTax = totalTax + taxAmount;
-				grandTotal = grandTotal + total;
-				grandTotalMYR = grandTotalMYR + totalMYR;
-			}
-		}
-		else
-		{
-			for each  subLineItem1 in subInfo.Subcription_Line_Items
-			{
-				tenancy = subLineItem1.Tenant_Code;
-				customer = subLineItem1.Customer;
-				item = subLineItem1.Item;
-				itemInfo = Transaction_Type[ID == item];
-				itemCode = subLineItem1.Item_Code;
-				description = subLineItem1.Description;
-				unitPrice = subLineItem1.Unit_Price;
-				quantity = subLineItem1.Quantity1;
-				tax = ifnull(subLineItem1.Tax,null);
-				taxPct = ifnull(subLineItem1.Tax_Pct,0);
-				businessSegment = subLineItem1.Business_Segment;
-				businessUnit = subLineItem1.Business_Unit;
-				circuitId = subLineItem1.Circuit_ID;
-				circuitIdType = subLineItem1.Circuit_ID_Type;
-				subLineItemId = subLineItem1.ID;
-				prorateUnitPrice = unitPrice / contractEndDate.eomonth(0).getDay();
-				prorateSubTotal = prorateUnitPrice * contractEndDate.getDay();
-				//prorateSubTotal = prorateMonth * quantity;
-				subTotal = prorateSubTotal;
-				unitPrice = subTotal;
-				//info "prorateUnitPrice:" + prorateUnitPrice;
-				//info "prorateMonth:" + prorateMonth;
-				//info "subTotal:" + subTotal;
-				taxAmount = subTotal * taxPct / 100;
-				total = subTotal + taxAmount;
-				totalMYR = total * exchangeRate;
-				/*
-                                                  					invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  					invoiceLineItem.Customer_PO_No=subId;
-                                                  					invoiceLineItem.Item=item;
-                                                  					invoiceLineItem.Item_Code=itemCode;
-                                                  					invoiceLineItem.Description=description;
-                                                  					invoiceLineItem.Unit_Price=subTotal;
-                                                  					//invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Quantity=quantity;
-                                                  					invoiceLineItem.Sub_Total=subTotal;
-                                                  					invoiceLineItem.Tax=tax;
-                                                  					invoiceLineItem.Tax_Pct=taxPct;
-                                                  					invoiceLineItem.Tax_Amount=taxAmount;
-                                                  					invoiceLineItem.Total=total;
-                                                  					invoiceLineItem.Business_Segment=businessSegment;
-                                                  					invoiceLineItem.Business_Unit=businessUnit;
-                                                  					invoiceLineItem.Circuit_ID=circuitId;
-                                                  					invoiceLineItem.Circuit_ID_Type=circuitIdType;
-                                                  					invoiceLineItem.Sub_Line_Item=subLineItemId;
-                                                  					invoiceLineItem.Tenancy=tenancy;
-                                                  					invoiceLineItem.Customer=customer;
-                                                  					invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  					*/
-				sumSubTotal = sumSubTotal + subTotal;
-				totalTax = totalTax + taxAmount;
-				grandTotal = grandTotal + total;
-				grandTotalMYR = grandTotalMYR + totalMYR;
-				//info "totalMYR:" + totalMYR;
-				//info "grandTotalMYR:" + grandTotalMYR;
-			}
-		}
-	}
-	//Actuall Billing Date Equal To Monthly Billing Date
-	else if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
-	{
-		//info "invoice create as normal";
-		for each  subLineItem in subInfo.Subcription_Line_Items
-		{
-			tenancy = subLineItem.Tenant_Code;
-			customer = subLineItem.Customer;
-			item = subLineItem.Item;
-			itemInfo = Transaction_Type[ID == item];
-			itemCode = subLineItem.Item_Code;
-			//chargesCategory = itemInfo.Charges_Category;
-			//chargesCategory = itemInfo.Charges_Category1;
-			description = subLineItem.Description;
-			unitPrice = subLineItem.Unit_Price;
-			//quantity = subLineItem.Quantity;
-			quantity = subLineItem.Quantity1;
-			tax = subLineItem.Tax;
-			taxPct = ifnull(subLineItem.Tax_Pct,0);
-			businessSegment = subLineItem.Business_Segment;
-			businessUnit = subLineItem.Business_Unit;
-			circuitId = subLineItem.Circuit_ID;
-			circuitIdType = subLineItem.Circuit_ID_Type;
-			subLineItemId = subLineItem.ID;
-			subTotal = unitPrice * quantity;
-			taxAmount = subTotal * taxPct / 100;
-			total = subTotal + taxAmount;
-			totalMYR = total * exchangeRate;
-			/*
-                                                  				invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  				invoiceLineItem.Customer_PO_No=subId;
-                                                  				invoiceLineItem.Item=item;
-                                                  				invoiceLineItem.Item_Code=itemCode;
-                                                  				invoiceLineItem.Description=description;
-                                                  				invoiceLineItem.Unit_Price=unitPrice;
-                                                  				//invoiceLineItem.Quantity=quantity;
-                                                  				invoiceLineItem.Quantity=quantity;
-                                                  				invoiceLineItem.Sub_Total=subTotal;
-                                                  				invoiceLineItem.Tax=tax;
-                                                  				invoiceLineItem.Tax_Pct=taxPct;
-                                                  				invoiceLineItem.Tax_Amount=taxAmount;
-                                                  				invoiceLineItem.Total=total;
-                                                  				//invoiceLineItem.Charges_Category1=chargesCategory;
-                                                  				invoiceLineItem.Business_Segment=businessSegment;
-                                                  				invoiceLineItem.Business_Unit=businessUnit;
-                                                  				invoiceLineItem.Circuit_ID=circuitId;
-                                                  				invoiceLineItem.Circuit_ID_Type=circuitIdType;
-                                                  				invoiceLineItem.Sub_Line_Item=subLineItemId;
-                                                  				invoiceLineItem.Tenancy=tenancy;
-                                                  				invoiceLineItem.Customer=customer;
-                                                  				invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  				*/
-			sumSubTotal = sumSubTotal + subTotal;
-			totalTax = totalTax + taxAmount;
-			grandTotal = grandTotal + total;
-			grandTotalMYR = grandTotalMYR + totalMYR;
-		}
-	}
-}
-invNo = thisapp.invoice.generate_invoice_number();
-//info "invNo:" + invNo;
-//doNo = thisapp.generate_delivery_order_no();
-organizationInfo = Organization_Settings[ID != null];
-customerProfileInfo = Customer_Profile[ID == customer];
-/*
-                                                  	//Previous Code
-                                                  	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
-                                                  	totalAmountDue = totalDue + grandTotal;*/
-handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
-//info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
-payableTo = payableTo.distinct();
-for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
-{
-	unitPrice = ifnull(transactionType.Unit_Price,0) / ifnull(exchangeRate,1);
-	taxAmount = unitPrice * ifnull(transactionType.Tax.Tax_Percentage,0) / 100;
-	total = unitPrice + taxAmount;
-	totalMYR = total * ifnull(exchangeRate,1);
+	invNo = thisapp.invoice.generate_invoice_number();
+	//info "invNo:" + invNo;
+	//doNo = thisapp.generate_delivery_order_no();
+	organizationInfo = Organization_Settings[ID != null];
+	customerProfileInfo = Customer_Profile[ID == customer];
 	/*
-                                                  		invoiceLineItem = Invoice.Invoice_Line_Item();
-                                                  		invoiceLineItem.Item=transactionType.ID;
-                                                  		invoiceLineItem.Description=transactionType.Description;
-                                                  		invoiceLineItem.Unit_Price=ifnull(transactionType.Unit_Price,0);
-                                                  		invoiceLineItem.Quantity=1;
-                                                  		invoiceLineItem.Sub_Total=ifnull(transactionType.Unit_Price,0);
-                                                  		invoiceLineItem.Tax=ifnull(transactionType.Tax,null);
-                                                  		invoiceLineItem.Tax_Pct=ifnull(transactionType.Tax_Percentage,0);
-                                                  		invoiceLineItem.Tax_Amount=taxAmount;
-                                                  		invoiceLineItem.Total=total;
-                                                  		invoiceLineItem.Tenancy=tenancy;
-                                                  		invoiceLineItem.Customer=customer;
-                                                  		invoiceLineItemCollection.insert(invoiceLineItem);
-                                                  		*/
-	sumSubTotal = sumSubTotal + unitPrice;
-	totalTax = totalTax + taxAmount;
-	grandTotal = grandTotal + total;
-	grandTotalMYR = grandTotalMYR + totalMYR;
-}
-errorMsg = "";
-try 
-{
-	/* Invoice_Line_Item=invoiceLineItemCollection is being deleted below function createInvoice = insert into Invoice */
-	createInvoice = insert into Invoice
-	[
-		Invoice_No=invNo
-		Payment_Term=tenantInfo.Payment_Term
-		Customer_Code=tenantID
-		Customer=customer
-		Customer_TIN=customerProfileInfo.Customer_TIN
-		Customer_SST_Registration_Number=ifnull(customerProfileInfo.Customer_SST,"")
-		Customer_E_mail=customerEmailAddress
-		Customer_Registration_Identification_Passport_Number=ifnull(customerProfileInfo.Customer_Registration_Number,"")
-		Customer_Street=ifnull(customerProfileInfo.Business_Street,"")
-		Customer_Postcode=ifnull(customerProfileInfo.Postcode,"")
-		Customer_City=ifnull(customerProfileInfo.City,"")
-		Customer_State=ifnull(customerProfileInfo.State,null)
-		Customer_Country=ifnull(customerProfileInfo.Country,null)
-		Supplier_TIN=organizationInfo.Supplier_TIN
-		Supplier_SST_Registration_Number=organizationInfo.SST_ID
-		Subscriptions=subsListId
-		Invoice_Date=actualBillingDate
-		Due_Date=dueDate
-		Sub_Total_Call_Charges=0
-		Total_Tax_Call_Charges=0
-		Grand_Total_Call_Charges=0
-		Sub_Total_Monthly_Rental=0
-		Total_Tax_Monthly_Rental=0
-		Grand_Total_Monthly_Rental=0
-		Amount_Due=grandTotal
-		Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
-		Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
-		Amount_Paid=0
-		Deposit_Amount=totalDepositAmount
-		Base_Currency=currency
-		Payable_To=payableTo
-		Invoice_For_Usage=invoiceUsage
-		Enable_Reminder=enableReminder
-		Created_By_The_System=true
-		Status="Draft"
-		Added_User=zoho.loginuser
-		Supplier=Organization_Settings[ID != null].ID
-	];
-}
-catch (error)
-{
-	if(error.containsIgnoreCase("duplicate"))
+                                                   	//Previous Code
+                                                   	totalDue = Invoice[Status == "Sent" || Status == "Overdue" || Status == "Partially Paid" && Customer_Code == tenantID].sum(Amount_Due);
+                                                   	totalAmountDue = totalDue + grandTotal;*/
+	handlePreviousInvoiceBalance = thisapp.invoice.handle_previous_invoice_balances(actualBillingDate,billingCycle,tenantID,grandTotal);
+	//info "Total_Amount_Due:" + handlePreviousInvoiceBalance.get("Total_Amount_Due");
+	payableTo = payableTo.distinct();
+	for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
 	{
-		thisapp.invoice.create_new_invoice_no_for_duplicate(tenantID,customer,customerEmailAddress,subsListId,actualBillingDate,dueDate,monthlyBillingDate,tenantFinalBillingDate,invoiceLineItemCollection,tenantInfo.Payment_Term,sumSubTotal,totalTax,grandTotal,grandTotalMYR,currency,exchangeRate,payableTo,billingCycle,invoiceUsage,enableReminder,billFor,totalDepositAmount,subSubmission);
+		unitPrice = ifnull(transactionType.Unit_Price,0) / ifnull(exchangeRate,1);
+		taxAmount = unitPrice * ifnull(transactionType.Tax.Tax_Percentage,0) / 100;
+		total = unitPrice + taxAmount;
+		totalMYR = total * ifnull(exchangeRate,1);
+		/*
+                                                   		invoiceLineItem = Invoice.Invoice_Line_Item();
+                                                   		invoiceLineItem.Item=transactionType.ID;
+                                                   		invoiceLineItem.Description=transactionType.Description;
+                                                   		invoiceLineItem.Unit_Price=ifnull(transactionType.Unit_Price,0);
+                                                   		invoiceLineItem.Quantity=1;
+                                                   		invoiceLineItem.Sub_Total=ifnull(transactionType.Unit_Price,0);
+                                                   		invoiceLineItem.Tax=ifnull(transactionType.Tax,null);
+                                                   		invoiceLineItem.Tax_Pct=ifnull(transactionType.Tax_Percentage,0);
+                                                   		invoiceLineItem.Tax_Amount=taxAmount;
+                                                   		invoiceLineItem.Total=total;
+                                                   		invoiceLineItem.Tenancy=tenancy;
+                                                   		invoiceLineItem.Customer=customer;
+                                                   		invoiceLineItemCollection.insert(invoiceLineItem);
+                                                   		*/
+		sumSubTotal = sumSubTotal + unitPrice;
+		totalTax = totalTax + taxAmount;
+		grandTotal = grandTotal + total;
+		grandTotalMYR = grandTotalMYR + totalMYR;
 	}
-	errorMsg = error;
-	//info "error:" + error;
-}
-if(errorMsg == "")
-{
-	//info "createInvoice:" + createInvoice;
-	if(!subSubmission)
+	errorMsg = "";
+	try 
 	{
-		if(actualBillingDate == tenantFinalBillingDate && billingCycle == 1)
+		/* Invoice_Line_Item=invoiceLineItemCollection is being deleted below function createInvoice = insert into Invoice */
+		createInvoice = insert into Invoice
+		[
+			Invoice_No=invNo
+			Payment_Term=tenantInfo.Payment_Term
+			Customer_Code=tenantID
+			Customer=customer
+			Customer_TIN=customerProfileInfo.Customer_TIN
+			Customer_SST_Registration_Number=ifnull(customerProfileInfo.Customer_SST,"")
+			Customer_E_mail=customerEmailAddress
+			Customer_Registration_Identification_Passport_Number=ifnull(customerProfileInfo.Customer_Registration_Number,"")
+			Customer_Street=ifnull(customerProfileInfo.Business_Street,"")
+			Customer_Postcode=ifnull(customerProfileInfo.Postcode,"")
+			Customer_City=ifnull(customerProfileInfo.City,"")
+			Customer_State=ifnull(customerProfileInfo.State,null)
+			Customer_Country=ifnull(customerProfileInfo.Country,null)
+			Supplier_TIN=organizationInfo.Supplier_TIN
+			Supplier_SST_Registration_Number=organizationInfo.SST_ID
+			Subscriptions=subsListId
+			Invoice_Date=actualBillingDate
+			Due_Date=dueDate
+			Sub_Total_Call_Charges=0
+			Total_Tax_Call_Charges=0
+			Grand_Total_Call_Charges=0
+			Sub_Total_Monthly_Rental=0
+			Total_Tax_Monthly_Rental=0
+			Grand_Total_Monthly_Rental=0
+			Amount_Due=grandTotal
+			Previous_Balance=handlePreviousInvoiceBalance.get("Previous_Balance")
+			Total_Amount_Due=handlePreviousInvoiceBalance.get("Total_Amount_Due")
+			Amount_Paid=0
+			Deposit_Amount=totalDepositAmount
+			Base_Currency=currency
+			Payable_To=payableTo
+			Invoice_For_Usage=invoiceUsage
+			Enable_Reminder=enableReminder
+			Created_By_The_System=true
+			Added_User=zoho.loginuser
+			Supplier=Organization_Settings[ID != null].ID
+		];
+	}	catch (error)
+	{
+		if(error.containsIgnoreCase("duplicate"))
 		{
-			tenantInfo.Next_Billing_Date=null;
-			tenantInfo.Latest_Billing_Date=actualBillingDate;
+			thisapp.invoice.create_new_invoice_no_for_duplicate(tenantID,customer,customerEmailAddress,subsListId,actualBillingDate,dueDate,monthlyBillingDate,tenantFinalBillingDate,invoiceLineItemCollection,tenantInfo.Payment_Term,sumSubTotal,totalTax,grandTotal,grandTotalMYR,currency,exchangeRate,payableTo,billingCycle,invoiceUsage,enableReminder,billFor,totalDepositAmount,subSubmission);
 		}
-		else if(actualBillingDate == tenantNextBillingDate && billingCycle == 1)
-		{
-			tenantInfo.Next_Billing_Date=newNextBillingDate;
-			tenantInfo.Latest_Billing_Date=actualBillingDate;
-		}
+		errorMsg = error;
+		//info "error:" + error;
 	}
-	thisapp.subscription.update_subscription_next_and_last_billing_date(subsListId,billFor,billingCycle,actualBillingDate,monthlyBillingDate,billEvery);
-	getInvoice = Invoice[ID == createInvoice];
-	monthlyRentalCollection = Collection();
-	internetChargesCollection = Collection();
-	subTotalItems = 0;
-	totalTaxItems = 0;
-	grandTotalItems = 0;
-	subTotalInternetCharges = 0;
-	totalTaxInternetCharges = 0;
-	grandTotalInternetCharges = 0;
-	subTotalCallCharges = 0;
-	totalTaxCallCharges = 0;
-	grandTotalCallCharges = 0;
-	/*
-                                                  		for each  invLineItem in getInvoice.Invoice_Line_Item
-                                                  		{
-                                                  			getItem = Transaction_Type[ID == invLineItem.Item];
-                                                  			if(getItem.Charges_Type = "Internet Charges")
-                                                  			{
-                                                  				rowInternetCharges = Invoice.Internet_Charges();
-                                                  				rowInternetCharges.Customer_PO_No_Internet_Charges=invLineItem.Customer_PO_No;
-                                                  				rowInternetCharges.Item_Internet_Charges=invLineItem.Item;
-                                                  				rowInternetCharges.Item_Code_Internet_Charges=invLineItem.Item_Code;
-                                                  				rowInternetCharges.Description_Internet_Charges=invLineItem.Description;
-                                                  				rowInternetCharges.Unit_Price_Internet_Charges=invLineItem.Unit_Price;
-                                                  				//rowInternetCharges.Quantity_Internet_Charges=invLineItem.Quantity;
-                                                  				rowInternetCharges.Quantity_Internet_Charges=invLineItem.Quantity;
-                                                  				rowInternetCharges.Sub_Total_Internet_Charges=invLineItem.Sub_Total;
-                                                  				rowInternetCharges.Tax_Internet_Charges=invLineItem.Tax;
-                                                  				rowInternetCharges.Tax_Pct_Internet_Charges=invLineItem.Tax_Pct;
-                                                  				rowInternetCharges.Tax_Amount_Internet_Charges=invLineItem.Tax_Amount;
-                                                  				rowInternetCharges.Total_Internet_Charges=invLineItem.Total;
-                                                  				rowInternetCharges.Business_Segment_Internet_Charges=invLineItem.Business_Segment;
-                                                  				rowInternetCharges.Business_Unit_Internet_Charges=invLineItem.Business_Unit;
-                                                  				rowInternetCharges.Circuit_ID_Internet_Charges=invLineItem.Circuit_ID;
-                                                  				rowInternetCharges.Circuit_ID_Type_Internet_Charges=invLineItem.Circuit_ID_Type;
-                                                  				rowInternetCharges.Sub_Line_Item_Internet_Charges=invLineItem.Sub_Line_Item;
-                                                  				getInvoice.Internet_Charges.insert(rowInternetCharges);
-                                                  				subTotalInternetCharges = subTotalInternetCharges + invLineItem.Sub_Total;
-                                                  				totalTaxInternetCharges = totalTaxInternetCharges + invLineItem.Tax_Amount;
-                                                  				grandTotalInternetCharges = grandTotalInternetCharges + invLineItem.Total;
-                                                  			}
-                                                  			else if(getItem.Charges_Type = "Monthly Rental")
-                                                  			{
-                                                  				//info getItem.Item_Name;
-                                                  				rowMonthlyRental = Invoice.Monthly_Rental();
-                                                  				rowMonthlyRental.Customer_PO_No_Monthly_Rental=invLineItem.Customer_PO_No;
-                                                  				rowMonthlyRental.Item_Monthly_Rental=invLineItem.Item;
-                                                  				rowMonthlyRental.Item_Code_Monthly_Rental=invLineItem.Item_Code;
-                                                  				rowMonthlyRental.Description_Monthly_Rental=invLineItem.Description;
-                                                  				rowMonthlyRental.Unit_Price_Monthly_Rental=invLineItem.Unit_Price;
-                                                  				//rowMonthlyRental.Quantity_Monthly_Rental=invLineItem.Quantity;
-                                                  				rowMonthlyRental.Quantity_Monthly_Rental=invLineItem.Quantity;
-                                                  				rowMonthlyRental.Sub_Total_Monthly_Rental=invLineItem.Sub_Total;
-                                                  				rowMonthlyRental.Tax_Monthly_Rental=invLineItem.Tax;
-                                                  				rowMonthlyRental.Tax_Pct_Monthly_Rental=invLineItem.Tax_Pct;
-                                                  				rowMonthlyRental.Tax_Amount_Monthly_Rental=invLineItem.Tax_Amount;
-                                                  				rowMonthlyRental.Total_Monthly_Rental=invLineItem.Total;
-                                                  				rowMonthlyRental.Business_Segment_Monthly_Rental=invLineItem.Business_Segment;
-                                                  				rowMonthlyRental.Business_Unit_Monthly_Rental=invLineItem.Business_Unit;
-                                                  				rowMonthlyRental.Circuit_ID_Monthly_Rental=invLineItem.Circuit_ID;
-                                                  				rowMonthlyRental.Circuit_ID_Type_Monthly_Rental=invLineItem.Circuit_ID_Type;
-                                                  				rowMonthlyRental.Sub_Line_Item_Monthly_Rental=invLineItem.Sub_Line_Item;
-                                                  				getInvoice.Monthly_Rental.insert(rowMonthlyRental);
-                                                  				subTotalItems = subTotalItems + invLineItem.Sub_Total;
-                                                  				totalTaxItems = totalTaxItems + invLineItem.Tax_Amount;
-                                                  				grandTotalItems = grandTotalItems + invLineItem.Total;
-                                                  			}
-                                                  			else if(getItem.Charges_Type = "Call Charges")
-                                                  			{
-                                                  				callChargeRow = Invoice.Call_Charges();
-                                                  				callChargeRow.Item_Call_Charges=invLineItem.Item;
-                                                  				callChargeRow.Description_Call_Charges=invLineItem.Description;
-                                                  				callChargeRow.Unit_Price_Call_Charges=invLineItem.Unit_Price;
-                                                  				callChargeRow.Quantity_Call_Charges=invLineItem.Quantity.ToNumber();
-                                                  				callChargeRow.Sub_Total_Call_Charges=invLineItem.Sub_Total;
-                                                  				callChargeRow.Tax_Call_Charges=invLineItem.Tax;
-                                                  				callChargeRow.Tax_Pct_Call_Charges=invLineItem.Tax_Pct;
-                                                  				callChargeRow.Tax_Amount_Call_Charges=invLineItem.Tax_Amount;
-                                                  				callChargeRow.Total_Call_Charges=invLineItem.Total;
-                                                  				getInvoice.Call_Charges.insert(callChargeRow);
-                                                  				subTotalCallCharges = subTotalCallCharges + invLineItem.Sub_Total;
-                                                  				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Tax_Amount;
-                                                  				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Total;
-                                                  			}
-                                                  		} */
-	//Comment 24/07/2025 -Start
-	//Comment due to call charges didn't fill insert in the invoice line item
-	// 		chargesCategories = getInvoice.Charges_Categories1.Charge_Category;
-	// 		if(chargesCategories.containsIgnoreCase("Telephone Charges"))
-	// 		{
-	// 			subTotal = 0;
-	// 			totalTax = 0;
-	// 			grandTotal = 0;
-	// 			for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
-	// 			{
-	// 				unitPrice = ifnull(transactionType.Unit_Price,0) / ifnull(getInvoice.Exchange_Rate,1);
-	// 				taxAmount = unitPrice * ifnull(transactionType.Tax_Percentage,0) / 100;
-	// 				total = unitPrice + taxAmount;
-	// 				totalMYR = total * ifnull(getInvoice.Exchange_Rate,1);
-	// 				callChargeRow = Invoice.Call_Charges1();
-	// 				callChargeRow.Item=transactionType.ID;
-	// 				callChargeRow.Description=transactionType.Description;
-	// 				callChargeRow.Unit_Price=unitPrice;
-	// 				callChargeRow.Quantity=1;
-	// 				callChargeRow.Sub_Total=unitPrice;
-	// 				callChargeRow.Tax=ifnull(transactionType.Tax,0);
-	// 				callChargeRow.Tax_Pct=ifnull(transactionType.Tax_Percentage,0);
-	// 				callChargeRow.Tax_Amount=taxAmount;
-	// 				callChargeRow.Total=total;
-	// 				getInvoice.Call_Charges1.insert(callChargeRow);
-	// 				subTotal = subTotal + unitPrice;
-	// 				totalTax = totalTax + taxAmount;
-	// 				grandTotal = grandTotal + total;
-	// 			}
-	// 			getInvoice.Sub_Total_Call_Charges=subTotal;
-	// 			getInvoice.Total_Tax_Call_Charges=totalTax;
-	// 			getInvoice.Grand_Total_Call_Charges=grandTotal;
-	// 		}
-	//Comment 24/07/2025 - End
-	getInvoice.Sub_Total_Monthly_Rental=subTotalItems;
-	getInvoice.Total_Tax_Monthly_Rental=totalTaxItems;
-	getInvoice.Grand_Total_Monthly_Rental=grandTotalItems;
-	getInvoice.Sub_Total_Internet_Charges=subTotalInternetCharges;
-	getInvoice.Total_Tax_Internet_Charges=totalTaxInternetCharges;
-	getInvoice.Grand_Total_Internet_Charges=grandTotalInternetCharges;
-	getInvoice.Sub_Total_Call_Charges=subTotalCallCharges;
-	getInvoice.Total_Tax_Call_Charges=totalTaxCallCharges;
-	getInvoice.Grand_Total_Call_Charges=totalTaxCallCharges;
-	if(createSecondInvoice)
+	if(errorMsg == "")
 	{
-		thisapp.invoice.create_invoice_current_monthly(subsListId,billingCycle,tenantID,secondMonthlyBillingDate,secondActualBillingDate,false,null,null,true);
+		//info "createInvoice:" + createInvoice;
+		if(!subSubmission)
+		{
+			if(actualBillingDate == tenantFinalBillingDate && billingCycle == 1)
+			{
+				tenantInfo.Next_Billing_Date=null;
+				tenantInfo.Latest_Billing_Date=actualBillingDate;
+			}
+			else if(actualBillingDate == tenantNextBillingDate && billingCycle == 1)
+			{
+				tenantInfo.Next_Billing_Date=newNextBillingDate;
+				tenantInfo.Latest_Billing_Date=actualBillingDate;
+			}
+		}
+		thisapp.subscription.update_subscription_next_and_last_billing_date(subsListId,billFor,billingCycle,actualBillingDate,monthlyBillingDate,billEvery);
+		getInvoice = Invoice[ID == createInvoice];
+		monthlyRentalCollection = Collection();
+		internetChargesCollection = Collection();
+		subTotalItems = 0;
+		totalTaxItems = 0;
+		grandTotalItems = 0;
+		subTotalInternetCharges = 0;
+		totalTaxInternetCharges = 0;
+		grandTotalInternetCharges = 0;
+		subTotalCallCharges = 0;
+		totalTaxCallCharges = 0;
+		grandTotalCallCharges = 0;
+		/*
+                                                   		for each  invLineItem in getInvoice.Invoice_Line_Item
+                                                   		{
+                                                   			getItem = Transaction_Type[ID == invLineItem.Item];
+                                                   			if(getItem.Charges_Type = "Internet Charges")
+                                                   			{
+                                                   				rowInternetCharges = Invoice.Internet_Charges();
+                                                   				rowInternetCharges.Customer_PO_No_Internet_Charges=invLineItem.Customer_PO_No;
+                                                   				rowInternetCharges.Item_Internet_Charges=invLineItem.Item;
+                                                   				rowInternetCharges.Item_Code_Internet_Charges=invLineItem.Item_Code;
+                                                   				rowInternetCharges.Description_Internet_Charges=invLineItem.Description;
+                                                   				rowInternetCharges.Unit_Price_Internet_Charges=invLineItem.Unit_Price;
+                                                   				//rowInternetCharges.Quantity_Internet_Charges=invLineItem.Quantity;
+                                                   				rowInternetCharges.Quantity_Internet_Charges=invLineItem.Quantity;
+                                                   				rowInternetCharges.Sub_Total_Internet_Charges=invLineItem.Sub_Total;
+                                                   				rowInternetCharges.Tax_Internet_Charges=invLineItem.Tax;
+                                                   				rowInternetCharges.Tax_Pct_Internet_Charges=invLineItem.Tax_Pct;
+                                                   				rowInternetCharges.Tax_Amount_Internet_Charges=invLineItem.Tax_Amount;
+                                                   				rowInternetCharges.Total_Internet_Charges=invLineItem.Total;
+                                                   				rowInternetCharges.Business_Segment_Internet_Charges=invLineItem.Business_Segment;
+                                                   				rowInternetCharges.Business_Unit_Internet_Charges=invLineItem.Business_Unit;
+                                                   				rowInternetCharges.Circuit_ID_Internet_Charges=invLineItem.Circuit_ID;
+                                                   				rowInternetCharges.Circuit_ID_Type_Internet_Charges=invLineItem.Circuit_ID_Type;
+                                                   				rowInternetCharges.Sub_Line_Item_Internet_Charges=invLineItem.Sub_Line_Item;
+                                                   				getInvoice.Internet_Charges.insert(rowInternetCharges);
+                                                   				subTotalInternetCharges = subTotalInternetCharges + invLineItem.Sub_Total;
+                                                   				totalTaxInternetCharges = totalTaxInternetCharges + invLineItem.Tax_Amount;
+                                                   				grandTotalInternetCharges = grandTotalInternetCharges + invLineItem.Total;
+                                                   			}
+                                                   			else if(getItem.Charges_Type = "Monthly Rental")
+                                                   			{
+                                                   				//info getItem.Item_Name;
+                                                   				rowMonthlyRental = Invoice.Monthly_Rental();
+                                                   				rowMonthlyRental.Customer_PO_No_Monthly_Rental=invLineItem.Customer_PO_No;
+                                                   				rowMonthlyRental.Item_Monthly_Rental=invLineItem.Item;
+                                                   				rowMonthlyRental.Item_Code_Monthly_Rental=invLineItem.Item_Code;
+                                                   				rowMonthlyRental.Description_Monthly_Rental=invLineItem.Description;
+                                                   				rowMonthlyRental.Unit_Price_Monthly_Rental=invLineItem.Unit_Price;
+                                                   				//rowMonthlyRental.Quantity_Monthly_Rental=invLineItem.Quantity;
+                                                   				rowMonthlyRental.Quantity_Monthly_Rental=invLineItem.Quantity;
+                                                   				rowMonthlyRental.Sub_Total_Monthly_Rental=invLineItem.Sub_Total;
+                                                   				rowMonthlyRental.Tax_Monthly_Rental=invLineItem.Tax;
+                                                   				rowMonthlyRental.Tax_Pct_Monthly_Rental=invLineItem.Tax_Pct;
+                                                   				rowMonthlyRental.Tax_Amount_Monthly_Rental=invLineItem.Tax_Amount;
+                                                   				rowMonthlyRental.Total_Monthly_Rental=invLineItem.Total;
+                                                   				rowMonthlyRental.Business_Segment_Monthly_Rental=invLineItem.Business_Segment;
+                                                   				rowMonthlyRental.Business_Unit_Monthly_Rental=invLineItem.Business_Unit;
+                                                   				rowMonthlyRental.Circuit_ID_Monthly_Rental=invLineItem.Circuit_ID;
+                                                   				rowMonthlyRental.Circuit_ID_Type_Monthly_Rental=invLineItem.Circuit_ID_Type;
+                                                   				rowMonthlyRental.Sub_Line_Item_Monthly_Rental=invLineItem.Sub_Line_Item;
+                                                   				getInvoice.Monthly_Rental.insert(rowMonthlyRental);
+                                                   				subTotalItems = subTotalItems + invLineItem.Sub_Total;
+                                                   				totalTaxItems = totalTaxItems + invLineItem.Tax_Amount;
+                                                   				grandTotalItems = grandTotalItems + invLineItem.Total;
+                                                   			}
+                                                   			else if(getItem.Charges_Type = "Call Charges")
+                                                   			{
+                                                   				callChargeRow = Invoice.Call_Charges();
+                                                   				callChargeRow.Item_Call_Charges=invLineItem.Item;
+                                                   				callChargeRow.Description_Call_Charges=invLineItem.Description;
+                                                   				callChargeRow.Unit_Price_Call_Charges=invLineItem.Unit_Price;
+                                                   				callChargeRow.Quantity_Call_Charges=invLineItem.Quantity.ToNumber();
+                                                   				callChargeRow.Sub_Total_Call_Charges=invLineItem.Sub_Total;
+                                                   				callChargeRow.Tax_Call_Charges=invLineItem.Tax;
+                                                   				callChargeRow.Tax_Pct_Call_Charges=invLineItem.Tax_Pct;
+                                                   				callChargeRow.Tax_Amount_Call_Charges=invLineItem.Tax_Amount;
+                                                   				callChargeRow.Total_Call_Charges=invLineItem.Total;
+                                                   				getInvoice.Call_Charges.insert(callChargeRow);
+                                                   				subTotalCallCharges = subTotalCallCharges + invLineItem.Sub_Total;
+                                                   				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Tax_Amount;
+                                                   				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Total;
+                                                   			}
+                                                   		} */
+		//Comment 24/07/2025 -Start
+		//Comment due to call charges didn't fill insert in the invoice line item
+		// 		chargesCategories = getInvoice.Charges_Categories1.Charge_Category;
+		// 		if(chargesCategories.containsIgnoreCase("Telephone Charges"))
+		// 		{
+		// 			subTotal = 0;
+		// 			totalTax = 0;
+		// 			grandTotal = 0;
+		// 			for each  transactionType in Transaction_Type[Charges_Type == "Call Charges"]
+		// 			{
+		// 				unitPrice = ifnull(transactionType.Unit_Price,0) / ifnull(getInvoice.Exchange_Rate,1);
+		// 				taxAmount = unitPrice * ifnull(transactionType.Tax_Percentage,0) / 100;
+		// 				total = unitPrice + taxAmount;
+		// 				totalMYR = total * ifnull(getInvoice.Exchange_Rate,1);
+		// 				callChargeRow = Invoice.Call_Charges1();
+		// 				callChargeRow.Item=transactionType.ID;
+		// 				callChargeRow.Description=transactionType.Description;
+		// 				callChargeRow.Unit_Price=unitPrice;
+		// 				callChargeRow.Quantity=1;
+		// 				callChargeRow.Sub_Total=unitPrice;
+		// 				callChargeRow.Tax=ifnull(transactionType.Tax,0);
+		// 				callChargeRow.Tax_Pct=ifnull(transactionType.Tax_Percentage,0);
+		// 				callChargeRow.Tax_Amount=taxAmount;
+		// 				callChargeRow.Total=total;
+		// 				getInvoice.Call_Charges1.insert(callChargeRow);
+		// 				subTotal = subTotal + unitPrice;
+		// 				totalTax = totalTax + taxAmount;
+		// 				grandTotal = grandTotal + total;
+		// 			}
+		// 			getInvoice.Sub_Total_Call_Charges=subTotal;
+		// 			getInvoice.Total_Tax_Call_Charges=totalTax;
+		// 			getInvoice.Grand_Total_Call_Charges=grandTotal;
+		// 		}
+		//Comment 24/07/2025 - End
+		getInvoice.Sub_Total_Monthly_Rental=subTotalItems;
+		getInvoice.Total_Tax_Monthly_Rental=totalTaxItems;
+		getInvoice.Grand_Total_Monthly_Rental=grandTotalItems;
+		getInvoice.Sub_Total_Internet_Charges=subTotalInternetCharges;
+		getInvoice.Total_Tax_Internet_Charges=totalTaxInternetCharges;
+		getInvoice.Grand_Total_Internet_Charges=grandTotalInternetCharges;
+		getInvoice.Sub_Total_Call_Charges=subTotalCallCharges;
+		getInvoice.Total_Tax_Call_Charges=totalTaxCallCharges;
+		getInvoice.Grand_Total_Call_Charges=totalTaxCallCharges;
+		if(createSecondInvoice)
+		{
+			thisapp.invoice.create_invoice_current_monthly(subsListId,billingCycle,tenantID,secondMonthlyBillingDate,secondActualBillingDate,false,null,null,true);
+		}
 	}
-}
 }

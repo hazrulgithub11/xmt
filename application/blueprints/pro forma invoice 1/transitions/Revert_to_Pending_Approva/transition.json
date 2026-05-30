@@ -1,6 +1,0 @@
-{
-  "link_name": "Revert_to_Pending_Approva",
-  "display_name": "Revert to Pending Approval",
-  "from_stage": "Approved",
-  "to_stage": "Pending Approval"
-}

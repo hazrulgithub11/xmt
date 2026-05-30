@@ -1,8 +1,0 @@
-if(input.Due_Date > zoho.currentdate)
-														{
-															thisapp.blueprint.changeStage("Pro_Forma_Invoices","Deposits_Blueprint","Sent",input.ID);
-														}
-														else
-														{
-															thisapp.blueprint.changeStage("Pro_Forma_Invoices","Deposits_Blueprint","Overdue",input.ID);
-														}

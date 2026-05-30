@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 28-May-2026 21:21:12
+ * Generated on : 29-May-2026 20:34:28
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -15368,6 +15368,81 @@
 				Confirm_resubmission as "Confirm resubmission?"
 				Customer_Name_Trigger as "Customer Name Trigger"
 				User_Input_Trigger
+			)
+			custom actions
+			(
+				"Send Proforma Invoice"
+				(
+	  			workflow = Send_Proforma_Invoice1
+				show action in view header = true
+				condition = (Blueprint.Current_Stage != "Draft" && Blueprint.Current_Stage != "Pending Approval" && Blueprint.Current_Stage != "Rejected")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Send Proforma Invoice\" for ${Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+				)
+				"Mark As Sent"
+				(
+	  			workflow = Mark_As_Sent_Invoice1
+				show action in view header = true
+				condition = (Blueprint.Current_Stage == "Approved")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Mark As Sent\" this Pro Forma Invoice ${Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+				)
+				"Refund"
+				(
+	  			workflow = Refund1
+				show action in view header = true
+				condition = (Blueprint.Current_Stage == "Paid")
+				confirmation before execution
+				(
+					message for individual record = "Are you sure you want to \"Refund\" this Pro Forma Invoice ${Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+				)
+				"Record Payment Deposit"
+				(
+	  			workflow = Record_Payment_Deposit1
+				show action in view header = true
+				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Overdue")
+				confirmation before execution
+				(
+					message for individual record = "Open Payment Received for Pro Forma Invoice ${Invoice_No}?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+				)
+				"Bulk Approve"
+				(
+	  			workflow = Bulk_Approve1
+				show action in view header = true
+				condition = (Blueprint.Current_Stage == "Pending Approval")
+				confirmation before execution
+				(
+					message for individual record = "Execute the Bulk Approve action for the selected ${record_count} records?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+				)
+				"Send Email"
+				(
+	  			workflow = Send_Email7
+				show action in view header = true
+				condition = (Blueprint.Current_Stage != "Draft" && Blueprint.Current_Stage != "Pending Approval" && Blueprint.Current_Stage != "Rejected" && Blueprint.Current_Stage != "Approved")
+				confirmation before execution
+				(
+					message for individual record = "Execute the Send Email action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+				)
 			)
 		}
 	}
@@ -44403,6 +44478,217 @@
 					}
 				}
 			}
+			Send_Proforma_Invoice1 as "Send_Proforma_Invoice"
+			{
+				type =  functions
+				form = Pro_Forma_Invoices
+				execution type = for each record	
+				on start
+				{
+					actions 
+					{
+					on click
+					(
+						getEmailTemplate = Email_Templates[Template_Type == "Pro Forma Invoices" && Status == "Active"];
+										toAddresses = input.Customer_E_mail;
+										emailSubject = getEmailTemplate.Subject_field;
+										emailBody = getEmailTemplate.Body;
+										placeholders = getEmailTemplate.Placeholders;
+										recId = input.ID;
+										getRecordPI = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"Pro_Forma_Invoices_New",recId,"zoho_creator_connection");
+										if(getRecordPI.get("code") == 3000)
+										{
+											piData = getRecordPI.get("data");
+										}
+										for each  placeholder in placeholders
+										{
+											if(piData.get(placeholder).size() != null)
+											{
+												listData = piData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
+												placeHolderValue = "";
+												idx = 0;
+												for each  data in listData
+												{
+													if(data.contains("display_value:"))
+													{
+														if(idx > 0)
+														{
+															placeHolderValue = placeHolderValue + ",";
+														}
+														placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
+														idx = idx + 1;
+													}
+												}
+												emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+												emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
+											}
+											else
+											{
+												emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
+												emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
+											}
+										}
+										downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + recId + "/" + input.Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
+										piFile = invokeurl
+										[
+											url :downloadPITempUrl
+											type :GET
+										];
+										piFile.setparamname("file");
+										sendmail
+										[
+											from :zoho.adminuserid
+											to :toAddresses
+											subject :emailSubject
+											message :emailBody
+											Attachments :file:piFile
+										]
+					)
+					}
+					actions 
+					{
+					on click
+					(
+						if(input.Due_Date > zoho.currentdate)
+										{
+											thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",input.ID);
+										}
+										else
+										{
+											thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",input.ID);
+										}
+					)
+					}
+				}
+			}
+			Mark_As_Sent_Invoice1 as "Mark_As_Sent_Invoice"
+			{
+				type =  functions
+				form = Pro_Forma_Invoices
+				execution type = for each record	
+				on start
+				{
+					actions 
+					{
+					on click
+					(
+						if(input.Due_Date > zoho.currentdate)
+										{
+											thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",input.ID);
+										}
+										else
+										{
+											thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",input.ID);
+										}
+					)
+					}
+				}
+			}
+			Refund1 as "Refund"
+			{
+				type =  functions
+				form = Pro_Forma_Invoices
+				execution type = for each record	
+				on start
+				{
+					actions 
+					{
+					on click
+					(
+						journalEntryLineItem = Collection();
+										row1 = Journal_Entry.Journal_Entry_Line_Item();
+										row1.Account=4662372000000087213;
+										row1.Description="Pro Forma Invoice " + input.Invoice_No + " Xkomm Security Deposit";
+										row1.Debit=ifnull(input.Grand_Total,0);
+										row1.Credit=0;
+										row1.Deposits=input.ID;
+										row2 = Journal_Entry.Journal_Entry_Line_Item();
+										getPRLineItem = Payment_Received_Line_Item[Pro_Forma_Invoice_No == input.ID];
+										getPR = Payment_Received[ID == getPRLineItem.Payment_Received];
+										row2.Account=getPR.Paid_To;
+										row2.Description="Pro Forma Invoice " + input.Invoice_No + " to " + getPR.Paid_To.Account + "-" + getPR.Paid_To.Bank_Account_Number;
+										row2.Debit=0;
+										row2.Credit=ifnull(input.Grand_Total,0);
+										row2.Deposits=input.ID;
+										journalEntryLineItem.insert(row1,row2);
+										newJournalEntryRecord = insert into Journal_Entry
+										[
+											Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+											Document_No=input.Invoice_No
+											Added_User=zoho.loginuser
+											Deposits=input.ID
+											Date_field=zoho.currentdate
+											Journal_Entry_Line_Item=journalEntryLineItem
+											Sub_Total_Debit=ifnull(input.Sub_Total,0)
+											Sub_Total_Credit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
+											Total_Debit=ifnull(input.Grand_Total,0)
+											Total_Credit=ifnull(input.Grand_Total,0)
+											Difference=ifnull(input.Grand_Total,0) - ifnull(input.Grand_Total,0)
+											Created_By_The_System=true
+										];
+					)
+					}
+				}
+			}
+			Record_Payment_Deposit1 as "Record_Payment_Deposit"
+			{
+				type =  functions
+				form = Pro_Forma_Invoices
+				execution type = for each record	
+				on start
+				{
+					actions 
+					{
+					on click
+					(
+						paymentType = "Payment_Type=Deposit";
+										customerName = "&Customer_Name=" + input.Customer;
+										customerCode = "&Customer_Code=" + input.Customer_Code;
+										customerTIN = "&Customer_TIN=" + ifnull(input.Customer_TIN,"");
+										customerSST = "&Customer_SST=" + ifnull(input.Customer_SST_Registration_Number,"");
+										customerEmail = "&Customer_Email=" + ifnull(input.Customer_E_mail,"");
+										paymentReceivedCurrency = "&Payment_Received_Currency=" + ifnull(input.Invoice_Currency,"");
+										singlePaymentRecord = "&Single_Record_Payment=true";
+										paymentTypeSingleRecord = "&Payment_Type_Single_Record=Pro Forma Invoice";
+										pi = "&Pro_Forma_Invoices=" + input.ID;
+										url = "#Form:Payment_Received?" + paymentType + customerName + customerCode + customerTIN + customerSST + customerEmail + paymentReceivedCurrency + singlePaymentRecord + paymentTypeSingleRecord + pi;
+										openUrl(url,"popup window","height=100%,width=100%");
+					)
+					}
+				}
+			}
+			Bulk_Approve1 as "Bulk_Approve"
+			{
+				type =  functions
+				form = Pro_Forma_Invoices
+				execution type = for each record	
+				on start
+				{
+					actions 
+					{
+					on click
+					(
+						thisapp.blueprint.executeTransition("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Approve",input.ID);
+					)
+					}
+				}
+			}
+			Send_Email7 as "Send_Email6"
+			{
+				type =  functions
+				form = Pro_Forma_Invoices
+				execution type = for each record	
+				on start
+				{
+					actions 
+					{
+					on click
+					(
+						openUrl("#Form:Email_Input_Form?Record_ID=" + input.ID + "&Document_Type=Pro Forma Invoices","popup");
+					)
+					}
+				}
+			}
 		}
 	}
 	share_settings
@@ -50047,6 +50333,12 @@
     		 				Edit 
     		 				Duplicate 
     		 				Delete 
+			 				"Send Proforma Invoice"
+			 				"Mark As Sent"
+			 				"Refund"
+			 				"Record Payment Deposit"
+			 				"Bulk Approve"
+			 				"Send Email"
     	 				)
     				)
 				)

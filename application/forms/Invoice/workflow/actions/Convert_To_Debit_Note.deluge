@@ -1,12 +1,12 @@
 // Record action: Convert To Debit Note
-// Link name: Convert_To_Debit_Note
+// Link name: Convert_To_Debit_Note1
 // Form: Invoice
 
 errorMessage = "";
 				create_debit_note_id = null;
 				try 
 				{
-					create_debit_note_id = insert into Debit_Note
+					blueprint_create_debit_note_id = insert into Debit_Note
 					[
 						Supplier=input.Supplier
 						Customer=input.Customer
@@ -42,7 +42,6 @@ errorMessage = "";
 						Delivery_Country=input.Delivery_Country
 						Delivery_State=input.Delivery_State
 						Invoice_No=thisapp.debit_note.generate_debit_note_no()
-						Status="Draft"
 						Invoice_Date=zoho.currentdate
 						Payment_Term=input.Payment_Term
 						Due_Date=zoho.currentdate.addDay(input.Payment_Term.Days)
@@ -71,6 +70,8 @@ errorMessage = "";
 						Reference_Invoice=input.ID
 						Added_User=zoho.loginuser
 					];
+					thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Draft",blueprint_create_debit_note_id);
+					create_debit_note_id = blueprint_create_debit_note_id;
 					// Add item row to item subform
 					total_monthly_rental = 0;
 					total_internet_charges = 0;

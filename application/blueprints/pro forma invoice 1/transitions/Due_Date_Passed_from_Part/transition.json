@@ -1,6 +1,0 @@
-{
-  "link_name": "Due_Date_Passed_from_Part",
-  "display_name": "Due Date Passed from Partially Paid",
-  "from_stage": "Partially Paid",
-  "to_stage": "Overdue"
-}

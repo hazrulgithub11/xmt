@@ -1,6 +1,0 @@
-{
-  "link_name": "Payment_Received_Full_fro2",
-  "display_name": "Payment Received Full from Partially Paid",
-  "from_stage": "Partially Paid",
-  "to_stage": "Paid"
-}

@@ -1,6 +1,0 @@
-{
-  "link_name": "Paid_to_Sent",
-  "display_name": "Paid to Sent",
-  "from_stage": "Paid",
-  "to_stage": "Sent"
-}

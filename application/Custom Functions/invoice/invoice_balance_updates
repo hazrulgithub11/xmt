@@ -11,7 +11,7 @@ void invoice.invoice_balance_updates(int invoice_id)
 	previous_balance_of_unpaid_invoices = 0;
 	if(invoice_date != null && customer_id != null)
 	{
-		for each  curr_invoice in Invoice[Amount_Due > 0 && Invoice_Date < invoice_date && Customer == customer_id]
+		for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoice_date && Customer == customer_id && ID != invoice_id]
 		{
 			previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
 		}

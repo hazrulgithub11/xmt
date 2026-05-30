@@ -1,6 +1,0 @@
-{
-  "link_name": "Due_Date_Passed_from_Sent",
-  "display_name": "Due Date Passed from Sent",
-  "from_stage": "Sent",
-  "to_stage": "Overdue"
-}

@@ -2,5 +2,4 @@
 // Link name: Send_Email5
 // Form: Invoice
 
-// openUrl("#Form:Email_Input_Form?Record_ID=" + input.ID,"popup");
-				openUrl("#Form:Email_Input_Form?Record_ID=" + input.ID + "&Document_Type=Invoice","popup");
+openUrl("#Form:Email_Input_Form?Record_ID=" + input.ID + "&Document_Type=Invoice","popup");

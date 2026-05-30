@@ -47,9 +47,7 @@ void invoice.create_new_invoice_no_for_duplicate(int tenantID, int customer, str
 			Created_By_The_System=true
 			Added_User=zoho.loginuser
 		];
-		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Draft",createInvoice);
-	}
-	catch (error)
+	}	catch (error)
 	{
 		//info "error:" + error;
 		if(error.containsIgnoreCase("duplicate"))
@@ -223,8 +221,7 @@ void invoice.create_new_invoice_no_for_duplicate(int tenantID, int customer, str
 			getInvoice.Sub_Total_Call_Charges=subTotalCallCharges;
 			getInvoice.Total_Tax_Call_Charges=totalTaxCallCharges;
 			getInvoice.Grand_Total_Call_Charges=totalTaxCallCharges;
-		}
-		catch (e)
+		}		catch (e)
 		{
 			//info "error:" + e;
 		}

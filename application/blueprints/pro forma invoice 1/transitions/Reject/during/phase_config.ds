@@ -1,3 +1,0 @@
-action = update_fields
-            				workflow status = true
-            				visible fields = [Rejection_Reason]
