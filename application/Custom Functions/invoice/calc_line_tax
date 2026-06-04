@@ -1,0 +1,17 @@
+// Tax + line total. nullSafeTotal: true uses subTotal + ifnull(taxAmount,0) for total.
+Map invoice.calc_line_tax(decimal subTotal, decimal taxPct, bool nullSafeTotal)
+{
+	taxAmount = subTotal * taxPct / 100;
+	if(nullSafeTotal)
+	{
+		total = subTotal + ifnull(taxAmount,0);
+	}
+	else
+	{
+		total = subTotal + taxAmount;
+	}
+	lineTax = Map();
+	lineTax.put("taxAmount",taxAmount);
+	lineTax.put("total",total);
+	return lineTax;
+}

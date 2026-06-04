@@ -194,17 +194,17 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
                                                    							unitPrice = prorateMonth;
                                                    						}
                                                    					}*/
-					prorateUnitPrice = unitPrice / contractStartDate.eomonth(0).getDay();
-					daysUsed = contractStartDate.eomonth(0).getDay() - contractStartDate.getDay() + 1;
-					subTotal = prorateUnitPrice * daysUsed;
-					unitPrice = subTotal;
-					quantity = 1;
+					lineAmounts = thisapp.invoice.calc_line_subtotal("prorate_start_month",unitPrice,0,0,contractStartDate,null,null,0,null,null,null);
+					subTotal = lineAmounts.get("subTotal");
+					unitPrice = lineAmounts.get("unitPrice");
+					quantity = lineAmounts.get("quantity");
 					//info "quantity:" + quantity;
 					//info "billingCycleMonthsUsed: " + billingCycleMonthsUsed;
 					//info "subTotal: " + subTotal;
 					//info "subtotal" + subTotal;
-					taxAmount = subTotal * taxPct / 100;
-					total = subTotal + taxAmount;
+					lineTax = thisapp.invoice.calc_line_tax(subTotal,taxPct,false);
+					taxAmount = lineTax.get("taxAmount");
+					total = lineTax.get("total");
 					totalMYR = total * exchangeRate;
 					/*
                                                    					invoiceLineItem = Invoice.Invoice_Line_Item();
@@ -252,9 +252,10 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 					circuitId = subLineItem.Circuit_ID_Subscription;
 					circuitIdType = subLineItem.Circuit_ID_Type_Subscription;
 					subLineItemId = subLineItem.ID;
-					subTotal = unitPrice * quantity;
-					taxAmount = subTotal * taxPct / 100;
-					total = subTotal + taxAmount;
+					subTotal = thisapp.invoice.calc_line_subtotal("single_period",unitPrice,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+					lineTax = thisapp.invoice.calc_line_tax(subTotal,taxPct,false);
+					taxAmount = lineTax.get("taxAmount");
+					total = lineTax.get("total");
 					totalMYR = total * exchangeRate;
 					/*
                                                    					invoiceLineItem = Invoice.Invoice_Line_Item();
@@ -311,9 +312,10 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
                                                    					circuitId = subLineItem.Circuit_ID;
                                                    					circuitIdType = subLineItem.Circuit_ID_Type;
                                                    					subLineItemId = subLineItem.ID;
-                                                   					subTotal = unitPrice * quantity;
-                                                   					taxAmount = subTotal * taxPct / 100;
-                                                   					total = subTotal + ifnull(taxAmount,0);
+                                                   					subTotal = thisapp.invoice.calc_line_subtotal("single_period",unitPrice,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+                                                   					lineTax = thisapp.invoice.calc_line_tax(subTotal,taxPct,true);
+                                                   					taxAmount = lineTax.get("taxAmount");
+                                                   					total = lineTax.get("total");
                                                    					totalMYR = total * exchangeRate;
                                                    					invoiceLineItem = Invoice.Invoice_Line_Item();
                                                    					invoiceLineItem.Customer_PO_No=subId;
@@ -372,8 +374,9 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
                                                    					info "prorateUnitPrice:" + prorateUnitPrice;
                                                    					info "prorateMonth:" + prorateMonth;
                                                    					info "subTotal:" + subTotal;
-                                                   					taxAmount = subTotal * taxPct / 100;
-                                                   					total = subTotal + taxAmount;
+                                                   					lineTax = thisapp.invoice.calc_line_tax(subTotal,taxPct,false);
+                                                   					taxAmount = lineTax.get("taxAmount");
+                                                   					total = lineTax.get("total");
                                                    					totalMYR = total * exchangeRate;
                                                    					invoiceLineItem = Invoice.Invoice_Line_Item();
                                                    					invoiceLineItem.Customer_PO_No=subId;
@@ -420,9 +423,10 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 					circuitId = subLineItem.Circuit_ID_Subscription;
 					circuitIdType = subLineItem.Circuit_ID_Type_Subscription;
 					subLineItemId = subLineItem.ID;
-					subTotal = unitPrice * quantity;
-					taxAmount = subTotal * taxPct / 100;
-					total = subTotal + ifnull(taxAmount,0);
+					subTotal = thisapp.invoice.calc_line_subtotal("single_period",unitPrice,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+					lineTax = thisapp.invoice.calc_line_tax(subTotal,taxPct,true);
+					taxAmount = lineTax.get("taxAmount");
+					total = lineTax.get("total");
 					totalMYR = total * exchangeRate;
 					/*
                                                    					invoiceLineItem = Invoice.Invoice_Line_Item();
@@ -470,16 +474,15 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 					circuitId = subLineItem1.Circuit_ID_Subscription;
 					circuitIdType = subLineItem1.Circuit_ID_Type_Subscription;
 					subLineItemId = subLineItem1.ID;
-					prorateUnitPrice = unitPrice / contractEndDate.eomonth(0).getDay();
-					prorateSubTotal = prorateUnitPrice * contractEndDate.getDay();
-					//prorateSubTotal = prorateMonth * quantity;
-					subTotal = prorateSubTotal;
-					unitPrice = subTotal;
+					lineAmounts = thisapp.invoice.calc_line_subtotal("prorate_final_month",unitPrice,0,0,null,contractEndDate,null,0,null,null,null);
+					subTotal = lineAmounts.get("subTotal");
+					unitPrice = lineAmounts.get("unitPrice");
 					//info "prorateUnitPrice:" + prorateUnitPrice;
 					//info "prorateMonth:" + prorateMonth;
 					//info "subTotal:" + subTotal;
-					taxAmount = subTotal * taxPct / 100;
-					total = subTotal + taxAmount;
+					lineTax = thisapp.invoice.calc_line_tax(subTotal,taxPct,false);
+					taxAmount = lineTax.get("taxAmount");
+					total = lineTax.get("total");
 					totalMYR = total * exchangeRate;
 					/*
                                                    					invoiceLineItem = Invoice.Invoice_Line_Item();
@@ -531,9 +534,10 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 				circuitId = subLineItem.Circuit_ID_Subscription;
 				circuitIdType = subLineItem.Circuit_ID_Type_Subscription;
 				subLineItemId = subLineItem.ID;
-				subTotal = unitPrice * quantity;
-				taxAmount = subTotal * taxPct / 100;
-				total = subTotal + taxAmount;
+				subTotal = thisapp.invoice.calc_line_subtotal("single_period",unitPrice,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+				lineTax = thisapp.invoice.calc_line_tax(subTotal,taxPct,false);
+				taxAmount = lineTax.get("taxAmount");
+				total = lineTax.get("total");
 				totalMYR = total * exchangeRate;
 				/*
                                                    				invoiceLineItem = Invoice.Invoice_Line_Item();

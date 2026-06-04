@@ -1,0 +1,88 @@
+// Single entry for line subTotal / quantity / unitPrice. Modes: single_period | full_cycle | prorate_start_month | prorate_final_month | days30 | legacy_current_start
+Map invoice.calc_line_subtotal(string mode, decimal unitPrice, decimal quantity, int billingCycle, date rangeStart, date rangeEnd, date referenceDate, int contractPeriod, string billEvery, date nextBillingDate, date actualBillingDate)
+{
+	lineAmounts = Map();
+	billingCycleMonthsUsed = 0;
+	if(mode == "single_period")
+	{
+		lineAmounts.put("subTotal",unitPrice * quantity);
+	}
+	else if(mode == "full_cycle")
+	{
+		lineAmounts.put("subTotal",unitPrice * quantity * billingCycle);
+	}
+	else if(mode == "prorate_start_month")
+	{
+		prorateUnitPrice = unitPrice / rangeStart.eomonth(0).getDay();
+		daysUsed = rangeStart.eomonth(0).getDay() - rangeStart.getDay() + 1;
+		subTotal = prorateUnitPrice * daysUsed;
+		lineAmounts.put("subTotal",subTotal);
+		lineAmounts.put("unitPrice",subTotal);
+		lineAmounts.put("quantity",1);
+	}
+	else if(mode == "prorate_final_month")
+	{
+		prorateUnitPrice = unitPrice / rangeEnd.eomonth(0).getDay();
+		subTotal = prorateUnitPrice * rangeEnd.getDay();
+		lineAmounts.put("subTotal",subTotal);
+		lineAmounts.put("unitPrice",subTotal);
+	}
+	else if(mode == "days30")
+	{
+		quantity = ((daysBetween(rangeStart,rangeEnd) + 1) / 30).round(2);
+		subTotal = unitPrice * quantity;
+		if(quantity < 1)
+		{
+			quantity = 1;
+			unitPrice = subTotal;
+		}
+		lineAmounts.put("subTotal",subTotal);
+		lineAmounts.put("quantity",quantity);
+		lineAmounts.put("unitPrice",unitPrice);
+	}
+	else if(mode == "legacy_current_start")
+	{
+		if(nextBillingDate == null)
+		{
+			prorateUnitPrice = unitPrice / 30;
+			if(monthsBetween(rangeStart,rangeEnd) <= contractPeriod && rangeStart.getDay() == rangeEnd.getDay())
+			{
+				subTotal = unitPrice * quantity * contractPeriod;
+			}
+			else
+			{
+				subTotal = prorateUnitPrice * quantity * (daysBetween(rangeStart,rangeEnd) + 1);
+			}
+		}
+		else
+		{
+			prorateUnitPrice = unitPrice / rangeStart.eomonth(0).getDay();
+			if(rangeStart.getDay() == 1 || (billEvery == "Last Day Of Month" && rangeStart.getDay() == rangeStart.eomonth(0).getDay()))
+			{
+				prorateMonth = unitPrice;
+			}
+			else
+			{
+				daysUsed = rangeStart.eomonth(0).getDay() - rangeStart.getDay() + 1;
+				prorateMonth = prorateUnitPrice * daysUsed;
+			}
+			prorateSubTotal = prorateMonth * quantity;
+			if(actualBillingDate == today)
+			{
+				billingCycleMonthsUsed = thisapp.invoice.get_billing_cycle_months_used(rangeStart,nextBillingDate,billEvery);
+			}
+			else
+			{
+				billingCycleMonthsUsed = thisapp.invoice.get_billing_cycle_months_used(rangeStart,referenceDate,billEvery);
+			}
+			if(billingCycleMonthsUsed == billingCycle)
+			{
+				billingCycleMonthsUsed = billingCycleMonthsUsed - 1;
+			}
+			subTotal = unitPrice * quantity * billingCycleMonthsUsed + prorateSubTotal;
+		}
+		lineAmounts.put("subTotal",subTotal);
+		lineAmounts.put("billingCycleMonthsUsed",billingCycleMonthsUsed);
+	}
+	return lineAmounts;
+}

@@ -240,22 +240,31 @@ Acceptance:
 ---
 
 ## Phase 3 - Centralize Amount + Proration Calculations (Duplicated Calculation)
-Status: `TODO`
+Status: `DONE`
 
 Goal:
 - Unify line amount, proration, and quantity behavior across invoice variants.
 
-Files to change + manager reason:
-- `application/Custom Functions/invoice/create_invoice_current_monthly`
-- `application/Custom Functions/invoice/create_invoice_previous_monthly`
-- `application/Custom Functions/invoice/create_invoice_current_not_monthly`
-- `application/Custom Functions/invoice/create_invoice_previous_not_monthly`
-- `application/Custom Functions/invoice/create_invoice` (legacy compatibility path)
-  Reason (all above): consolidate repeated math blocks into shared helpers and remove drift between paths.
+**Source of truth:** `XMT___Billing_System.ds` (live Creator export). `application/` files re-extracted from `.ds` after refactor.
+
+### Amount / proration utility layer (2 functions)
+
+| Function | `mode` / behavior |
+|----------|-------------------|
+| `invoice.calc_line_subtotal(mode, …)` | `single_period` · `full_cycle` · `prorate_start_month` · `prorate_final_month` · `days30` · `legacy_current_start` |
+| `invoice.calc_line_tax(subTotal, taxPct, nullSafeTotal)` | Tax + total; `nullSafeTotal=true` uses `subTotal + ifnull(taxAmount,0)` |
+
+Files changed + manager reason:
+- `XMT___Billing_System.ds` — two helpers; ~100 call sites in five `create_invoice*` functions.
+- `application/Custom Functions/invoice/calc_line_subtotal`, `calc_line_tax` — **only** amount helpers (8 one-liner helpers removed).
+- `application/Custom Functions/invoice/create_invoice*` — re-synced from `.ds`.
+
+**Intentionally not unified (behavior preserved):** previous-duration start proration in legacy `create_invoice` (P10: prorateMonth not × quantity); legacy final-billing branches (P6–P8); monthly vs non-monthly branch orchestration.
 
 Acceptance:
-- One formula policy for proration and quantity.
-- Consistent totals regardless of monthly/non-monthly path.
+- [x] One formula policy per pattern via shared helpers.
+- [x] Tax/total and P2/P5/P13/P14 paths consistent across monthly/non-monthly specialists.
+- [ ] Smoke: compare invoice line subtotals before/after on test subscriptions (Creator deploy required).
 
 ---
 
@@ -332,7 +341,7 @@ Acceptance:
 - [x] Phase 0 - Baseline and Safety Net (docs only; manager sign-off pending)
 - [x] Phase 1 - Workflow Consolidation (deploy + smoke pending)
 - [x] Phase 2 - Centralize Billing-Date Calculations (deploy + smoke pending)
-- [ ] Phase 3 - Centralize Amount + Proration Calculations
+- [x] Phase 3 - Centralize Amount + Proration (2 helpers; deploy + smoke pending)
 - [ ] Phase 4 - Fix Wrong Logic Calculations
 - [ ] Phase 5 - Ticket Workflow Unification
 - [ ] Phase 6 - Tenancy Guardrails + Data Integrity
@@ -340,6 +349,19 @@ Acceptance:
 ---
 
 ## Change Log (Manager Update Format)
+
+- Date: 2026-06-03
+- Phase: 3 (consolidated)
+- Files changed: `XMT___Billing_System.ds`, `calc_line_subtotal` + `calc_line_tax` (replaced 8 helpers), 5 `create_invoice*` re-extracted
+- Why changed: One subtotal entry (mode string) + one tax/total entry; same formulas, less surface area.
+- Risk level: `High` (invoice amounts — publish 2 helpers to Creator; retire 8 if previously deployed)
+- Validation done: All `calc_*` call sites migrated in `.ds`; application mirrors re-extract.
+- Outcome: Phase 3 complete in repo; legacy complex branches remain inline by design.
+
+- Date: 2026-06-03
+- Phase: 3 (initial)
+- Files changed: `XMT___Billing_System.ds`, 8 `invoice.calc_*` helpers (superseded by consolidation above)
+- Why changed: First pass at centralization (replaced by 2-function design per team feedback).
 
 - Date: 2026-06-03
 - Phase: 2
