@@ -1,0 +1,5 @@
+// Non-monthly: billing date on contract day-of-month in the reference month/year.
+date tenancy.get_billing_date_for_contract_day(date contractStartDate, date referenceDate)
+{
+	return toDate(contractStartDate.getDay() + "-" + referenceDate.getMonth() + "-" + referenceDate.getYear(),"dd-MM-yyyy");
+}

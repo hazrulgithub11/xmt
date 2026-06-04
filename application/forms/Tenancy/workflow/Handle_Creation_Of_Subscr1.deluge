@@ -1,3 +1,4 @@
+// Mirror of application/Schedule/Handle_Creation_Of_Subscr1.deluge — keep in sync. Entry: fetch_subscription_and_tenancy_details
 Handle_Creation_Of_Subscr1 as "Handle Creation Of Subscription Invoice"
 {
 	type =  schedule

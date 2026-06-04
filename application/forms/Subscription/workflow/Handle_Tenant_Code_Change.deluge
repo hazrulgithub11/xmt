@@ -13,7 +13,7 @@ Handle_Tenant_Code_Change as "Handle Tenant Code Changes"
 			(
 					getTenant = Tenancy[ID == input.Customer_Code];
 				input.Payment_Term = ifnull(getTenant.Payment_Term,null);
-				input.Payable_To1 = ifnull(getTenant.Payable_To1,null);
+				input.Payable_To1 = ifnull(getTenant.Payable_To,null);
 				input.Contract_Start_Date = null;
 				input.Contract_Period = null;
 				input.Contract_End_Date = null;
@@ -24,19 +24,17 @@ Handle_Tenant_Code_Change as "Handle Tenant Code Changes"
 				if(input.Customer_Code != null)
 				{
 					quantity = thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
-					for each  subLineItem in input.Subcription_Line_Items
+					for each  subLineItem in input.Subscription_Line_Items
 					{
 						//subLineItem.Quantity=quantity;
-						subLineItem.Quantity1=quantity;
+						subLineItem.Quantity_Subscription=quantity;
 						//subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity,0);
-						subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity1,0);
-						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Tax_Pct / 100;
-						subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
-						subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Exchange_Rate,1);
-						subLineItem.Business_Segment=null;
-						subLineItem.Business_Unit=null;
-						grandTotal = grandTotal + ifnull(subLineItem.Total,0);
-						grandTotalMYR = grandTotalMYR + ifnull(subLineItem.Total_MYR,0);
+						subLineItem.Sub_Total_Subscription=ifnull(subLineItem.Unit_Price_Subscription,0) * ifnull(subLineItem.Quantity_Subscription,0);
+						subLineItem.Tax_Amount_Subscription=subLineItem.Sub_Total_Subscription * subLineItem.Tax_Pct_Subscription / 100;
+						subLineItem.Total_Subscription=subLineItem.Sub_Total_Subscription + subLineItem.Tax_Amount_Subscription;
+						subLineItem.Business_Segment_Subscription=null;
+						subLineItem.Business_Unit_Subscription=null;
+						grandTotal = grandTotal + ifnull(subLineItem.Total_Subscription,0);
 					}
 					if(input.Customer_PO_No != "")
 					{
@@ -50,19 +48,15 @@ Handle_Tenant_Code_Change as "Handle Tenant Code Changes"
 				}
 				else
 				{
-					for each  subLineItem in input.Subcription_Line_Items
+					for each  subLineItem in input.Subscription_Line_Items
 					{
-						//subLineItem.Quantity=quantity;
-						subLineItem.Quantity1=quantity;
-						//subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity,0);
-						subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity1,0);
-						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Tax_Pct / 100;
-						subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
-						subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Exchange_Rate,1);
-						subLineItem.Business_Segment=null;
-						subLineItem.Business_Unit=null;
-						grandTotal = grandTotal + ifnull(subLineItem.Total,0);
-						grandTotalMYR = grandTotalMYR + ifnull(subLineItem.Total_MYR,0);
+						subLineItem.Quantity_Subscription=quantity;
+						subLineItem.Sub_Total_Subscription=ifnull(subLineItem.Unit_Price_Subscription,0) * ifnull(subLineItem.Quantity_Subscription,0);
+						subLineItem.Tax_Amount_Subscription=subLineItem.Sub_Total_Subscription * subLineItem.Tax_Pct_Subscription / 100;
+						subLineItem.Total_Subscription=subLineItem.Sub_Total_Subscription + subLineItem.Tax_Amount_Subscription;
+						subLineItem.Business_Segment_Subscription=null;
+						subLineItem.Business_Unit_Subscription=null;
+						grandTotal = grandTotal + ifnull(subLineItem.Total_Subscription,0);
 					}
 					input.Customer_PO_No = "";
 				}

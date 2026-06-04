@@ -1,3 +1,4 @@
+// Mirror of application/Schedule/Handle_Creation_Of_Invoic.deluge — keep in sync. Entry: run_scheduled_non_monthly_billing
 Handle_Creation_Of_Invoic as "Handle Creation Of Invoice Other Than Monthly"
 {
 	type =  schedule
@@ -10,20 +11,7 @@ Handle_Creation_Of_Invoic as "Handle Creation Of Invoice Other Than Monthly"
 		{
 		on load
 		(
-			tenantInfo = Tenancy[ID == input.Customer_Code];
-				billingCycle = tenantInfo.Billing_Cycle;
-				billFor = tenantInfo.Bill_For;
-				billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billingCycle);
-				subsListId = List();
-				subsListId.add(input.ID);
-				if(billFor == "Current Duration")
-				{
-					thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,input.Next_Billing_Date,input.Next_Billing_Date,false,null,null);
-				}
-				else
-				{
-					thisapp.invoice.create_invoice_previous_not_monthly(input.ID,billCycleInt,input.Customer_Code,input.Next_Billing_Date,input.Next_Billing_Date,false,null,null);
-				}
+			thisapp.tenancy.run_scheduled_non_monthly_billing(input.ID);
 		)
 		}
 	}

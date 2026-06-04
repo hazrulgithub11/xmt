@@ -1,0 +1,9 @@
+// Bill-every anchor date for a reference month (monthly billing cycle).
+date tenancy.get_billing_every_date(string billEvery, date referenceDate)
+{
+	if(billEvery == "Last Day Of Month" || (billEvery == "29" && referenceDate.getMonth() == 2 && !thisapp.is_leap_year(referenceDate.getYear())))
+	{
+		return toDate("01-" + referenceDate.getMonth() + "-" + referenceDate.getYear(),"dd-MM-yyyy").eomonth(0);
+	}
+	return toDate(billEvery + "-" + referenceDate.getMonth() + "-" + referenceDate.getYear(),"dd-MM-yyyy");
+}

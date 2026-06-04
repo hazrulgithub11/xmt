@@ -1,4 +1,5 @@
-Handle_Edit_Submission as "Handle Edit Submission"
+// LEGACY / DEPRECATED — inactive. Do not re-enable or maintain. Primary: Handle_Subscription_Submi.deluge
+Handle_Edit_Submission as "[LEGACY] Handle Edit Submission"
 {
 	type =  form
 	form = Subscription
@@ -12,6 +13,7 @@ Handle_Edit_Submission as "Handle Edit Submission"
 		{
 			custom deluge script
 			(
+					// DEPRECATED: superseded by Handle_Subscription_Submi (Primary).
 					getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
 				if(getInvoices.size() == 0)
 				{

@@ -1,0 +1,17 @@
+// Schedule entry (non-monthly): Handle_Creation_Of_Invoic — do not duplicate inline invoice routing in workflows.
+void tenancy.run_scheduled_non_monthly_billing(int subscriptionID)
+{
+	sub = Subscription[ID == subscriptionID];
+	tenantInfo = Tenancy[ID == sub.Customer_Code];
+	billingCycle = tenantInfo.Billing_Cycle;
+	billFor = tenantInfo.Bill_For;
+	billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billingCycle);
+	if(billFor == "Current Duration")
+	{
+		thisapp.invoice.create_invoice_current_not_monthly(subscriptionID,billCycleInt,sub.Customer_Code,sub.Next_Billing_Date,sub.Next_Billing_Date,false,null,null);
+	}
+	else
+	{
+		thisapp.invoice.create_invoice_previous_not_monthly(subscriptionID,billCycleInt,sub.Customer_Code,sub.Next_Billing_Date,sub.Next_Billing_Date,false,null,null);
+	}
+}

@@ -12,10 +12,6 @@ Handle_Contract_Period_Ch as "Handle Contract Period Changes"
 			custom deluge script
 			(
 					input.Contract_End_Date = input.Contract_Start_Date.addMonth(input.Contract_Period);
-				for each  subLineItem in input.Subcription_Line_Items
-				{
-					subLineItem.Contract_End_Date=input.Contract_End_Date;
-				}
 				getTenant = Tenancy[ID == input.Customer_Code];
 				billCycle = getTenant.Billing_Cycle;
 				billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(billCycle);

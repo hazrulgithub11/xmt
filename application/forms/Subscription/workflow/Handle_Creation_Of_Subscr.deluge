@@ -1,4 +1,5 @@
-Handle_Creation_Of_Subscr as "Handle Creation Of Subscription"
+// LEGACY / DEPRECATED — inactive. Do not re-enable or maintain. Primary: Handle_Subscription_Submi.deluge
+Handle_Creation_Of_Subscr as "[LEGACY] Handle Creation Of Subscription"
 {
 	type =  form
 	form = Subscription
@@ -12,6 +13,7 @@ Handle_Creation_Of_Subscr as "Handle Creation Of Subscription"
 		{
 			custom deluge script
 			(
+					// DEPRECATED: superseded by Handle_Subscription_Submi (Primary).
 					tenancyInfo = Tenancy[ID == input.Customer_Code];
 				tenantNextBilligDate = tenancyInfo.Next_Billing_Date;
 				tenantLastBillingDate = tenancyInfo.Latest_Billing_Date;

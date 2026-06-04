@@ -1,3 +1,4 @@
+// Canonical monthly billing schedule. Entry: thisapp.tenancy.fetch_subscription_and_tenancy_details
 Handle_Creation_Of_Subscr1 as "Handle Creation Of Subscription Invoice"
 {
 	type =  schedule

@@ -1,0 +1,55 @@
+// Authoritative next-billing-date transition after an invoice run (monthly and non-monthly cycles).
+date tenancy.compute_next_billing_date(int billingCycle, date actualBillingDate, date monthlyBillingDate, string billEvery, date contractStartDate)
+{
+	newNextBillingDate = null;
+	if(billingCycle == 1)
+	{
+		if(monthlyBillingDate == actualBillingDate)
+		{
+			newNextBillingDate = actualBillingDate.addMonth(billingCycle);
+			if(billEvery != "Last Day Of Month")
+			{
+				billEveryInt = billEvery.toLong();
+			}
+			else
+			{
+				billEveryInt = newNextBillingDate.eomonth(0).getDay();
+			}
+			if(newNextBillingDate.getDay() != billEveryInt && newNextBillingDate.getMonth() != 2 && billEvery != "Last Day Of Month")
+			{
+				newNextBillingDate = toDate(billEvery + "-" + newNextBillingDate.getMonth() + "-" + newNextBillingDate.getYear(),"dd-MM-yyyy");
+			}
+		}
+		else
+		{
+			newNextBillingDate = monthlyBillingDate.addMonth(billingCycle);
+		}
+		if(billEvery == "Last Day Of Month")
+		{
+			newNextBillingDate = newNextBillingDate.eomonth(0);
+		}
+	}
+	else
+	{
+		if(monthlyBillingDate == actualBillingDate)
+		{
+			if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay())
+			{
+				newNextBillingDate = actualBillingDate.addMonth(billingCycle).eomonth(0);
+			}
+			else if(contractStartDate.getDay() != actualBillingDate.addMonth(billingCycle).getDay() && actualBillingDate.addMonth(billingCycle).getMonth() != 2)
+			{
+				newNextBillingDate = toDate(contractStartDate.getDay() + "-" + actualBillingDate.addMonth(billingCycle).getMonth() + "-" + actualBillingDate.addMonth(billingCycle).getYear(),"dd-MM-yyyy");
+			}
+			else
+			{
+				newNextBillingDate = actualBillingDate.addMonth(billingCycle);
+			}
+		}
+		else
+		{
+			newNextBillingDate = monthlyBillingDate.addMonth(billingCycle);
+		}
+	}
+	return newNextBillingDate;
+}

@@ -1,5 +1,7 @@
 # XMT Billing System - Architecture Overview (Inferred)
 
+**Active refactor tracker:** [tenancy_subscription_cleanup.plan.md](tenancy_subscription_cleanup.plan.md) (Tenancy + Subscription cleanup; Phase 0 baseline frozen at commit `39be617`).
+
 ## 1) Scope and Confidence
 
 This document is inferred from static scan of `XMT___Billing_System.ds` (Zoho Creator export, ~48k lines).  

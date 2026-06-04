@@ -1,45 +1,16 @@
 void subscription.update_subscription_next_and_last_billing_date(list:int subsListId, string billFor, int billingCycle, date actualBillingDate, date monthlyBillingDate, string billEvery)
 {
-	//newNextBillingDate = actualBillingDate.addMonth(billingCycle);
-	//info "Update Subscription Date";
-	//info "actualBillingDate:" + actualBillingDate;
-	//info "monthlyBillingDate:" + monthlyBillingDate;
+	subInfo = Subscription[ID == subsListId.get(0)];
+	contractStartDate = subInfo.Contract_Start_Date;
+	newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
 	if(billingCycle == 1)
 	{
-		if(monthlyBillingDate == actualBillingDate)
-		{
-			newNextBillingDate = actualBillingDate.addMonth(billingCycle);
-			if(billEvery != "Last Day Of Month")
-			{
-				billEveryInt = billEvery.toLong();
-			}
-			else
-			{
-				billEveryInt = newNextBillingDate.eomonth(0).getDay();
-			}
-			if(newNextBillingDate.getDay() != billEveryInt && newNextBillingDate.getMonth() != 2 && billEvery != "Last Day Of Month")
-			{
-				newNextBillingDate = toDate(billEvery + "-" + newNextBillingDate.getMonth() + "-" + newNextBillingDate.getYear(),"dd-MM-yyyy");
-			}
-		}
-		else
-		{
-			newNextBillingDate = monthlyBillingDate.addMonth(billingCycle);
-		}
-		if(billEvery == "Last Day Of Month")
-		{
-			newNextBillingDate = newNextBillingDate.eomonth(0);
-		}
-		//info "actualBillingDate:" + actualBillingDate;
 		if(billFor.containsIgnoreCase("Current"))
 		{
 			for each  subId in subsListId
 			{
 				subInfo = Subscription[ID == subId];
 				finalBillingDate = subInfo.Final_Billing_Date;
-				contractEndDate = subInfo.Contract_End_Date;
-				//getTenant = Tenancy [ ID != subInfo.Customer_Code ];
-				//billCycleInt = thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
 				if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
 				{
 					subInfo.Next_Billing_Date=newNextBillingDate;
@@ -84,31 +55,7 @@ void subscription.update_subscription_next_and_last_billing_date(list:int subsLi
 	else
 	{
 		subInfo = Subscription[ID == subsListId.get(0)];
-		contractStartDate = subInfo.Contract_Start_Date;
-		contractEndDate = subInfo.Contract_End_Date;
 		finalBillingDate = subInfo.Final_Billing_Date;
-		if(monthlyBillingDate == actualBillingDate)
-		{
-			if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay())
-			{
-				newNextBillingDate = actualBillingDate.addMonth(billingCycle).eomonth(0);
-			}
-			else if(contractStartDate.getDay() != actualBillingDate.addMonth(billingCycle).getDay() && actualBillingDate.addMonth(billingCycle).getMonth() != 2)
-			{
-				newNextBillingDate = toDate(contractStartDate.getDay() + "-" + actualBillingDate.addMonth(billingCycle).getMonth() + "-" + actualBillingDate.addMonth(billingCycle).getYear(),"dd-MM-yyyy");
-			}
-			else
-			{
-				newNextBillingDate = actualBillingDate.addMonth(billingCycle);
-			}
-		}
-		else
-		{
-			newNextBillingDate = monthlyBillingDate.addMonth(billingCycle);
-		}
-		//info "actualBillingDate:" + actualBillingDate;
-		//info "monthlyBillingDate:" + monthlyBillingDate;
-		//info "newNextBillingDate:" + newNextBillingDate;
 		if(billFor.containsIgnoreCase("Current"))
 		{
 			if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)

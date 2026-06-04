@@ -1,0 +1,13 @@
+// Adjust next/final billing dates for Last Day Of Month and 29th (non-Feb) rules.
+date tenancy.normalize_billing_date_for_bill_every(date billingDate, string billEvery)
+{
+	if(billEvery == "Last Day Of Month" && billingDate.getDay() != billingDate.eomonth(0).getDay() && billingDate.getMonth() != 2)
+	{
+		return toDate(billingDate.eomonth(0).getDay() + "-" + billingDate.getMonth() + "-" + billingDate.getYear(),"dd-MM-yyyy");
+	}
+	else if(billEvery == "29" && billingDate.getDay() != 29 && billingDate.getMonth() != 2)
+	{
+		return toDate("29" + "-" + billingDate.getMonth() + "-" + billingDate.getYear(),"dd-MM-yyyy");
+	}
+	return billingDate;
+}

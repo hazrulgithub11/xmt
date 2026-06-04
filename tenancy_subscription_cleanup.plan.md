@@ -1,8 +1,35 @@
 # Tenancy + Subscription Cleanup Plan
 
-Status: `In Progress`  
+Status: `In Progress` (Phase 0 complete — awaiting manager sign-off)  
 Owner: `Billing Team`  
 Last Updated: `2026-06-03`
+
+**Active cleanup tracker:** this file. Architecture overview: [`xmt.plan.md`](xmt.plan.md).
+
+## Team Agreement (Baseline — No Behavior Change)
+
+Until a phase is explicitly started and its acceptance criteria are met:
+
+1. **Do not** change Deluge logic in scoped tenancy/subscription/invoice/ticket files except documentation and comments that do not alter runtime.
+2. **Treat** the git baseline below as the reference snapshot for diffs and regression comparison.
+3. **Record** every behavioral change in the Change Log with phase, risk, and validation notes.
+4. **Deploy** one phase at a time; do not mix Phase 1+ refactors in the same release as unrelated billing changes.
+
+| Role | Sign-off | Date |
+|------|----------|------|
+| Billing / dev lead | ☐ Approved baseline | |
+| Manager | ☐ Approved plan + sequencing | |
+
+## Git Baseline (Frozen)
+
+| Field | Value |
+|-------|-------|
+| Commit | `39be6172a70176f42024fe7f0fad07dbe63e0a60` |
+| Message | `pro forma invoice custom actions` |
+| Canonical export | `XMT___Billing_System.ds` |
+| Extracted app root | `application/` |
+
+Compare all cleanup work against this commit unless the baseline row is updated here with a new SHA and reason.
 
 ## Source Of Truth
 
@@ -43,73 +70,172 @@ Validated modules/workflows/functions from source:
 
 ---
 
+## Baseline Inventory (Frozen Behavior)
+
+### Workflow activation matrix
+
+| Workflow | Repo path | Trigger | Creator status | Notes |
+|----------|-----------|---------|----------------|-------|
+| Handle Creation Of Subscription | `application/forms/Subscription/workflow/Handle_Creation_Of_Subscr.deluge` | `on add` → `on success` | **inactive** | Legacy add path; mirrors billing orchestration |
+| Handle Edit Submission | `application/forms/Subscription/workflow/Handle_Edit_Submission.deluge` | `on edit` → `on success` | **inactive** | Legacy edit path |
+| Handle Subscription Submission And Edit | `application/forms/Subscription/workflow/Handle_Subscription_Submi.deluge` | `on add or edit` → `on success` | **active** | Primary add/edit path; gated `Bill_For == "Current Duration" && Billing_Cycle == "Monthly"` |
+| Handle Contract Start Date | `application/forms/Subscription/workflow/Handle_Contract_Start_Dat.deluge` | `on user input` Contract_Start_Date | **active** | Inline billing-date derivation on load |
+| Handle Contract End Date Fields | `application/forms/Subscription/workflow/Handle_Contract_End_Date_.deluge` | `on user input` Contract_End_Date | **active** | Line-item end-date sync |
+| Handle Creation Of Subscription Invoice (Tenancy form) | `application/forms/Tenancy/workflow/Handle_Creation_Of_Subscr1.deluge` | schedule on Tenancy | duplicate of schedule | Same schedule definition as `application/Schedule/` |
+| Handle Creation Of Subscription Invoice | `application/Schedule/Handle_Creation_Of_Subscr1.deluge` | 5 days before `Next_Billing_Date` 09:00 SGT | **active** | Monthly → `tenancy.fetch_subscription_and_tenancy_details` |
+| Handle Creation Of Invoice Other Than Monthly | `application/Schedule/Handle_Creation_Of_Invoic.deluge` | 5 days before sub `Next_Billing_Date` | **active** | Non-monthly active subs → `invoice.create_invoice_*_not_monthly` |
+
+### Shared functions in scope (repo paths)
+
+| Function | Path | Role in baseline |
+|----------|------|------------------|
+| `tenancy.convert_bill_cycle_to_int` | `application/Custom Functions/tenancy/convert_bill_cycle_to_int` | Cycle string → months int (default 1 if null/unknown) |
+| `tenancy.get_billing_every_date` | `application/Custom Functions/tenancy/get_billing_every_date` | Bill-every anchor for a reference month (Phase 2) |
+| `tenancy.get_monthly_billing_date_from_actual` | `application/Custom Functions/tenancy/get_monthly_billing_date_from_actual` | Monthly invoice period from next-billing date (Phase 2) |
+| `tenancy.normalize_billing_date_for_bill_every` | `application/Custom Functions/tenancy/normalize_billing_date_for_bill_every` | Last-day / 29th date adjustment (Phase 2) |
+| `tenancy.get_billing_date_for_contract_day` | `application/Custom Functions/tenancy/get_billing_date_for_contract_day` | Non-monthly contract-day billing date (Phase 2) |
+| `tenancy.compute_next_billing_date` | `application/Custom Functions/tenancy/compute_next_billing_date` | Next billing date after invoice run (Phase 2) |
+| `tenancy.fetch_subscription_and_tenancy_details` | `application/Custom Functions/tenancy/fetch_subscription_and_tenancy_details` | Monthly schedule orchestration |
+| `tenancy.run_scheduled_non_monthly_billing` | `application/Custom Functions/tenancy/run_scheduled_non_monthly_billing` | Non-monthly schedule orchestration (Phase 1) |
+| `subscription.update_subscription_next_and_last_billing_date` | `application/Custom Functions/subscription/update_subscription_next_and_last_billing_date` | Post-invoice date updates |
+| `subscription.createTicket` | `application/Custom Functions/subscription/createTicket` | Desk ticket (legacy path) |
+| `subscription.createTicketUpdateWo` | `application/Custom Functions/subscription/createTicketUpdateWo` | Desk ticket + WO update |
+| `work_order_creation.updateTicketNumber` | `application/Custom Functions/work_order_creation/updateTicketNumber` | Ticket number on WO |
+| `invoice.create_invoice_current_monthly` | `application/Custom Functions/invoice/create_invoice_current_monthly` | Current-duration monthly invoice |
+| `invoice.create_invoice_previous_monthly` | `application/Custom Functions/invoice/create_invoice_previous_monthly` | Previous-duration monthly invoice |
+| `invoice.create_invoice_current_not_monthly` | `application/Custom Functions/invoice/create_invoice_current_not_monthly` | Current-duration non-monthly |
+| `invoice.create_invoice_previous_not_monthly` | `application/Custom Functions/invoice/create_invoice_previous_not_monthly` | Previous-duration non-monthly |
+
+### Line-count snapshot (for diff noise awareness)
+
+| File | Lines |
+|------|------:|
+| `Handle_Creation_Of_Subscr.deluge` | 582 |
+| `Handle_Edit_Submission.deluge` | 578 |
+| `Handle_Subscription_Submi.deluge` | 760 |
+| `Handle_Contract_Start_Dat.deluge` | 278 |
+| `Handle_Contract_End_Date_.deluge` | 243 |
+| `Handle_Creation_Of_Subscr1.deluge` (Schedule + Tenancy) | 18 each |
+
+### Known baseline behaviors (document, do not “fix” in Phase 0)
+
+- **Dual subscription on-success paths:** inactive `Handle_Creation_Of_Subscr` / `Handle_Edit_Submission` vs active `Handle_Subscription_Submi` — production behavior follows the active workflow only.
+- **Duplicate monthly schedule:** identical `Handle_Creation_Of_Subscr1` under `application/Schedule/` and `application/forms/Tenancy/workflow/`.
+- **Split ticket pipeline:** `createTicket`, `createTicketUpdateWo`, and `updateTicketNumber` are separate entry points (Phase 5 target).
+- **Repeated date/proration math** across workflows and invoice functions (Phases 2–4 targets).
+
+### Pre-refactor smoke checklist (run before Phase 1+)
+
+- [ ] Subscription add (monthly, Current Duration): dates and line items match pre-change baseline in test tenancy.
+- [ ] Subscription edit with zero invoices: same as add path.
+- [ ] Contract start/end user-input: end date and proration fields populate as today.
+- [ ] Monthly schedule (or manual invoke of `fetch_subscription_and_tenancy_details`): invoice created for due subs.
+- [ ] Non-monthly schedule: correct `create_invoice_*_not_monthly` branch for Bill_For.
+- [ ] No unexpected activation of **inactive** workflows after export/sync to Creator.
+
+---
+
 ## Phase-By-Phase Execution Plan
 
 ## Phase 0 - Baseline and Safety Net
-Status: `TODO`
+Status: `DONE` (pending sign-off in table above)
 
 Goal:
 - Freeze current behavior and make cleanup trackable.
 
-Files to change + manager reason:
+Files changed + manager reason:
 - `tenancy_subscription_cleanup.plan.md`  
-  Reason: Create a single progress tracker with scope, sequencing, and accountability.
-- `xmt.plan.md` (optional summary link only)  
-  Reason: Keep one-line pointer to active cleanup tracker for team visibility.
+  Reason: Single progress tracker with baseline inventory, git SHA, team rules, and smoke checklist.
+- `xmt.plan.md`  
+  Reason: One-line pointer to this tracker for team visibility.
 
 Acceptance:
-- Plan approved.
-- Team aligns on "no behavior change" baseline before refactor.
+- [x] Plan documented with scope, sequencing, and accountability.
+- [x] Baseline inventory and git SHA recorded.
+- [x] Explicit “no behavior change” agreement captured.
+- [ ] Plan approved (manager sign-off).
+- [ ] Team aligned on baseline before Phase 1 (checkboxes in sign-off table).
 
 ---
 
 ## Phase 1 - Workflow Consolidation (Duplicate Workflow)
-Status: `TODO`
+Status: `DONE`
 
 Goal:
 - Keep exactly one active orchestration path per scenario.
 
-Files to change + manager reason:
+Files changed + manager reason:
 - `application/forms/Subscription/workflow/Handle_Subscription_Submi.deluge`  
-  Reason: Keep as primary add/edit billing orchestration entry.
+  Reason: Marked as primary add/edit orchestration (`(Primary)` display name + header).
 - `application/forms/Subscription/workflow/Handle_Creation_Of_Subscr.deluge`  
-  Reason: Mark as legacy/deprecated path to prevent dual maintenance confusion.
+  Reason: Marked `[LEGACY]`, inactive, deprecation comments.
 - `application/forms/Subscription/workflow/Handle_Edit_Submission.deluge`  
-  Reason: Mark as legacy/deprecated path to avoid duplicate execution logic.
+  Reason: Marked `[LEGACY]`, inactive, deprecation comments.
+- `application/Custom Functions/tenancy/run_scheduled_non_monthly_billing`  
+  Reason: Single non-monthly schedule entry (mirrors monthly `fetch_subscription_and_tenancy_details`).
 - `application/Schedule/Handle_Creation_Of_Subscr1.deluge`  
-  Reason: Normalize monthly schedule call path.
+  Reason: Documented canonical monthly path; calls `fetch_subscription_and_tenancy_details` only.
 - `application/Schedule/Handle_Creation_Of_Invoic.deluge`  
-  Reason: Normalize non-monthly schedule call path.
+  Reason: Inline invoice routing removed; calls `run_scheduled_non_monthly_billing` only.
+- `application/forms/Subscription/workflow/Handle_Creation_Of_Invoic.deluge`  
+  Reason: Kept in sync with Schedule export.
+- `application/forms/Tenancy/workflow/Handle_Creation_Of_Subscr1.deluge`  
+  Reason: Kept in sync with Schedule export.
+- `XMT___Billing_System.ds`  
+  Reason: New function + schedule block aligned with `application/` extract.
+
+### Orchestration map (post Phase 1)
+
+| Scenario | Active path | Entry function |
+|----------|-------------|----------------|
+| Subscription add/edit (monthly, Current Duration) | `Handle_Subscription_Submi` | inline (Phase 2+ may centralize) |
+| Subscription add (legacy) | `[LEGACY] Handle_Creation_Of_Subscr` | inactive — do not use |
+| Subscription edit (legacy) | `[LEGACY] Handle_Edit_Submission` | inactive — do not use |
+| Monthly invoice schedule | `Handle_Creation_Of_Subscr1` | `tenancy.fetch_subscription_and_tenancy_details` |
+| Non-monthly invoice schedule | `Handle_Creation_Of_Invoic` | `tenancy.run_scheduled_non_monthly_billing` |
 
 Acceptance:
-- One clear orchestration path for add/edit.
-- Schedules call normalized entry functions only.
+- [x] One clear orchestration path for add/edit (`Handle_Subscription_Submi`).
+- [x] Schedules call normalized entry functions only.
+- [ ] Smoke checklist re-run after deploy to Creator.
 
 ---
 
 ## Phase 2 - Centralize Billing-Date Calculations (Duplicated Calculation)
-Status: `TODO`
+Status: `DONE`
 
 Goal:
 - Move repeated billing date computations into one shared utility layer.
 
-Files to change + manager reason:
-- `application/Custom Functions/tenancy/convert_bill_cycle_to_int`  
-  Reason: Add safe default + validation to avoid null/undefined downstream behavior.
-- `application/Custom Functions/tenancy/fetch_subscription_and_tenancy_details`  
-  Reason: Reduce inline date logic and route to centralized date utility.
-- `application/Custom Functions/subscription/update_subscription_next_and_last_billing_date`  
-  Reason: Make this the authoritative updater for next/latest/final date transitions.
-- `application/forms/Subscription/workflow/Handle_Subscription_Submi.deluge`  
-  Reason: Replace repeated date math blocks with shared function calls.
-- `application/forms/Subscription/workflow/Handle_Contract_Start_Dat.deluge`  
-  Reason: Remove duplicated billing-date derivation from user-input workflow.
-- `application/forms/Subscription/workflow/Handle_Contract_End_Date_.deluge`  
-  Reason: Remove duplicated billing-date derivation from user-input workflow.
+### Billing-date utility layer (single source of truth)
+
+| Function | Purpose |
+|----------|---------|
+| `tenancy.get_billing_every_date(billEvery, referenceDate)` | Monthly bill-every anchor (today or contract start month) |
+| `tenancy.get_monthly_billing_date_from_actual(billEvery, actualBillingDate)` | Schedule monthly invoice period date |
+| `tenancy.normalize_billing_date_for_bill_every(date, billEvery)` | Last Day Of Month / 29th adjustments |
+| `tenancy.get_billing_date_for_contract_day(contractStart, referenceDate)` | Non-monthly billing on contract day |
+| `tenancy.compute_next_billing_date(...)` | Post-invoice next billing transition |
+| `tenancy.convert_bill_cycle_to_int(billCycle)` | Safe cycle int (defaults to 1) |
+
+Files changed + manager reason:
+- `application/Custom Functions/tenancy/convert_bill_cycle_to_int` — null/empty guard, default 1.
+- `application/Custom Functions/tenancy/get_billing_every_date` — **new** shared bill-every anchor.
+- `application/Custom Functions/tenancy/get_monthly_billing_date_from_actual` — **new** schedule period helper.
+- `application/Custom Functions/tenancy/normalize_billing_date_for_bill_every` — **new** last-day/29th normalizer.
+- `application/Custom Functions/tenancy/get_billing_date_for_contract_day` — **new** non-monthly day helper.
+- `application/Custom Functions/tenancy/compute_next_billing_date` — **new** next-date calculator.
+- `application/Custom Functions/tenancy/fetch_subscription_and_tenancy_details` — uses `get_monthly_billing_date_from_actual`.
+- `application/Custom Functions/subscription/update_subscription_next_and_last_billing_date` — delegates next date to `compute_next_billing_date`.
+- `application/forms/Subscription/workflow/Handle_Subscription_Submi.deluge` — inline date blocks → utility calls.
+- `application/forms/Subscription/workflow/Handle_Contract_Start_Dat.deluge` — removed commented date-derivation blocks; UI/validation only.
+- `application/forms/Subscription/workflow/Handle_Contract_End_Date_.deluge` — same cleanup.
+- `XMT___Billing_System.ds` — new utilities + updated custom functions.
 
 Acceptance:
-- Billing-date formulas are defined once and reused.
-- Start/end date user-input workflows only do UI/validation responsibilities.
+- [x] Billing-date formulas defined once in `tenancy.*` utilities and reused.
+- [x] Contract start/end workflows: UI, validation, prorate notes, line-item sync only.
+- [ ] Smoke checklist re-run after Creator deploy (month-end, leap-year, short contracts).
 
 ---
 
@@ -203,9 +329,9 @@ Acceptance:
 
 ## Progress Tracker
 
-- [ ] Phase 0 - Baseline and Safety Net
-- [ ] Phase 1 - Workflow Consolidation
-- [ ] Phase 2 - Centralize Billing-Date Calculations
+- [x] Phase 0 - Baseline and Safety Net (docs only; manager sign-off pending)
+- [x] Phase 1 - Workflow Consolidation (deploy + smoke pending)
+- [x] Phase 2 - Centralize Billing-Date Calculations (deploy + smoke pending)
 - [ ] Phase 3 - Centralize Amount + Proration Calculations
 - [ ] Phase 4 - Fix Wrong Logic Calculations
 - [ ] Phase 5 - Ticket Workflow Unification
@@ -214,6 +340,30 @@ Acceptance:
 ---
 
 ## Change Log (Manager Update Format)
+
+- Date: 2026-06-03
+- Phase: 2
+- Files changed: 5 new `tenancy.*` date utilities, `convert_bill_cycle_to_int`, `fetch_subscription_and_tenancy_details`, `update_subscription_next_and_last_billing_date`, `Handle_Subscription_Submi`, contract start/end workflows, `XMT___Billing_System.ds`
+- Why changed: Centralize repeated billing-date math; contract UI workflows stripped of dead date-derivation code.
+- Risk level: `Medium` (must publish 5 new Creator functions; behavior should be equivalent)
+- Validation done: Utility extract matches prior inline formulas; workflow branches unchanged.
+- Outcome: Phase 2 complete in repo; await Creator deploy + smoke checklist.
+
+- Date: 2026-06-03
+- Phase: 1
+- Files changed: Subscription workflows (primary/legacy), schedules, `run_scheduled_non_monthly_billing`, `XMT___Billing_System.ds`
+- Why changed: One add/edit path; schedule thin wrappers; non-monthly logic centralized.
+- Risk level: `Medium` (new Creator function must be published; schedule behavior equivalent)
+- Validation done: Extracted schedule logic matches prior inline calls (same args to invoice functions).
+- Outcome: Phase 1 complete in repo; await Creator deploy + smoke checklist.
+
+- Date: 2026-06-03
+- Phase: 0
+- Files changed: `tenancy_subscription_cleanup.plan.md`, `xmt.plan.md`
+- Why changed: Freeze baseline, add tracker/sign-off/smoke checklist; link from architecture doc.
+- Risk level: `Low` (documentation only)
+- Validation done: Repo inventory verified against `application/` extracts; git SHA recorded.
+- Outcome: Phase 0 deliverables complete; no Deluge behavior changes.
 
 Use this template for each merged batch:
 

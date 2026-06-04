@@ -1,5 +1,10 @@
 int tenancy.convert_bill_cycle_to_int(string billCycle)
 {
+	monthsToAdd = 1;
+	if(billCycle == null || billCycle == "")
+	{
+		return monthsToAdd;
+	}
 	if(billCycle == "Monthly")
 	{
 		monthsToAdd = 1;

@@ -1,0 +1,13 @@
+// Monthly invoice period date derived from tenant next-billing date and bill-every rule.
+date tenancy.get_monthly_billing_date_from_actual(string billEvery, date actualBillingDate)
+{
+	if(billEvery.toLong() == 1)
+	{
+		return actualBillingDate.toStartOfMonth();
+	}
+	if(billEvery == "Last Day Of Month")
+	{
+		return toDate("01-" + actualBillingDate.getMonth() + "-" + actualBillingDate.getYear(),"dd-MM-yyyy").eomonth(0);
+	}
+	return toDate(billEvery + "-" + actualBillingDate.getMonth() + "-" + actualBillingDate.getYear(),"dd-MM-yyyy");
+}
