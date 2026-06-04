@@ -269,7 +269,7 @@ Acceptance:
 ---
 
 ## Phase 4 - Fix Wrong Logic Calculations
-Status: `TODO`
+Status: `DONE`
 
 Goal:
 - Correct known incorrect/fragile logic while preserving intended business behavior.
@@ -342,7 +342,7 @@ Acceptance:
 - [x] Phase 1 - Workflow Consolidation (deploy + smoke pending)
 - [x] Phase 2 - Centralize Billing-Date Calculations (deploy + smoke pending)
 - [x] Phase 3 - Centralize Amount + Proration (2 helpers; deploy + smoke pending)
-- [ ] Phase 4 - Fix Wrong Logic Calculations
+- [x] Phase 4 - Fix Wrong Logic Calculations
 - [ ] Phase 5 - Ticket Workflow Unification
 - [ ] Phase 6 - Tenancy Guardrails + Data Integrity
 

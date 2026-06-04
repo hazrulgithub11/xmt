@@ -76,7 +76,7 @@ Handle_Subscription_Submi1 as "Handle Subscription Submission And Edit (Primary)
 							tenancyInfo.Latest_Billing_Date=input.Latest_Billing_Date;
 						}
 					}
-					else if(contractStartDate >= today.toStartOfMonth() && contractStartDate <= today.eomonth(0) && contractStartDate < today || (daysBetween(today,currentBillingEveryDate) <= 5 && contractStartDate >= currentBillingEveryDate))
+					else if(contractStartDate >= today.toStartOfMonth() && contractStartDate <= today.eomonth(0) && (contractStartDate <= today || (daysBetween(today,currentBillingEveryDate) <= 5 && contractStartDate >= currentBillingEveryDate)))
 					{
 						//info "daysBetween Contract Start Date And currentBillingEveryDate:" + daysBetween(contractStartDate,currentBillingEveryDate);
 						//Contract Start Date Is The Same As Current Month And Year.

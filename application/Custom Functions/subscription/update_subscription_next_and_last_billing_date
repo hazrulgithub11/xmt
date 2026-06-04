@@ -1,8 +1,5 @@
 void subscription.update_subscription_next_and_last_billing_date(list:int subsListId, string billFor, int billingCycle, date actualBillingDate, date monthlyBillingDate, string billEvery)
 {
-	subInfo = Subscription[ID == subsListId.get(0)];
-	contractStartDate = subInfo.Contract_Start_Date;
-	newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
 	if(billingCycle == 1)
 	{
 		if(billFor.containsIgnoreCase("Current"))
@@ -11,6 +8,8 @@ void subscription.update_subscription_next_and_last_billing_date(list:int subsLi
 			{
 				subInfo = Subscription[ID == subId];
 				finalBillingDate = subInfo.Final_Billing_Date;
+				contractStartDate = subInfo.Contract_Start_Date;
+				newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
 				if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
 				{
 					subInfo.Next_Billing_Date=newNextBillingDate;
@@ -24,7 +23,7 @@ void subscription.update_subscription_next_and_last_billing_date(list:int subsLi
 				}
 				else if(actualBillingDate != monthlyBillingDate)
 				{
-					continue;
+					subInfo.Latest_Billing_Date=actualBillingDate;
 				}
 			}
 		}
@@ -34,6 +33,8 @@ void subscription.update_subscription_next_and_last_billing_date(list:int subsLi
 			{
 				subInfo = Subscription[ID == subId];
 				finalBillingDate = subInfo.Final_Billing_Date;
+				contractStartDate = subInfo.Contract_Start_Date;
+				newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
 				if(actualBillingDate != monthlyBillingDate)
 				{
 					subInfo.Latest_Billing_Date=actualBillingDate;
@@ -54,34 +55,47 @@ void subscription.update_subscription_next_and_last_billing_date(list:int subsLi
 	}
 	else
 	{
-		subInfo = Subscription[ID == subsListId.get(0)];
-		finalBillingDate = subInfo.Final_Billing_Date;
-		if(billFor.containsIgnoreCase("Current"))
+		for each  subId in subsListId
 		{
-			if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
+			subInfo = Subscription[ID == subId];
+			finalBillingDate = subInfo.Final_Billing_Date;
+			contractStartDate = subInfo.Contract_Start_Date;
+			newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
+			if(billFor.containsIgnoreCase("Current"))
 			{
-				subInfo.Next_Billing_Date=newNextBillingDate;
-				subInfo.Latest_Billing_Date=actualBillingDate;
+				if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
+				{
+					subInfo.Next_Billing_Date=newNextBillingDate;
+					subInfo.Latest_Billing_Date=actualBillingDate;
+				}
+				else if(actualBillingDate == finalBillingDate)
+				{
+					subInfo.Next_Billing_Date=null;
+					subInfo.Latest_Billing_Date=actualBillingDate;
+					subInfo.Subscription_Status="Inactive";
+				}
+				else if(actualBillingDate != monthlyBillingDate)
+				{
+					subInfo.Latest_Billing_Date=actualBillingDate;
+				}
 			}
-			else if(actualBillingDate == finalBillingDate)
+			else if(billFor.containsIgnoreCase("Previous"))
 			{
-				subInfo.Next_Billing_Date=null;
-				subInfo.Latest_Billing_Date=actualBillingDate;
-				subInfo.Subscription_Status="Inactive";
-			}
-		}
-		else if(billFor.containsIgnoreCase("Previous"))
-		{
-			if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
-			{
-				subInfo.Next_Billing_Date=newNextBillingDate;
-				subInfo.Latest_Billing_Date=actualBillingDate;
-			}
-			else if(actualBillingDate == finalBillingDate)
-			{
-				subInfo.Next_Billing_Date=null;
-				subInfo.Latest_Billing_Date=actualBillingDate;
-				subInfo.Subscription_Status="Inactive";
+				if(actualBillingDate != monthlyBillingDate)
+				{
+					subInfo.Latest_Billing_Date=actualBillingDate;
+				}
+				if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
+				{
+					subInfo.Next_Billing_Date=newNextBillingDate;
+					subInfo.Latest_Billing_Date=actualBillingDate;
+				}
+				else if(actualBillingDate == finalBillingDate)
+				{
+					subInfo.Next_Billing_Date=null;
+					subInfo.Latest_Billing_Date=actualBillingDate;
+					subInfo.Subscription_Status="Inactive";
+				}
 			}
 		}
 	}

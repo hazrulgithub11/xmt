@@ -38,7 +38,7 @@ Handle_Tenant_Code_Change as "Handle Tenant Code Changes"
 					}
 					if(input.Customer_PO_No != "")
 					{
-						subscriptionList = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No.contains(input.Customer_PO_No)].ID.getAll();
+						subscriptionList = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No == input.Customer_PO_No && ID != input.ID].ID.getAll();
 						if(subscriptionList.size() > 0)
 						{
 							alert "The Customer PO No. " + input.Customer_PO_No + " already exists for this tenant. Please enter a different PO No.";

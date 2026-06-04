@@ -15,6 +15,9 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 	totalTax = 0;
 	grandTotal = 0;
 	grandTotalMYR = 0;
+	subTotalCallCharges = 0;
+	totalTaxCallCharges = 0;
+	grandTotalCallCharges = 0;
 	totalDepositAmount = 0;
 	invoiceLineItemCollection = Collection();
 	payableTo = List();
@@ -601,6 +604,9 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 		totalTax = totalTax + taxAmount;
 		grandTotal = grandTotal + total;
 		grandTotalMYR = grandTotalMYR + totalMYR;
+		subTotalCallCharges = subTotalCallCharges + unitPrice;
+		totalTaxCallCharges = totalTaxCallCharges + taxAmount;
+		grandTotalCallCharges = grandTotalCallCharges + total;
 	}
 	errorMsg = "";
 	try 
@@ -626,9 +632,9 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 			Subscriptions=subsListId
 			Invoice_Date=actualBillingDate
 			Due_Date=dueDate
-			Sub_Total_Call_Charges=0
-			Total_Tax_Call_Charges=0
-			Grand_Total_Call_Charges=0
+			Sub_Total_Call_Charges=subTotalCallCharges
+			Total_Tax_Call_Charges=totalTaxCallCharges
+			Grand_Total_Call_Charges=grandTotalCallCharges
 			Sub_Total_Monthly_Rental=0
 			Total_Tax_Monthly_Rental=0
 			Grand_Total_Monthly_Rental=0
@@ -679,9 +685,6 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 		subTotalInternetCharges = 0;
 		totalTaxInternetCharges = 0;
 		grandTotalInternetCharges = 0;
-		subTotalCallCharges = 0;
-		totalTaxCallCharges = 0;
-		grandTotalCallCharges = 0;
 		/*
                                                    		for each  invLineItem in getInvoice.Invoice_Line_Item
                                                    		{
@@ -752,7 +755,7 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
                                                    				getInvoice.Call_Charges.insert(callChargeRow);
                                                    				subTotalCallCharges = subTotalCallCharges + invLineItem.Sub_Total;
                                                    				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Tax_Amount;
-                                                   				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Total;
+                                                   				grandTotalCallCharges = grandTotalCallCharges + invLineItem.Total;
                                                    			}
                                                    		} */
 		//Comment 24/07/2025 -Start
@@ -797,7 +800,7 @@ void invoice.create_invoice_current_monthly(list:int subsListId, int billingCycl
 		getInvoice.Grand_Total_Internet_Charges=grandTotalInternetCharges;
 		getInvoice.Sub_Total_Call_Charges=subTotalCallCharges;
 		getInvoice.Total_Tax_Call_Charges=totalTaxCallCharges;
-		getInvoice.Grand_Total_Call_Charges=totalTaxCallCharges;
+		getInvoice.Grand_Total_Call_Charges=grandTotalCallCharges;
 		if(createSecondInvoice)
 		{
 			thisapp.invoice.create_invoice_current_monthly(subsListId,billingCycle,tenantID,secondMonthlyBillingDate,secondActualBillingDate,false,null,null,true);
