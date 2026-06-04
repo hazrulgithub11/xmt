@@ -1,0 +1,95 @@
+map subscription.resolve_desk_account_and_contact(int subsId)
+{
+	result = Map();
+	result.put("contact_id","");
+	result.put("account_id","");
+	result.put("customer_code_display_value","");
+	result.put("contact_name","");
+	result.put("contact_email","");
+	result.put("contact_phone","");
+	subRec = Subscription[ID == subsId];
+	if(subRec == null)
+	{
+		return result;
+	}
+	contact_name = subRec.Contact;
+	contact_email = subRec.Technical_Email;
+	contact_phone = subRec.Phone_Number;
+	customer_code_id = subRec.Customer_Code;
+	result.put("contact_name",contact_name);
+	result.put("contact_email",contact_email);
+	result.put("contact_phone",contact_phone);
+	account_id = "";
+	customer_code_display_value = "";
+	if(customer_code_id != null)
+	{
+		tenancy_record = Tenancy[ID == customer_code_id];
+		if(tenancy_record != null)
+		{
+			customer_code_display_value = tenancy_record.Customer_Code;
+			result.put("customer_code_display_value",customer_code_display_value);
+			search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customer_code_display_value;
+			search_account_response = invokeurl
+			[
+				url :search_account_url
+				type :GET
+				connection:"zdesk"
+			];
+			if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+			{
+				account_id = search_account_response.get("data").get(0).get("id");
+				result.put("account_id",account_id);
+			}
+		}
+	}
+	contact_id = "";
+	if(ifnull(contact_email,"") != "")
+	{
+		search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + contact_email;
+		search_contact_response = invokeurl
+		[
+			url :search_contact_url
+			type :GET
+			connection:"zdesk"
+		];
+		if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+		{
+			for each  contactRec in search_contact_response.get("data")
+			{
+				if(ifnull(account_id,"") == "" || contactRec.get("accountId") == account_id)
+				{
+					contact_id = contactRec.get("id");
+					break;
+				}
+			}
+		}
+		if(contact_id == "")
+		{
+			cf = Map();
+			if(ifnull(account_id,"") != "")
+			{
+				cf.put("accountId",account_id.toLong());
+			}
+			cf.put("cf_technical_contact_name",contact_name);
+			cf.put("cf_technical_email",contact_email);
+			cf.put("cf_technical_phone_number",contact_phone);
+			contact_data = Map();
+			contact_data.put("lastName",contact_name);
+			contact_data.put("email",contact_email);
+			contact_data.put("cf",cf);
+			create_contact_response = invokeurl
+			[
+				url :"https://desk.zoho.com/api/v1/contacts"
+				type :POST
+				parameters:contact_data.toString()
+				connection:"zdesk"
+			];
+			if(create_contact_response.get("id") != null)
+			{
+				contact_id = create_contact_response.get("id");
+			}
+		}
+	}
+	result.put("contact_id",contact_id);
+	return result;
+}

@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 04-Jun-2026 03:05:30
+ * Generated on : 04-Jun-2026 03:47:25
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -15434,6 +15434,9 @@
                  	totalTax = 0;
                  	grandTotal = 0;
                  	grandTotalMYR = 0;
+                 	subTotalCallCharges = 0;
+                 	totalTaxCallCharges = 0;
+                 	grandTotalCallCharges = 0;
                  	totalDepositAmount = 0;
                  	invoiceLineItemCollection = Collection();
                  	payableTo = List();
@@ -16020,6 +16023,9 @@
                  		totalTax = totalTax + taxAmount;
                  		grandTotal = grandTotal + total;
                  		grandTotalMYR = grandTotalMYR + totalMYR;
+                 		subTotalCallCharges = subTotalCallCharges + unitPrice;
+                 		totalTaxCallCharges = totalTaxCallCharges + taxAmount;
+                 		grandTotalCallCharges = grandTotalCallCharges + total;
                  	}
                  	errorMsg = "";
                  	try 
@@ -16045,9 +16051,9 @@
                  			Subscriptions=subsListId
                  			Invoice_Date=actualBillingDate
                  			Due_Date=dueDate
-                 			Sub_Total_Call_Charges=0
-                 			Total_Tax_Call_Charges=0
-                 			Grand_Total_Call_Charges=0
+                 			Sub_Total_Call_Charges=subTotalCallCharges
+                 			Total_Tax_Call_Charges=totalTaxCallCharges
+                 			Grand_Total_Call_Charges=grandTotalCallCharges
                  			Sub_Total_Monthly_Rental=0
                  			Total_Tax_Monthly_Rental=0
                  			Grand_Total_Monthly_Rental=0
@@ -16098,9 +16104,6 @@
                  		subTotalInternetCharges = 0;
                  		totalTaxInternetCharges = 0;
                  		grandTotalInternetCharges = 0;
-                 		subTotalCallCharges = 0;
-                 		totalTaxCallCharges = 0;
-                 		grandTotalCallCharges = 0;
                  		/*
                                                                     		for each  invLineItem in getInvoice.Invoice_Line_Item
                                                                     		{
@@ -16171,7 +16174,7 @@
                                                                     				getInvoice.Call_Charges.insert(callChargeRow);
                                                                     				subTotalCallCharges = subTotalCallCharges + invLineItem.Sub_Total;
                                                                     				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Tax_Amount;
-                                                                    				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Total;
+                                                                    				grandTotalCallCharges = grandTotalCallCharges + invLineItem.Total;
                                                                     			}
                                                                     		} */
                  		//Comment 24/07/2025 -Start
@@ -16216,7 +16219,7 @@
                  		getInvoice.Grand_Total_Internet_Charges=grandTotalInternetCharges;
                  		getInvoice.Sub_Total_Call_Charges=subTotalCallCharges;
                  		getInvoice.Total_Tax_Call_Charges=totalTaxCallCharges;
-                 		getInvoice.Grand_Total_Call_Charges=totalTaxCallCharges;
+                 		getInvoice.Grand_Total_Call_Charges=grandTotalCallCharges;
                  		if(createSecondInvoice)
                  		{
                  			thisapp.invoice.create_invoice_current_monthly(subsListId,billingCycle,tenantID,secondMonthlyBillingDate,secondActualBillingDate,false,null,null,true);
@@ -16998,6 +17001,9 @@
                  	totalTax = 0;
                  	grandTotal = 0;
                  	grandTotalMYR = 0;
+                 	subTotalCallCharges = 0;
+                 	totalTaxCallCharges = 0;
+                 	grandTotalCallCharges = 0;
                  	totalDepositAmount = 0;
                  	invoiceLineItemCollection = Collection();
                  	payableTo = List();
@@ -17692,6 +17698,9 @@
                  		totalTax = totalTax + taxAmount;
                  		grandTotal = grandTotal + total;
                  		grandTotalMYR = grandTotalMYR + totalMYR;
+                 		subTotalCallCharges = subTotalCallCharges + unitPrice;
+                 		totalTaxCallCharges = totalTaxCallCharges + taxAmount;
+                 		grandTotalCallCharges = grandTotalCallCharges + total;
                  	}
                  	errorMsg = "";
                  	try 
@@ -17717,9 +17726,9 @@
                  			Subscriptions=subsListId
                  			Invoice_Date=actualBillingDate
                  			Due_Date=dueDate
-                 			Sub_Total_Call_Charges=0
-                 			Total_Tax_Call_Charges=0
-                 			Grand_Total_Call_Charges=0
+                 			Sub_Total_Call_Charges=subTotalCallCharges
+                 			Total_Tax_Call_Charges=totalTaxCallCharges
+                 			Grand_Total_Call_Charges=grandTotalCallCharges
                  			Sub_Total_Monthly_Rental=0
                  			Total_Tax_Monthly_Rental=0
                  			Grand_Total_Monthly_Rental=0
@@ -17770,9 +17779,6 @@
                  		subTotalInternetCharges = 0;
                  		totalTaxInternetCharges = 0;
                  		grandTotalInternetCharges = 0;
-                 		subTotalCallCharges = 0;
-                 		totalTaxCallCharges = 0;
-                 		grandTotalCallCharges = 0;
                  		/*
                                                                     		for each  invLineItem in getInvoice.Invoice_Line_Item
                                                                     		{
@@ -17842,7 +17848,7 @@
                                                                     				getInvoice.Call_Charges.insert(callChargeRow);
                                                                     				subTotalCallCharges = subTotalCallCharges + invLineItem.Sub_Total;
                                                                     				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Tax_Amount;
-                                                                    				totalTaxCallCharges = totalTaxCallCharges + invLineItem.Total;
+                                                                    				grandTotalCallCharges = grandTotalCallCharges + invLineItem.Total;
                                                                     			}
                                                                     		}
                                                                     		*/
@@ -17888,7 +17894,7 @@
                  		getInvoice.Grand_Total_Internet_Charges=grandTotalInternetCharges;
                  		getInvoice.Sub_Total_Call_Charges=subTotalCallCharges;
                  		getInvoice.Total_Tax_Call_Charges=totalTaxCallCharges;
-                 		getInvoice.Grand_Total_Call_Charges=totalTaxCallCharges;
+                 		getInvoice.Grand_Total_Call_Charges=grandTotalCallCharges;
                  		if(createSecondInvoice)
                  		{
                  			thisapp.invoice.create_invoice_previous_monthly(subsListId,billingCycle,tenantID,secondMonthlyBillingDate,secondActualBillingDate,false,null,null,true);
@@ -19730,6 +19736,10 @@
                  	}
                  	return piList;
                  }
+				 string subscription.build_work_order_perma_url(int woId)
+                 {
+                 	return "https://creatorapp.zohopublic.com/" + zoho.adminuser + "/" + zoho.appname + "/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?ID=" + woId.toString();
+                 }
 				 int subscription.checker_public_user()
                  {
                  	if(thisapp.permissions.isUserInProfile("Administrator") || thisapp.permissions.isUserInProfile("Finance Executive") || thisapp.permissions.isUserInProfile("Finance Manager"))
@@ -19744,382 +19754,97 @@
                  }
 				 map subscription.createTicket(int recId, string ticketType)
                  {
-                 	subRec = Subscription[ID == recId];
-                 	contact_name = subRec.Contact;
-                 	contact_email = subRec.Technical_Email;
-                 	contact_phone = subRec.Phone_Number;
-                 	customer_code_id = subRec.Customer_Code;
-                 	// ticket_type = ifnull(subRec.Work_Order_Type,"");
-                 	create_work_order = subRec.Create_Work_Order;
-                 	//department ID in Zoho Desk
-                 	department_id = "1027140000000006907";
-                 	// ticket_type = "";
-                 	// if(create_work_order == true)
-                 	// {
-                 	// 	ticket_type = work_order_type;
-                 	// }
-                 	mess = Map();
-                 	if(ticketType != "")
+                 	woList = Work_Order_Creation[Subscription == recId].ID.getAll();
+                 	if(woList.size() == 0)
                  	{
-                 		customer_code_display_value = "";
-                 		account_id = "";
-                 		// Fetch the customer code if available
-                 		if(customer_code_id != null)
-                 		{
-                 			tenancy_record = Tenancy[ID == customer_code_id];
-                 			if(tenancy_record != null)
-                 			{
-                 				customer_code_display_value = tenancy_record.Customer_Code;
-                 			}
-                 			//info "Customer Code: " + customer_code_display_value;
-                 			// Search for account by customer code
-                 			search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customer_code_display_value;
-                 			// 				search_account_url = "https://desk.zoho.com/api/v1/accounts/search?cf_single_line_1=" + customer_code_display_value;
-                 			search_account_response = invokeurl
-                 			[
-                 				url :search_account_url
-                 				type :GET
-                 				connection:"zdesk"
-                 			];
-                 			//info "Account Search Response: " + search_account_response.toString();
-                 			// Check if account is found
-                 			if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
-                 			{
-                 				account_id = search_account_response.get("data").get(0).get("id");
-                 				//info "Account found: ID = " + account_id;
-                 			}
-                 			else
-                 			{
-                 				//info "No matching account found for Customer Code: " + customer_code_display_value;
-                 			}
-                 		}
-                 		// Search for contact by custom field email (cf_technical_email)
-                 		contact_id = "";
-                 		search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?email=" + contact_email;
-                 		// 		search_contact_params = Map();
-                 		// 		search_contact_params.put("email",contact_email);
-                 		search_contact_response = invokeurl
-                 		[
-                 			url :search_contact_url
-                 			type :GET
-                 			connection:"zdesk"
-                 		];
-                 		// 		parameters:search_contact_params.toString()
-                 		//info "Search Contact Response: " + search_contact_response.toString();
-                 		// Check if contact is found
-                 		if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
-                 		{
-                 			for each  contactRec in search_contact_response.get("data")
-                 			{
-                 				if(contactRec.get("accountId") == account_id)
-                 				{
-                 					contact_id = search_contact_response.get("data").get(0).get("id");
-                 					//info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
-                 					//info "Associated Account ID: " + account_id;
-                 				}
-                 			}
-                 			// 		contact_id = search_contact_response.get("data").get(0).get("id");
-                 			// 		account_id = search_contact_response.get("data").get(0).get("accountId");
-                 			// Retrieve accountId from contact data
-                 			// 		info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
-                 			// 		info "Associated Account ID: " + account_id;
-                 		}
-                 		else
-                 		{
-                 			//info "No contact found with email: " + contact_email;
-                 			// Create a new contact if not found
-                 			cf = Map();
-                 			if(ifnull(account_id,"") != "")
-                 			{
-                 				cf.put("accountId",account_id.toLong());
-                 			}
-                 			cf.put("cf_technical_contact_name",contact_name);
-                 			cf.put("cf_technical_email",contact_email);
-                 			cf.put("cf_technical_phone_number",contact_phone);
-                 			contact_data = Map();
-                 			contact_data.put("lastName",contact_name);
-                 			contact_data.put("email",contact_email);
-                 			contact_data.put("cf",cf);
-                 			desk_contact_url = "https://desk.zoho.com/api/v1/contacts";
-                 			create_contact_response = invokeurl
-                 			[
-                 				url :desk_contact_url
-                 				type :POST
-                 				parameters:contact_data.toString()
-                 				connection:"zdesk"
-                 			];
-                 			//info "Create Contact Response: " + create_contact_response.toString();
-                 			if(create_contact_response.get("id") != null)
-                 			{
-                 				contact_id = create_contact_response.get("id");
-                 				//info "New contact created successfully. ID: " + contact_id;
-                 			}
-                 			else
-                 			{
-                 				//info "Failed to create contact. Response: " + create_contact_response.toString();
-                 			}
-                 		}
-                 		// 	if(account_id != "")
-                 		// 	{
-                 		// 		// Fetch account details by account_id
-                 		// 		search_account_url = "https://desk.zoho.com/api/v1/accounts/" + account_id;
-                 		// 		search_account_response = invokeurl
-                 		// 		[
-                 		// 			url :search_account_url
-                 		// 			type :GET
-                 		// 			connection:"zdesk"
-                 		// 		];
-                 		// 		//info "Account Search Response: " + search_account_response.toString();
-                 		// 		if(search_account_response.get("data") != null)
-                 		// 		{
-                 		// 			account_name = search_account_response.get("data").get("accountName");
-                 		// 			// Get the account name
-                 		// 			info "Account Name: " + account_name;
-                 		// 		}
-                 		// 		else
-                 		// 		{
-                 		// 			info "No account found with ID: " + account_id;
-                 		// 		}
-                 		// 	}
-                 		// 	else
-                 		// 	{
-                 		// 		info "No account associated with the contact.";
-                 		// 	}
-                 		// Proceed to create ticket
-                 		if(contact_id != "")
-                 		{
-                 			// 		record_id = recId;
-                 			// Construct the billing URL using the record id of the Work order creation
-                 			billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?Subscription=" + recId.toString();
-                 			cf = Map();
-                 			cf.put("cf_customer_code",customer_code_display_value);
-                 			cf.put("cf_contact",contact_name);
-                 			cf.put("cf_ticket_type",ticketType);
-                 			cf.put("cf_url_to_subscription_record_in_billing_system",billing_url);
-                 			cf.put("cf_problem_category","Not Applicable");
-                 			cf.put("cf_subcategory","Not Applicable");
-                 			cf.put("cf_maintenance_type","Not Applicable");
-                 			ticket_data = Map();
-                 			ticket_data.put("subject","Work Order - " + ticketType);
-                 			ticket_data.put("description","This ticket is created for " + ticketType);
-                 			ticket_data.put("departmentId",department_id);
-                 			ticket_data.put("contactId",contact_id);
-                 			ticket_data.put("accountId",account_id);
-                 			ticket_data.put("status","Open");
-                 			ticket_data.put("cf",cf);
-                 			ticket_data.put("email",contact_email);
-                 			ticket_data.put("phone",contact_phone);
-                 			desk_ticket_url = "https://desk.zoho.com/api/v1/tickets";
-                 			create_ticket_response = invokeurl
-                 			[
-                 				url :desk_ticket_url
-                 				type :POST
-                 				parameters:ticket_data.toString()
-                 				connection:"zdesk"
-                 			];
-                 			if(create_ticket_response.get("id") != null)
-                 			{
-                 				// Step 7: Update Work Order Record in Zoho Creator with Ticket ID and Ticket Number
-                 				ticket_id = create_ticket_response.get("id");
-                 				ticket_number = create_ticket_response.get("ticketNumber");
-                 				info "Ticket created successfully. Ticket ID: " + ticket_id + ", Ticket Number: " + ticket_number;
-                 				update_map = Map();
-                 				update_map.put("Ticket_ID",ticket_id);
-                 				update_map.put("Ticket_Number",ticket_number);
-                 				woRec = Work_Order_Creation[ID == recId];
-                 				woRec.Ticket_ID=ticket_id;
-                 				woRec.Ticket_Number=ticket_number;
-                 				// 							update_response = zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"All_Work_Order_Creations",recId,update_map,Map(),"zcreator");
-                 				//info "Zoho Creator Record Update Response: " + update_response.toString();
-                 				mess.put("code",200);
-                 				mess.put("message","Ticket created successfully. Ticket ID: " + ticket_id + ", Ticket Number: " + ticket_number);
-                 			}
-                 			else
-                 			{
-                 				mess.put("code",403);
-                 				mess.put("message","Failed to create ticket. Error: " + create_ticket_response.toString());
-                 			}
-                 		}
-                 		else
-                 		{
-                 			// 		info "Invalid Contact ID. Ticket creation aborted.";
-                 			mess.put("code",403);
-                 			mess.put("message","Invalid Contact ID. Ticket creation aborted.");
-                 		}
-                 	}
-                 	else
-                 	{
-                 		// 	info "No ticket created. Must choose a Ticket Type!";
+                 		mess = Map();
                  		mess.put("code",403);
-                 		mess.put("message","No ticket created. Must choose a Ticket Type!");
+                 		mess.put("message","No work order for subscription. Use work_order_creation.updateTicketNumber.");
+                 		return mess;
                  	}
-                 	return mess;
+                 	woId = woList.get(woList.size() - 1);
+                 	return thisapp.subscription.createTicketForWorkOrder(recId,woId.toLong(),ticketType);
+                 }
+				 map subscription.createTicketForWorkOrder(int subsId, int woId, string ticketType)
+                 {
+                 	woUrl = thisapp.subscription.build_work_order_perma_url(woId);
+                 	return thisapp.subscription.createTicketUpdateWo(subsId,woId,ticketType,woUrl);
                  }
 				 map subscription.createTicketUpdateWo(int subsId, int woId, string ticketType, string url)
                  {
-                 	subRec = Subscription[ID == subsId];
-                 	contact_name = subRec.Contact;
-                 	contact_email = subRec.Technical_Email;
-                 	contact_phone = subRec.Phone_Number;
-                 	customer_code_id = subRec.Customer_Code;
-                 	// ticket_type = ifnull(subRec.Work_Order_Type,"");
-                 	create_work_order = subRec.Create_Work_Order;
-                 	//department ID in Zoho Desk
                  	department_id = "1027140000000006907";
-                 	// ticket_type = "";
-                 	// if(create_work_order == true)
-                 	// {
-                 	// 	ticket_type = work_order_type;
-                 	// }
                  	mess = Map();
-                 	if(ticketType != "")
+                 	mess.put("code",403);
+                 	if(ticketType == null || ticketType == "")
                  	{
-                 		customer_code_display_value = "";
-                 		account_id = "";
-                 		// Fetch the customer code if available
-                 		if(customer_code_id != null)
-                 		{
-                 			tenancy_record = Tenancy[ID == customer_code_id];
-                 			if(tenancy_record != null)
-                 			{
-                 				customer_code_display_value = tenancy_record.Customer_Code;
-                 			}
-                 			//info "Customer Code: " + customer_code_display_value;
-                 			// Search for account by customer code
-                 			search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customer_code_display_value;
-                 			// 				search_account_url = "https://desk.zoho.com/api/v1/accounts/search?cf_single_line_1=" + customer_code_display_value;
-                 			search_account_response = invokeurl
-                 			[
-                 				url :search_account_url
-                 				type :GET
-                 				connection:"zdesk"
-                 			];
-                 			//info "Account Search Response: " + search_account_response.toString();
-                 			// Check if account is found
-                 			if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
-                 			{
-                 				account_id = search_account_response.get("data").get(0).get("id");
-                 				//info "Account found: ID = " + account_id;
-                 			}
-                 			else
-                 			{
-                 				//info "No matching account found for Customer Code: " + customer_code_display_value;
-                 			}
-                 		}
-                 		// Search for contact by custom field email (cf_technical_email)
-                 		contact_id = "";
-                 		search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + contact_email;
-                 		// 		search_contact_params = Map();
-                 		// 		search_contact_params.put("email",contact_email);
-                 		search_contact_response = invokeurl
-                 		[
-                 			url :search_contact_url
-                 			type :GET
-                 			connection:"zdesk"
-                 		];
-                 		// 		parameters:search_contact_params.toString()
-                 		//info "Search Contact Response: " + search_contact_response.toString();
-                 		// Check if contact is found
-                 		if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
-                 		{
-                 			for each  contactRec in search_contact_response.get("data")
-                 			{
-                 				if(contactRec.get("accountId") == account_id)
-                 				{
-                 					contact_id = search_contact_response.get("data").get(0).get("id");
-                 					//info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
-                 					//info "Associated Account ID: " + account_id;
-                 				}
-                 			}
-                 			// 		contact_id = search_contact_response.get("data").get(0).get("id");
-                 			// 		account_id = search_contact_response.get("data").get(0).get("accountId");
-                 			// Retrieve accountId from contact data
-                 			// 		info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
-                 			// 		info "Associated Account ID: " + account_id;
-                 		}
-                 		else
-                 		{
-                 			//info "No contact found with email: " + contact_email;
-                 			// Create a new contact if not found
-                 			cf = Map();
-                 			if(ifnull(account_id,"") != "")
-                 			{
-                 				cf.put("accountId",account_id.toLong());
-                 			}
-                 			cf.put("cf_technical_contact_name",contact_name);
-                 			cf.put("cf_technical_email",contact_email);
-                 			cf.put("cf_technical_phone_number",contact_phone);
-                 			contact_data = Map();
-                 			contact_data.put("lastName",contact_name);
-                 			contact_data.put("email",contact_email);
-                 			contact_data.put("cf",cf);
-                 			desk_contact_url = "https://desk.zoho.com/api/v1/contacts";
-                 			create_contact_response = invokeurl
-                 			[
-                 				url :desk_contact_url
-                 				type :POST
-                 				parameters:contact_data.toString()
-                 				connection:"zdesk"
-                 			];
-                 			//info "Create Contact Response: " + create_contact_response.toString();
-                 			if(create_contact_response.get("id") != null)
-                 			{
-                 				contact_id = create_contact_response.get("id");
-                 				//info "New contact created successfully. ID: " + contact_id;
-                 			}
-                 		}
-                 		// Proceed to create ticket
-                 		if(ifnull(contact_id,"") != "")
-                 		{
-                 			// 		record_id = recId;
-                 			// Construct the billing URL using the record id of the Work order creation
-                 			// 			billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?Subscription=" + recId.toString();
-                 			cf = Map();
-                 			cf.put("cf_customer_code",customer_code_display_value);
-                 			cf.put("cf_contact",contact_name);
-                 			cf.put("cf_technical_email",contact_email);
-                 			cf.put("cf_technical_phone_number",contact_phone);
-                 			cf.put("cf_ticket_type",ticketType);
-                 			cf.put("cf_url_to_subscription_record_in_billing_system",url);
-                 			cf.put("cf_problem_category","Not Applicable");
-                 			cf.put("cf_subcategory","Not Applicable");
-                 			cf.put("cf_maintenance_type","Not Applicable");
-                 			cf.put("cf_service_type","Please Select Service Type");
-                 			cf.put("cf_business_unit","Please Select Business Unit");
-                 			ticket_data = Map();
-                 			ticket_data.put("subject","Work Order - " + ticketType);
-                 			ticket_data.put("description","This ticket is created for " + ticketType);
-                 			ticket_data.put("departmentId",department_id);
-                 			ticket_data.put("contactId",contact_id);
-                 			ticket_data.put("accountId",account_id);
-                 			ticket_data.put("status","Open");
-                 			ticket_data.put("cf",cf);
-                 			// 			ticket_data.put("email",contact_email);
-                 			// 			ticket_data.put("phone",contact_phone);
-                 			desk_ticket_url = "https://desk.zoho.com/api/v1/tickets";
-                 			create_ticket_response = invokeurl
-                 			[
-                 				url :desk_ticket_url
-                 				type :POST
-                 				parameters:ticket_data.toString()
-                 				connection:"zdesk"
-                 			];
-                 			//info "Create Ticket Response: " + create_ticket_response;
-                 			//update back the WO record with ticket id and ticket number
-                 			if(ifnull(create_ticket_response.get("id"),"") != "")
-                 			{
-                 				woRec = Work_Order_Creation[ID == woId];
-                 				woRec.Ticket_ID=create_ticket_response.get("id");
-                 				woRec.Ticket_Number=create_ticket_response.get("ticketNumber");
-                 				woRec.Customer_Name=subRec.Customer_Name;
-                 				woRec.Customer_Code=customer_code_id;
-                 			}
-                 			mess.put("message","success");
-                 		}
-                 		else
-                 		{
-                 			mess.put("message","cant find contact");
-                 		}
+                 		mess.put("message","No ticket created. Must choose a Ticket Type.");
+                 		return mess;
+                 	}
+                 	subRec = Subscription[ID == subsId];
+                 	woRec = Work_Order_Creation[ID == woId];
+                 	if(subRec == null)
+                 	{
+                 		mess.put("message","Subscription record not found.");
+                 		return mess;
+                 	}
+                 	if(woRec == null)
+                 	{
+                 		mess.put("message","Work order record not found.");
+                 		return mess;
+                 	}
+                 	deskContext = thisapp.subscription.resolve_desk_account_and_contact(subsId);
+                 	contact_id = deskContext.get("contact_id");
+                 	account_id = deskContext.get("account_id");
+                 	customer_code_display_value = deskContext.get("customer_code_display_value");
+                 	contact_name = deskContext.get("contact_name");
+                 	contact_email = deskContext.get("contact_email");
+                 	contact_phone = deskContext.get("contact_phone");
+                 	if(ifnull(contact_id,"") == "")
+                 	{
+                 		mess.put("message","Desk contact could not be resolved or created.");
+                 		return mess;
+                 	}
+                 	cf = Map();
+                 	cf.put("cf_customer_code",customer_code_display_value);
+                 	cf.put("cf_contact",contact_name);
+                 	cf.put("cf_technical_email",contact_email);
+                 	cf.put("cf_technical_phone_number",contact_phone);
+                 	cf.put("cf_ticket_type",ticketType);
+                 	cf.put("cf_url_to_subscription_record_in_billing_system",url);
+                 	cf.put("cf_problem_category","Not Applicable");
+                 	cf.put("cf_subcategory","Not Applicable");
+                 	cf.put("cf_maintenance_type","Not Applicable");
+                 	cf.put("cf_service_type","Please Select Service Type");
+                 	cf.put("cf_business_unit","Please Select Business Unit");
+                 	ticket_data = Map();
+                 	ticket_data.put("subject","Work Order - " + ticketType);
+                 	ticket_data.put("description","This ticket is created for " + ticketType);
+                 	ticket_data.put("departmentId",department_id);
+                 	ticket_data.put("contactId",contact_id);
+                 	ticket_data.put("accountId",account_id);
+                 	ticket_data.put("status","Open");
+                 	ticket_data.put("cf",cf);
+                 	create_ticket_response = invokeurl
+                 	[
+                 		url :"https://desk.zoho.com/api/v1/tickets"
+                 		type :POST
+                 		parameters:ticket_data.toString()
+                 		connection:"zdesk"
+                 	];
+                 	if(ifnull(create_ticket_response.get("id"),"") != "")
+                 	{
+                 		woRec.Ticket_ID=create_ticket_response.get("id");
+                 		woRec.Ticket_Number=create_ticket_response.get("ticketNumber");
+                 		woRec.Customer_Name=subRec.Customer_Name;
+                 		woRec.Customer_Code=subRec.Customer_Code;
+                 		mess.put("code",200);
+                 		mess.put("message","Ticket created successfully.");
+                 		mess.put("ticketId",create_ticket_response.get("id"));
+                 		mess.put("ticketNumber",create_ticket_response.get("ticketNumber"));
+                 	}
+                 	else
+                 	{
+                 		mess.put("message","Failed to create Desk ticket. Error: " + create_ticket_response.toString());
                  	}
                  	return mess;
                  }
@@ -20133,11 +19858,103 @@
                  	info "tenantID:" + getSubs.Customer_Code;
                  	info "nextBillingDate:" + getSubs.Next_Billing_Date;
                  }
+				 map subscription.resolve_desk_account_and_contact(int subsId)
+                 {
+                 	result = Map();
+                 	result.put("contact_id","");
+                 	result.put("account_id","");
+                 	result.put("customer_code_display_value","");
+                 	result.put("contact_name","");
+                 	result.put("contact_email","");
+                 	result.put("contact_phone","");
+                 	subRec = Subscription[ID == subsId];
+                 	if(subRec == null)
+                 	{
+                 		return result;
+                 	}
+                 	contact_name = subRec.Contact;
+                 	contact_email = subRec.Technical_Email;
+                 	contact_phone = subRec.Phone_Number;
+                 	customer_code_id = subRec.Customer_Code;
+                 	result.put("contact_name",contact_name);
+                 	result.put("contact_email",contact_email);
+                 	result.put("contact_phone",contact_phone);
+                 	account_id = "";
+                 	customer_code_display_value = "";
+                 	if(customer_code_id != null)
+                 	{
+                 		tenancy_record = Tenancy[ID == customer_code_id];
+                 		if(tenancy_record != null)
+                 		{
+                 			customer_code_display_value = tenancy_record.Customer_Code;
+                 			result.put("customer_code_display_value",customer_code_display_value);
+                 			search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customer_code_display_value;
+                 			search_account_response = invokeurl
+                 			[
+                 				url :search_account_url
+                 				type :GET
+                 				connection:"zdesk"
+                 			];
+                 			if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+                 			{
+                 				account_id = search_account_response.get("data").get(0).get("id");
+                 				result.put("account_id",account_id);
+                 			}
+                 		}
+                 	}
+                 	contact_id = "";
+                 	if(ifnull(contact_email,"") != "")
+                 	{
+                 		search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + contact_email;
+                 		search_contact_response = invokeurl
+                 		[
+                 			url :search_contact_url
+                 			type :GET
+                 			connection:"zdesk"
+                 		];
+                 		if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+                 		{
+                 			for each  contactRec in search_contact_response.get("data")
+                 			{
+                 				if(ifnull(account_id,"") == "" || contactRec.get("accountId") == account_id)
+                 				{
+                 					contact_id = contactRec.get("id");
+                 					break;
+                 				}
+                 			}
+                 		}
+                 		if(contact_id == "")
+                 		{
+                 			cf = Map();
+                 			if(ifnull(account_id,"") != "")
+                 			{
+                 				cf.put("accountId",account_id.toLong());
+                 			}
+                 			cf.put("cf_technical_contact_name",contact_name);
+                 			cf.put("cf_technical_email",contact_email);
+                 			cf.put("cf_technical_phone_number",contact_phone);
+                 			contact_data = Map();
+                 			contact_data.put("lastName",contact_name);
+                 			contact_data.put("email",contact_email);
+                 			contact_data.put("cf",cf);
+                 			create_contact_response = invokeurl
+                 			[
+                 				url :"https://desk.zoho.com/api/v1/contacts"
+                 				type :POST
+                 				parameters:contact_data.toString()
+                 				connection:"zdesk"
+                 			];
+                 			if(create_contact_response.get("id") != null)
+                 			{
+                 				contact_id = create_contact_response.get("id");
+                 			}
+                 		}
+                 	}
+                 	result.put("contact_id",contact_id);
+                 	return result;
+                 }
 				 void subscription.update_subscription_next_and_last_billing_date(list:int subsListId, string billFor, int billingCycle, date actualBillingDate, date monthlyBillingDate, string billEvery)
                  {
-                 	subInfo = Subscription[ID == subsListId.get(0)];
-                 	contractStartDate = subInfo.Contract_Start_Date;
-                 	newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
                  	if(billingCycle == 1)
                  	{
                  		if(billFor.containsIgnoreCase("Current"))
@@ -20146,6 +19963,8 @@
                  			{
                  				subInfo = Subscription[ID == subId];
                  				finalBillingDate = subInfo.Final_Billing_Date;
+                 				contractStartDate = subInfo.Contract_Start_Date;
+                 				newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
                  				if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
                  				{
                  					subInfo.Next_Billing_Date=newNextBillingDate;
@@ -20159,7 +19978,7 @@
                  				}
                  				else if(actualBillingDate != monthlyBillingDate)
                  				{
-                 					continue;
+                 					subInfo.Latest_Billing_Date=actualBillingDate;
                  				}
                  			}
                  		}
@@ -20169,6 +19988,8 @@
                  			{
                  				subInfo = Subscription[ID == subId];
                  				finalBillingDate = subInfo.Final_Billing_Date;
+                 				contractStartDate = subInfo.Contract_Start_Date;
+                 				newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
                  				if(actualBillingDate != monthlyBillingDate)
                  				{
                  					subInfo.Latest_Billing_Date=actualBillingDate;
@@ -20189,34 +20010,47 @@
                  	}
                  	else
                  	{
-                 		subInfo = Subscription[ID == subsListId.get(0)];
-                 		finalBillingDate = subInfo.Final_Billing_Date;
-                 		if(billFor.containsIgnoreCase("Current"))
+                 		for each  subId in subsListId
                  		{
-                 			if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
+                 			subInfo = Subscription[ID == subId];
+                 			finalBillingDate = subInfo.Final_Billing_Date;
+                 			contractStartDate = subInfo.Contract_Start_Date;
+                 			newNextBillingDate = thisapp.tenancy.compute_next_billing_date(billingCycle,actualBillingDate,monthlyBillingDate,billEvery,contractStartDate);
+                 			if(billFor.containsIgnoreCase("Current"))
                  			{
-                 				subInfo.Next_Billing_Date=newNextBillingDate;
-                 				subInfo.Latest_Billing_Date=actualBillingDate;
+                 				if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
+                 				{
+                 					subInfo.Next_Billing_Date=newNextBillingDate;
+                 					subInfo.Latest_Billing_Date=actualBillingDate;
+                 				}
+                 				else if(actualBillingDate == finalBillingDate)
+                 				{
+                 					subInfo.Next_Billing_Date=null;
+                 					subInfo.Latest_Billing_Date=actualBillingDate;
+                 					subInfo.Subscription_Status="Inactive";
+                 				}
+                 				else if(actualBillingDate != monthlyBillingDate)
+                 				{
+                 					subInfo.Latest_Billing_Date=actualBillingDate;
+                 				}
                  			}
-                 			else if(actualBillingDate == finalBillingDate)
+                 			else if(billFor.containsIgnoreCase("Previous"))
                  			{
-                 				subInfo.Next_Billing_Date=null;
-                 				subInfo.Latest_Billing_Date=actualBillingDate;
-                 				subInfo.Subscription_Status="Inactive";
-                 			}
-                 		}
-                 		else if(billFor.containsIgnoreCase("Previous"))
-                 		{
-                 			if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
-                 			{
-                 				subInfo.Next_Billing_Date=newNextBillingDate;
-                 				subInfo.Latest_Billing_Date=actualBillingDate;
-                 			}
-                 			else if(actualBillingDate == finalBillingDate)
-                 			{
-                 				subInfo.Next_Billing_Date=null;
-                 				subInfo.Latest_Billing_Date=actualBillingDate;
-                 				subInfo.Subscription_Status="Inactive";
+                 				if(actualBillingDate != monthlyBillingDate)
+                 				{
+                 					subInfo.Latest_Billing_Date=actualBillingDate;
+                 				}
+                 				if(actualBillingDate == monthlyBillingDate && actualBillingDate != finalBillingDate)
+                 				{
+                 					subInfo.Next_Billing_Date=newNextBillingDate;
+                 					subInfo.Latest_Billing_Date=actualBillingDate;
+                 				}
+                 				else if(actualBillingDate == finalBillingDate)
+                 				{
+                 					subInfo.Next_Billing_Date=null;
+                 					subInfo.Latest_Billing_Date=actualBillingDate;
+                 					subInfo.Subscription_Status="Inactive";
+                 				}
                  			}
                  		}
                  	}
@@ -20440,6 +20274,33 @@
                  		}
                  	}
                  }
+				 string tenancy.find_desk_contact_for_account(string technicalEmail, string deskAccountId)
+                 {
+                 	contact_id = "";
+                 	if(technicalEmail == null || technicalEmail == "")
+                 	{
+                 		return contact_id;
+                 	}
+                 	search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technicalEmail;
+                 	search_contact_response = invokeurl
+                 	[
+                 		url :search_contact_url
+                 		type :GET
+                 		connection:"zdesk"
+                 	];
+                 	if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+                 	{
+                 		for each  contactRec in search_contact_response.get("data")
+                 		{
+                 			if(ifnull(deskAccountId,"") == "" || contactRec.get("accountId") == deskAccountId)
+                 			{
+                 				contact_id = contactRec.get("id");
+                 				break;
+                 			}
+                 		}
+                 	}
+                 	return contact_id;
+                 }
 				 string tenancy.generate_tenancy_no(string prefix)
                  {
                  	tenancyInfo = Tenancy[Account_Number.containsIgnoreCase(prefix) && Account_Number != ""] sort by Account_Number desc;
@@ -20483,6 +20344,30 @@
                  	}
                  	return toDate(billEvery + "-" + referenceDate.getMonth() + "-" + referenceDate.getYear(),"dd-MM-yyyy");
                  }
+				 string tenancy.get_desk_account_id_for_tenancy(int tenancyId, string customerCodeDisplay, string deskRecordId)
+                 {
+                 	desk_account_id = ifnull(deskRecordId,"");
+                 	if(desk_account_id != "")
+                 	{
+                 		return desk_account_id;
+                 	}
+                 	if(customerCodeDisplay == null || customerCodeDisplay == "")
+                 	{
+                 		return "";
+                 	}
+                 	search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customerCodeDisplay;
+                 	search_account_response = invokeurl
+                 	[
+                 		url :search_account_url
+                 		type :GET
+                 		connection:"zdesk"
+                 	];
+                 	if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+                 	{
+                 		return search_account_response.get("data").get(0).get("id");
+                 	}
+                 	return "";
+                 }
 				 date tenancy.get_monthly_billing_date_from_actual(string billEvery, date actualBillingDate)
                  {
                  	if(billEvery.toLong() == 1)
@@ -20523,26 +20408,111 @@
                  		thisapp.invoice.create_invoice_previous_not_monthly(subscriptionID,billCycleInt,sub.Customer_Code,sub.Next_Billing_Date,sub.Next_Billing_Date,false,null,null);
                  	}
                  }
+				 void tenancy.sync_desk_technical_contact_on_edit(int tenancyId, string technicalEmail, string oldTechnicalEmail, string contactName, string phoneNumber, string customerCodeDisplay, string deskRecordId)
+                 {
+                 	if(technicalEmail == null || technicalEmail == "")
+                 	{
+                 		return;
+                 	}
+                 	desk_account_id = thisapp.tenancy.get_desk_account_id_for_tenancy(tenancyId,customerCodeDisplay,deskRecordId);
+                 	if(desk_account_id == "")
+                 	{
+                 		return;
+                 	}
+                 	contact_id = thisapp.tenancy.find_desk_contact_for_account(technicalEmail,desk_account_id);
+                 	email_changed = technicalEmail != oldTechnicalEmail;
+                 	if(email_changed && contact_id == "")
+                 	{
+                 		search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technicalEmail;
+                 		search_contact_response = invokeurl
+                 		[
+                 			url :search_contact_url
+                 			type :GET
+                 			connection:"zdesk"
+                 		];
+                 		if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+                 		{
+                 			for each  contactRec in search_contact_response.get("data")
+                 			{
+                 				if(contactRec.get("accountId") != desk_account_id)
+                 				{
+                 					return;
+                 				}
+                 			}
+                 		}
+                 		create_contact_cf = Map();
+                 		create_contact_cf.put("cf_technical_contact_name",contactName);
+                 		create_contact_cf.put("cf_technical_email",technicalEmail);
+                 		create_contact_cf.put("cf_technical_phone_number",phoneNumber);
+                 		create_contact_data = Map();
+                 		create_contact_data.put("email",technicalEmail);
+                 		create_contact_data.put("lastName",contactName);
+                 		create_contact_data.put("accountId",desk_account_id.toLong());
+                 		create_contact_data.put("cf",create_contact_cf);
+                 		create_contact_response = invokeurl
+                 		[
+                 			url :"https://desk.zoho.com/api/v1/contacts"
+                 			type :POST
+                 			parameters:create_contact_data.toString()
+                 			connection:"zdesk"
+                 		];
+                 		if(create_contact_response.get("id") != null)
+                 		{
+                 			contact_id = create_contact_response.get("id");
+                 		}
+                 	}
+                 	update_account_cf = Map();
+                 	update_account_cf.put("cf_technical_contact",contactName);
+                 	update_account_cf.put("cf_technical_email",technicalEmail);
+                 	update_account_cf.put("cf_technical_phone_number",phoneNumber);
+                 	update_account_data = Map();
+                 	update_account_data.put("cf",update_account_cf);
+                 	invokeurl
+                 	[
+                 		url :"https://desk.zoho.com/api/v1/accounts/" + desk_account_id
+                 		type :PATCH
+                 		parameters:update_account_data.toString()
+                 		connection:"zdesk"
+                 	]
+                 	if(contact_id != "")
+                 	{
+                 		update_contact_cf = Map();
+                 		update_contact_cf.put("cf_technical_contact_name",contactName);
+                 		update_contact_cf.put("cf_technical_email",technicalEmail);
+                 		update_contact_cf.put("cf_technical_phone_number",phoneNumber);
+                 		update_contact_data = Map();
+                 		update_contact_data.put("lastName",contactName);
+                 		if(email_changed)
+                 		{
+                 			update_contact_data.put("email",technicalEmail);
+                 		}
+                 		update_contact_data.put("cf",update_contact_cf);
+                 		invokeurl
+                 		[
+                 			url :"https://desk.zoho.com/api/v1/contacts/" + contact_id
+                 			type :PATCH
+                 			parameters:update_contact_data.toString()
+                 			connection:"zdesk"
+                 		]
+                 	}
+                 }
 				 map work_order_creation.updateTicketNumber(int recId, string ticketType)
                  {
-                 	// Retrieve subscription record based on the given recId
-                 	subRec = Subscription[ID == recId];
-                 	contact_name = subRec.Contact;
-                 	contact_email = subRec.Technical_Email;
-                 	contact_phone = subRec.Phone_Number;
-                 	customer_code_id = subRec.Customer_Code;
-                 	create_work_order = subRec.Create_Work_Order;
-                 	department_id = "1027140000000006907";
                  	mess = Map();
+                 	mess.put("code",403);
+                 	if(ticketType == null || ticketType == "")
+                 	{
+                 		mess.put("message","No ticket created. Must choose a Ticket Type.");
+                 		return mess;
+                 	}
+                 	subRec = Subscription[ID == recId];
+                 	if(subRec == null)
+                 	{
+                 		mess.put("message","Subscription record not found.");
+                 		return mess;
+                 	}
                  	try 
                  	{
-                 		// Step 1: Create Work Order in Zoho Creator
-                 		// 		work_order_data = Map();
-                 		// 		work_order_data.put("Subscription",recId);
-                 		// 		work_order_data.put("Customer_Name",subRec.Customer_Name);
-                 		// 		work_order_data.put("Customer_Code",customer_code_id);
-                 		// 		work_order_data.put("Work_Order_Type",ticketType);
-                 		//update by Nik
                  		createWo = insert into Work_Order_Creation
                  		[
                  			Added_User=zoho.loginuser
@@ -20552,175 +20522,22 @@
                  			Work_Order_Type=ticketType
                  		];
                  		workOrderId = createWo;
-                 		woUrl = "https://creatorapp.zohopublic.com/" + zoho.adminuser + "/" + zoho.appname + "/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?ID=" + workOrderId.toString();
-                 		try 
+                 		woUrl = thisapp.subscription.build_work_order_perma_url(workOrderId);
+                 		createTicket = thisapp.subscription.createTicketUpdateWo(recId,workOrderId,ticketType,woUrl);
+                 		if(createTicket.get("code") == 200)
                  		{
-                 			//create ticket
-                 			createTicket = thisapp.subscription.createTicketUpdateWo(recId,workOrderId.toLong(),ticketType,woUrl);
-                 			mess.put("message",createTicket);
+                 			mess.put("code",200);
+                 			mess.put("message",createTicket.get("message"));
+                 			mess.put("ticketId",createTicket.get("ticketId"));
+                 			mess.put("ticketNumber",createTicket.get("ticketNumber"));
+                 			mess.put("workOrderId",workOrderId);
                  		}
-                 		catch (errorCreateTicket)
+                 		else
                  		{
-                 			mess.put("message",errorCreateTicket);
+                 			mess.put("message",createTicket.get("message"));
                  		}
-                 		//end update by Nik
-                 		// Call Zoho Creator API to create the work order record
-                 		// 		add_work_order_response = zoho.creator.createRecord(zoho.adminuser,zoho.appname,"Work_Order_Creation",work_order_data,Map(),"zcreator");
-                 		//info "Add Work Order Record Response: " + add_work_order_response.toString();
-                 		// 		if(add_work_order_response.get("code") == 200)
-                 		// 		{
-                 		// 			work_order_id = add_work_order_response.get("ID");
-                 		// 			info "Work Order record added successfully. ID: " + work_order_id;
-                 		// 			if(ticketType != "")
-                 		// 			{
-                 		// 				try 
-                 		// 				{
-                 		// 					customer_code_display_value = "";
-                 		// 					account_id = "";
-                 		// 					if(customer_code_id != null)
-                 		// 					{
-                 		// 						// Step 2: Retrieve Customer Code from the Tenancy module
-                 		// 						tenancy_record = Tenancy[ID == customer_code_id];
-                 		// 						if(tenancy_record != null)
-                 		// 						{
-                 		// 							customer_code_display_value = tenancy_record.Customer_Code;
-                 		// 						}
-                 		// 						// Step 3: Search for the Account in Zoho Desk using Customer Code
-                 		// 						search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customer_code_display_value;
-                 		// 						search_account_response = invokeurl
-                 		// 						[
-                 		// 							url :search_account_url
-                 		// 							type :GET
-                 		// 							connection:"zdesk"
-                 		// 						];
-                 		// 						info "Account Search Response: " + search_account_response.toString();
-                 		// 						// Extract Account ID if found
-                 		// 						if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
-                 		// 						{
-                 		// 							account_id = search_account_response.get("data").get(0).get("id");
-                 		// 							info "Account found: ID = " + account_id;
-                 		// 						}
-                 		// 					}
-                 		// 					contact_id = "";
-                 		// 					// Step 4: Search for the Contact in Zoho Desk using Email
-                 		// 					search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?email=" + contact_email;
-                 		// 					search_contact_response = invokeurl
-                 		// 					[
-                 		// 						url :search_contact_url
-                 		// 						type :GET
-                 		// 						connection:"zdesk"
-                 		// 					];
-                 		// 					info "Search Contact Response: " + search_contact_response.toString();
-                 		// 					if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
-                 		// 					{
-                 		// 						// Loop through contacts to find the one associated with the correct account
-                 		// 						for each  contactRec in search_contact_response.get("data")
-                 		// 						{
-                 		// 							if(contactRec.get("accountId") == account_id)
-                 		// 							{
-                 		// 								contact_id = search_contact_response.get("data").get(0).get("id");
-                 		// 								info "Contact found: ID = " + contact_id + ", Email = " + contact_email;
-                 		// 								info "Associated Account ID: " + account_id;
-                 		// 							}
-                 		// 						}
-                 		// 					}
-                 		// 					else
-                 		// 					{
-                 		// 						info "No contact found with email: " + contact_email;
-                 		// 						// Step 5: Create a new Contact if not found
-                 		// 						cf = Map();
-                 		// 						if(ifnull(account_id,"") != "")
-                 		// 						{
-                 		// 							cf.put("accountId",account_id.toLong());
-                 		// 						}
-                 		// 						cf.put("cf_technical_contact_name",contact_name);
-                 		// 						cf.put("cf_technical_email",contact_email);
-                 		// 						cf.put("cf_technical_phone_number",contact_phone);
-                 		// 						contact_data = Map();
-                 		// 						contact_data.put("lastName",contact_name);
-                 		// 						contact_data.put("email",contact_email);
-                 		// 						contact_data.put("cf",cf);
-                 		// 						desk_contact_url = "https://desk.zoho.com/api/v1/contacts";
-                 		// 						create_contact_response = invokeurl
-                 		// 						[
-                 		// 							url :desk_contact_url
-                 		// 							type :POST
-                 		// 							parameters:contact_data.toString()
-                 		// 							connection:"zdesk"
-                 		// 						];
-                 		// 						if(create_contact_response.get("id") != null)
-                 		// 						{
-                 		// 							contact_id = create_contact_response.get("id");
-                 		// 							info "New contact created successfully. ID: " + contact_id;
-                 		// 						}
-                 		// 					}
-                 		// 					if(contact_id != "")
-                 		// 					{
-                 		// 						// Step 6: Create Ticket in Zoho Desk
-                 		// 						billing_url = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?Subscription=" + recId.toString();
-                 		// 						cf = Map();
-                 		// 						cf.put("cf_customer_code",customer_code_display_value);
-                 		// 						cf.put("cf_contact",contact_name);
-                 		// 						cf.put("cf_ticket_type",ticketType);
-                 		// 						cf.put("cf_url_to_subscription_record_in_billing_system",billing_url);
-                 		// 						cf.put("cf_problem_category","Not Applicable");
-                 		// 						cf.put("cf_subcategory","Not Applicable");
-                 		// 						cf.put("cf_maintenance_type","Not Applicable");
-                 		// 						ticket_data = Map();
-                 		// 						ticket_data.put("subject","Work Order - " + ticketType);
-                 		// 						ticket_data.put("description","This ticket is created for " + ticketType);
-                 		// 						ticket_data.put("departmentId",department_id);
-                 		// 						ticket_data.put("contactId",contact_id);
-                 		// 						ticket_data.put("accountId",account_id);
-                 		// 						ticket_data.put("status","Open");
-                 		// 						ticket_data.put("cf",cf);
-                 		// 						ticket_data.put("email",contact_email);
-                 		// 						ticket_data.put("phone",contact_phone);
-                 		// 						desk_ticket_url = "https://desk.zoho.com/api/v1/tickets";
-                 		// 						create_ticket_response = invokeurl
-                 		// 						[
-                 		// 							url :desk_ticket_url
-                 		// 							type :POST
-                 		// 							parameters:ticket_data.toString()
-                 		// 							connection:"zdesk"
-                 		// 						];
-                 		// 						info "Create Ticket Response: " + create_ticket_response;
-                 		// 						if(create_ticket_response.get("id") != null)
-                 		// 						{
-                 		// 							// Step 7: Update Work Order Record in Zoho Creator with Ticket ID and Ticket Number
-                 		// 							ticket_id = create_ticket_response.get("id");
-                 		// 							ticket_number = create_ticket_response.get("ticketNumber");
-                 		// 							info "Ticket created successfully. Ticket ID: " + ticket_id + ", Ticket Number: " + ticket_number;
-                 		// 							// 							update_map = Map();
-                 		// 							// 							update_map.put("Ticket_ID",ticket_id);
-                 		// 							// 							update_map.put("Ticket_Number",ticket_number);
-                 		// 							woRec = Work_Order_Creation[ID == work_order_id.toLong()];
-                 		// 							woRec.Ticket_ID=ticket_id;
-                 		// 							woRec.Ticket_Number=ticket_number;
-                 		// 							// 							update_response = zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"All_Work_Order_Creations",recId,update_map,Map(),"zcreator");
-                 		// 							// 							info "Zoho Creator Record Update Response: " + update_response.toString();
-                 		// 							mess.put("code",200);
-                 		// 							mess.put("message","Ticket created successfully. Ticket ID: " + ticket_id + ", Ticket Number: " + ticket_number);
-                 		// 						}
-                 		// 						else
-                 		// 						{
-                 		// 							mess.put("code",403);
-                 		// 							mess.put("message","Failed to create ticket. Error: " + create_ticket_response.toString());
-                 		// 						}
-                 		// 					}
-                 		// 				}
-                 		// 				catch (e)
-                 		// 				{
-                 		// 					info "Error occurred while creating ticket: " + e.toString();
-                 		// 					mess.put("code",500);
-                 		// 					mess.put("message","An error occurred: " + e.toString());
-                 		// 				}
-                 		// 			}
-                 		// 		}
-                 	}
-                 	catch (e)
+                 	}	catch (e)
                  	{
-                 		info "General error: " + e.toString();
                  		mess.put("code",500);
                  		mess.put("message","An error occurred: " + e.toString());
                  	}
@@ -21227,7 +21044,7 @@
 											}
 											if(input.Customer_PO_No != "")
 											{
-												subscriptionList = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No.contains(input.Customer_PO_No)].ID.getAll();
+												subscriptionList = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No == input.Customer_PO_No && ID != input.ID].ID.getAll();
 												if(subscriptionList.size() > 0)
 												{
 													alert "The Customer PO No. " + input.Customer_PO_No + " already exists for this tenant. Please enter a different PO No.";
@@ -25416,10 +25233,12 @@
 					{
 						custom deluge script
 						(
-											get_invoice_list = Invoice[Subscriptions == input.ID].ID.getAll();
-										get_credit_note_list = Credit_Note[Subscriptions == input.ID].ID.getAll();
-										get_refund_note_list = Refund_Note[Subscriptions == input.ID].ID.getAll();
-										message = "This subscription can’t be deleted because it is used in the following module(s):\n\n";
+											subscriptionId = input.ID;
+										get_invoice_list = Invoice[Subscriptions.contains(subscriptionId)].ID.getAll();
+										get_credit_note_list = Credit_Note[Subscriptions.contains(subscriptionId)].ID.getAll();
+										get_refund_note_list = Refund_Note[Subscriptions.contains(subscriptionId)].ID.getAll();
+										get_work_order_list = Work_Order_Creation[Subscription == subscriptionId].ID.getAll();
+										message = "This subscription can't be deleted because it is used in the following module(s):\n\n";
 										hasDependency = false;
 										if(get_invoice_list.size() > 0)
 										{
@@ -25434,6 +25253,16 @@
 										if(get_refund_note_list.size() > 0)
 										{
 											message = message + "- Refund Notes: " + get_refund_note_list.size() + "\n";
+											hasDependency = true;
+										}
+										if(get_work_order_list.size() > 0)
+										{
+											message = message + "- Work Order Creations: " + get_work_order_list.size() + "\n";
+											hasDependency = true;
+										}
+										if(input.Pro_Forma_Invoices != null)
+										{
+											message = message + "- Pro Forma Invoice linked on this subscription\n";
 											hasDependency = true;
 										}
 										if(hasDependency)
@@ -26765,7 +26594,8 @@
 					{
 						custom deluge script
 						(
-											createTicket = thisapp.work_order_creation.updateTicketNumber(input.ID,input.Work_Order_Type);
+											// Subscription on-add: create WO record, then Desk ticket (shared pipeline).
+										createTicket = thisapp.work_order_creation.updateTicketNumber(input.ID,input.Work_Order_Type);
 										// if(createTicket.get("code") == 200)
 										// {
 										// 	success message createTicket.get("message");
@@ -26974,9 +26804,7 @@
 					{
 						custom deluge script
 						(
-											// createTicket = thisapp.subscription.createTicket(input.Subscription,input.Work_Order_Type);
-										woUrl = "https://creatorapp.zohopublic.com/" + zoho.adminuser + "/" + zoho.appname + "/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?ID=" + input.ID.toString();
-										createTicket = thisapp.subscription.createTicketUpdateWo(input.Subscription,input.ID,input.Work_Order_Type,woUrl);
+											createTicket = thisapp.subscription.createTicketForWorkOrder(input.Subscription,input.ID,input.Work_Order_Type);
 										// if(createTicket.get("code") == 200)
 										// {
 										// 	success message createTicket.get("message");
@@ -27920,162 +27748,35 @@
 						(
 											technical_email = input.Technical_Email;
 										old_technical_email = old.Technical_Email;
-										// Get the old email before the change
-										contact_name = input.Contact;
-										phone_number = input.Phone_Number;
-										customerCode = input.Customer_Code;
-										// Fetch old values from Zoho Creator
-										old_contact_name = old.Contact;
-										old_phone_number = old.Phone_Number;
-										// Step 1: Check if a contact with the new email already exists in Zoho Desk
-										fetch_contacts_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technical_email;
-										contact_check_response = invokeurl
-										[
-											url :fetch_contacts_url
-											type :GET
-											connection:"zdesk"
-										];
-										//info "Contact Check Response: " + contact_check_response.toString();
-										contact_exists = false;
-										if(contact_check_response.contains("data") && contact_check_response.get("data").size() > 0)
+										if(technical_email != null && technical_email != "" && technical_email != old_technical_email)
 										{
-											contact_exists = true;
-											contact_id = contact_check_response.get("data").get(0).get("id");
-											//info "Contact already exists in Zoho Desk with ID: " + contact_id;
-										}
-										//info "contact_exists" + contact_exists;
-										// Step 2: If the Technical Email has changed and the new email does not exist in Zoho Desk, create a new contact
-										// ADD CODE 06/11/2025 - add new conditional statement "contact_check_response.toString().containsIgnoreCase("error")" to prevent from create contact when technical email is null
-										if(technical_email != old_technical_email && !contact_exists && !contact_check_response.toString().containsIgnoreCase("error"))
-										{
-											//info "Technical Email changed. Creating new contact in Zoho Desk.";
-											// Fetch the accountId from Tenancy module using the old email
-											//ADD CODE 06/11/2025 - to prevent get the wrong zoho desk account id due to old technical email is null 
-											if(old_technical_email != "" && old_technical_email != null)
+											desk_account_id = thisapp.tenancy.get_desk_account_id_for_tenancy(input.ID,input.Customer_Code,ifnull(input.Record_ID,""));
+											if(desk_account_id != "")
 											{
-												tenancy_record = Tenancy[Technical_Email == old_technical_email];
-												if(tenancy_record.count() > 0)
+												existing_contact_id = thisapp.tenancy.find_desk_contact_for_account(technical_email,desk_account_id);
+												if(existing_contact_id == "")
 												{
-													account_id = tenancy_record.Record_ID;
-													info account_id;
-													// Get the Record_ID from Tenancy
-												}
-												else
-												{
-													account_id = null;
-													// Set to null if no record is found
-												}
-											}
-											else
-											{
-												account_id = input.Record_ID;
-											}
-											//info "Fetched Account ID: " + account_id;
-											// Create a new contact in Zoho Desk
-											create_contact_data = Map();
-											create_contact_cf = Map();
-											create_contact_data.put("email",technical_email);
-											// Use the new email
-											create_contact_data.put("lastName",contact_name);
-											create_contact_data.put("accountId",account_id);
-											// Assign the retrieved Account ID
-											create_contact_cf.put("cf_technical_contact_name",contact_name);
-											create_contact_cf.put("cf_technical_email",technical_email);
-											create_contact_cf.put("cf_technical_phone_number",phone_number);
-											create_contact_data.put("cf",create_contact_cf);
-											create_contact_url = "https://desk.zoho.com/api/v1/contacts";
-											create_contact_response = invokeurl
-											[
-												url :create_contact_url
-												type :POST
-												parameters:create_contact_data.toString()
-												connection:"zdesk"
-											];
-											//info "New Contact Creation Response: " + create_contact_response.toString();
-											// After creating a contact, update the Account to reflect the new email
-											if(account_id != null)
-											{
-												update_account_data = Map();
-												update_account_cf = Map();
-												update_account_cf.put("cf_technical_email",technical_email);
-												// Update the technical email
-												update_account_data.put("cf",update_account_cf);
-												update_account_url = "https://desk.zoho.com/api/v1/accounts/" + account_id;
-												update_account_response = invokeurl
-												[
-													url :update_account_url
-													type :PATCH
-													parameters:update_account_data.toString()
-													connection:"zdesk"
-												];
-												//info "Account Email Update Response: " + update_account_response.toString();
-											}
-										}
-										else
-										{
-											//info "Contact already exists or Technical Email has not changed, skipping creation.";
-										}
-										// Step 3: Fetch existing tenancy records for the updated email
-										// ADD CODE 06/11/2025 - add the conditional statement below in checking technical email aim to prevent looping which consume around 500 external call
-										if(technical_email != null && technical_email != "")
-										{
-											existing_tenancy = Tenancy[Technical_Email == technical_email];
-											if(existing_tenancy.count() > 0)
-											{
-												for each  tenant in existing_tenancy
-												{
-													// Fetch previous values of Contact and Phone_Number
-													old_contact_name = tenant.get("Contact");
-													old_phone_number = tenant.get("Phone_Number");
-													if(old_contact_name != contact_name || old_phone_number != phone_number)
+													search_contact_response = invokeurl
+													[
+														url :"https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technical_email
+														type :GET
+														connection:"zdesk"
+													];
+													if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
 													{
-														//info "Matching tenant found with different contact or phone number.";
-														// Get Account ID directly from 'Tenancy' module's Record_ID
-														desk_account_id = tenant.Record_ID;
-														//info "Found Zoho Desk Account ID from Tenancy: " + desk_account_id;
-														// Step 4: Update Account Information
-														update_data = Map();
-														update_cf = Map();
-														update_cf.put("cf_technical_contact",contact_name);
-														update_cf.put("cf_technical_phone_number",phone_number);
-														update_data.put("cf",update_cf);
-														update_account_url = "https://desk.zoho.com/api/v1/accounts/" + desk_account_id;
-														update_response = invokeurl
-														[
-															url :update_account_url
-															type :PATCH
-															parameters:update_data.toString()
-															connection:"zdesk"
-														];
-														//info "Account Update Response: " + update_response.toString();
-														// Step 5: If a contact exists, update it
-														if(contact_exists)
+														for each  contactRec in search_contact_response.get("data")
 														{
-															//info "Updating existing contact in Zoho Desk.";
-															update_contact_data = Map();
-															update_contact_cf = Map();
-															update_contact_data.put("lastName",contact_name);
-															update_contact_cf.put("cf_technical_contact_name",contact_name);
-															update_contact_cf.put("cf_technical_phone_number",phone_number);
-															update_contact_data.put("cf",update_contact_cf);
-															update_contact_url = "https://desk.zoho.com/api/v1/contacts/" + contact_id;
-															update_contact_response = invokeurl
-															[
-																url :update_contact_url
-																type :PATCH
-																parameters:update_contact_data.toString()
-																connection:"zdesk"
-															];
-															//info "Contact Update Response: " + update_contact_response.toString();
-														}
-														else
-														{
-															//info "No associated contact found for the account.";
+															if(contactRec.get("accountId") != desk_account_id)
+															{
+																alert "This technical email is already linked in Zoho Desk to a different customer account. Use a unique email or update the existing Desk contact.";
+																cancel submit;
+															}
 														}
 													}
 												}
 											}
 										}
+										thisapp.tenancy.sync_desk_technical_contact_on_edit(input.ID,technical_email,old_technical_email,input.Contact,input.Phone_Number,input.Customer_Code,ifnull(input.Record_ID,""));
 						)
 					}
 				}
@@ -28246,17 +27947,17 @@
 													}
 												}
 												/*else
-														 				 						{
-														 				 							input.Latest_Billing_Date = input.Contract_End_Date;
-														 				 							subFinalBillingDate = input.Contract_End_Date;
-														 				 						}*/
+																		 				 						{
+																		 				 							input.Latest_Billing_Date = input.Contract_End_Date;
+																		 				 							subFinalBillingDate = input.Contract_End_Date;
+																		 				 						}*/
 												//Update tenant last billing date if tenant last billing date null
 												if(tenantLastBillingDate == null)
 												{
 													tenancyInfo.Latest_Billing_Date=input.Latest_Billing_Date;
 												}
 											}
-											else if(contractStartDate >= today.toStartOfMonth() && contractStartDate <= today.eomonth(0) && contractStartDate < today || (daysBetween(today,currentBillingEveryDate) <= 5 && contractStartDate >= currentBillingEveryDate))
+											else if(contractStartDate >= today.toStartOfMonth() && contractStartDate <= today.eomonth(0) && contractStartDate <= today || (daysBetween(today,currentBillingEveryDate) <= 5 && contractStartDate >= currentBillingEveryDate))
 											{
 												//info "daysBetween Contract Start Date And currentBillingEveryDate:" + daysBetween(contractStartDate,currentBillingEveryDate);
 												//Contract Start Date Is The Same As Current Month And Year.
@@ -28434,19 +28135,19 @@
 													}
 												}
 												/*else
-														 				 						{
-														 				 							tenantNextBillingDate = null;
-														 				 							if(input.Prorate == true)
-														 				 							{
-														 				 								subFinalBillingDate = today;
-														 				 								input.Latest_Billing_Date = today;
-														 				 								input.Next_Billing_Date = null;
-														 				 								input.Final_Billing_Date = today;
-														 				 								subsListId = List();
-														 				 								subsListId.add(input.ID);
-														 				 								thisapp.invoice.create_invoice_previous_monthly(subsListId,billCycleInt,input.Customer_Code,today,today);
-														 				 							}
-														 				 						}*/
+																		 				 						{
+																		 				 							tenantNextBillingDate = null;
+																		 				 							if(input.Prorate == true)
+																		 				 							{
+																		 				 								subFinalBillingDate = today;
+																		 				 								input.Latest_Billing_Date = today;
+																		 				 								input.Next_Billing_Date = null;
+																		 				 								input.Final_Billing_Date = today;
+																		 				 								subsListId = List();
+																		 				 								subsListId.add(input.ID);
+																		 				 								thisapp.invoice.create_invoice_previous_monthly(subsListId,billCycleInt,input.Customer_Code,today,today);
+																		 				 							}
+																		 				 						}*/
 											}
 											else
 											{
@@ -28512,25 +28213,25 @@
 												//Contract Start Date If Before Today Date
 												/* Determine Subscription Final Billing Date*/
 												/*contractPeriodLeft = monthsBetween(currentBillingEveryDate,contractEndDate);
-														 				 						info "contractPeriodLeft:" + contractPeriodLeft;
-														 				 						addMonthValue = (contractPeriodLeft / billCycleInt).toNumber() * billCycleInt;
-														 				 						info "addMonthValue:" + addMonthValue;
-														 				 						if(addMonthValue <= 0)
-														 				 						{
-														 				 							//subFinalBillingDate = contractEndDate;
-														 				 							if(input.Prorate)
-														 				 							{
-														 				 								input.Latest_Billing_Date = today;
-														 				 								subFinalBillingDate = today;
-														 				 							}
-														 				 						}
-														 				 						else
-														 				 						{
-														 				 							input.Latest_Billing_Date = today;
-														 				 							subFinalBillingDate = currentBillingEveryDate.addMonth(addMonthValue);
-														 				 							input.Next_Billing_Date = currentBillingEveryDate.addMonth(billCycleInt);
-														 				 						}
-														 				 						info "subFinalBillingDate:" + subFinalBillingDate;*/
+																		 				 						info "contractPeriodLeft:" + contractPeriodLeft;
+																		 				 						addMonthValue = (contractPeriodLeft / billCycleInt).toNumber() * billCycleInt;
+																		 				 						info "addMonthValue:" + addMonthValue;
+																		 				 						if(addMonthValue <= 0)
+																		 				 						{
+																		 				 							//subFinalBillingDate = contractEndDate;
+																		 				 							if(input.Prorate)
+																		 				 							{
+																		 				 								input.Latest_Billing_Date = today;
+																		 				 								subFinalBillingDate = today;
+																		 				 							}
+																		 				 						}
+																		 				 						else
+																		 				 						{
+																		 				 							input.Latest_Billing_Date = today;
+																		 				 							subFinalBillingDate = currentBillingEveryDate.addMonth(addMonthValue);
+																		 				 							input.Next_Billing_Date = currentBillingEveryDate.addMonth(billCycleInt);
+																		 				 						}
+																		 				 						info "subFinalBillingDate:" + subFinalBillingDate;*/
 												//info "Contract start date less than the current month";
 												contractPeriodLeft = monthsBetween(currentBillingEveryDate,contractEndDate);
 												addMonthValue = (contractPeriodLeft / billCycleInt).toNumber() * billCycleInt;
@@ -28573,60 +28274,60 @@
 													}
 												}
 												/*New code
-														 				 						if(contractEndDate >= today.toStartOfMonth())
-														 				 						{
-														 				 							addValue = ((monthsBetween(contractStartDate,currentBillingEveryDate) / billCycleInt).toNumber() + 1) * billCycleInt;
-														 				 							info "addValue:"+addValue;
-														 				 							nextBillingDate = contractStartDate.addMonth(addValue);
-														 				 							previousBillingDate = nextBillingDate.subMonth(billCycleInt);
-														 				 							if(contractPeriod % billCycleInt == 0)
-														 				 							{
-														 				 								subFinalBillingDate = contractStartDate.addMonth(contractPeriod - billCycleInt);
-														 				 							}
-														 				 							else
-														 				 							{
-														 				 								contractBillingPeriod=(contractPeriod/billCycleInt).toNumber() * billCycleInt;
-														 				 								if ( contractBillingPeriod < 1 ) 
-														 				 				                {
-														 				 									subFinalBillingDate = contractStartDate;
-														 				 				                }
-														 				 								else 
-														 				 				                {
-														 				 									subFinalBillingDate = contractStartDate.addMonth(contractBillingPeriod);
-														 				 				                }
-														 				 								
-														 				 							}
-														 				 							if(contractStartDate.eomonth(0).getDay() == contractStartDate.getDay())
-														 				 							{
-														 				 								nextBillingDate = nextBillingDate.eomonth(0);
-														 				 								subFinalBillingDate = subFinalBillingDate.eomonth(0);
-														 				 								previousBillingDate = previousBillingDate.eomonth(0);
-														 				 							}
-														 				 							info "nextBillingDate:" + nextBillingDate;
-														 				 							info "subFinalBillingDate:" + subFinalBillingDate;
-														 				 							info "previousBillingDate:" + previousBillingDate;
-														 				 							info "daysBetween Today And Next Billing Date:" + daysBetween(today,nextBillingDate);
-														 				 							if ( monthsBetween(nextBillingDate,subFinalBillingDate) < billCycleInt ) 
-														 				 				            {
-														 				 								subFinalBillingDate = nextBillingDate;
-														 				 				            }
-														 				 							input.Final_Billing_Date = subFinalBillingDate;
-														 				 							info "daysBetween Today and Next Billing Date:"+daysBetween(today,nextBillingDate);
-														 				 							if ( subFinalBillingDate <= nextBillingDate ) 
-														 				 				            {
-														 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,false,null,null);
-														 				 				            }
-														 				 							else if(daysBetween(today,nextBillingDate) <= 5 )
-														 				 							{
-														 				 								//create single invoice
-														 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,nextBillingDate,nextBillingDate,false,null,null);
-														 				 							}
-														 				 							else
-														 				 							{
-														 				 								//create two invoice
-														 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,true,nextBillingDate,nextBillingDate);
-														 				 							}
-														 				 						}*/
+																		 				 						if(contractEndDate >= today.toStartOfMonth())
+																		 				 						{
+																		 				 							addValue = ((monthsBetween(contractStartDate,currentBillingEveryDate) / billCycleInt).toNumber() + 1) * billCycleInt;
+																		 				 							info "addValue:"+addValue;
+																		 				 							nextBillingDate = contractStartDate.addMonth(addValue);
+																		 				 							previousBillingDate = nextBillingDate.subMonth(billCycleInt);
+																		 				 							if(contractPeriod % billCycleInt == 0)
+																		 				 							{
+																		 				 								subFinalBillingDate = contractStartDate.addMonth(contractPeriod - billCycleInt);
+																		 				 							}
+																		 				 							else
+																		 				 							{
+																		 				 								contractBillingPeriod=(contractPeriod/billCycleInt).toNumber() * billCycleInt;
+																		 				 								if ( contractBillingPeriod < 1 ) 
+																		 				 				                {
+																		 				 									subFinalBillingDate = contractStartDate;
+																		 				 				                }
+																		 				 								else 
+																		 				 				                {
+																		 				 									subFinalBillingDate = contractStartDate.addMonth(contractBillingPeriod);
+																		 				 				                }
+																		 				 								
+																		 				 							}
+																		 				 							if(contractStartDate.eomonth(0).getDay() == contractStartDate.getDay())
+																		 				 							{
+																		 				 								nextBillingDate = nextBillingDate.eomonth(0);
+																		 				 								subFinalBillingDate = subFinalBillingDate.eomonth(0);
+																		 				 								previousBillingDate = previousBillingDate.eomonth(0);
+																		 				 							}
+																		 				 							info "nextBillingDate:" + nextBillingDate;
+																		 				 							info "subFinalBillingDate:" + subFinalBillingDate;
+																		 				 							info "previousBillingDate:" + previousBillingDate;
+																		 				 							info "daysBetween Today And Next Billing Date:" + daysBetween(today,nextBillingDate);
+																		 				 							if ( monthsBetween(nextBillingDate,subFinalBillingDate) < billCycleInt ) 
+																		 				 				            {
+																		 				 								subFinalBillingDate = nextBillingDate;
+																		 				 				            }
+																		 				 							input.Final_Billing_Date = subFinalBillingDate;
+																		 				 							info "daysBetween Today and Next Billing Date:"+daysBetween(today,nextBillingDate);
+																		 				 							if ( subFinalBillingDate <= nextBillingDate ) 
+																		 				 				            {
+																		 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,false,null,null);
+																		 				 				            }
+																		 				 							else if(daysBetween(today,nextBillingDate) <= 5 )
+																		 				 							{
+																		 				 								//create single invoice
+																		 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,nextBillingDate,nextBillingDate,false,null,null);
+																		 				 							}
+																		 				 							else
+																		 				 							{
+																		 				 								//create two invoice
+																		 				 				thisapp.invoice.create_invoice_current_not_monthly(input.ID,billCycleInt,input.Customer_Code,previousBillingDate,previousBillingDate,true,nextBillingDate,nextBillingDate);
+																		 				 							}
+																		 				 						}*/
 												//Create Invoice 
 												//subsListId = List();
 												//subsListId.add(input.ID);
@@ -28671,14 +28372,14 @@
 												//info "startBillingEveryDate:" + startBillingEveryDate;
 												input.Next_Billing_Date = contractStartDate;
 												/* 		if(contractStartDate.getDay() == contractStartDate.eomonth(0).getDay() || (contractStartDate.getDay() >= 29 && contractEndDate.getMonth() == 2 && !thisapp.is_leap_year(contractEndDate.getYear())))
-														 				 						{
-														 				 							endDay = contractEndDate.eomonth(0).getDay();
-														 				 						}
-														 				 						else
-														 				 						{
-														 				 							endDay = contractStartDate.getDay();
-														 				 						}
-														 				 						info "endDay:" + endDay; */
+																		 				 						{
+																		 				 							endDay = contractEndDate.eomonth(0).getDay();
+																		 				 						}
+																		 				 						else
+																		 				 						{
+																		 				 							endDay = contractStartDate.getDay();
+																		 				 						}
+																		 				 						info "endDay:" + endDay; */
 												if(contractPeriod % billCycleInt == 0)
 												{
 													if(contractPeriod < billCycleInt)
@@ -29379,51 +29080,58 @@
 					{
 						custom deluge script
 						(
-											get_invoice_list = Invoice[Customer_Code == input.ID].ID.getAll();
-										get_credit_note_list = Credit_Note[Customer_Code == input.ID].ID.getAll();
-										get_debit_note_list = Debit_Note[Customer_Code == input.ID].ID.getAll();
-										get_refund_note_list = Refund_Note[Customer_Code == input.ID].ID.getAll();
-										get_pro_forma_invoices_list = Pro_Forma_Invoices[Customer_Code == input.ID].ID.getAll();
-										get_subscription_list = Subscription[Customer_Code == input.ID].ID.getAll();
-										get_payment_received_list = Payment_Received[Customer_Code == input.ID].ID.getAll();
-										message = "This tenancy can’t be deleted because it is used in the following module(s):\n\n";
-										has_dependency = false;
+											tenancyId = input.ID;
+										get_invoice_list = Invoice[Customer_Code == tenancyId].ID.getAll();
+										get_credit_note_list = Credit_Note[Customer_Code == tenancyId].ID.getAll();
+										get_debit_note_list = Debit_Note[Customer_Code == tenancyId].ID.getAll();
+										get_refund_note_list = Refund_Note[Customer_Code == tenancyId].ID.getAll();
+										get_subscription_list = Subscription[Customer_Code == tenancyId].ID.getAll();
+										get_pro_forma_invoices_list = Pro_Forma_Invoices[Customer_Code == tenancyId].ID.getAll();
+										get_payment_received_list = Payment_Received[Customer_Code == tenancyId].ID.getAll();
+										get_work_order_list = Work_Order_Creation[Customer_Code == tenancyId].ID.getAll();
+										message = "This tenancy can't be deleted because it is used in the following module(s):\n\n";
+										hasDependency = false;
+										if(get_subscription_list.size() > 0)
+										{
+											message = message + "- Subscriptions: " + get_subscription_list.size() + "\n";
+											hasDependency = true;
+										}
 										if(get_invoice_list.size() > 0)
 										{
 											message = message + "- Invoices: " + get_invoice_list.size() + "\n";
-											has_dependency = true;
+											hasDependency = true;
 										}
 										if(get_credit_note_list.size() > 0)
 										{
 											message = message + "- Credit Notes: " + get_credit_note_list.size() + "\n";
-											has_dependency = true;
+											hasDependency = true;
 										}
 										if(get_debit_note_list.size() > 0)
 										{
 											message = message + "- Debit Notes: " + get_debit_note_list.size() + "\n";
-											has_dependency = true;
+											hasDependency = true;
 										}
 										if(get_refund_note_list.size() > 0)
 										{
 											message = message + "- Refund Notes: " + get_refund_note_list.size() + "\n";
-											has_dependency = true;
+											hasDependency = true;
 										}
 										if(get_pro_forma_invoices_list.size() > 0)
 										{
 											message = message + "- Pro Forma Invoices: " + get_pro_forma_invoices_list.size() + "\n";
-											has_dependency = true;
-										}
-										if(get_subscription_list.size() > 0)
-										{
-											message = message + "- Subscriptions: " + get_subscription_list.size() + "\n";
-											has_dependency = true;
+											hasDependency = true;
 										}
 										if(get_payment_received_list.size() > 0)
 										{
 											message = message + "- Payments Received: " + get_payment_received_list.size() + "\n";
-											has_dependency = true;
+											hasDependency = true;
 										}
-										if(has_dependency)
+										if(get_work_order_list.size() > 0)
+										{
+											message = message + "- Work Order Creations: " + get_work_order_list.size() + "\n";
+											hasDependency = true;
+										}
+										if(hasDependency)
 										{
 											message = message + "\nPlease remove or reassign these records before deleting the customer code.";
 											alert message;

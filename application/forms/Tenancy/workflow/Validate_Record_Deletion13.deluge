@@ -11,15 +11,22 @@ Validate_Record_Deletion13 as "Validate Record Deletion"
 		{
 			custom deluge script
 			(
-					get_invoice_list = Invoice[Customer_Code == input.ID].ID.getAll();
-				get_credit_note_list = Credit_Note[Customer_Code == input.ID].ID.getAll();
-				get_debit_note_list = Debit_Note[Customer_Code == input.ID].ID.getAll();
-				get_refund_note_list = Refund_Note[Customer_Code == input.ID].ID.getAll();
-				get_subscription_list = Subscription[Customer_Code == input.ID].ID.getAll();
-				get_pro_forma_invoices_list = Pro_Forma_Invoices[Customer_Code == input.ID].ID.getAll();
-				get_payment_received_list = Payment_Received[Customer_Code == input.ID].ID.getAll();
-				message = "This tenancy can’t be deleted because it is used in the following module(s):\n\n";
+					tenancyId = input.ID;
+				get_invoice_list = Invoice[Customer_Code == tenancyId].ID.getAll();
+				get_credit_note_list = Credit_Note[Customer_Code == tenancyId].ID.getAll();
+				get_debit_note_list = Debit_Note[Customer_Code == tenancyId].ID.getAll();
+				get_refund_note_list = Refund_Note[Customer_Code == tenancyId].ID.getAll();
+				get_subscription_list = Subscription[Customer_Code == tenancyId].ID.getAll();
+				get_pro_forma_invoices_list = Pro_Forma_Invoices[Customer_Code == tenancyId].ID.getAll();
+				get_payment_received_list = Payment_Received[Customer_Code == tenancyId].ID.getAll();
+				get_work_order_list = Work_Order_Creation[Customer_Code == tenancyId].ID.getAll();
+				message = "This tenancy can't be deleted because it is used in the following module(s):\n\n";
 				hasDependency = false;
+				if(get_subscription_list.size() > 0)
+				{
+					message = message + "- Subscriptions: " + get_subscription_list.size() + "\n";
+					hasDependency = true;
+				}
 				if(get_invoice_list.size() > 0)
 				{
 					message = message + "- Invoices: " + get_invoice_list.size() + "\n";
@@ -40,11 +47,6 @@ Validate_Record_Deletion13 as "Validate Record Deletion"
 					message = message + "- Refund Notes: " + get_refund_note_list.size() + "\n";
 					hasDependency = true;
 				}
-				if(get_subscription_list.size() > 0)
-				{
-					message = message + "- Subscriptions: " + get_subscription_list.size() + "\n";
-					hasDependency = true;
-				}
 				if(get_pro_forma_invoices_list.size() > 0)
 				{
 					message = message + "- Pro Forma Invoices: " + get_pro_forma_invoices_list.size() + "\n";
@@ -53,6 +55,11 @@ Validate_Record_Deletion13 as "Validate Record Deletion"
 				if(get_payment_received_list.size() > 0)
 				{
 					message = message + "- Payments Received: " + get_payment_received_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(get_work_order_list.size() > 0)
+				{
+					message = message + "- Work Order Creations: " + get_work_order_list.size() + "\n";
 					hasDependency = true;
 				}
 				if(hasDependency)
@@ -66,4 +73,3 @@ Validate_Record_Deletion13 as "Validate Record Deletion"
 	}
 
 }
-

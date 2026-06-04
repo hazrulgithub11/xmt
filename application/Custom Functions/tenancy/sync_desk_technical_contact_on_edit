@@ -1,0 +1,88 @@
+void tenancy.sync_desk_technical_contact_on_edit(int tenancyId, string technicalEmail, string oldTechnicalEmail, string contactName, string phoneNumber, string customerCodeDisplay, string deskRecordId)
+{
+	if(technicalEmail == null || technicalEmail == "")
+	{
+		return;
+	}
+	desk_account_id = thisapp.tenancy.get_desk_account_id_for_tenancy(tenancyId,customerCodeDisplay,deskRecordId);
+	if(desk_account_id == "")
+	{
+		return;
+	}
+	contact_id = thisapp.tenancy.find_desk_contact_for_account(technicalEmail,desk_account_id);
+	email_changed = technicalEmail != oldTechnicalEmail;
+	if(email_changed && contact_id == "")
+	{
+		search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technicalEmail;
+		search_contact_response = invokeurl
+		[
+			url :search_contact_url
+			type :GET
+			connection:"zdesk"
+		];
+		if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+		{
+			for each  contactRec in search_contact_response.get("data")
+			{
+				if(contactRec.get("accountId") != desk_account_id)
+				{
+					return;
+				}
+			}
+		}
+		create_contact_cf = Map();
+		create_contact_cf.put("cf_technical_contact_name",contactName);
+		create_contact_cf.put("cf_technical_email",technicalEmail);
+		create_contact_cf.put("cf_technical_phone_number",phoneNumber);
+		create_contact_data = Map();
+		create_contact_data.put("email",technicalEmail);
+		create_contact_data.put("lastName",contactName);
+		create_contact_data.put("accountId",desk_account_id.toLong());
+		create_contact_data.put("cf",create_contact_cf);
+		create_contact_response = invokeurl
+		[
+			url :"https://desk.zoho.com/api/v1/contacts"
+			type :POST
+			parameters:create_contact_data.toString()
+			connection:"zdesk"
+		];
+		if(create_contact_response.get("id") != null)
+		{
+			contact_id = create_contact_response.get("id");
+		}
+	}
+	update_account_cf = Map();
+	update_account_cf.put("cf_technical_contact",contactName);
+	update_account_cf.put("cf_technical_email",technicalEmail);
+	update_account_cf.put("cf_technical_phone_number",phoneNumber);
+	update_account_data = Map();
+	update_account_data.put("cf",update_account_cf);
+	invokeurl
+	[
+		url :"https://desk.zoho.com/api/v1/accounts/" + desk_account_id
+		type :PATCH
+		parameters:update_account_data.toString()
+		connection:"zdesk"
+	];
+	if(contact_id != "")
+	{
+		update_contact_cf = Map();
+		update_contact_cf.put("cf_technical_contact_name",contactName);
+		update_contact_cf.put("cf_technical_email",technicalEmail);
+		update_contact_cf.put("cf_technical_phone_number",phoneNumber);
+		update_contact_data = Map();
+		update_contact_data.put("lastName",contactName);
+		if(email_changed)
+		{
+			update_contact_data.put("email",technicalEmail);
+		}
+		update_contact_data.put("cf",update_contact_cf);
+		invokeurl
+		[
+			url :"https://desk.zoho.com/api/v1/contacts/" + contact_id
+			type :PATCH
+			parameters:update_contact_data.toString()
+			connection:"zdesk"
+		];
+	}
+}

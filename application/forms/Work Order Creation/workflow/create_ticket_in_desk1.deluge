@@ -11,9 +11,7 @@ create_ticket_in_desk1 as "create ticket in desk"
 		{
 			custom deluge script
 			(
-					// createTicket = thisapp.subscription.createTicket(input.Subscription,input.Work_Order_Type);
-				woUrl = "https://creatorapp.zohopublic.com/" + zoho.adminuser + "/" + zoho.appname + "/report-perma/All_Work_Order_Creations/VdbndsS1m3EHhRMdrSZhfhqgf48gsSOVkQ5v1pbMZVR2H6XfrXATWSwUP7B2xVaCBmtWaKXBYeKj8k5B79afguswAdx7HB4ezBvp?ID=" + input.ID.toString();
-				createTicket = thisapp.subscription.createTicketUpdateWo(input.Subscription,input.ID,input.Work_Order_Type,woUrl);
+					createTicket = thisapp.subscription.createTicketForWorkOrder(input.Subscription,input.ID,input.Work_Order_Type);
 				// if(createTicket.get("code") == 200)
 				// {
 				// 	success message createTicket.get("message");

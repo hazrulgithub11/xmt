@@ -121,7 +121,7 @@ Validated modules/workflows/functions from source:
 
 - **Dual subscription on-success paths:** inactive `Handle_Creation_Of_Subscr` / `Handle_Edit_Submission` vs active `Handle_Subscription_Submi` — production behavior follows the active workflow only.
 - **Duplicate monthly schedule:** identical `Handle_Creation_Of_Subscr1` under `application/Schedule/` and `application/forms/Tenancy/workflow/`.
-- **Split ticket pipeline:** `createTicket`, `createTicketUpdateWo`, and `updateTicketNumber` are separate entry points (Phase 5 target).
+- **Ticket pipeline:** unified in Phase 5 via `createTicketUpdateWo` + shared Desk helpers (see Phase 5 implementation).
 - **Repeated date/proration math** across workflows and invoice functions (Phases 2–4 targets).
 
 ### Pre-refactor smoke checklist (run before Phase 1+)
@@ -293,7 +293,7 @@ Acceptance:
 ---
 
 ## Phase 5 - Ticket Workflow Unification (Duplicate Workflow + Wrong Logic)
-Status: `TODO`
+Status: `DONE`
 
 Goal:
 - Use one ticket creation pipeline and remove conflicting behavior.
@@ -314,10 +314,25 @@ Acceptance:
 - One deterministic flow for ticket creation.
 - No mismatched `Subscription` vs `Work_Order_Creation` record updates.
 
+### Phase 5 implementation (unified pipeline)
+
+| Step | Entry | Flow |
+|------|-------|------|
+| Subscription on-add | `create_ticket_in_desk` → `work_order_creation.updateTicketNumber` | Insert `Work_Order_Creation` → `createTicketUpdateWo` |
+| Work order on-add | `create_ticket_in_desk1` → `subscription.createTicketForWorkOrder` | Build perma URL → `createTicketUpdateWo` |
+
+New shared helpers:
+- `subscription.build_work_order_perma_url` — single WO report URL builder
+- `subscription.resolve_desk_account_and_contact` — account search + `cf_technical_email` contact match/create
+- `subscription.createTicketForWorkOrder` — thin wrapper for existing WO records
+
+`subscription.createTicket` — deprecated shim (delegates to `createTicketForWorkOrder` when a WO exists).  
+`subscription.createTicketUpdateWo` — canonical Desk ticket + **Work_Order_Creation-only** updates (never Subscription).
+
 ---
 
 ## Phase 6 - Tenancy Guardrails + Data Integrity
-Status: `TODO`
+Status: `DONE`
 
 Goal:
 - Strengthen tenancy lifecycle safety and cross-module consistency.
@@ -327,12 +342,23 @@ Files to change + manager reason:
   Reason: keep dependency checks complete and human-readable before delete.
 - `application/forms/Subscription/workflow/Validate_Record_Deletion2.deluge`  
   Reason: extend dependent-module checks to avoid orphan side effects.
-- `application/forms/Tenancy/workflow/change_technical_informat1.deluge`  
+- `application/forms/Tenancy/workflow/change_technical_informat.deluge`  
   Reason: harden Desk contact/account update assumptions and reduce duplicate contact risk.
 
 Acceptance:
 - No unsafe deletes.
 - Desk identity mapping remains consistent after tenancy edits.
+
+### Phase 6 implementation
+
+New Desk helpers (`tenancy.*`):
+- `get_desk_account_id_for_tenancy` — `Record_ID` first, else account search by `Customer_Code`
+- `find_desk_contact_for_account` — `cf_technical_email` scoped to Desk account (same pattern as Phase 5)
+- `sync_desk_technical_contact_on_edit` — updates **only** the tenancy being edited (removed cross-tenant email loop)
+
+Delete guards extended:
+- Tenancy: `Work_Order_Creation`, `Pro_Forma_Invoices` (live app has no `Pro_Forma_Invoices_1` form)
+- Subscription: `Work_Order_Creation`, linked `Pro_Forma_Invoices`, `.contains()` for multi-select `Subscriptions` on invoices/notes
 
 ---
 
@@ -343,8 +369,8 @@ Acceptance:
 - [x] Phase 2 - Centralize Billing-Date Calculations (deploy + smoke pending)
 - [x] Phase 3 - Centralize Amount + Proration (2 helpers; deploy + smoke pending)
 - [x] Phase 4 - Fix Wrong Logic Calculations
-- [ ] Phase 5 - Ticket Workflow Unification
-- [ ] Phase 6 - Tenancy Guardrails + Data Integrity
+- [x] Phase 5 - Ticket Workflow Unification
+- [x] Phase 6 - Tenancy Guardrails + Data Integrity
 
 ---
 

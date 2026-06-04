@@ -1,0 +1,5 @@
+map subscription.createTicketForWorkOrder(int subsId, int woId, string ticketType)
+{
+	woUrl = thisapp.subscription.build_work_order_perma_url(woId);
+	return thisapp.subscription.createTicketUpdateWo(subsId,woId,ticketType,woUrl);
+}

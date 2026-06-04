@@ -1,0 +1,49 @@
+Change_technical_informat as "Change technical information in desk"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					technical_email = input.Technical_Email;
+				old_technical_email = old.Technical_Email;
+				if(technical_email != null && technical_email != "" && technical_email != old_technical_email)
+				{
+					desk_account_id = thisapp.tenancy.get_desk_account_id_for_tenancy(input.ID,input.Customer_Code,ifnull(input.Record_ID,""));
+					if(desk_account_id != "")
+					{
+						existing_contact_id = thisapp.tenancy.find_desk_contact_for_account(technical_email,desk_account_id);
+						if(existing_contact_id == "")
+						{
+							search_contact_response = invokeurl
+							[
+								url :"https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technical_email
+								type :GET
+								connection:"zdesk"
+							];
+							if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+							{
+								for each  contactRec in search_contact_response.get("data")
+								{
+									if(contactRec.get("accountId") != desk_account_id)
+									{
+										alert "This technical email is already linked in Zoho Desk to a different customer account. Use a unique email or update the existing Desk contact.";
+										cancel submit;
+									}
+								}
+							}
+						}
+					}
+				}
+				thisapp.tenancy.sync_desk_technical_contact_on_edit(input.ID,technical_email,old_technical_email,input.Contact,input.Phone_Number,input.Customer_Code,ifnull(input.Record_ID,""));
+			)
+		}
+	}
+
+}

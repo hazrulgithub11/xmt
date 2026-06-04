@@ -1,0 +1,24 @@
+string tenancy.get_desk_account_id_for_tenancy(int tenancyId, string customerCodeDisplay, string deskRecordId)
+{
+	desk_account_id = ifnull(deskRecordId,"");
+	if(desk_account_id != "")
+	{
+		return desk_account_id;
+	}
+	if(customerCodeDisplay == null || customerCodeDisplay == "")
+	{
+		return "";
+	}
+	search_account_url = "https://desk.zoho.com/api/v1/accounts/search?customField1=cf_single_line_1:" + customerCodeDisplay;
+	search_account_response = invokeurl
+	[
+		url :search_account_url
+		type :GET
+		connection:"zdesk"
+	];
+	if(search_account_response.get("data") != null && search_account_response.get("data").size() > 0)
+	{
+		return search_account_response.get("data").get(0).get("id");
+	}
+	return "";
+}

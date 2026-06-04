@@ -1,0 +1,27 @@
+string tenancy.find_desk_contact_for_account(string technicalEmail, string deskAccountId)
+{
+	contact_id = "";
+	if(technicalEmail == null || technicalEmail == "")
+	{
+		return contact_id;
+	}
+	search_contact_url = "https://desk.zoho.com/api/v1/contacts/search?customField1=cf_technical_email:" + technicalEmail;
+	search_contact_response = invokeurl
+	[
+		url :search_contact_url
+		type :GET
+		connection:"zdesk"
+	];
+	if(search_contact_response.get("data") != null && search_contact_response.get("data").size() > 0)
+	{
+		for each  contactRec in search_contact_response.get("data")
+		{
+			if(ifnull(deskAccountId,"") == "" || contactRec.get("accountId") == deskAccountId)
+			{
+				contact_id = contactRec.get("id");
+				break;
+			}
+		}
+	}
+	return contact_id;
+}

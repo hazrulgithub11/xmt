@@ -11,10 +11,12 @@ Validate_Record_Deletion2 as "Validate Record Deletion"
 		{
 			custom deluge script
 			(
-					get_invoice_list = Invoice[Subscriptions == input.ID].ID.getAll();
-				get_credit_note_list = Credit_Note[Subscriptions == input.ID].ID.getAll();
-				get_refund_note_list = Refund_Note[Subscriptions == input.ID].ID.getAll();
-				message = "This subscription can’t be deleted because it is used in the following module(s):\n\n";
+					subscriptionId = input.ID;
+				get_invoice_list = Invoice[Subscriptions.contains(subscriptionId)].ID.getAll();
+				get_credit_note_list = Credit_Note[Subscriptions.contains(subscriptionId)].ID.getAll();
+				get_refund_note_list = Refund_Note[Subscriptions.contains(subscriptionId)].ID.getAll();
+				get_work_order_list = Work_Order_Creation[Subscription == subscriptionId].ID.getAll();
+				message = "This subscription can't be deleted because it is used in the following module(s):\n\n";
 				hasDependency = false;
 				if(get_invoice_list.size() > 0)
 				{
@@ -31,6 +33,16 @@ Validate_Record_Deletion2 as "Validate Record Deletion"
 					message = message + "- Refund Notes: " + get_refund_note_list.size() + "\n";
 					hasDependency = true;
 				}
+				if(get_work_order_list.size() > 0)
+				{
+					message = message + "- Work Order Creations: " + get_work_order_list.size() + "\n";
+					hasDependency = true;
+				}
+				if(input.Pro_Forma_Invoices != null)
+				{
+					message = message + "- Pro Forma Invoice linked on this subscription\n";
+					hasDependency = true;
+				}
 				if(hasDependency)
 				{
 					message = message + "\nPlease remove or reassign these records before deleting the subscription.";
@@ -42,4 +54,3 @@ Validate_Record_Deletion2 as "Validate Record Deletion"
 	}
 
 }
-

@@ -11,6 +11,7 @@ create_ticket_in_desk as "create ticket in desk"
 		{
 			custom deluge script
 			(
+					// Subscription on-add: create WO record, then Desk ticket (shared pipeline).
 					createTicket = thisapp.work_order_creation.updateTicketNumber(input.ID,input.Work_Order_Type);
 				// if(createTicket.get("code") == 200)
 				// {
