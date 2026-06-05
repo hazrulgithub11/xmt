@@ -13,9 +13,9 @@ Validation_On_Quantity as "Validation On Quantity"
 			custom deluge script
 			(
 					isItemQuantityNegative = false;
-				for each  subLineItem in input.Subcription_Line_Items
+				for each  subLineItem in input.Subscription_Line_Items
 				{
-					if(ifnull(subLineItem.Quantity,0) < 1)
+					if(ifnull(subLineItem.Quantity_Subscription,0) < 1)
 					{
 						isItemQuantityNegative = true;
 					}

@@ -1,4 +1,4 @@
-string tenancy.generate_account_number(string prefix)
+string tenancy.generate_tenancy_no(string prefix)
 {
 	tenancyInfo = Tenancy[Account_Number.containsIgnoreCase(prefix) && Account_Number != ""] sort by Account_Number desc;
 	if(tenancyInfo.ID == null)

@@ -1,0 +1,31 @@
+string tenancy.generate_tenancy_no(string prefix)
+{
+	tenancyInfo = Tenancy[Account_Number.containsIgnoreCase(prefix) && Account_Number != ""] sort by Account_Number desc;
+	if(tenancyInfo.ID == null)
+	{
+		count = 0;
+	}
+	else
+	{
+		count = tenancyInfo.Account_Number.removeAllAlpha().toLong();
+	}
+	count = count + 1;
+	if(count < 10)
+	{
+		pad = "000";
+	}
+	else if(count < 100)
+	{
+		pad = "00";
+	}
+	else if(count < 1000)
+	{
+		pad = "0";
+	}
+	else
+	{
+		pad = "";
+	}
+	accNumber = prefix + pad + count;
+	return accNumber;
+}

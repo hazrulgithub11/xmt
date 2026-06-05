@@ -11,10 +11,11 @@ prefill_subscription_stat1 as "prefill subscription status"
 		{
 			custom deluge script
 			(
-					input.Subscription_Status = "Active";
+					getOrganization = Organization_Settings[ID != null];
+				input.Subscription_Status = "Active";
+				input.Base_Currency = ifnull(getOrganization.Base_Currency,"MYR");
 			)
 		}
 	}
 
 }
-

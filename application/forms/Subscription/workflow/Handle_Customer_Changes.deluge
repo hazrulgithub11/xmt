@@ -12,14 +12,10 @@ Handle_Customer_Changes as "Handle Customer Changes"
 			custom deluge script
 			(
 					customerInfo = Customer_Profile[ID == input.Customer_Name];
-				input.Currency = ifnull(customerInfo.Currency, null);
-				getOrganization = Organization_Settings[ID != null];
-				baseCurrency = ifnull(getOrganization.Base_Currency, "MYR");
-				if(input.Currency == null || input.Currency == "")
-				{
-					input.Exchange_Rate = null;
-				}
-				else if(input.Currency == baseCurrency)
+				baseCurrency = ifnull(input.Base_Currency,ifnull(Organization_Settings[ID != null].Base_Currency,"MYR"));
+				subscriptionCurrency = ifnull(customerInfo.Currency,baseCurrency);
+				input.Subscription_Currency = subscriptionCurrency;
+				if(subscriptionCurrency == baseCurrency)
 				{
 					input.Exchange_Rate = 1;
 				}
@@ -29,7 +25,7 @@ Handle_Customer_Changes as "Handle Customer Changes"
 					{
 						exchange_rate_get_response = invokeurl
 						[
-							url :"https://api.frankfurter.app/latest?from=" + input.Currency + "&to=" + baseCurrency
+							url :"https://api.frankfurter.app/latest?from=" + subscriptionCurrency + "&to=" + baseCurrency
 							type :GET
 						];
 						exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
@@ -37,60 +33,39 @@ Handle_Customer_Changes as "Handle Customer Changes"
 					}
 					catch (e)
 					{
-						info e;
 						input.Exchange_Rate = "";
 					}
 				}
 				input.Payment_Term = null;
 				input.Payable_To1 = null;
-				input.Payment_Term = null;
 				input.Contract_Start_Date = null;
 				input.Contract_Period = null;
 				input.Contract_End_Date = null;
 				input.Prorate = false;
 				input.Prorate_Note1 = "";
-				/* grandTotal = 0;
-				 				 				grandTotalMYR = 0; */
-				for each  subLineItem in input.Subcription_Line_Items
+				for each  subLineItem in input.Subscription_Line_Items
 				{
-					unitPrice = ifnull(subLineItem.Item.Unit_Price,0);
+					unitPrice = subLineItem.Item_Subscription.Unit_Price;
 					unitPriceCurrency = unitPrice / ifnull(input.Exchange_Rate,1);
-					subLineItem.Unit_Price=unitPriceCurrency;
-					subLineItem.Item_Code=subLineItem.Item.Item_Code;
-					subLineItem.Description=subLineItem.Item.Description;
-					subLineItem.Quantity=0;
-					subLineItem.Sub_Total=0;
-					subLineItem.Tax=null;
-					subLineItem.Tax_Pct=0;
-					subLineItem.Tax_Amount=0;
-					subLineItem.Total=0;
-					subLineItem.Total_MYR=0;
-					/*if(subLineItem.Item.Tax == null)
-				 				 					{
-				 				 						subLineItem.Tax=null;
-				 				 						subLineItem.Tax_Pct=0;
-				 				 						subLineItem.Tax_Amount=0;
-				 				 					}
-				 				 					else
-				 				 					{
-				 				 						subLineItem.Tax=subLineItem.Item.Tax;
-				 				 						subLineItem.Tax_Pct=subLineItem.Item.Tax.Tax_Percentage;
-				 				 						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Item.Tax.Tax_Percentage / 100;
-				 				 					}
-				 				 					subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
-				 				 					subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Currency.Exchange_Rate_to_MYR,1);
-				 				 					grandTotal = grandTotal + subLineItem.Total;
-				 				 					grandTotalMYR = grandTotalMYR + subLineItem.Total_MYR;*/
+					subLineItem.Unit_Price_Subscription=unitPriceCurrency;
+					subLineItem.Item_Code_Subscription=subLineItem.Item_Subscription.Item_Code;
+					subLineItem.Description_Subscription=subLineItem.Item_Subscription.Description;
+					subLineItem.Quantity_Subscription=0;
+					subLineItem.Sub_Total_Subscription=0;
+					subLineItem.Tax_Subscription=null;
+					subLineItem.Tax_Pct_Subscription=0;
+					subLineItem.Tax_Amount_Subscription=0;
+					subLineItem.Total_Subscription=0;
 					if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
 					{
-						subLineItem.Business_Segment:ui.add(customerInfo.Business_Segment);
+						subLineItem.Business_Segment_Subscription:ui.add(customerInfo.Business_Segment);
 					}
 					else
 					{
-						clear subLineItem.Business_Segment;
+						clear subLineItem.Business_Segment_Subscription;
 					}
-					clear subLineItem.Business_Unit;
-					subLineItem.Business_Unit=null;
+					clear subLineItem.Business_Unit_Subscription;
+					subLineItem.Business_Unit_Subscription=null;
 				}
 				input.Grand_Total = 0;
 				input.Grand_Total_MYR = 0;
@@ -99,4 +74,3 @@ Handle_Customer_Changes as "Handle Customer Changes"
 	}
 
 }
-

@@ -12,27 +12,22 @@ Disable_Fields as "Disable Fields"
 			custom deluge script
 			(
 					disable Grand_Total;
-				disable Currency;
+				disable Base_Currency;
+				disable Subscription_Currency;
+				disable Exchange_Rate;
 				//disable Status;
 				disable Next_Billing_Date;
 				disable Latest_Billing_Date;
 				disable Final_Billing_Date;
 				disable Grand_Total_MYR;
-				disable Subcription_Line_Items.Item_Code;
-				disable Subcription_Line_Items.Description;
-				disable Subcription_Line_Items.Sub_Total;
-				disable Subcription_Line_Items.Quantity;
-				disable Subcription_Line_Items.Quantity1;
-				//disable Subcription_Line_Items.Tax;
-				disable Subcription_Line_Items.Tax_Pct;
-				disable Subcription_Line_Items.Tax_Amount;
-				disable Subcription_Line_Items.Total;
-				disable Subcription_Line_Items.Total_MYR;
-				disable Subcription_Line_Items.Circuit_ID_Type;
-				disable Subcription_Line_Items.Contract_Start_Date;
-				disable Subcription_Line_Items.Contract_End_Date;
-				disable Subcription_Line_Items.Customer;
-				disable Subcription_Line_Items.Tenant_Code;
+				disable Subscription_Line_Items.Item_Code_Subscription;
+				disable Subscription_Line_Items.Description_Subscription;
+				disable Subscription_Line_Items.Sub_Total_Subscription;
+				disable Subscription_Line_Items.Quantity_Subscription;
+				disable Subscription_Line_Items.Tax_Pct_Subscription;
+				disable Subscription_Line_Items.Tax_Amount_Subscription;
+				disable Subscription_Line_Items.Total_Subscription;
+				disable Subscription_Line_Items.Circuit_ID_Type_Subscription;
 				// disable Termination_Status;
 				disable Contact;
 				disable Technical_Email;

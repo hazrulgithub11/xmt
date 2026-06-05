@@ -1,0 +1,44 @@
+Validation_on_form_submis as "Validation on form submission for Tenancy"
+{
+	type =  form
+	form = Tenancy
+
+	record event = on add or edit
+
+	on validate
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					// Bill Every is required for Monthly billing cycle
+				if(input.Billing_Cycle == "Monthly" && (input.Bill_Every == null || input.Bill_Every == ""))
+				{
+					alert(Bill_Every,"Bill Every is required when Billing Cycle is Monthly.");
+					cancel submit;
+				}
+				// Generate Account Number for new tenancy records (Account_Number field must NOT be mandatory in Creator)
+				if(input.Account_Number == null || input.Account_Number == "")
+				{
+					if(input.Account_Type == null || input.Account_Type == "")
+					{
+						alert(Account_Type,"Select an Account Type (FK, MRT, or PROJ). The Account Number is generated automatically.");
+						cancel submit;
+					}
+					input.Account_Number = thisapp.tenancy.generate_tenancy_no(input.Account_Type);
+				}
+				// Update Display Name
+				customerProfileName = ifnull(input.Customer_Name.Customer_Name,"");
+				if(input.Tenant_Name.toUpperCase() == customerProfileName.toUpperCase())
+				{
+					input.Display_Name = customerProfileName;
+				}
+				else
+				{
+					input.Display_Name = customerProfileName + " - " + input.Tenant_Name;
+				}
+			)
+		}
+	}
+
+}

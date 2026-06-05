@@ -11,8 +11,8 @@ Disable_Fields_During_Edi as "Disable Fields During Edit"
 		{
 			custom deluge script
 			(
-					disable Subcription_Line_Items.Circuit_ID;
-				disable Subcription_Line_Items.Circuit_ID_Type;
+					disable Subscription_Line_Items.Circuit_ID_Subscription;
+				disable Subscription_Line_Items.Circuit_ID_Type_Subscription;
 				getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
 				if(getInvoices.size() > 0)
 				{
@@ -24,10 +24,10 @@ Disable_Fields_During_Edi as "Disable Fields During Edit"
 					disable Payment_Term;
 					disable Pro_Forma_Invoices;
 					disable Prorate;
-					disable Subcription_Line_Items.Item;
-					disable Subcription_Line_Items.Unit_Price;
-					disable Subcription_Line_Items.Quantity;
-					disable Subcription_Line_Items.Tax;
+					disable Subscription_Line_Items.Item_Subscription;
+					disable Subscription_Line_Items.Unit_Price_Subscription;
+					disable Subscription_Line_Items.Quantity_Subscription;
+					disable Subscription_Line_Items.Tax_Subscription;
 				}
 			)
 		}
@@ -49,7 +49,7 @@ Disable_Fields_During_Edi as "Disable Fields During Edit"
 					disable Contract_End_Date;
 					disable Payment_Term;
 					disable Final_Billing_Date;
-					disable Currency;
+					disable Subscription_Currency;
 					disable Work_Order_Type;
 					disable Phone_Number;
 					disable Attachment;
@@ -59,26 +59,20 @@ Disable_Fields_During_Edi as "Disable Fields During Edit"
 					disable Grand_Total_MYR;
 					disable Technical_Email;
 					disable Customer_Name;
-					disable Subcription_Line_Items.Unit_Price;
-					disable Subcription_Line_Items.Business_Unit;
-					disable Subcription_Line_Items.Total;
-					disable Subcription_Line_Items.Contract_Start_Date;
-					disable Subcription_Line_Items.Circuit_ID_Type;
-					disable Subcription_Line_Items.Circuit_ID;
-					disable Subcription_Line_Items.Sub_Total;
-					disable Subcription_Line_Items.Quantity;
-					disable Subcription_Line_Items.Item_Code;
-					disable Subcription_Line_Items.Contract_End_Date;
-					disable Subcription_Line_Items.Subscription;
-					disable Subcription_Line_Items.Tenant_Code;
-					disable Subcription_Line_Items.Tax_Pct;
-					disable Subcription_Line_Items.Item;
-					disable Subcription_Line_Items.Tax_Amount;
-					disable Subcription_Line_Items.Business_Segment;
-					disable Subcription_Line_Items.Tax;
-					disable Subcription_Line_Items.Total_MYR;
-					disable Subcription_Line_Items.Customer;
-					disable Subcription_Line_Items.Description;
+					disable Subscription_Line_Items.Unit_Price_Subscription;
+					disable Subscription_Line_Items.Business_Unit_Subscription;
+					disable Subscription_Line_Items.Total_Subscription;
+					disable Subscription_Line_Items.Circuit_ID_Type_Subscription;
+					disable Subscription_Line_Items.Circuit_ID_Subscription;
+					disable Subscription_Line_Items.Sub_Total_Subscription;
+					disable Subscription_Line_Items.Quantity_Subscription;
+					disable Subscription_Line_Items.Item_Code_Subscription;
+					disable Subscription_Line_Items.Tax_Pct_Subscription;
+					disable Subscription_Line_Items.Item_Subscription;
+					disable Subscription_Line_Items.Tax_Amount_Subscription;
+					disable Subscription_Line_Items.Business_Segment_Subscription;
+					disable Subscription_Line_Items.Tax_Subscription;
+					disable Subscription_Line_Items.Description_Subscription;
 					/* 		otherParams = Map();
 				 				 						otherParamsList = List();
 				 				 						otherParamsList.add("all");

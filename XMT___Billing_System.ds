@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 04-Jun-2026 03:47:25
+ * Generated on : 04-Jun-2026 19:06:18
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -10250,7 +10250,7 @@
 	 			column = 1   
 				width = medium
 			)
-			must have unique Account_Number
+			unique Account_Number
 			(
     			type = text
 				displayname = "Account Number"
@@ -20581,7 +20581,9 @@
 						custom deluge script
 						(
 											disable Grand_Total;
+										disable Base_Currency;
 										disable Subscription_Currency;
+										disable Exchange_Rate;
 										//disable Status;
 										disable Next_Billing_Date;
 										disable Latest_Billing_Date;
@@ -20643,25 +20645,9 @@
 				}
 
 			}
-			Generate_Account_Number as "Generate Account Number"
-			{
-				type =  form
-				form = Tenancy
-
-				record event = on add
-
-				on success
-				{
-					actions 
-					{
-						custom deluge script
-						(
-											input.Account_Number = thisapp.tenancy.generate_tenancy_no(input.Account_Type);
-						)
-					}
-				}
-
-			}
+			// Generate_Account_Number — REMOVED.
+			// Account Number is now generated in Validation_on_form_submis (on validate).
+			// Keeping this on-success workflow would double-call generate_tenancy_no and produce an off-by-one account number.
 			Hide_Fields_During_Create as "Hide Fields During Create"
 			{
 				type =  form
@@ -21165,14 +21151,10 @@
 						custom deluge script
 						(
 											customerInfo = Customer_Profile[ID == input.Customer_Name];
-										input.Subscription_Currency = ifnull(customerInfo.Currency,null);
-										getOrganization = Organization_Settings[ID != null];
-										baseCurrency = ifnull(getOrganization.Base_Currency,"MYR");
-										if(input.Subscription_Currency == null || input.Subscription_Currency == "")
-										{
-											input.Exchange_Rate = null;
-										}
-										else if(input.Subscription_Currency == baseCurrency)
+										baseCurrency = ifnull(input.Base_Currency,ifnull(Organization_Settings[ID != null].Base_Currency,"MYR"));
+										subscriptionCurrency = ifnull(customerInfo.Currency,baseCurrency);
+										input.Subscription_Currency = subscriptionCurrency;
+										if(subscriptionCurrency == baseCurrency)
 										{
 											input.Exchange_Rate = 1;
 										}
@@ -21182,14 +21164,14 @@
 											{
 												exchange_rate_get_response = invokeurl
 												[
-													url :"https://api.frankfurter.app/latest?from=" + input.Subscription_Currency + "&to=" + baseCurrency
+													url :"https://api.frankfurter.app/latest?from=" + subscriptionCurrency + "&to=" + baseCurrency
 													type :GET
 												];
 												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 												input.Exchange_Rate = exchange_rate;
-											}	catch (e)
+											}
+											catch (e)
 											{
-												info e;
 												input.Exchange_Rate = "";
 											}
 										}
@@ -26396,23 +26378,32 @@
 					{
 						custom deluge script
 						(
-											// Update Display Name
-										if(input.Tenant_Name.toUpperCase() == Customer_Name.Customer_Name.toUpperCase())
+											// Bill Every is required for Monthly billing cycle
+										if(input.Billing_Cycle == "Monthly" && (input.Bill_Every == null || input.Bill_Every == ""))
 										{
-											input.Display_Name = input.Customer_Name.Customer_Name;
+											alert(Bill_Every,"Bill Every is required when Billing Cycle is Monthly.");
+											cancel submit;
+										}
+										// Generate Account Number for new tenancy records (Account_Number field must NOT be mandatory in Creator)
+										if(input.Account_Number == null || input.Account_Number == "")
+										{
+											if(input.Account_Type == null || input.Account_Type == "")
+											{
+												alert(Account_Type,"Select an Account Type (FK, MRT, or PROJ). The Account Number is generated automatically.");
+												cancel submit;
+											}
+											input.Account_Number = thisapp.tenancy.generate_tenancy_no(input.Account_Type);
+										}
+										// Update Display Name
+										customerProfileName = ifnull(input.Customer_Name.Customer_Name,"");
+										if(input.Tenant_Name.toUpperCase() == customerProfileName.toUpperCase())
+										{
+											input.Display_Name = customerProfileName;
 										}
 										else
 										{
-											input.Display_Name = input.Customer_Name.Customer_Name + " - " + input.Tenant_Name;
+											input.Display_Name = customerProfileName + " - " + input.Tenant_Name;
 										}
-						)
-					}
-					actions  (Billing_Cycle == "Monthly" && Bill_Every is null)
-					{
-						custom deluge script
-						(
-											alert(Bill_Every,"This field is mandatory. Enter a value.");
-										cancel submit;
 						)
 					}
 				}
@@ -26509,7 +26500,9 @@
 					{
 						custom deluge script
 						(
-											input.Subscription_Status = "Active";
+											getOrganization = Organization_Settings[ID != null];
+										input.Subscription_Status = "Active";
+										input.Base_Currency = ifnull(getOrganization.Base_Currency,"MYR");
 						)
 					}
 				}
