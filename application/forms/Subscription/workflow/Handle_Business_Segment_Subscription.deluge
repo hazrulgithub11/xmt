@@ -1,0 +1,28 @@
+Handle_Business_Segment_Subscription as "Handle Business Segment - Subscription Line Item"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Subscription_Line_Items.Business_Segment_Subscription
+	{
+		actions 
+		{
+			custom deluge script
+			(
+							if(row.Business_Segment_Subscription != null)
+						{
+							getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Subscription].ID.getAll();
+							row.Business_Unit_Subscription:ui.add(getBusinessUnitIDs);
+						}
+						else
+						{
+							clear row.Business_Unit_Subscription;
+						}
+			)
+		}
+	}
+
+}
+

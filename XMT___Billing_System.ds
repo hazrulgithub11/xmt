@@ -12128,6 +12128,7 @@
 				Customer_Name.Added_User as "Added User"
 				Payment_Term as "Payment Term"
 				Grand_Total_MYR as "Grand Total MYR"
+				Subscription_Status as "Subscription Status"
 				ID
 			)
 			filters
@@ -36823,6 +36824,33 @@
 				}
 
 			}
+			Handle_Business_Segment_Subscription as "Handle Business Segment - Subscription Line Item"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Subscription_Line_Items.Business_Segment_Subscription
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(row.Business_Segment_Subscription != null)
+										{
+											getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Subscription].ID.getAll();
+											row.Business_Unit_Subscription:ui.add(getBusinessUnitIDs);
+										}
+										else
+										{
+											clear row.Business_Unit_Subscription;
+										}
+						)
+					}
+				}
+
+			}
 			User_Input_Trigger_Workfl5 as "User_Input_Trigger_Workflow"
 			{
 				type =  form
@@ -42685,24 +42713,51 @@
 					layout
 					(
 		 				type = 2
-						datablock1
+					datablock1
+					(
+	     				title = "Overview"
+						fields
 						(
-		     				title = "Overview"
-							fields
-							(
-								Customer_Name as "Customer Name"
-								Customer_Code as "Customer Code"
-								Contract_Start_Date as "Contract Start Date"
-								Contract_End_Date as "Contract End Date"
-								Contract_Period as "Contract Period (Month)"
-								Customer_PO_No as "Customer PO No."
-								Attachment
-							)
+							Customer_Name as "Customer Name"
+							Customer_Code as "Customer Code"
+							Contract_Start_Date as "Contract Start Date"
+							Contract_End_Date as "Contract End Date"
+							Contract_Period as "Contract Period (Month)"
+							Customer_PO_No as "Customer PO No."
+							Subscription_Status as "Subscription Status"
+							Payment_Term as "Payment Term"
+							Grand_Total as "Grand Total"
+							Grand_Total_MYR as "Grand Total MYR"
+							Attachment
 						)
-						datablock2
+					)
+					datablock3
+					(
+	     				title = "Subscription Line Items"
+	     				related field = Subscription_Line_Items
+						fields
 						(
-		     				title = "Customer Name"
-		     				related field = Customer_Name
+							Item_Subscription as "Item"
+							Item_Code_Subscription as "Item Code"
+							Description_Subscription as "Description"
+							Quantity_Subscription as "Quantity"
+							Unit_Price_Subscription as "Unit Price"
+							Sub_Total_Subscription as "Sub Total"
+							Tax_Subscription as "Tax"
+							Tax_Type_Subscription as "Tax Type"
+							Tax_Pct_Subscription as "Tax Pct"
+							Tax_Amount_Subscription as "Tax Amount"
+							Total_Subscription as "Total"
+							Business_Segment_Subscription as "Business Segment"
+							Business_Unit_Subscription as "Business Unit"
+							Circuit_ID_Subscription as "Circuit ID"
+							Circuit_ID_Type_Subscription as "Circuit ID Type"
+						)
+					)
+					datablock2
+					(
+	     				title = "Customer Name"
+	     				related field = Customer_Name
 							fields
 							(
 								Customer_Name as "Customer Name"

@@ -29,6 +29,7 @@ list All_Subscriptions
 		Customer_Name.Added_User as "Added User"
 		Payment_Term as "Payment Term"
 		Grand_Total_MYR as "Grand Total MYR"
+		Subscription_Status as "Subscription Status"
 		ID
 	)
 	filters
@@ -73,18 +74,18 @@ list All_Subscriptions
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Delete 
-    	 	)
+			menu
+			(
+				header
+				(
+					Delete 
+				)
 			record
 			(
 				Edit   	   
 				Delete   	   
     		)
-    	)
+			)
     	action
     	(
 			on click
@@ -114,73 +115,60 @@ list All_Subscriptions
 					Contract_End_Date as "Contract End Date"
 					Contract_Period as "Contract Period (Month)"
 					Customer_PO_No as "Customer PO No."
-					Attachment
-				)
-			)
-			datablock2
-			(
-		     	title = "Bill Information"
-				fields
-				(
-					Latest_Billing_Date as "Latest Billing Date"
-					Next_Billing_Date as "Next Billing Date"
-					Final_Billing_Date as "Final Billing Date"
+					Subscription_Status as "Subscription Status"
 					Payment_Term as "Payment Term"
-					Customer_Code.Bill_For as "Bill For"
-					Customer_Code.Bill_Every as "Bill Every"
-					Customer_Code.Billing_Cycle as "Billing Cycle"
 					Grand_Total as "Grand Total"
 					Grand_Total_MYR as "Grand Total MYR"
+					Attachment
 				)
 			)
 			datablock3
 			(
-		     	title = "Subcription Line Items"
-		     	related field = Subcription_Line_Items
+		     	title = "Subscription Line Items"
+		     	related field = Subscription_Line_Items
 				fields
 				(
-					Item
-					Item_Code as "Item Code"
-					Description
-					Unit_Price as "Unit Price"
-					Quantity1 as "Quantity"
-					Sub_Total as "Sub Total"
-					Tax
-					Tax_Amount as "Tax Amount"
-					Total
+					Item_Subscription as "Item"
+					Item_Code_Subscription as "Item Code"
+					Description_Subscription as "Description"
+					Quantity_Subscription as "Quantity"
+					Unit_Price_Subscription as "Unit Price"
+					Sub_Total_Subscription as "Sub Total"
+					Tax_Subscription as "Tax"
+					Tax_Type_Subscription as "Tax Type"
+					Tax_Pct_Subscription as "Tax Pct"
+					Tax_Amount_Subscription as "Tax Amount"
+					Total_Subscription as "Total"
+					Business_Segment_Subscription as "Business Segment"
+					Business_Unit_Subscription as "Business Unit"
+					Circuit_ID_Subscription as "Circuit ID"
+					Circuit_ID_Type_Subscription as "Circuit ID Type"
 				)
 			)
-			datablock4
+			datablock2
 			(
-		     	title = "System Information"
+		     	title = "Customer Name"
+		     	related field = Customer_Name
 				fields
 				(
-					Customer_Name.Added_Time as "Added Time"
-					Customer_Name.Added_User as "Added User"
-					Customer_Name.Modified_Time as "Modified Time"
-					Customer_Name.Modified_User as "Modified User"
-				)
-			)
-			datablock5
-			(
-		     	title = "Work Order Creation"
-		     	related field = Work_Order_Creation.Subscription
-				fields
-				(
-					Work_Order_Type as "Work Order Type"
-					Ticket_Number as "Ticket Number"
-					Added_Time as "Added Time"
+					Customer_Name as "Customer Name"
+					Customer_Registration_Number as "Customer Registration Number"
+					Customer_Registration_Number_Scheme as "Customer Registration Number Scheme"
+					Customer_TIN as "Customer TIN"
+					Customer_SST as "Customer SST"
+					Business_Street as "Business Address"
+					City
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-    		 	Delete 
-			 	"Create Work Order"
-    	 	)
-    	)
+			menu
+			(
+				header
+				(
+					Edit 
+					Delete 
+					"Create Work Order"
+				)
+			)
 	)
 }
