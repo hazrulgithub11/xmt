@@ -1,0 +1,41 @@
+User_Input_Trigger_Workflow as "User_Input_Trigger_Workflow"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of User_Input_Trigger
+	{
+		actions 
+		{
+			custom deluge script
+			(
+							////////////////////////////////////////////////////////////////////////////////////////////
+						// Subscription Line Items Calculation
+						calculated_grand_total = 0;
+						calculated_grand_total_myr = 0;
+						exchangeRate = ifnull(input.Exchange_Rate,1);
+						for each  subLineItem in input.Subscription_Line_Items
+						{
+							// Row-level calculation
+							curr_sub_total = ifnull(subLineItem.Quantity_Subscription,0) * ifnull(subLineItem.Unit_Price_Subscription,0);
+							curr_tax_amount = curr_sub_total * ifnull(subLineItem.Tax_Pct_Subscription,0) / 100;
+							curr_total = curr_sub_total + curr_tax_amount;
+							subLineItem.Sub_Total_Subscription=curr_sub_total;
+							subLineItem.Tax_Amount_Subscription=curr_tax_amount;
+							subLineItem.Total_Subscription=curr_total;
+							// Accumulate form-level totals
+							calculated_grand_total = calculated_grand_total + curr_total;
+							calculated_grand_total_myr = calculated_grand_total_myr + (curr_total * exchangeRate);
+						}
+						///////////////////////////////////////////////////////////////////////////////////////////
+						// Form-level totals
+						input.Grand_Total = calculated_grand_total;
+						input.Grand_Total_MYR = calculated_grand_total_myr;
+			)
+		}
+	}
+
+}
+

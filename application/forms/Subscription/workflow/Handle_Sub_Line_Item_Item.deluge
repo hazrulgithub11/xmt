@@ -1,0 +1,58 @@
+Handle_Sub_Line_Item_Item as "Handle Subscription Line Item - Item"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Subscription_Line_Items.Item_Subscription
+	{
+		actions 
+		{
+			custom deluge script
+			(
+							if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+						{
+							alert "Ensure Exchange Rate is not empty before selecting an item.";
+							row.Item_Subscription=null;
+							return;
+						}
+						if(row.Item_Subscription == null)
+						{
+							row.Item_Code_Subscription=null;
+							row.Classification_Codes_Subscription=null;
+							row.Description_Subscription=null;
+							row.Quantity_Subscription=null;
+							row.Unit_Price_Subscription=null;
+							row.Sub_Total_Subscription=null;
+							row.Tax_Subscription=null;
+							row.Tax_Type_Subscription=null;
+							row.Tax_Pct_Subscription=null;
+							row.Tax_Amount_Subscription=null;
+							row.Total_Subscription=null;
+							row.Circuit_ID_Subscription=null;
+							row.Circuit_ID_Type_Subscription=null;
+						}
+						else
+						{
+							itemRecord = Transaction_Type[ID == row.Item_Subscription];
+							row.Item_Code_Subscription=itemRecord.Item_Code;
+							row.Classification_Codes_Subscription=itemRecord.Classification_Codes;
+							row.Description_Subscription=itemRecord.Description;
+							getTenant = Tenancy[ID == input.Customer_Code];
+							row.Quantity_Subscription=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+							unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+							row.Unit_Price_Subscription=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+							row.Tax_Subscription=itemRecord.Tax;
+							row.Tax_Type_Subscription=itemRecord.Tax.Tax_Type;
+							row.Tax_Pct_Subscription=itemRecord.Tax.Tax_Percentage;
+							row.Circuit_ID_Subscription=itemRecord.Circuit_ID;
+							row.Circuit_ID_Type_Subscription=itemRecord.Circuit_ID_Type;
+						}
+						input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
+

@@ -43,32 +43,29 @@ Handle_Customer_Changes as "Handle Customer Changes"
 				input.Contract_End_Date = null;
 				input.Prorate = false;
 				input.Prorate_Note1 = "";
-				for each  subLineItem in input.Subscription_Line_Items
+			for each  subLineItem in input.Subscription_Line_Items
+			{
+				unitPrice = subLineItem.Item_Subscription.Unit_Price;
+				unitPriceCurrency = unitPrice / ifnull(input.Exchange_Rate,1);
+				subLineItem.Unit_Price_Subscription=unitPriceCurrency;
+				subLineItem.Item_Code_Subscription=subLineItem.Item_Subscription.Item_Code;
+				subLineItem.Description_Subscription=subLineItem.Item_Subscription.Description;
+				subLineItem.Quantity_Subscription=0;
+				subLineItem.Tax_Subscription=null;
+				subLineItem.Tax_Type_Subscription=null;
+				subLineItem.Tax_Pct_Subscription=0;
+				if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
 				{
-					unitPrice = subLineItem.Item_Subscription.Unit_Price;
-					unitPriceCurrency = unitPrice / ifnull(input.Exchange_Rate,1);
-					subLineItem.Unit_Price_Subscription=unitPriceCurrency;
-					subLineItem.Item_Code_Subscription=subLineItem.Item_Subscription.Item_Code;
-					subLineItem.Description_Subscription=subLineItem.Item_Subscription.Description;
-					subLineItem.Quantity_Subscription=0;
-					subLineItem.Sub_Total_Subscription=0;
-					subLineItem.Tax_Subscription=null;
-					subLineItem.Tax_Pct_Subscription=0;
-					subLineItem.Tax_Amount_Subscription=0;
-					subLineItem.Total_Subscription=0;
-					if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
-					{
-						subLineItem.Business_Segment_Subscription:ui.add(customerInfo.Business_Segment);
-					}
-					else
-					{
-						clear subLineItem.Business_Segment_Subscription;
-					}
-					clear subLineItem.Business_Unit_Subscription;
-					subLineItem.Business_Unit_Subscription=null;
+					subLineItem.Business_Segment_Subscription:ui.add(customerInfo.Business_Segment);
 				}
-				input.Grand_Total = 0;
-				input.Grand_Total_MYR = 0;
+				else
+				{
+					clear subLineItem.Business_Segment_Subscription;
+				}
+				clear subLineItem.Business_Unit_Subscription;
+				subLineItem.Business_Unit_Subscription=null;
+			}
+			input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

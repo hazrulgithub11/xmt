@@ -11,28 +11,29 @@ Disable_Fields as "Disable Fields"
 		{
 			custom deluge script
 			(
-					disable Grand_Total;
-				disable Base_Currency;
-				disable Subscription_Currency;
-				disable Exchange_Rate;
-				//disable Status;
-				disable Next_Billing_Date;
-				disable Latest_Billing_Date;
-				disable Final_Billing_Date;
-				disable Grand_Total_MYR;
-				disable Subscription_Line_Items.Item_Code_Subscription;
-				disable Subscription_Line_Items.Description_Subscription;
-				disable Subscription_Line_Items.Sub_Total_Subscription;
-				disable Subscription_Line_Items.Quantity_Subscription;
-				disable Subscription_Line_Items.Tax_Pct_Subscription;
-				disable Subscription_Line_Items.Tax_Amount_Subscription;
-				disable Subscription_Line_Items.Total_Subscription;
-				disable Subscription_Line_Items.Circuit_ID_Type_Subscription;
-				// disable Termination_Status;
-				disable Contact;
-				disable Technical_Email;
-				disable Phone_Number;
-				disable Prorate_Note1;
+			disable Grand_Total;
+			disable Base_Currency;
+			disable Subscription_Currency;
+			disable Exchange_Rate;
+			//disable Status;
+			disable Next_Billing_Date;
+			disable Latest_Billing_Date;
+			disable Final_Billing_Date;
+			disable Grand_Total_MYR;
+			disable User_Input_Trigger;
+			disable Subscription_Line_Items.Item_Code_Subscription;
+			disable Subscription_Line_Items.Description_Subscription;
+			disable Subscription_Line_Items.Sub_Total_Subscription;
+			disable Subscription_Line_Items.Quantity_Subscription;
+			disable Subscription_Line_Items.Tax_Pct_Subscription;
+			disable Subscription_Line_Items.Tax_Amount_Subscription;
+			disable Subscription_Line_Items.Total_Subscription;
+			disable Subscription_Line_Items.Circuit_ID_Type_Subscription;
+			// disable Termination_Status;
+			disable Contact;
+			disable Technical_Email;
+			disable Phone_Number;
+			disable Prorate_Note1;
 			)
 		}
 	}

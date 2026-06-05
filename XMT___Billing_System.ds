@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 04-Jun-2026 19:06:18
+ * Generated on : 05-Jun-2026 00:34:38
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -9797,6 +9797,14 @@
 				type = decimal
 				displayname = "Grand Total MYR"
 				format = commadotwestern
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+			User_Input_Trigger
+			(
+    			type = checkbox
+				initial value = false
 	 			row = 4
 	 			column = 1   
 				width = medium
@@ -20589,6 +20597,7 @@
 										disable Latest_Billing_Date;
 										disable Final_Billing_Date;
 										disable Grand_Total_MYR;
+										disable User_Input_Trigger;
 										disable Subscription_Line_Items.Item_Code_Subscription;
 										disable Subscription_Line_Items.Description_Subscription;
 										disable Subscription_Line_Items.Sub_Total_Subscription;
@@ -20645,9 +20654,6 @@
 				}
 
 			}
-			// Generate_Account_Number — REMOVED.
-			// Account Number is now generated in Validation_on_form_submis (on validate).
-			// Keeping this on-success workflow would double-call generate_tenancy_no and produce an off-by-one account number.
 			Hide_Fields_During_Create as "Hide Fields During Create"
 			{
 				type =  form
@@ -20748,6 +20754,7 @@
 										hide Final_Billing_Date;
 										hide Prorate;
 										hide Prorate_Note1;
+										hide User_Input_Trigger;
 						)
 					}
 				}
@@ -21011,22 +21018,14 @@
 										input.Contract_End_Date = null;
 										input.Prorate = false;
 										input.Prorate_Note1 = "";
-										grandTotal = 0;
-										grandTotalMYR = 0;
 										if(input.Customer_Code != null)
 										{
 											quantity = thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
 											for each  subLineItem in input.Subscription_Line_Items
 											{
-												//subLineItem.Quantity=quantity;
 												subLineItem.Quantity_Subscription=quantity;
-												//subLineItem.Sub_Total=ifnull(subLineItem.Unit_Price,0) * ifnull(subLineItem.Quantity,0);
-												subLineItem.Sub_Total_Subscription=ifnull(subLineItem.Unit_Price_Subscription,0) * ifnull(subLineItem.Quantity_Subscription,0);
-												subLineItem.Tax_Amount_Subscription=subLineItem.Sub_Total_Subscription * subLineItem.Tax_Pct_Subscription / 100;
-												subLineItem.Total_Subscription=subLineItem.Sub_Total_Subscription + subLineItem.Tax_Amount_Subscription;
 												subLineItem.Business_Segment_Subscription=null;
 												subLineItem.Business_Unit_Subscription=null;
-												grandTotal = grandTotal + ifnull(subLineItem.Total_Subscription,0);
 											}
 											if(input.Customer_PO_No != "")
 											{
@@ -21042,18 +21041,13 @@
 										{
 											for each  subLineItem in input.Subscription_Line_Items
 											{
-												subLineItem.Quantity_Subscription=quantity;
-												subLineItem.Sub_Total_Subscription=ifnull(subLineItem.Unit_Price_Subscription,0) * ifnull(subLineItem.Quantity_Subscription,0);
-												subLineItem.Tax_Amount_Subscription=subLineItem.Sub_Total_Subscription * subLineItem.Tax_Pct_Subscription / 100;
-												subLineItem.Total_Subscription=subLineItem.Sub_Total_Subscription + subLineItem.Tax_Amount_Subscription;
+												subLineItem.Quantity_Subscription=0;
 												subLineItem.Business_Segment_Subscription=null;
 												subLineItem.Business_Unit_Subscription=null;
-												grandTotal = grandTotal + ifnull(subLineItem.Total_Subscription,0);
 											}
 											input.Customer_PO_No = "";
 										}
-										input.Grand_Total = grandTotal;
-										input.Grand_Total_MYR = grandTotalMYR;
+										input.User_Input_Trigger = !input.User_Input_Trigger;
 						)
 					}
 				}
@@ -21169,22 +21163,18 @@
 												];
 												exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
 												input.Exchange_Rate = exchange_rate;
-											}
-											catch (e)
+											}	catch (e)
 											{
 												input.Exchange_Rate = "";
 											}
 										}
 										input.Payment_Term = null;
 										input.Payable_To1 = null;
-										input.Payment_Term = null;
 										input.Contract_Start_Date = null;
 										input.Contract_Period = null;
 										input.Contract_End_Date = null;
 										input.Prorate = false;
 										input.Prorate_Note1 = "";
-										/* grandTotal = 0;
-														 				 				grandTotalMYR = 0; */
 										for each  subLineItem in input.Subscription_Line_Items
 										{
 											unitPrice = subLineItem.Item_Subscription.Unit_Price;
@@ -21193,27 +21183,9 @@
 											subLineItem.Item_Code_Subscription=subLineItem.Item_Subscription.Item_Code;
 											subLineItem.Description_Subscription=subLineItem.Item_Subscription.Description;
 											subLineItem.Quantity_Subscription=0;
-											subLineItem.Sub_Total_Subscription=0;
 											subLineItem.Tax_Subscription=null;
+											subLineItem.Tax_Type_Subscription=null;
 											subLineItem.Tax_Pct_Subscription=0;
-											subLineItem.Tax_Amount_Subscription=0;
-											subLineItem.Total_Subscription=0;
-											/*if(subLineItem.Item.Tax == null)
-														 				 					{
-														 				 						subLineItem.Tax=null;
-														 				 						subLineItem.Tax_Pct=0;
-														 				 						subLineItem.Tax_Amount=0;
-														 				 					}
-														 				 					else
-														 				 					{
-														 				 						subLineItem.Tax=subLineItem.Item.Tax;
-														 				 						subLineItem.Tax_Pct=subLineItem.Item.Tax.Tax_Percentage;
-														 				 						subLineItem.Tax_Amount=subLineItem.Sub_Total * subLineItem.Item.Tax.Tax_Percentage / 100;
-														 				 					}
-														 				 					subLineItem.Total=subLineItem.Sub_Total + subLineItem.Tax_Amount;
-														 				 					subLineItem.Total_MYR=subLineItem.Total * ifnull(input.Currency.Exchange_Rate_to_MYR,1);
-														 				 					grandTotal = grandTotal + subLineItem.Total;
-														 				 					grandTotalMYR = grandTotalMYR + subLineItem.Total_MYR;*/
 											if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
 											{
 												subLineItem.Business_Segment_Subscription:ui.add(customerInfo.Business_Segment);
@@ -21225,8 +21197,7 @@
 											clear subLineItem.Business_Unit_Subscription;
 											subLineItem.Business_Unit_Subscription=null;
 										}
-										input.Grand_Total = 0;
-										input.Grand_Total_MYR = 0;
+										input.User_Input_Trigger = !input.User_Input_Trigger;
 						)
 					}
 				}
@@ -21411,6 +21382,14 @@
 
 				on load
 				{
+					actions 
+					{
+						custom deluge script
+						(
+											hide User_Input_Trigger;
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
 				}
 
 			}
@@ -26379,7 +26358,7 @@
 						custom deluge script
 						(
 											// Bill Every is required for Monthly billing cycle
-										if(input.Billing_Cycle == "Monthly" && (input.Bill_Every == null || input.Bill_Every == ""))
+										if(input.Billing_Cycle == "Monthly" && input.Bill_Every == null || input.Bill_Every == "")
 										{
 											alert(Bill_Every,"Bill Every is required when Billing Cycle is Monthly.");
 											cancel submit;
@@ -36699,6 +36678,186 @@
 										input.Supplier_State = getOrganization.State;
 										input.Base_Currency = getOrganization.Base_Currency;
 										hide Invoice_No;
+						)
+					}
+				}
+
+			}
+			Handle_Sub_Line_Item_Item as "Handle Subscription Line Item - Item"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Subscription_Line_Items.Item_Subscription
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+										{
+											alert "Ensure Exchange Rate is not empty before selecting an item.";
+											row.Item_Subscription=null;
+											return;
+										}
+										if(row.Item_Subscription == null)
+										{
+											row.Item_Code_Subscription=null;
+											row.Classification_Codes_Subscription=null;
+											row.Description_Subscription=null;
+											row.Quantity_Subscription=null;
+											row.Unit_Price_Subscription=null;
+											row.Sub_Total_Subscription=null;
+											row.Tax_Subscription=null;
+											row.Tax_Type_Subscription=null;
+											row.Tax_Pct_Subscription=null;
+											row.Tax_Amount_Subscription=null;
+											row.Total_Subscription=null;
+											row.Circuit_ID_Subscription=null;
+											row.Circuit_ID_Type_Subscription=null;
+										}
+										else
+										{
+											itemRecord = Transaction_Type[ID == row.Item_Subscription];
+											row.Item_Code_Subscription=itemRecord.Item_Code;
+											row.Classification_Codes_Subscription=itemRecord.Classification_Codes;
+											row.Description_Subscription=itemRecord.Description;
+											getTenant = Tenancy[ID == input.Customer_Code];
+											row.Quantity_Subscription=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+											unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+											row.Unit_Price_Subscription=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+											row.Tax_Subscription=itemRecord.Tax;
+											row.Tax_Type_Subscription=itemRecord.Tax.Tax_Type;
+											row.Tax_Pct_Subscription=itemRecord.Tax.Tax_Percentage;
+											row.Circuit_ID_Subscription=itemRecord.Circuit_ID;
+											row.Circuit_ID_Type_Subscription=itemRecord.Circuit_ID_Type;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Sub_Line_Item_Tax as "Handle Subscription Line Item - Tax"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Subscription_Line_Items.Tax_Subscription
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											row.Tax_Type_Subscription=row.Tax_Subscription.Tax_Type;
+										row.Tax_Pct_Subscription=row.Tax_Subscription.Tax_Percentage;
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Sub_Line_Item_Unit as "Handle Subscription Line Item - Unit Price"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Subscription_Line_Items.Unit_Price_Subscription
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(ifnull(row.Unit_Price_Subscription,0) <= 0)
+										{
+											alert "Please enter a unit price greater than 0.";
+											row.Unit_Price_Subscription=1;
+											return;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Addition_Row_Sub_L as "Handle Addition Row - Subscription Line Item"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on add row of Subscription_Line_Items
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											clear row.Business_Segment_Subscription;
+										clear row.Business_Unit_Subscription;
+										customerInfo = Customer_Profile[ID == input.Customer_Name];
+										if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+										{
+											row.Business_Segment_Subscription:ui.add(customerInfo.Business_Segment);
+										}
+										else
+										{
+											clear row.Business_Segment_Subscription;
+											clear row.Business_Unit_Subscription;
+										}
+						)
+					}
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			User_Input_Trigger_Workfl5 as "User_Input_Trigger_Workflow"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of User_Input_Trigger
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											////////////////////////////////////////////////////////////////////////////////////////////
+										// Subscription Line Items Calculation
+										calculated_grand_total = 0;
+										calculated_grand_total_myr = 0;
+										exchangeRate = ifnull(input.Exchange_Rate,1);
+										for each  subLineItem in input.Subscription_Line_Items
+										{
+											// Row-level calculation
+											curr_sub_total = ifnull(subLineItem.Quantity_Subscription,0) * ifnull(subLineItem.Unit_Price_Subscription,0);
+											curr_tax_amount = curr_sub_total * ifnull(subLineItem.Tax_Pct_Subscription,0) / 100;
+											curr_total = curr_sub_total + curr_tax_amount;
+											subLineItem.Sub_Total_Subscription=curr_sub_total;
+											subLineItem.Tax_Amount_Subscription=curr_tax_amount;
+											subLineItem.Total_Subscription=curr_total;
+											// Accumulate form-level totals
+											calculated_grand_total = calculated_grand_total + curr_total;
+											calculated_grand_total_myr = calculated_grand_total_myr + curr_total * exchangeRate;
+										}
+										///////////////////////////////////////////////////////////////////////////////////////////
+										// Form-level totals
+										input.Grand_Total = calculated_grand_total;
+										input.Grand_Total_MYR = calculated_grand_total_myr;
 						)
 					}
 				}

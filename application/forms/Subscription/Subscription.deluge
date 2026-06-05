@@ -397,6 +397,14 @@ form Subscription
 	 	column = 1   
 		width = medium
 	)
+	User_Input_Trigger
+	(
+    	type = checkbox
+		initial value = false
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
 	must have Payable_To1
 	(
 		type = list	

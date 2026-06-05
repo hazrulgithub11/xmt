@@ -11,12 +11,13 @@ Hide_Fields_During_Create1 as "Hide Fields During Create"
 		{
 			custom deluge script
 			(
-					hide Subcription_Line_Items.Circuit_ID;
-				hide Next_Billing_Date;
-				hide Latest_Billing_Date;
-				hide Final_Billing_Date;
-				hide Prorate;
-				hide Prorate_Note1;
+			hide Subcription_Line_Items.Circuit_ID;
+			hide Next_Billing_Date;
+			hide Latest_Billing_Date;
+			hide Final_Billing_Date;
+			hide Prorate;
+			hide Prorate_Note1;
+			hide User_Input_Trigger;
 			)
 		}
 	}
