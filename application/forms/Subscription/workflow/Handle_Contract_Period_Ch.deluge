@@ -45,7 +45,7 @@ Handle_Contract_Period_Ch as "Handle Contract Period Changes"
 							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date.toStartOfMonth() + " to " + input.Contract_Start_Date.eomonth(0) + ".";
 						}
 					}
-					input.Prorate_Note1 = prorateNote;
+					input.Prorate_Note = prorateNote;
 				}
 				/*if(input.Contract_Start_Date < today.toStartOfMonth())
 				 				 				{

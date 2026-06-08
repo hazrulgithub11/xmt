@@ -42,7 +42,7 @@ Handle_Contract_Start_Dat as "Handle Contract Start Date"
 							prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date.toStartOfMonth() + " to " + input.Contract_Start_Date.eomonth(0) + ".";
 						}
 					}
-					input.Prorate_Note1 = prorateNote;
+					input.Prorate_Note = prorateNote;
 				}
 			)
 		}
@@ -53,15 +53,15 @@ Handle_Contract_Start_Dat as "Handle Contract Start Date"
 					getTenant = Tenancy[ID == input.Customer_Code];
 				if((getTenant.Billing_Cycle == "Monthly" && getTenant.Bill_For == "Current Duration" && input.Contract_Start_Date > today.toStartOfMonth() && input.Contract_Start_Date.getDay() != 1 && input.Contract_Start_Date <= today.eomonth(0)) || (getTenant.Billing_Cycle == "Monthly" && getTenant.Bill_For == "Previous Duration" && input.Contract_Start_Date > today.subMonth(1).toStartOfMonth() && input.Contract_Start_Date <= today.eomonth(0) && input.Contract_Start_Date.getDay() != 1))
 				{
-					show Prorate_Note1;
+					show Prorate_Note;
 					show Prorate;
 				}
 				else
 				{
-					hide Prorate_Note1;
+					hide Prorate_Note;
 					hide Prorate;
 					input.Prorate = false;
-					input.Prorate_Note1 = "";
+					input.Prorate_Note = "";
 				}
 			)
 		}
@@ -70,9 +70,10 @@ Handle_Contract_Start_Dat as "Handle Contract Start Date"
 			custom deluge script
 			(
 					input.Prorate = false;
-				input.Prorate_Note1 = "";
+				input.Prorate_Note = "";
 			)
 		}
 	}
 
 }
+

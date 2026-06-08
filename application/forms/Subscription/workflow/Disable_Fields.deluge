@@ -11,29 +11,89 @@ Disable_Fields as "Disable Fields"
 		{
 			custom deluge script
 			(
-			disable Grand_Total;
-			disable Base_Currency;
-			disable Subscription_Currency;
-			disable Exchange_Rate;
-			//disable Status;
-			disable Next_Billing_Date;
-			disable Latest_Billing_Date;
-			disable Final_Billing_Date;
-			disable Grand_Total_MYR;
-			disable User_Input_Trigger;
-			disable Subscription_Line_Items.Item_Code_Subscription;
-			disable Subscription_Line_Items.Description_Subscription;
-			disable Subscription_Line_Items.Sub_Total_Subscription;
-			disable Subscription_Line_Items.Quantity_Subscription;
-			disable Subscription_Line_Items.Tax_Pct_Subscription;
-			disable Subscription_Line_Items.Tax_Amount_Subscription;
-			disable Subscription_Line_Items.Total_Subscription;
-			disable Subscription_Line_Items.Circuit_ID_Type_Subscription;
-			// disable Termination_Status;
-			disable Contact;
-			disable Technical_Email;
-			disable Phone_Number;
-			disable Prorate_Note1;
+					// ── Always disabled (union of both "Disable Fields" blocks) ──────────────────
+				disable Grand_Total;
+				disable Base_Currency;
+				disable Subscription_Currency;
+				disable Exchange_Rate;
+				disable Next_Billing_Date;
+				disable Latest_Billing_Date;
+				disable Final_Billing_Date;
+				disable Grand_Total_Base_Currency;
+				disable User_Input_Trigger;
+				disable Contact;
+				disable Technical_Email;
+				disable Phone_Number;
+				disable Prorate_Note;
+				// ── Disable extra fields if invoices already exist ───────────────────────────
+				if(input.ID != null)
+				{
+					getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
+					if(getInvoices.size() > 0)
+					{
+						disable Customer_Name;
+						disable Customer_Code;
+						disable Customer_PO_No;
+						disable Contract_Start_Date;
+						disable Contract_End_Date;
+						disable Contract_Period;
+						disable Payment_Term;
+						disable Charge_Category;
+						disable Subscription_Status;
+						disable Pro_Forma_Invoices;
+						disable Prorate;
+						disable Create_Work_Order;
+						disable Work_Order_Type;
+						disable Monthly_Rental.Item_Monthly_Rental;
+						disable Monthly_Rental.Item_Code_Monthly_Rental;
+						disable Monthly_Rental.Classification_Codes_Monthly_Rental;
+						disable Monthly_Rental.Description_Monthly_Rental;
+						disable Monthly_Rental.Quantity_Monthly_Rental;
+						disable Monthly_Rental.Unit_Price_Monthly_Rental;
+						disable Monthly_Rental.Sub_Total_Monthly_Rental;
+						disable Monthly_Rental.Tax_Monthly_Rental;
+						disable Monthly_Rental.Tax_Type_Monthly_Rental;
+						disable Monthly_Rental.Tax_Pct_Monthly_Rental;
+						disable Monthly_Rental.Tax_Amount_Monthly_Rental;
+						disable Monthly_Rental.Total_Monthly_Rental;
+						disable Monthly_Rental.Business_Segment_Monthly_Rental;
+						disable Monthly_Rental.Business_Unit_Monthly_Rental;
+						disable Monthly_Rental.Circuit_ID_Monthly_Rental;
+						disable Monthly_Rental.Circuit_ID_Type_Monthly_Rental;
+						disable Call_Charges.Item_Call_Charges;
+						disable Call_Charges.Item_Code_Call_Charges;
+						disable Call_Charges.Classification_Codes_Call_Charges;
+						disable Call_Charges.Description_Call_Charges;
+						disable Call_Charges.Quantity_Call_Charges;
+						disable Call_Charges.Unit_Price_Call_Charges;
+						disable Call_Charges.Sub_Total_Call_Charges;
+						disable Call_Charges.Tax_Call_Charges;
+						disable Call_Charges.Tax_Type_Call_Charges;
+						disable Call_Charges.Tax_Pct_Call_Charges;
+						disable Call_Charges.Tax_Amount_Call_Charges;
+						disable Call_Charges.Total_Call_Charges;
+						disable Call_Charges.Business_Segment_Call_Charges;
+						disable Call_Charges.Business_Unit_Call_Charges;
+						disable Call_Charges.Circuit_ID_Call_Charges;
+						disable Call_Charges.Circuit_ID_Type_Call_Charges;
+						disable Internet_Charges.Item_Internet_Charges;
+						disable Internet_Charges.Item_Code_Internet_Charges;
+						disable Internet_Charges.Classification_Codes_Internet_Charges;
+						disable Internet_Charges.Description_Internet_Charges;
+						disable Internet_Charges.Quantity_Internet_Charges;
+						disable Internet_Charges.Unit_Price_Internet_Charges;
+						disable Internet_Charges.Sub_Total_Internet_Charges;
+						disable Internet_Charges.Tax_Internet_Charges;
+						disable Internet_Charges.Tax_Type_Internet_Charges;
+						disable Internet_Charges.Tax_Pct_Internet_Charges;
+						disable Internet_Charges.Tax_Amount_Internet_Charges;
+						disable Internet_Charges.Total_Internet_Charges;
+						disable Internet_Charges.Business_Segment_Internet_Charges;
+						disable Internet_Charges.Business_Unit_Internet_Charges;
+						disable Internet_Charges.Circuit_ID_Internet_Charges;
+						disable Internet_Charges.Circuit_ID_Type_Internet_Charges;
+					}
+				}
 			)
 		}
 	}

@@ -1,0 +1,67 @@
+User_Input_Trigger_Workfl5 as "User_Input_Trigger_Workflow"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of User_Input_Trigger
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					////////////////////////////////////////////////////////////////////////////////////////////
+				// Line Items Calculation
+				calculated_grand_total = 0;
+				calculated_grand_total_myr = 0;
+				exchange_rate = input.Exchange_Rate;
+				// Monthly Rental Calculation
+				for each  curr_monthly_rental_line_item in input.Monthly_Rental
+				{
+					curr_sub_total = curr_monthly_rental_line_item.Quantity_Monthly_Rental * curr_monthly_rental_line_item.Unit_Price_Monthly_Rental;
+					curr_tax_amount = curr_sub_total * curr_monthly_rental_line_item.Tax_Pct_Monthly_Rental / 100;
+					curr_total = curr_sub_total + curr_tax_amount;
+					curr_monthly_rental_line_item.Sub_Total_Monthly_Rental=curr_sub_total;
+					curr_monthly_rental_line_item.Tax_Amount_Monthly_Rental=curr_tax_amount;
+					curr_monthly_rental_line_item.Total_Monthly_Rental=curr_total;
+					// Accumulate form-level totals
+					calculated_grand_total = calculated_grand_total + curr_total;
+					calculated_grand_total_myr = calculated_grand_total_myr + curr_total * exchange_rate;
+				}
+				// Internet Charges Calculation
+				for each  curr_internet_charges_line_item in input.Internet_Charges
+				{
+					curr_sub_total = curr_internet_charges_line_item.Quantity_Internet_Charges * curr_internet_charges_line_item.Unit_Price_Internet_Charges;
+					curr_tax_amount = curr_sub_total * curr_internet_charges_line_item.Tax_Pct_Internet_Charges / 100;
+					curr_total = curr_sub_total + curr_tax_amount;
+					curr_internet_charges_line_item.Sub_Total_Internet_Charges=curr_sub_total;
+					curr_internet_charges_line_item.Tax_Amount_Internet_Charges=curr_tax_amount;
+					curr_internet_charges_line_item.Total_Internet_Charges=curr_total;
+					// Accumulate form-level totals
+					calculated_grand_total = calculated_grand_total + curr_total;
+					calculated_grand_total_myr = calculated_grand_total_myr + curr_total * exchange_rate;
+				}
+				// Call Charges Calculation
+				for each  curr_call_charges_line_item in input.Call_Charges
+				{
+					curr_sub_total = curr_call_charges_line_item.Quantity_Call_Charges * curr_call_charges_line_item.Unit_Price_Call_Charges;
+					curr_tax_amount = curr_sub_total * curr_call_charges_line_item.Tax_Pct_Call_Charges / 100;
+					curr_total = curr_sub_total + curr_tax_amount;
+					curr_call_charges_line_item.Sub_Total_Call_Charges=curr_sub_total;
+					curr_call_charges_line_item.Tax_Amount_Call_Charges=curr_tax_amount;
+					curr_call_charges_line_item.Total_Call_Charges=curr_total;
+					// Accumulate form-level totals
+					calculated_grand_total = calculated_grand_total + curr_total;
+					calculated_grand_total_myr = calculated_grand_total_myr + curr_total * exchange_rate;
+				}
+				////////////////////////////////////////////////////////////////////////////////////////////
+				// Form-level totals
+				input.Grand_Total = calculated_grand_total;
+				input.Grand_Total_Base_Currency = calculated_grand_total_myr;
+			)
+		}
+	}
+
+}
+

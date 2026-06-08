@@ -48,7 +48,7 @@ Handle_Contract_End_Date_ as "Handle Contract End Date Fields"
 								prorateNote = "The first invoice will only cover the current billing period from " + input.Contract_Start_Date.toStartOfMonth() + " to " + input.Contract_Start_Date.eomonth(0) + ".";
 							}
 						}
-						input.Prorate_Note1 = prorateNote;
+						input.Prorate_Note = prorateNote;
 					}
 				}
 			)
@@ -56,3 +56,4 @@ Handle_Contract_End_Date_ as "Handle Contract End Date Fields"
 	}
 
 }
+

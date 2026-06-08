@@ -1,17 +1,17 @@
-Hide_Fields as "Hide Fields"
+Handle_Charge_Category6 as "Handle Charge Category"
 {
 	type =  form
 	form = Subscription
 
 	record event = on add or edit
 
-	on load
+	on user input of Charge_Category
 	{
 		actions 
 		{
 			custom deluge script
 			(
-					if(input.Charge_Category == "Miscellaneous Charges")
+				if(input.Charge_Category == "Miscellaneous Charges")
 				{
 					hide Call_Charges;
 					clear Call_Charges;
@@ -31,15 +31,9 @@ Hide_Fields as "Hide Fields"
 		{
 			custom deluge script
 			(
-					hide User_Input_Trigger;
 				input.User_Input_Trigger = !input.User_Input_Trigger;
-				if(input.Create_Work_Order == false)
-				{
-					hide Work_Order_Type;
-				}
 			)
 		}
 	}
 
 }
-

@@ -11,11 +11,11 @@ Handle_Customer_Changes as "Handle Customer Changes"
 		{
 			custom deluge script
 			(
-					customerInfo = Customer_Profile[ID == input.Customer_Name];
-				baseCurrency = ifnull(input.Base_Currency,ifnull(Organization_Settings[ID != null].Base_Currency,"MYR"));
-				subscriptionCurrency = ifnull(customerInfo.Currency,baseCurrency);
-				input.Subscription_Currency = subscriptionCurrency;
-				if(subscriptionCurrency == baseCurrency)
+					customer_info = Customer_Profile[ID == input.Customer_Name];
+				base_currency = ifnull(input.Base_Currency,ifnull(Organization_Settings[ID != null].Base_Currency,"MYR"));
+				subscription_currency = ifnull(customer_info.Currency,base_currency);
+				input.Subscription_Currency = subscription_currency;
+				if(subscription_currency == base_currency)
 				{
 					input.Exchange_Rate = 1;
 				}
@@ -25,13 +25,12 @@ Handle_Customer_Changes as "Handle Customer Changes"
 					{
 						exchange_rate_get_response = invokeurl
 						[
-							url :"https://api.frankfurter.app/latest?from=" + subscriptionCurrency + "&to=" + baseCurrency
+							url :"https://api.frankfurter.app/latest?from=" + subscription_currency + "&to=" + base_currency
 							type :GET
 						];
-						exchange_rate = exchange_rate_get_response.get("rates").get(baseCurrency);
+						exchange_rate = exchange_rate_get_response.get("rates").get(base_currency);
 						input.Exchange_Rate = exchange_rate;
-					}
-					catch (e)
+					}	catch (e)
 					{
 						input.Exchange_Rate = "";
 					}
@@ -42,32 +41,80 @@ Handle_Customer_Changes as "Handle Customer Changes"
 				input.Contract_Period = null;
 				input.Contract_End_Date = null;
 				input.Prorate = false;
-				input.Prorate_Note1 = "";
-			for each  subLineItem in input.Subscription_Line_Items
-			{
-				unitPrice = subLineItem.Item_Subscription.Unit_Price;
-				unitPriceCurrency = unitPrice / ifnull(input.Exchange_Rate,1);
-				subLineItem.Unit_Price_Subscription=unitPriceCurrency;
-				subLineItem.Item_Code_Subscription=subLineItem.Item_Subscription.Item_Code;
-				subLineItem.Description_Subscription=subLineItem.Item_Subscription.Description;
-				subLineItem.Quantity_Subscription=0;
-				subLineItem.Tax_Subscription=null;
-				subLineItem.Tax_Type_Subscription=null;
-				subLineItem.Tax_Pct_Subscription=0;
-				if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+				input.Prorate_Note = "";
+				// Monthly Rental
+				for each  curr_monthly_rental_line_item in input.Monthly_Rental
 				{
-					subLineItem.Business_Segment_Subscription:ui.add(customerInfo.Business_Segment);
+					unit_price = curr_monthly_rental_line_item.Item_Monthly_Rental.Unit_Price;
+					unit_price_currency = unit_price / ifnull(input.Exchange_Rate,1);
+					curr_monthly_rental_line_item.Unit_Price_Monthly_Rental=unit_price_currency;
+					curr_monthly_rental_line_item.Item_Code_Monthly_Rental=curr_monthly_rental_line_item.Item_Monthly_Rental.Item_Code;
+					curr_monthly_rental_line_item.Description_Monthly_Rental=curr_monthly_rental_line_item.Item_Monthly_Rental.Description;
+					curr_monthly_rental_line_item.Quantity_Monthly_Rental=0;
+					curr_monthly_rental_line_item.Tax_Monthly_Rental=null;
+					curr_monthly_rental_line_item.Tax_Type_Monthly_Rental=null;
+					curr_monthly_rental_line_item.Tax_Pct_Monthly_Rental=0;
+					if(customer_info.ID != null && customer_info.Business_Segment.size() > 0)
+					{
+						curr_monthly_rental_line_item.Business_Segment_Monthly_Rental:ui.add(customer_info.Business_Segment);
+					}
+					else
+					{
+						clear curr_monthly_rental_line_item.Business_Segment_Monthly_Rental;
+					}
+					clear curr_monthly_rental_line_item.Business_Unit_Monthly_Rental;
+					curr_monthly_rental_line_item.Business_Unit_Monthly_Rental=null;
 				}
-				else
+				// Internet Charges
+				for each  curr_internet_charges_line_item in input.Internet_Charges
 				{
-					clear subLineItem.Business_Segment_Subscription;
+					unit_price = curr_internet_charges_line_item.Item_Internet_Charges.Unit_Price;
+					unit_price_currency = unit_price / ifnull(input.Exchange_Rate,1);
+					curr_internet_charges_line_item.Unit_Price_Internet_Charges=unit_price_currency;
+					curr_internet_charges_line_item.Item_Code_Internet_Charges=curr_internet_charges_line_item.Item_Internet_Charges.Item_Code;
+					curr_internet_charges_line_item.Description_Internet_Charges=curr_internet_charges_line_item.Item_Internet_Charges.Description;
+					curr_internet_charges_line_item.Quantity_Internet_Charges=0;
+					curr_internet_charges_line_item.Tax_Internet_Charges=null;
+					curr_internet_charges_line_item.Tax_Type_Internet_Charges=null;
+					curr_internet_charges_line_item.Tax_Pct_Internet_Charges=0;
+					if(customer_info.ID != null && customer_info.Business_Segment.size() > 0)
+					{
+						curr_internet_charges_line_item.Business_Segment_Internet_Charges:ui.add(customer_info.Business_Segment);
+					}
+					else
+					{
+						clear curr_internet_charges_line_item.Business_Segment_Internet_Charges;
+					}
+					clear curr_internet_charges_line_item.Business_Unit_Internet_Charges;
+					curr_internet_charges_line_item.Business_Unit_Internet_Charges=null;
 				}
-				clear subLineItem.Business_Unit_Subscription;
-				subLineItem.Business_Unit_Subscription=null;
-			}
-			input.User_Input_Trigger = !input.User_Input_Trigger;
+				// Call Charges
+				for each  curr_call_charges_line_item in input.Call_Charges
+				{
+					unit_price = curr_call_charges_line_item.Item_Call_Charges.Unit_Price;
+					unit_price_currency = unit_price / ifnull(input.Exchange_Rate,1);
+					curr_call_charges_line_item.Unit_Price_Call_Charges=unit_price_currency;
+					curr_call_charges_line_item.Item_Code_Call_Charges=curr_call_charges_line_item.Item_Call_Charges.Item_Code;
+					curr_call_charges_line_item.Description_Call_Charges=curr_call_charges_line_item.Item_Call_Charges.Description;
+					curr_call_charges_line_item.Quantity_Call_Charges=0;
+					curr_call_charges_line_item.Tax_Call_Charges=null;
+					curr_call_charges_line_item.Tax_Type_Call_Charges=null;
+					curr_call_charges_line_item.Tax_Pct_Call_Charges=0;
+					if(customer_info.ID != null && customer_info.Business_Segment.size() > 0)
+					{
+						curr_call_charges_line_item.Business_Segment_Call_Charges:ui.add(customer_info.Business_Segment);
+					}
+					else
+					{
+						clear curr_call_charges_line_item.Business_Segment_Call_Charges;
+					}
+					clear curr_call_charges_line_item.Business_Unit_Call_Charges;
+					curr_call_charges_line_item.Business_Unit_Call_Charges=null;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}
 
 }
+

@@ -11,16 +11,39 @@ Handle_Line_Item_Business as "Handle Line Item Business Segment"
 		{
 			custom deluge script
 			(
-					customerInfo = Customer_Profile[ID == input.Customer_Name];
-				for each  subLineItem in input.Subcription_Line_Items
+					customer_info = Customer_Profile[ID == input.Customer_Name];
+				// Monthly Rental
+				for each  curr_monthly_rental_line_item in input.Monthly_Rental
 				{
-					businessSegment = subLineItem.Business_Segment;
-					subLineItem.Business_Segment=businessSegment;
-					businessUnit = subLineItem.Business_Unit;
-					subLineItem.Business_Segment:ui.add(customerInfo.Business_Segment);
-					getBusinessUnits = Business_Unit[Business_Segment == businessSegment].ID.getAll();
-					subLineItem.Business_Unit:ui.add(getBusinessUnits);
-					subLineItem.Business_Unit=businessUnit;
+					business_segment = curr_monthly_rental_line_item.Business_Segment_Monthly_Rental;
+					curr_monthly_rental_line_item.Business_Segment_Monthly_Rental=business_segment;
+					business_unit = curr_monthly_rental_line_item.Business_Unit_Monthly_Rental;
+					curr_monthly_rental_line_item.Business_Segment_Monthly_Rental:ui.add(customer_info.Business_Segment);
+					get_business_units = Business_Unit[Business_Segment == business_segment].ID.getAll();
+					curr_monthly_rental_line_item.Business_Unit_Monthly_Rental:ui.add(get_business_units);
+					curr_monthly_rental_line_item.Business_Unit_Monthly_Rental=business_unit;
+				}
+				// Internet Charges
+				for each  curr_internet_charges_line_item in input.Internet_Charges
+				{
+					business_segment = curr_internet_charges_line_item.Business_Segment_Internet_Charges;
+					curr_internet_charges_line_item.Business_Segment_Internet_Charges=business_segment;
+					business_unit = curr_internet_charges_line_item.Business_Unit_Internet_Charges;
+					curr_internet_charges_line_item.Business_Segment_Internet_Charges:ui.add(customer_info.Business_Segment);
+					get_business_units = Business_Unit[Business_Segment == business_segment].ID.getAll();
+					curr_internet_charges_line_item.Business_Unit_Internet_Charges:ui.add(get_business_units);
+					curr_internet_charges_line_item.Business_Unit_Internet_Charges=business_unit;
+				}
+				// Call Charges
+				for each  curr_call_charges_line_item in input.Call_Charges
+				{
+					business_segment = curr_call_charges_line_item.Business_Segment_Call_Charges;
+					curr_call_charges_line_item.Business_Segment_Call_Charges=business_segment;
+					business_unit = curr_call_charges_line_item.Business_Unit_Call_Charges;
+					curr_call_charges_line_item.Business_Segment_Call_Charges:ui.add(customer_info.Business_Segment);
+					get_business_units = Business_Unit[Business_Segment == business_segment].ID.getAll();
+					curr_call_charges_line_item.Business_Unit_Call_Charges:ui.add(get_business_units);
+					curr_call_charges_line_item.Business_Unit_Call_Charges=business_unit;
 				}
 			)
 		}

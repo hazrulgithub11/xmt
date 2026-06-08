@@ -2,9 +2,11 @@ form Subscription
 {
 	success message = "Subscription Added Successfully"
 	feature property = 64
-	Section
+	Customer_Info_Section
 	(
 		type = section
+		displayname = "Customer Info Section"
+		visibility = true
 	 	row = 1
 	 	column = 0   
 		width = medium
@@ -15,17 +17,6 @@ form Subscription
 		displayname = "Customer Name"
 		values  = Customer_Profile.ID
     	displayformat = [Customer_Name]
-		sortorder = ascending
-	 	row = 1
-	 	column = 1   
-		width = medium
-	)
-	must have Customer_Code
-	(
-		type = picklist	
-		displayname = "Customer Code"
-		values  = Tenancy[Customer_Name.ID == input.Customer_Name].ID
-    	displayformat = [Customer_Code]
 		sortorder = ascending
 	 	row = 1
 	 	column = 1   
@@ -47,110 +38,12 @@ form Subscription
 	 	column = 1   
 		width = medium
 	)
-	must have Contract_Start_Date
-	(
-    	type = date
-		displayname = "Contract Start Date"
-		alloweddays = 0,1,2,3,4,5,6
-	 	row = 1
-	 	column = 1   
-		width = medium
-	)
-	must have Contract_Period
-	(
-		type = number
-		displayname = "Contract Period (Month)"
-    	description
-    	[
-    		type = tooltip
-    	 	message = "Enter number of months"
-    	]
-	 	row = 1
-	 	column = 1   
-		width = medium
-	)
-	must have Contract_End_Date
-	(
-    	type = date
-		displayname = "Contract End Date"
-		alloweddays = 0,1,2,3,4,5,6
-	 	row = 1
-	 	column = 1   
-		width = medium
-	)
-	Prorate
-	(
-    	type = checkbox
-		displayname = "Prorate?"
-		initial value = false
-	 	row = 1
-	 	column = 1   
-		width = medium
-	)
-	Prorate_Note1
-	(
-    	type = textarea
-		displayname = "Prorate Note"
-		height = 100px
-	 	row = 1
-	 	column = 1   
-		width = medium
-	)
-	must have Charge_Category
-	(
-		type = picklist
-		displayname = "Charge Category"
-		maxchar = 100
-		values = {"Miscellaneous Charges","Fixed Charges","Telephone Charges"}
-		initial value = "Miscellaneous Charges"
-	 	row = 1
-	 	column = 2   
-		width = medium
-	)
-	must have Payment_Term
+	must have Customer_Code
 	(
 		type = picklist	
-		displayname = "Payment Term"
-		values  = Payment_Term.ID
-    	displayformat = [Days]
-		sortorder = ascending
-	 	row = 1
-	 	column = 2   
-		width = medium
-	)
-	Next_Billing_Date
-	(
-    	type = date
-		displayname = "Next Billing Date"
-		alloweddays = 0,1,2,3,4,5,6
-	 	row = 1
-	 	column = 2   
-		width = medium
-	)
-	Latest_Billing_Date
-	(
-    	type = date
-		displayname = "Latest Billing Date"
-		alloweddays = 0,1,2,3,4,5,6
-	 	row = 1
-	 	column = 2   
-		width = medium
-	)
-	Final_Billing_Date
-	(
-    	type = date
-		displayname = "Final Billing Date"
-		alloweddays = 0,1,2,3,4,5,6
-	 	row = 1
-	 	column = 2   
-		width = medium
-	)
-	Pro_Forma_Invoices
-	(
-		type = picklist	
-		displayname = "Pro Forma Invoices"
-		values  = Pro_Forma_Invoices.ID
-    	displayformat = [Invoice_No]
+		displayname = "Customer Code"
+		values  = Tenancy[Customer_Name.ID == input.Customer_Name].ID
+    	displayformat = [Customer_Code]
 		sortorder = ascending
 	 	row = 1
 	 	column = 2   
@@ -184,22 +77,83 @@ form Subscription
 		width = medium
 		personal data = true
 	)
-	Create_Work_Order
+	Contract_Terms_Section
+	(
+		type = section
+		displayname = "Contract Terms Section"
+		visibility = true
+	 	row = 2
+	 	column = 0   
+		width = medium
+	)
+	must have Contract_Start_Date
+	(
+    	type = date
+		displayname = "Contract Start Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Contract_Period
+	(
+		type = number
+		displayname = "Contract Period (Month)"
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Enter number of months"
+    	]
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Charge_Category
+	(
+		type = picklist
+		displayname = "Charge Category"
+		maxchar = 100
+		values = {"Miscellaneous Charges","Fixed Charges","Telephone Charges"}
+		initial value = "Miscellaneous Charges"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	Prorate
 	(
     	type = checkbox
-		displayname = "Create Work Order"
+		displayname = "Prorate?"
 		initial value = false
-	 	row = 1
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	Prorate_Note
+	(
+    	type = textarea
+		displayname = "Prorate Note"
+		height = 100px
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Contract_End_Date
+	(
+    	type = date
+		displayname = "Contract End Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 2
 	 	column = 2   
 		width = medium
 	)
-	Work_Order_Type
+	must have Payment_Term
 	(
-		type = picklist
-		displayname = "Work Order Type"
-		maxchar = 100
-		values = {"WO - Service Activation","WO - Service Change Request","WO - Service Termination"}
-	 	row = 1
+		type = picklist	
+		displayname = "Payment Term"
+		values  = Payment_Term.ID
+    	displayformat = [Days]
+		sortorder = ascending
+	 	row = 2
 	 	column = 2   
 		width = medium
 	)
@@ -209,30 +163,87 @@ form Subscription
 		displayname = "Subscription Status"
 		maxchar = 100
 		values = {"Active","Inactive","Terminated"}
-	 	row = 1
+	 	row = 2
 	 	column = 2   
 		width = medium
 	)
-	Subscription_Line_Items
+	Next_Billing_Date
+	(
+    	type = date
+		displayname = "Next Billing Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Latest_Billing_Date
+	(
+    	type = date
+		displayname = "Latest Billing Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Final_Billing_Date
+	(
+    	type = date
+		displayname = "Final Billing Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Pro_Forma_Invoices
+	(
+		type = picklist	
+		displayname = "Pro Forma Invoices"
+		values  = Pro_Forma_Invoices.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Create_Work_Order
+	(
+    	type = checkbox
+		displayname = "Create Work Order"
+		initial value = false
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Work_Order_Type
+	(
+		type = picklist
+		displayname = "Work Order Type"
+		maxchar = 100
+		values = {"WO - Service Activation","WO - Service Change Request","WO - Service Termination"}
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Monthly_Rental
 	(
 		type = grid
-		displayname = "Subscription Line Items"
-		must have Item_Subscription
+		displayname = "Monthly Rental"
+		must have Item_Monthly_Rental
 		(
 			type = picklist	
 			displayname = "Item"
-			values  = Transaction_Type.ID
+			values  = Transaction_Type[Charges_Type == "Monthly Rental"].ID
     		displayformat = [Item_Name]
 			sortorder = ascending
 			width = medium
 		)
-		must have Item_Code_Subscription
+		must have Item_Code_Monthly_Rental
 		(
     		type = text
 			displayname = "Item Code"
 			width = medium
 		)
-		must have Classification_Codes_Subscription
+		must have Classification_Codes_Monthly_Rental
 		(
 			type = list	
 			displayname = "Classification Codes"
@@ -240,32 +251,37 @@ form Subscription
 			height = 60px
 			width = medium
 		)
-		must have Description_Subscription
+		must have Description_Monthly_Rental
 		(
     		type = textarea
 			displayname = "Description"
 			height = 100px
 			width = medium
 		)
-		must have Quantity_Subscription
+		must have Quantity_Monthly_Rental
 		(
 			type = decimal
 			displayname = "Quantity"
+			initial value = 0
 			width = medium
 		)
-		must have Unit_Price_Subscription
+		must have Unit_Price_Monthly_Rental
 		(
 			type = decimal
 			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
 			width = medium
 		)
-		must have Sub_Total_Subscription
+		must have Sub_Total_Monthly_Rental
 		(
 			type = decimal
 			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
 			width = medium
 		)
-		must have Tax_Subscription
+		must have Tax_Monthly_Rental
 		(
 			type = picklist	
 			displayname = "Tax"
@@ -274,31 +290,39 @@ form Subscription
 			sortorder = ascending
 			width = medium
 		)
-		must have Tax_Type_Subscription
+		must have Tax_Type_Monthly_Rental
 		(
-    		type = text
+			type = picklist
 			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
 			width = medium
 		)
-		must have Tax_Pct_Subscription
+		must have Tax_Pct_Monthly_Rental
 		(
 			type = decimal
 			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
 			width = medium
 		)
-		must have Tax_Amount_Subscription
+		must have Tax_Amount_Monthly_Rental
 		(
 			type = decimal
 			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
 			width = medium
 		)
-		must have Total_Subscription
+		must have Total_Monthly_Rental
 		(
 			type = decimal
-			displayname = "Total"
+			displayname = "Total "
+			format = commadotwestern
+			initial value = 0
 			width = medium
 		)
-		must have Business_Segment_Subscription
+		must have Business_Segment_Monthly_Rental
 		(
 			type = picklist	
 			displayname = "Business Segment"
@@ -307,7 +331,7 @@ form Subscription
 			sortorder = ascending
 			width = medium
 		)
-		must have Business_Unit_Subscription
+		must have Business_Unit_Monthly_Rental
 		(
 			type = picklist	
 			displayname = "Business Unit"
@@ -316,7 +340,7 @@ form Subscription
 			sortorder = ascending
 			width = medium
 		)
-		must have Circuit_ID_Subscription
+		must have Circuit_ID_Monthly_Rental
 		(
 			type = picklist	
 			displayname = "Circuit ID"
@@ -325,7 +349,7 @@ form Subscription
 			sortorder = ascending
 			width = medium
 		)
-		must have Circuit_ID_Type_Subscription
+		must have Circuit_ID_Type_Monthly_Rental
 		(
 			type = picklist	
 			displayname = "Circuit ID Type"
@@ -334,7 +358,283 @@ form Subscription
 			sortorder = ascending
 			width = medium
 		)
-	 	row = 2
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Internet_Charges
+	(
+		type = grid
+		displayname = "Internet Charges"
+		must have Item_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type[Charges_Type == "Internet Charges"].ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Item_Code_Internet_Charges
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Internet_Charges
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Internet_Charges
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Internet_Charges
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Internet_Charges
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Sub_Total_Internet_Charges
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Internet_Charges
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Internet_Charges
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Amount_Internet_Charges
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Internet_Charges
+		(
+			type = decimal
+			displayname = "Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Business_Segment_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Call_Charges
+	(
+		type = grid
+		displayname = "Call Charges"
+		must have Item_Call_Charges
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type.ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = 100px
+		)
+		must have Item_Code_Call_Charges
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Call_Charges
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Call_Charges
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Call_Charges
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Call_Charges
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Sub_Total_Call_Charges
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Tax_Call_Charges
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Call_Charges
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Call_Charges
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Tax_Amount_Call_Charges
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Call_Charges
+		(
+			type = decimal
+			displayname = "Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Business_Segment_Call_Charges
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Call_Charges
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Call_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Call_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 5
 	 	column = 1   
 		width = medium
 	)
@@ -343,7 +643,7 @@ form Subscription
 		type = section
 		displayname = "Transaction Info"
 		visibility = true
-	 	row = 3
+	 	row = 6
 	 	column = 0   
 		width = medium
 	)
@@ -351,7 +651,7 @@ form Subscription
 	(
     	type = text
 		displayname = "Base Currency"
-	 	row = 3
+	 	row = 6
 	 	column = 1   
 		width = medium
 	)
@@ -359,7 +659,7 @@ form Subscription
 	(
     	type = text
 		displayname = "Subscription Currency"
-	 	row = 3
+	 	row = 6
 	 	column = 1   
 		width = medium
 	)
@@ -367,7 +667,7 @@ form Subscription
 	(
 		type = decimal
 		displayname = "Exchange Rate"
-	 	row = 3
+	 	row = 6
 	 	column = 1   
 		width = medium
 	)
@@ -375,7 +675,7 @@ form Subscription
 	(
 		type = section
 		displayname = "Section"
-	 	row = 4
+	 	row = 7
 	 	column = 0   
 		width = medium
 	)
@@ -384,16 +684,16 @@ form Subscription
 		type = decimal
 		displayname = "Grand Total"
 		format = commadotwestern
-	 	row = 4
+	 	row = 7
 	 	column = 1   
 		width = medium
 	)
-	Grand_Total_MYR
+	Grand_Total_Base_Currency
 	(
 		type = decimal
-		displayname = "Grand Total MYR"
+		displayname = "Grand Total (Base Currency)"
 		format = commadotwestern
-	 	row = 4
+	 	row = 7
 	 	column = 1   
 		width = medium
 	)
@@ -401,7 +701,7 @@ form Subscription
 	(
     	type = checkbox
 		initial value = false
-	 	row = 4
+	 	row = 7
 	 	column = 1   
 		width = medium
 	)
@@ -413,7 +713,7 @@ form Subscription
     	displayformat = [Account + " - " + Bank_Account_Number]
 		sortorder = ascending
 		height = 60px
-	 	row = 4
+	 	row = 7
 	 	column = 1   
 		width = medium
 	)

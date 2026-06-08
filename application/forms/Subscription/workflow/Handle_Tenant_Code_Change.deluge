@@ -11,44 +11,74 @@ Handle_Tenant_Code_Change as "Handle Tenant Code Changes"
 		{
 			custom deluge script
 			(
-			getTenant = Tenancy[ID == input.Customer_Code];
-			input.Payment_Term = ifnull(getTenant.Payment_Term,null);
-			input.Payable_To1 = ifnull(getTenant.Payable_To,null);
-			input.Contract_Start_Date = null;
-			input.Contract_Period = null;
-			input.Contract_End_Date = null;
-			input.Prorate = false;
-			input.Prorate_Note1 = "";
-			if(input.Customer_Code != null)
-			{
-				quantity = thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
-				for each  subLineItem in input.Subscription_Line_Items
+					get_tenant = Tenancy[ID == input.Customer_Code];
+				input.Payment_Term = ifnull(get_tenant.Payment_Term,null);
+				input.Payable_To1 = ifnull(get_tenant.Payable_To,null);
+				input.Contract_Start_Date = null;
+				input.Contract_Period = null;
+				input.Contract_End_Date = null;
+				input.Prorate = false;
+				input.Prorate_Note = "";
+				if(input.Customer_Code != null)
 				{
-					subLineItem.Quantity_Subscription=quantity;
-					subLineItem.Business_Segment_Subscription=null;
-					subLineItem.Business_Unit_Subscription=null;
-				}
-				if(input.Customer_PO_No != "")
-				{
-					subscriptionList = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No == input.Customer_PO_No && ID != input.ID].ID.getAll();
-					if(subscriptionList.size() > 0)
+					quantity = thisapp.tenancy.convert_bill_cycle_to_int(get_tenant.Billing_Cycle);
+					// Monthly Rental
+					for each  curr_monthly_rental_line_item in input.Monthly_Rental
 					{
-						alert "The Customer PO No. " + input.Customer_PO_No + " already exists for this tenant. Please enter a different PO No.";
-						input.Customer_PO_No = "";
+						curr_monthly_rental_line_item.Quantity_Monthly_Rental=quantity;
+						curr_monthly_rental_line_item.Business_Segment_Monthly_Rental=null;
+						curr_monthly_rental_line_item.Business_Unit_Monthly_Rental=null;
+					}
+					// Internet Charges
+					for each  curr_internet_charges_line_item in input.Internet_Charges
+					{
+						curr_internet_charges_line_item.Quantity_Internet_Charges=quantity;
+						curr_internet_charges_line_item.Business_Segment_Internet_Charges=null;
+						curr_internet_charges_line_item.Business_Unit_Internet_Charges=null;
+					}
+					// Call Charges
+					for each  curr_call_charges_line_item in input.Call_Charges
+					{
+						curr_call_charges_line_item.Quantity_Call_Charges=quantity;
+						curr_call_charges_line_item.Business_Segment_Call_Charges=null;
+						curr_call_charges_line_item.Business_Unit_Call_Charges=null;
+					}
+					if(input.Customer_PO_No != "")
+					{
+						subscription_list = Subscription[Customer_Code == input.Customer_Code && Customer_PO_No == input.Customer_PO_No && ID != input.ID].ID.getAll();
+						if(subscription_list.size() > 0)
+						{
+							alert "The Customer PO No. " + input.Customer_PO_No + " already exists for this tenant. Please enter a different PO No.";
+							input.Customer_PO_No = "";
+						}
 					}
 				}
-			}
-			else
-			{
-				for each  subLineItem in input.Subscription_Line_Items
+				else
 				{
-					subLineItem.Quantity_Subscription=0;
-					subLineItem.Business_Segment_Subscription=null;
-					subLineItem.Business_Unit_Subscription=null;
+					// Monthly Rental
+					for each  curr_monthly_rental_line_item in input.Monthly_Rental
+					{
+						curr_monthly_rental_line_item.Quantity_Monthly_Rental=0;
+						curr_monthly_rental_line_item.Business_Segment_Monthly_Rental=null;
+						curr_monthly_rental_line_item.Business_Unit_Monthly_Rental=null;
+					}
+					// Internet Charges
+					for each  curr_internet_charges_line_item in input.Internet_Charges
+					{
+						curr_internet_charges_line_item.Quantity_Internet_Charges=0;
+						curr_internet_charges_line_item.Business_Segment_Internet_Charges=null;
+						curr_internet_charges_line_item.Business_Unit_Internet_Charges=null;
+					}
+					// Call Charges
+					for each  curr_call_charges_line_item in input.Call_Charges
+					{
+						curr_call_charges_line_item.Quantity_Call_Charges=0;
+						curr_call_charges_line_item.Business_Segment_Call_Charges=null;
+						curr_call_charges_line_item.Business_Unit_Call_Charges=null;
+					}
+					input.Customer_PO_No = "";
 				}
-				input.Customer_PO_No = "";
-			}
-			input.User_Input_Trigger = !input.User_Input_Trigger;
+				input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

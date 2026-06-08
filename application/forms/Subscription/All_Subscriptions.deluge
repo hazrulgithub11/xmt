@@ -28,7 +28,7 @@ list All_Subscriptions
 		Customer_Name.Modified_User as "Modified User"
 		Customer_Name.Added_User as "Added User"
 		Payment_Term as "Payment Term"
-		Grand_Total_MYR as "Grand Total MYR"
+		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Subscription_Status as "Subscription Status"
 		ID
 	)
@@ -118,31 +118,8 @@ list All_Subscriptions
 					Subscription_Status as "Subscription Status"
 					Payment_Term as "Payment Term"
 					Grand_Total as "Grand Total"
-					Grand_Total_MYR as "Grand Total MYR"
+					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 					Attachment
-				)
-			)
-			datablock3
-			(
-		     	title = "Subscription Line Items"
-		     	related field = Subscription_Line_Items
-				fields
-				(
-					Item_Subscription as "Item"
-					Item_Code_Subscription as "Item Code"
-					Description_Subscription as "Description"
-					Quantity_Subscription as "Quantity"
-					Unit_Price_Subscription as "Unit Price"
-					Sub_Total_Subscription as "Sub Total"
-					Tax_Subscription as "Tax"
-					Tax_Type_Subscription as "Tax Type"
-					Tax_Pct_Subscription as "Tax Pct"
-					Tax_Amount_Subscription as "Tax Amount"
-					Total_Subscription as "Total"
-					Business_Segment_Subscription as "Business Segment"
-					Business_Unit_Subscription as "Business Unit"
-					Circuit_ID_Subscription as "Circuit ID"
-					Circuit_ID_Type_Subscription as "Circuit ID Type"
 				)
 			)
 			datablock2
