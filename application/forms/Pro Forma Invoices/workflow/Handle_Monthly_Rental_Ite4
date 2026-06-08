@@ -1,7 +1,7 @@
-Handle_Monthly_Rental_Ite1 as "Handle Monthly Rental Item"
+Handle_Monthly_Rental_Ite4 as "Handle Monthly Rental Item"
 {
 	type =  form
-	form = Debit_Note
+	form = Pro_Forma_Invoices
 
 	record event = on add or edit
 

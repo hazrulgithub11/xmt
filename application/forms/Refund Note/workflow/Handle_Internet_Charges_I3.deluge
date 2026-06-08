@@ -31,7 +31,6 @@ Handle_Internet_Charges_I3 as "Handle Internet Charges Item"
 					row.Tax_Pct_Internet_Charges=null;
 					row.Tax_Amount_Internet_Charges=null;
 					row.Total_Internet_Charges=null;
-					row.Customer_PO_No_Internet_Charges=null;
 					row.Business_Segment_Internet_Charges=null;
 					row.Business_Unit_Internet_Charges=null;
 					row.Circuit_ID_Internet_Charges=null;

@@ -556,15 +556,6 @@ form Pro_Forma_Invoices
 			initial value = 0
 			width = medium
 		)
-		Customer_PO_No_Monthly_Rental
-		(
-			type = picklist	
-			displayname = "Customer PO No."
-			values  = Subscription.ID
-    		displayformat = [Customer_PO_No]
-			sortorder = ascending
-			width = medium
-		)
 		must have Business_Segment_Monthly_Rental
 		(
 			type = picklist	
@@ -701,15 +692,6 @@ form Pro_Forma_Invoices
 			displayname = "Total"
 			format = commadotwestern
 			initial value = 0
-			width = medium
-		)
-		Customer_PO_No_Internet_Charges
-		(
-			type = picklist	
-			displayname = "Customer PO No."
-			values  = Subscription.ID
-    		displayformat = [Customer_PO_No]
-			sortorder = ascending
 			width = medium
 		)
 		must have Business_Segment_Internet_Charges
@@ -856,15 +838,6 @@ form Pro_Forma_Invoices
 			displayname = "Total"
 			format = commadotwestern
 			initial value = 0
-			width = medium
-		)
-		Customer_PO_No_Call_Charges
-		(
-			type = picklist	
-			displayname = "Customer PO No."
-			values  = Subscription.ID
-    		displayformat = [Customer_PO_No]
-			sortorder = ascending
 			width = medium
 		)
 		must have Business_Segment_Call_Charges

@@ -31,7 +31,6 @@ Handle_Monthly_Rental_Ite as "Handle Monthly Rental Item"
 					row.Tax_Pct_Monthly_Rental=null;
 					row.Tax_Amount_Monthly_Rental=null;
 					row.Total_Monthly_Rental=null;
-					row.Customer_PO_No_Monthly_Rental=null;
 					row.Business_Segment_Monthly_Rental=null;
 					row.Business_Unit_Monthly_Rental=null;
 					row.Circuit_ID_Monthly_Rental=null;

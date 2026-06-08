@@ -111,7 +111,6 @@ void invoice.create_new_invoice_no_for_duplicate(int tenantID, int customer, str
                  				if(getItem.Charges_Type = "Internet Charges")
                  				{
                  					rowInternetCharges = Invoice.Internet_Charges();
-                 					rowInternetCharges.Customer_PO_No_Internet_Charges=invLineItem.Customer_PO_No;
                  					rowInternetCharges.Item_Internet_Charges=invLineItem.Item;
                  					rowInternetCharges.Item_Code_Internet_Charges=invLineItem.Item_Code;
                  					rowInternetCharges.Description_Internet_Charges=invLineItem.Description;
@@ -136,7 +135,6 @@ void invoice.create_new_invoice_no_for_duplicate(int tenantID, int customer, str
                  				else if(getItem.Charges_Type = "Monthly Rental")
                  				{
                  					rowMonthlyRental = Invoice.Monthly_Rental();
-                 					rowMonthlyRental.Customer_PO_No_Monthly_Rental=invLineItem.Customer_PO_No;
                  					rowMonthlyRental.Item_Monthly_Rental=invLineItem.Item;
                  					rowMonthlyRental.Item_Code_Monthly_Rental=invLineItem.Item_Code;
                  					rowMonthlyRental.Description_Monthly_Rental=invLineItem.Description;

@@ -31,7 +31,6 @@ Handle_Call_Charges_Item1 as "Handle Call Charges Item"
 					row.Tax_Pct_Call_Charges=null;
 					row.Tax_Amount_Call_Charges=null;
 					row.Total_Call_Charges=null;
-					row.Customer_PO_No_Call_Charges=null;
 					row.Business_Segment_Call_Charges=null;
 					row.Business_Unit_Call_Charges=null;
 					row.Circuit_ID_Call_Charges=null;
