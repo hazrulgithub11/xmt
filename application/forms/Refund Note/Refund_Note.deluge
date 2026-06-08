@@ -1,1260 +1,1226 @@
-		form Refund_Note
-		{
-			displayname = "Refund Note"
-			success message = "Invoice Added Successfully"
-			Supplier_From_Section
-			(
-				type = section
-				displayname = "Supplier (From)"
-				visibility = true
-	 			row = 1
-	 			column = 0   
-				width = medium
-			)
-			must have Supplier
-			(
-				type = picklist	
-				values  = Organization_Settings.ID
-    			displayformat = [Organization_Name]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Supplier_Business_Activity_Description
-			(
-    			type = text
-				displayname = "Business Activity Description"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Supplier_TIN
-			(
-    			type = text
-				displayname = "Tax Identification Number(TIN)"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Supplier_ID_Type
-			(
-    			type = text
-				displayname = "ID Type"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Supplier_Registration_Identification_Passport_Number
-			(
-    			type = text
-				displayname = "Registration / Identification / Passport Number"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Supplier_SST_Registration_Number
-			(
-    			type = text
-				displayname = "SST Registration Number"
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			must have Supplier_Telephone_Number
-			(
-    			type = phonenumber
-				displayname = "Telephone Number"
-	 			row = 1
-	 			column = 1   
-				width = medium
-				personal data = true
-			)
-			must have Supplier_E_mail
-			(
-    			type = email
-				displayname = "E-mail"
-				maxchar = 80
-	 			row = 1
-	 			column = 1   
-				width = medium
-				personal data = true
-			)
-			must have Supplier_Name
-			(
-    			type = text
-				displayname = "Name"
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Supplier_Street
-			(
-    			type = textarea
-				displayname = "Street"
-				height = 100px
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Supplier_Postcode
-			(
-    			type = text
-				displayname = "Postcode"
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Supplier_City
-			(
-    			type = text
-				displayname = "City"
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Supplier_State
-			(
-    			type = text
-				displayname = "State"
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Supplier_Country
-			(
-    			type = text
-				displayname = "Country"
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			Buyer_To_Section
-			(
-				type = section
-				displayname = "Buyer (To)"
-				visibility = true
-	 			row = 2
-	 			column = 0   
-				width = medium
-			)
-			must have Customer
-			(
-				type = picklist	
-				values  = Customer_Profile.ID
-    			displayformat = [Customer_Name]
-				sortorder = ascending
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			Customer_Code
-			(
-				type = picklist	
-				displayname = "Customer Code"
-				values  = Tenancy[Customer_Name.ID == input.Customer].ID
-    			displayformat = [Customer_Code]
-				sortorder = ascending
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_TIN
-			(
-    			type = text
-				displayname = "Tax Identification Number(TIN)"
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_ID_Type
-			(
-    			type = text
-				displayname = "ID Type"
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_Registration_Identification_Passport_Number
-			(
-    			type = text
-				displayname = "Registration / Identification / Passport Number"
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_SST_Registration_Number
-			(
-    			type = text
-				displayname = "SST Registration Number"
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			must have Customer_Telephone_Number
-			(
-    			type = phonenumber
-				displayname = "Telephone Number"
-	 			row = 2
-	 			column = 1   
-				width = medium
-				personal data = true
-			)
-			must have Customer_E_mail
-			(
-    			type = email
-				displayname = "E-mail"
-				maxchar = 80
-	 			row = 2
-	 			column = 1   
-				width = medium
-				personal data = true
-			)
-			must have Customer_Name
-			(
-    			type = text
-				displayname = "Name"
-	 			row = 2
-	 			column = 2   
-				width = medium
-			)
-			must have Customer_Street
-			(
-    			type = textarea
-				displayname = "Street"
-				height = 100px
-	 			row = 2
-	 			column = 2   
-				width = medium
-			)
-			must have Customer_Postcode
-			(
-    			type = text
-				displayname = "Postcode"
-	 			row = 2
-	 			column = 2   
-				width = medium
-			)
-			must have Customer_City
-			(
-    			type = text
-				displayname = "City"
-	 			row = 2
-	 			column = 2   
-				width = medium
-			)
-			must have Customer_State
-			(
-    			type = text
-				displayname = "State"
-	 			row = 2
-	 			column = 2   
-				width = medium
-			)
-			must have Customer_Country
-			(
-    			type = text
-				displayname = "Country"
-	 			row = 2
-	 			column = 2   
-				width = medium
-			)
-			Shipping_Information_Section
-			(
-				type = section
-				displayname = "Shipping Information"
-				visibility = true
-	 			row = 3
-	 			column = 0   
-				width = medium
-			)
-			Delivery_Street
-			(
-    			type = textarea
-				displayname = "Delivery Street"
-				height = 100px
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Delivery_Postcode
-			(
-    			type = text
-				displayname = "Delivery Postcode"
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Delivery_City
-			(
-    			type = text
-				displayname = "Delivery City"
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Delivery_State
-			(
-    			type = text
-				displayname = "Delivery State"
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Delivery_Country
-			(
-    			type = text
-				displayname = "Delivery Country"
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Invoice_Info
-			(
-				type = section
-				displayname = "Invoice Info"
-				visibility = true
-	 			row = 4
-	 			column = 0   
-				width = medium
-			)
-			unique Invoice_No
-			(
-    			type = text
-				displayname = "Invoice No."
-    			description
-    			[
-    				type = tooltip
-    			 	message = "Doc. No. will be generated after record is created"
-    			]
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
-			Invoice_UUID
-			(
-    			type = text
-				displayname = "Invoice UUID"
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
-			Invoice_UUID_Link
-			(
-    			type = url
-				displayname = "Invoice UUID Link"
-				enable  linkname
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
-			Invoice_Public_Link
-			(
-    			type = url
-				displayname = "Invoice Public Link"
-				enable  linkname
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
-			QR_Invoice_Public_Link
-			(
-				type = qrcode
-				displayname = "QR Invoice Public Link"
-				value = "${Invoice_Public_Link}"
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
-			Subscriptions
-			(
-				type = list	
-				values  = Subscription.ID
-    			displayformat = [Customer_PO_No]
-				sortorder = ascending
-				height = 60px
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			must have Invoice_Date
-			(
-    			type = date
-				displayname = "Invoice Date"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			must have Invoice_For_Usage
-			(
-    			type = text
-				displayname = "Invoice For Usage"
-    			description
-    			[
-    				type = tooltip
-    			 	message = "Billing Period"
-    			]
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			must have Payment_Term
-			(
-				type = picklist	
-				displayname = "Payment Term"
-				values  = Payment_Term.ID
-    			displayformat = [Days]
-				sortorder = ascending
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			must have Due_Date
-			(
-    			type = date
-				displayname = "Due Date"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			Enable_Reminder
-			(
-				type = picklist
-				displayname = "Enable Reminder ?"
-				maxchar = 100
-				values = {"Yes","No"}
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			must have Charge_Category
-			(
-				type = picklist
-				displayname = "Charge Category"
-				maxchar = 100
-				values = {"Miscellaneous Charges","Fixed Charges","Telephone Charges"}
-				initial value = "Miscellaneous Charges"
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			Announcement
-			(
-				type = picklist	
-				values  = Announcement.ID
-    			displayformat = [Announcement_Message]
-				sortorder = ascending
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			Announcement_image
-			(
-    			type = plaintext
-				value = "<div> <br /></div>"
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			Attachment
-			(
-    			type = upload file
+form Refund_Note
+{
+	displayname = "Refund Note"
+	success message = "Invoice Added Successfully"
+	Supplier_From_Section
+	(
+		type = section
+		displayname = "Supplier (From)"
+		visibility = true
+	 	row = 1
+	 	column = 0   
+		width = medium
+	)
+	must have Supplier
+	(
+		type = picklist	
+		values  = Organization_Settings.ID
+    	displayformat = [Organization_Name]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_Business_Activity_Description
+	(
+    	type = text
+		displayname = "Business Activity Description"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_TIN
+	(
+    	type = text
+		displayname = "Tax Identification Number(TIN)"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_ID_Type
+	(
+    	type = text
+		displayname = "ID Type"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_Registration_Identification_Passport_Number
+	(
+    	type = text
+		displayname = "Registration / Identification / Passport Number"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_SST_Registration_Number
+	(
+    	type = text
+		displayname = "SST Registration Number"
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	must have Supplier_Telephone_Number
+	(
+    	type = phonenumber
+		displayname = "Telephone Number"
+	 	row = 1
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Supplier_E_mail
+	(
+    	type = email
+		displayname = "E-mail"
+		maxchar = 80
+	 	row = 1
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Supplier_Name
+	(
+    	type = text
+		displayname = "Name"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_Street
+	(
+    	type = textarea
+		displayname = "Street"
+		height = 100px
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_Postcode
+	(
+    	type = text
+		displayname = "Postcode"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_City
+	(
+    	type = text
+		displayname = "City"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_State
+	(
+    	type = text
+		displayname = "State"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	must have Supplier_Country
+	(
+    	type = text
+		displayname = "Country"
+	 	row = 1
+	 	column = 2   
+		width = medium
+	)
+	Buyer_To_Section
+	(
+		type = section
+		displayname = "Buyer (To)"
+		visibility = true
+	 	row = 2
+	 	column = 0   
+		width = medium
+	)
+	must have Customer
+	(
+		type = picklist	
+		values  = Customer_Profile.ID
+    	displayformat = [Customer_Name]
+		sortorder = ascending
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Code
+	(
+		type = picklist	
+		displayname = "Customer Code"
+		values  = Tenancy[Customer_Name.ID == input.Customer].ID
+    	displayformat = [Customer_Code]
+		sortorder = ascending
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_TIN
+	(
+    	type = text
+		displayname = "Tax Identification Number(TIN)"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_ID_Type
+	(
+    	type = text
+		displayname = "ID Type"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Registration_Identification_Passport_Number
+	(
+    	type = text
+		displayname = "Registration / Identification / Passport Number"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_SST_Registration_Number
+	(
+    	type = text
+		displayname = "SST Registration Number"
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	must have Customer_Telephone_Number
+	(
+    	type = phonenumber
+		displayname = "Telephone Number"
+	 	row = 2
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Customer_E_mail
+	(
+    	type = email
+		displayname = "E-mail"
+		maxchar = 80
+	 	row = 2
+	 	column = 1   
+		width = medium
+		personal data = true
+	)
+	must have Customer_Name
+	(
+    	type = text
+		displayname = "Name"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_Street
+	(
+    	type = textarea
+		displayname = "Street"
+		height = 100px
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_Postcode
+	(
+    	type = text
+		displayname = "Postcode"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_City
+	(
+    	type = text
+		displayname = "City"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_State
+	(
+    	type = text
+		displayname = "State"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	must have Customer_Country
+	(
+    	type = text
+		displayname = "Country"
+	 	row = 2
+	 	column = 2   
+		width = medium
+	)
+	Shipping_Information_Section
+	(
+		type = section
+		displayname = "Shipping Information"
+		visibility = true
+	 	row = 3
+	 	column = 0   
+		width = medium
+	)
+	Delivery_Street
+	(
+    	type = textarea
+		displayname = "Delivery Street"
+		height = 100px
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_Postcode
+	(
+    	type = text
+		displayname = "Delivery Postcode"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_City
+	(
+    	type = text
+		displayname = "Delivery City"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_State
+	(
+    	type = text
+		displayname = "Delivery State"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Delivery_Country
+	(
+    	type = text
+		displayname = "Delivery Country"
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Invoice_Info
+	(
+		type = section
+		displayname = "Invoice Info"
+		visibility = true
+	 	row = 4
+	 	column = 0   
+		width = medium
+	)
+	unique Invoice_No
+	(
+    	type = text
+		displayname = "Invoice No."
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Doc. No. will be generated after record is created"
+    	]
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Invoice_UUID
+	(
+    	type = text
+		displayname = "Invoice UUID"
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Invoice_UUID_Link
+	(
+    	type = url
+		displayname = "Invoice UUID Link"
+		enable  linkname
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Invoice_Public_Link
+	(
+    	type = url
+		displayname = "Invoice Public Link"
+		enable  linkname
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	QR_Invoice_Public_Link
+	(
+		type = qrcode
+		displayname = "QR Invoice Public Link"
+		value = "${Invoice_Public_Link}"
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
+	Subscriptions
+	(
+		type = list	
+		values  = Subscription.ID
+    	displayformat = [Customer_PO_No]
+		sortorder = ascending
+		height = 60px
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Invoice_Date
+	(
+    	type = date
+		displayname = "Invoice Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Invoice_For_Usage
+	(
+    	type = text
+		displayname = "Invoice For Usage"
+    	description
+    	[
+    		type = tooltip
+    	 	message = "Billing Period"
+    	]
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Payment_Term
+	(
+		type = picklist	
+		displayname = "Payment Term"
+		values  = Payment_Term.ID
+    	displayformat = [Days]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Due_Date
+	(
+    	type = date
+		displayname = "Due Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Enable_Reminder
+	(
+		type = picklist
+		displayname = "Enable Reminder ?"
+		maxchar = 100
+		values = {"Yes","No"}
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	must have Charge_Category
+	(
+		type = picklist
+		displayname = "Charge Category"
+		maxchar = 100
+		values = {"Miscellaneous Charges","Fixed Charges","Telephone Charges"}
+		initial value = "Miscellaneous Charges"
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Announcement
+	(
+		type = picklist	
+		values  = Announcement.ID
+    	displayformat = [Announcement_Message]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Announcement_image
+	(
+    	type = plaintext
+		value = "<div> <br /></div>"
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Attachment
+	(
+    	type = upload file
 				browse = local_drive
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			Send_Email
-			(
-    			type = checkbox
-				displayname = "Send Email"
-				initial value = false
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			Transaction_Info
-			(
-				type = section
-				displayname = "Transaction Info"
-				visibility = true
-	 			row = 5
-	 			column = 0   
-				width = medium
-			)
-			must have Base_Currency
-			(
-    			type = text
-				displayname = "Base Currency"
-	 			row = 5
-	 			column = 1   
-				width = medium
-			)
-			must have Invoice_Currency
-			(
-    			type = text
-				displayname = "Invoice Currency"
-	 			row = 5
-	 			column = 1   
-				width = medium
-			)
-			must have Exchange_Rate
-			(
-				type = decimal
-				displayname = "Exchange Rate"
-				format = commadotwestern
-				decimalplace = 4
-	 			row = 5
-	 			column = 1   
-				width = medium
-			)
-			Monthly_Rental
-			(
-				type = grid
-				displayname = "Monthly Rental"
-				must have Item_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Item"
-					values  = Transaction_Type[Charges_Type == "Monthly Rental"].ID
-    				displayformat = [Item_Name]
-					sortorder = ascending
-					width = medium
-				)
-				must have Item_Code_Monthly_Rental
-				(
-    				type = text
-					displayname = "Item Code"
-					width = medium
-				)
-				must have Classification_Codes_Monthly_Rental
-				(
-					type = list	
-					displayname = "Classification Codes"
-					values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
-					height = 60px
-					width = medium
-				)
-				must have Description_Monthly_Rental
-				(
-    				type = textarea
-					displayname = "Description"
-					height = 100px
-					width = medium
-				)
-				must have Quantity_Monthly_Rental
-				(
-					type = decimal
-					displayname = "Quantity"
-					initial value = 0
-					width = medium
-				)
-				must have Unit_Price_Monthly_Rental
-				(
-					type = decimal
-					displayname = "Unit Price"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Sub_Total_Monthly_Rental
-				(
-					type = decimal
-					displayname = "Sub Total"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Tax_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Tax"
-					values  = Tax.ID
-    				displayformat = [Tax_Name]
-					sortorder = ascending
-					width = medium
-				)
-				must have Tax_Type_Monthly_Rental
-				(
-					type = picklist
-					displayname = "Tax Type"
-					maxchar = 100
-					values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
-					width = medium
-				)
-				must have Tax_Pct_Monthly_Rental
-				(
-					type = decimal
-					displayname = "Tax Pct"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Tax_Amount_Monthly_Rental
-				(
-					type = decimal
-					displayname = "Tax Amount"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Total_Monthly_Rental
-				(
-					type = decimal
-					displayname = "Total "
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				Customer_PO_No_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Customer PO No."
-					values  = Subscription.ID
-    				displayformat = [Customer_PO_No]
-					sortorder = ascending
-					width = medium
-				)
-				must have Business_Segment_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Business Segment"
-					values  = Business_Segment.ID
-    				displayformat = [Business]
-					sortorder = ascending
-					width = medium
-				)
-				must have Business_Unit_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Business Unit"
-					values  = Business_Unit.ID
-    				displayformat = [Business_Unit]
-					sortorder = ascending
-					width = medium
-				)
-				must have Circuit_ID_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Circuit ID"
-					values  = Circuit_ID.ID
-    				displayformat = [Circuit_ID]
-					sortorder = ascending
-					width = medium
-				)
-				must have Circuit_ID_Type_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Circuit ID Type"
-					values  = Circuit_ID_Type.ID
-    				displayformat = [Circuit_ID_Type]
-					sortorder = ascending
-					width = medium
-				)
-				Sub_Line_Item_Monthly_Rental
-				(
-					type = picklist	
-					displayname = "Sub Line Item"
-					values  = Subscription_Line_Item.ID
-    				displayformat = [ID]
-					sortorder = ascending
-					width = medium
-				)
-	 			row = 6
-	 			column = 1   
-				width = medium
-			)
-			Internet_Charges
-			(
-				type = grid
-				displayname = "Internet Charges"
-				must have Item_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Item"
-					values  = Transaction_Type[Charges_Type == "Internet Charges"].ID
-    				displayformat = [Item_Name]
-					sortorder = ascending
-					width = medium
-				)
-				must have Item_Code_Internet_Charges
-				(
-    				type = text
-					displayname = "Item Code"
-					width = medium
-				)
-				must have Classification_Codes_Internet_Charges
-				(
-					type = list	
-					displayname = "Classification Codes"
-					values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
-					height = 60px
-					width = medium
-				)
-				must have Description_Internet_Charges
-				(
-    				type = textarea
-					displayname = "Description"
-					height = 100px
-					width = medium
-				)
-				must have Quantity_Internet_Charges
-				(
-					type = decimal
-					displayname = "Quantity"
-					initial value = 0
-					width = medium
-				)
-				must have Unit_Price_Internet_Charges
-				(
-					type = decimal
-					displayname = "Unit Price"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Sub_Total_Internet_Charges
-				(
-					type = decimal
-					displayname = "Sub Total"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Tax_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Tax"
-					values  = Tax.ID
-    				displayformat = [Tax_Name]
-					sortorder = ascending
-					width = medium
-				)
-				must have Tax_Type_Internet_Charges
-				(
-					type = picklist
-					displayname = "Tax Type"
-					maxchar = 100
-					values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
-					width = medium
-				)
-				must have Tax_Pct_Internet_Charges
-				(
-					type = decimal
-					displayname = "Tax Pct"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Tax_Amount_Internet_Charges
-				(
-					type = decimal
-					displayname = "Tax Amount"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Total_Internet_Charges
-				(
-					type = decimal
-					displayname = "Total"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				Customer_PO_No_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Customer PO No."
-					values  = Subscription.ID
-    				displayformat = [Customer_PO_No]
-					sortorder = ascending
-					width = medium
-				)
-				must have Business_Segment_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Business Segment"
-					values  = Business_Segment.ID
-    				displayformat = [Business]
-					sortorder = ascending
-					width = medium
-				)
-				must have Business_Unit_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Business Unit"
-					values  = Business_Unit.ID
-    				displayformat = [Business_Unit]
-					sortorder = ascending
-					width = medium
-				)
-				must have Circuit_ID_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Circuit ID"
-					values  = Circuit_ID.ID
-    				displayformat = [Circuit_ID]
-					sortorder = ascending
-					width = medium
-				)
-				must have Circuit_ID_Type_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Circuit ID Type"
-					values  = Circuit_ID_Type.ID
-    				displayformat = [Circuit_ID_Type]
-					sortorder = ascending
-					width = medium
-				)
-				Sub_Line_Item_Internet_Charges
-				(
-					type = picklist	
-					displayname = "Sub Line Item"
-					values  = Subscription_Line_Item.ID
-    				displayformat = [ID]
-					sortorder = ascending
-					width = medium
-				)
-	 			row = 7
-	 			column = 1   
-				width = medium
-			)
-			Total_Section
-			(
-				type = section
-				displayname = "Total Section"
-	 			row = 8
-	 			column = 0   
-				width = medium
-			)
-			Call_Charges
-			(
-				type = grid
-				displayname = "Call Charges"
-				must have Item_Call_Charges
-				(
-					type = picklist	
-					displayname = "Item"
-					values  = Transaction_Type[Charges_Type == "Call Charges"].ID
-    				displayformat = [Item_Name]
-					sortorder = ascending
-					width = 100px
-				)
-				must have Item_Code_Call_Charges
-				(
-    				type = text
-					displayname = "Item Code"
-					width = medium
-				)
-				must have Classification_Codes_Call_Charges
-				(
-					type = list	
-					displayname = "Classification Codes"
-					values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
-					height = 60px
-					width = medium
-				)
-				must have Description_Call_Charges
-				(
-    				type = textarea
-					displayname = "Description"
-					height = 100px
-					width = medium
-				)
-				must have Quantity_Call_Charges
-				(
-					type = decimal
-					displayname = "Quantity"
-					initial value = 0
-					width = medium
-				)
-				must have Unit_Price_Call_Charges
-				(
-					type = decimal
-					displayname = "Unit Price"
-					format = commadotwestern
-					initial value = 0
-					width = 100px
-				)
-				must have Sub_Total_Call_Charges
-				(
-					type = decimal
-					displayname = "Sub Total"
-					format = commadotwestern
-					initial value = 0
-					width = 100px
-				)
-				must have Tax_Call_Charges
-				(
-					type = picklist	
-					displayname = "Tax"
-					values  = Tax.ID
-    				displayformat = [Tax_Name]
-					sortorder = ascending
-					width = medium
-				)
-				must have Tax_Type_Call_Charges
-				(
-					type = picklist
-					displayname = "Tax Type"
-					maxchar = 100
-					values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
-					width = medium
-				)
-				must have Tax_Pct_Call_Charges
-				(
-					type = decimal
-					displayname = "Tax Pct"
-					format = commadotwestern
-					initial value = 0
-					width = 100px
-				)
-				must have Tax_Amount_Call_Charges
-				(
-					type = decimal
-					displayname = "Tax Amount"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				must have Total_Call_Charges
-				(
-					type = decimal
-					displayname = "Total"
-					format = commadotwestern
-					initial value = 0
-					width = medium
-				)
-				Customer_PO_No_Call_Charges
-				(
-					type = picklist	
-					displayname = "Customer PO No."
-					values  = Subscription.ID
-    				displayformat = [Customer_PO_No]
-					sortorder = ascending
-					width = medium
-				)
-				must have Business_Segment_Call_Charges
-				(
-					type = picklist	
-					displayname = "Business Segment"
-					values  = Business_Segment.ID
-    				displayformat = [Business]
-					sortorder = ascending
-					width = medium
-				)
-				must have Business_Unit_Call_Charges
-				(
-					type = picklist	
-					displayname = "Business Unit"
-					values  = Business_Unit.ID
-    				displayformat = [Business_Unit]
-					sortorder = ascending
-					width = medium
-				)
-				must have Circuit_ID_Call_Charges
-				(
-					type = picklist	
-					displayname = "Circuit ID"
-					values  = Circuit_ID.ID
-    				displayformat = [Circuit_ID]
-					sortorder = ascending
-					width = medium
-				)
-				must have Circuit_ID_Type_Call_Charges
-				(
-					type = picklist	
-					displayname = "Circuit ID Type"
-					values  = Circuit_ID_Type.ID
-    				displayformat = [Circuit_ID_Type]
-					sortorder = ascending
-					width = medium
-				)
-				Sub_Line_Item_Call_Charges
-				(
-					type = picklist	
-					displayname = "Sub Line Item"
-					values  = Subscription_Line_Item.ID
-    				displayformat = [ID]
-					sortorder = ascending
-					width = medium
-				)
-	 			row = 9
-	 			column = 1   
-				width = medium
-			)
-			Reject_Section
-			(
-				type = section
-				displayname = "Reject Section"
-	 			row = 10
-	 			column = 0   
-				width = medium
-			)
-			Sub_Total_Monthly_Rental
-			(
-				type = decimal
-				displayname = "Sub Total Monthly Rental"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Total_Tax_Monthly_Rental
-			(
-				type = decimal
-				displayname = "Total Tax Monthly Rental"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Grand_Total_Monthly_Rental
-			(
-				type = decimal
-				displayname = "Grand Total Monthly Rental"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Sub_Total_Internet_Charges
-			(
-				type = decimal
-				displayname = "Sub Total Internet Charges"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Total_Tax_Internet_Charges
-			(
-				type = decimal
-				displayname = "Total Tax Internet Charges"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Grand_Total_Internet_Charges
-			(
-				type = decimal
-				displayname = "Grand Total Internet Charges"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Sub_Total_Call_Charges
-			(
-				type = decimal
-				displayname = "Sub Total Call Charges (Analog, Domestic & Overseas)"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Total_Tax_Call_Charges
-			(
-				type = decimal
-				displayname = "Total Tax Call Charges (Analog, Domestic & Overseas)"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Grand_Total_Call_Charges
-			(
-				type = decimal
-				displayname = "Grand Total Call Charges (Analog, Domestic & Overseas)"
-				format = commadotwestern
-				initial value = 0
-	 			row = 10
-	 			column = 1   
-				width = medium
-			)
-			Sub_Total
-			(
-				type = decimal
-				displayname = "Sub Total"
-				initial value = 0
-	 			row = 10
-	 			column = 2   
-				width = medium
-			)
-			Total_Tax
-			(
-				type = decimal
-				displayname = "Total Tax"
-				initial value = 0
-	 			row = 10
-	 			column = 2   
-				width = medium
-			)
-			Grand_Total
-			(
-				type = decimal
-				displayname = "Grand Total"
-				initial value = 0
-	 			row = 10
-	 			column = 2   
-				width = medium
-			)
-			Grand_Total_Base_Currency
-			(
-				type = decimal
-				displayname = "Grand Total (Base Currency)"
-				initial value = 0
-	 			row = 10
-	 			column = 2   
-				width = medium
-			)
-			must have Reference_Credit_Note
-			(
-				type = picklist	
-				displayname = "Reference Credit Note"
-				values  = Credit_Note.ID
-    			displayformat = [Invoice_No]
-				sortorder = ascending
-	 			row = 10
-	 			column = 2   
-				width = medium
-			)
-			Invoice_Related_List
-			(
-				type = grid
-				displayname = "Invoice Related List"
-				USERNAME
-				(
-    				type = text
-					width = medium
-				)
-				INVOICE_NUMBER
-				(
-    				type = text
-					width = medium
-				)
-				Related_List_Date
-				(
-    				type = date
-					displayname = "DATE"
-					alloweddays = 0,1,2,3,4,5,6
-					width = medium
-				)
-				Related_List_Time
-				(
-    				type = time
-					displayname = "TIME"
-					timedisplayoptions = "hh:mm:ss" 
-					width = medium
-				)
-				SUBMISSION_ID
-				(
-    				type = text
-					displayname = "SUBMISSION ID"
-					width = medium
-				)
-				UUID
-				(
-    				type = url
-					enable  linkname
-					width = medium
-				)
-				PUBLIC_LINK
-				(
-    				type = url
-					enable  linkname
-					width = medium
-				)
-				STATUS
-				(
-    				type = text
-					width = medium
-				)
-				MESSAGE
-				(
-    				type = textarea
-					height = 100px
-					width = medium
-				)
-	 			row = 11
-	 			column = 1   
-				width = medium
-			)
-			Decision_Section
-			(
-				type = section
-				displayname = "Decision Section"
-	 			row = 12
-	 			column = 0   
-				width = medium
-			)
-			User_Input_Trigger
-			(
-    			type = checkbox
-				initial value = false
-	 			row = 12
-	 			column = 1   
-				width = medium
-			)
-			Customer_Name_Trigger
-			(
-    			type = checkbox
-				displayname = "Customer Name Trigger"
-				initial value = false
-	 			row = 12
-	 			column = 1   
-				width = medium
-			)
-			Is_Refund_Note_Created_from_Credit_Note
-			(
-    			type = checkbox
-				initial value = false
-	 			row = 12
-	 			column = 1   
-				width = medium
-			)
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Send_Email
+	(
+    	type = checkbox
+		displayname = "Send Email"
+		initial value = false
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
+	Transaction_Info
+	(
+		type = section
+		displayname = "Transaction Info"
+		visibility = true
+	 	row = 5
+	 	column = 0   
+		width = medium
+	)
+	must have Base_Currency
+	(
+    	type = text
+		displayname = "Base Currency"
+	 	row = 5
+	 	column = 1   
+		width = medium
+	)
+	must have Invoice_Currency
+	(
+    	type = text
+		displayname = "Invoice Currency"
+	 	row = 5
+	 	column = 1   
+		width = medium
+	)
+	must have Exchange_Rate
+	(
+		type = decimal
+		displayname = "Exchange Rate"
+		format = commadotwestern
+		decimalplace = 4
+	 	row = 5
+	 	column = 1   
+		width = medium
+	)
+	Monthly_Rental
+	(
+		type = grid
+		displayname = "Monthly Rental"
+		must have Item_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type[Charges_Type == "Monthly Rental"].ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Item_Code_Monthly_Rental
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Monthly_Rental
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Monthly_Rental
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Sub_Total_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Monthly_Rental
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Amount_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Monthly_Rental
+		(
+			type = decimal
+			displayname = "Total "
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		Customer_PO_No_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Customer PO No."
+			values  = Subscription.ID
+    		displayformat = [Customer_PO_No]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Segment_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Monthly_Rental
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 6
+	 	column = 1   
+		width = medium
+	)
+	Internet_Charges
+	(
+		type = grid
+		displayname = "Internet Charges"
+		must have Item_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type[Charges_Type == "Internet Charges"].ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Item_Code_Internet_Charges
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Internet_Charges
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Internet_Charges
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Internet_Charges
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Internet_Charges
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Sub_Total_Internet_Charges
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Internet_Charges
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Internet_Charges
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Tax_Amount_Internet_Charges
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Internet_Charges
+		(
+			type = decimal
+			displayname = "Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		Customer_PO_No_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Customer PO No."
+			values  = Subscription.ID
+    		displayformat = [Customer_PO_No]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Segment_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Internet_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 7
+	 	column = 1   
+		width = medium
+	)
+	Total_Section
+	(
+		type = section
+		displayname = "Total Section"
+	 	row = 8
+	 	column = 0   
+		width = medium
+	)
+	Call_Charges
+	(
+		type = grid
+		displayname = "Call Charges"
+		must have Item_Call_Charges
+		(
+			type = picklist	
+			displayname = "Item"
+			values  = Transaction_Type[Charges_Type == "Call Charges"].ID
+    		displayformat = [Item_Name]
+			sortorder = ascending
+			width = 100px
+		)
+		must have Item_Code_Call_Charges
+		(
+    		type = text
+			displayname = "Item Code"
+			width = medium
+		)
+		must have Classification_Codes_Call_Charges
+		(
+			type = list	
+			displayname = "Classification Codes"
+			values = {"Breastfeeding equipment","Child care centres and kindergartens fees","Computer, smartphone or tablet","Consolidated e-Invoice","Construction materials (as specified under Fourth Schedule of the Lembaga Pembangunan Industri)","Disbursement","Donation","e-Commerce - e-Invoice to buyer / purchaser","e-Commerce - Self-billed e-Invoice to seller, logistics, etc.","Education fees","Goods on consignment (Consignor)","Goods on consignment (Consignee)","Gym membership","Insurance - Education and medical benefits","Insurance - Takaful or life insurance","Interest and financing expenses","Internet subscription","Land and building","Medical examination for learning disabilities and early intervention or rehabilitation treatments","Medical examination or vaccination expenses","Medical expenses for serious diseases","Others","Petroleum operations (as defined in Petroleum (Income Tax) Act 1967)","Private retirement scheme or deferred annuity scheme","Motor vehicle","Subscription of books / journals / magazines / newspapers / other similar publications","Reimbursement","Rental of motor vehicle","EV charging facilities (Installation, rental, sale / purchase or subscription fees)","Repair and maintenance","Research and development","Foreign income","Self-billed - Betting and gaming","Self-billed - Importation of goods","Self-billed - Importation of services","Self-billed - Others","Self-billed - Monetary payment to agents, dealers or distributors","Sports equipment, rental / entry fees for sports facilities, registration in sports competition","Supporting equipment for disabled person","Voluntary contribution to approved provident fund","Dental examination or treatment","Fertility treatment","Treatment and home care nursing, daycare centres and residential care centers","Vouchers, gift cards, loyalty points, etc","Self-billed - Non-monetary payment to agents, dealers or distributors"}
+			height = 60px
+			width = medium
+		)
+		must have Description_Call_Charges
+		(
+    		type = textarea
+			displayname = "Description"
+			height = 100px
+			width = medium
+		)
+		must have Quantity_Call_Charges
+		(
+			type = decimal
+			displayname = "Quantity"
+			initial value = 0
+			width = medium
+		)
+		must have Unit_Price_Call_Charges
+		(
+			type = decimal
+			displayname = "Unit Price"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Sub_Total_Call_Charges
+		(
+			type = decimal
+			displayname = "Sub Total"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Tax_Call_Charges
+		(
+			type = picklist	
+			displayname = "Tax"
+			values  = Tax.ID
+    		displayformat = [Tax_Name]
+			sortorder = ascending
+			width = medium
+		)
+		must have Tax_Type_Call_Charges
+		(
+			type = picklist
+			displayname = "Tax Type"
+			maxchar = 100
+			values = {"Sales Tax","Service Tax","Tourism Tax","High-Value Goods Tax","Sales Tax on Low Value Goods","Not Applicable"}
+			width = medium
+		)
+		must have Tax_Pct_Call_Charges
+		(
+			type = decimal
+			displayname = "Tax Pct"
+			format = commadotwestern
+			initial value = 0
+			width = 100px
+		)
+		must have Tax_Amount_Call_Charges
+		(
+			type = decimal
+			displayname = "Tax Amount"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		must have Total_Call_Charges
+		(
+			type = decimal
+			displayname = "Total"
+			format = commadotwestern
+			initial value = 0
+			width = medium
+		)
+		Customer_PO_No_Call_Charges
+		(
+			type = picklist	
+			displayname = "Customer PO No."
+			values  = Subscription.ID
+    		displayformat = [Customer_PO_No]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Segment_Call_Charges
+		(
+			type = picklist	
+			displayname = "Business Segment"
+			values  = Business_Segment.ID
+    		displayformat = [Business]
+			sortorder = ascending
+			width = medium
+		)
+		must have Business_Unit_Call_Charges
+		(
+			type = picklist	
+			displayname = "Business Unit"
+			values  = Business_Unit.ID
+    		displayformat = [Business_Unit]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Call_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID"
+			values  = Circuit_ID.ID
+    		displayformat = [Circuit_ID]
+			sortorder = ascending
+			width = medium
+		)
+		must have Circuit_ID_Type_Call_Charges
+		(
+			type = picklist	
+			displayname = "Circuit ID Type"
+			values  = Circuit_ID_Type.ID
+    		displayformat = [Circuit_ID_Type]
+			sortorder = ascending
+			width = medium
+		)
+	 	row = 9
+	 	column = 1   
+		width = medium
+	)
+	Reject_Section
+	(
+		type = section
+		displayname = "Reject Section"
+	 	row = 10
+	 	column = 0   
+		width = medium
+	)
+	Sub_Total_Monthly_Rental
+	(
+		type = decimal
+		displayname = "Sub Total Monthly Rental"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Total_Tax_Monthly_Rental
+	(
+		type = decimal
+		displayname = "Total Tax Monthly Rental"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Grand_Total_Monthly_Rental
+	(
+		type = decimal
+		displayname = "Grand Total Monthly Rental"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Sub_Total_Internet_Charges
+	(
+		type = decimal
+		displayname = "Sub Total Internet Charges"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Total_Tax_Internet_Charges
+	(
+		type = decimal
+		displayname = "Total Tax Internet Charges"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Grand_Total_Internet_Charges
+	(
+		type = decimal
+		displayname = "Grand Total Internet Charges"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Sub_Total_Call_Charges
+	(
+		type = decimal
+		displayname = "Sub Total Call Charges (Analog, Domestic & Overseas)"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Total_Tax_Call_Charges
+	(
+		type = decimal
+		displayname = "Total Tax Call Charges (Analog, Domestic & Overseas)"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Grand_Total_Call_Charges
+	(
+		type = decimal
+		displayname = "Grand Total Call Charges (Analog, Domestic & Overseas)"
+		format = commadotwestern
+		initial value = 0
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
+	Sub_Total
+	(
+		type = decimal
+		displayname = "Sub Total"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Total_Tax
+	(
+		type = decimal
+		displayname = "Total Tax"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Grand_Total
+	(
+		type = decimal
+		displayname = "Grand Total"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Grand_Total_Base_Currency
+	(
+		type = decimal
+		displayname = "Grand Total (Base Currency)"
+		initial value = 0
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	must have Reference_Credit_Note
+	(
+		type = picklist	
+		displayname = "Reference Credit Note"
+		values  = Credit_Note.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 10
+	 	column = 2   
+		width = medium
+	)
+	Invoice_Related_List
+	(
+		type = grid
+		displayname = "Invoice Related List"
+		USERNAME
+		(
+    		type = text
+			width = medium
+		)
+		INVOICE_NUMBER
+		(
+    		type = text
+			width = medium
+		)
+		Related_List_Date
+		(
+    		type = date
+			displayname = "DATE"
+			alloweddays = 0,1,2,3,4,5,6
+			width = medium
+		)
+		Related_List_Time
+		(
+    		type = time
+			displayname = "TIME"
+			timedisplayoptions = "hh:mm:ss" 
+			width = medium
+		)
+		SUBMISSION_ID
+		(
+    		type = text
+			displayname = "SUBMISSION ID"
+			width = medium
+		)
+		UUID
+		(
+    		type = url
+			enable  linkname
+			width = medium
+		)
+		PUBLIC_LINK
+		(
+    		type = url
+			enable  linkname
+			width = medium
+		)
+		STATUS
+		(
+    		type = text
+			width = medium
+		)
+		MESSAGE
+		(
+    		type = textarea
+			height = 100px
+			width = medium
+		)
+	 	row = 11
+	 	column = 1   
+		width = medium
+	)
+	Decision_Section
+	(
+		type = section
+		displayname = "Decision Section"
+	 	row = 12
+	 	column = 0   
+		width = medium
+	)
+	User_Input_Trigger
+	(
+    	type = checkbox
+		initial value = false
+	 	row = 12
+	 	column = 1   
+		width = medium
+	)
+	Customer_Name_Trigger
+	(
+    	type = checkbox
+		displayname = "Customer Name Trigger"
+		initial value = false
+	 	row = 12
+	 	column = 1   
+		width = medium
+	)
+	Is_Refund_Note_Created_from_Credit_Note
+	(
+    	type = checkbox
+		initial value = false
+	 	row = 12
+	 	column = 1   
+		width = medium
+	)
 	
-			actions
-			{
-				on add
-				{
-					submit
-					(
-   						type = submit
-   						displayname = "Submit"
-					)
-				}
-				on edit
-				{
-					update
-					(
-   						type = submit
-   						displayname = "Update"
-					)
-					cancel
-					(
-   						type = cancel
-   						displayname = "Cancel"
-					)
-				}
-			}
-		print template
-			{
-				XMT_Refund_Note
-				{
-							displayname = "XMT Refund Note"
-							content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"1728870692867_XMT_logo.png","imageId":"img_91598775","imageType":"upload","fileId":"6069490000000054013"},{"fileName":"1728874515218_Picture1.png","imageId":"img_9246046600000024","imageType":"upload","fileId":"6069490000000049011"},{"fileName":"","imageId":"","imageType":"","fileId":""}],"imageId":"","isFooterEnabled":true,"footer":{"imageId":"","elements":[],"style":"display: block; border-color: rgba(0, 0, 0, 0); bottom: 0px; width: 100%; background-color: rgb(255, 255, 255)","bgImg":""},"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; background-image: none","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_9173486800000012","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_9173486600000024","height":"25"}}]}]}},{"type":"columns","element":{"split":"7,45,7,31,10","id":"u_elem_9146774399999976","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_9184981399999976","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_91598775","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000054013&imgFileName=1728870692867_XMT_logo.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_9157080899999976","align":"left","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9146774199999988","height":"25"}}]},{"colElements":[{"type":"image","element":{"imageId":"img_9246046600000024","size":"S","src":"https://creator.zoho.com/appbuilder/xmttechnologiessdnbhd1/xmt-billing-system/downLoadImage?imgFileId=6069490000000049011&imgFileName=1728874515218_Picture1.png","captionMargin":"0px auto","alt":"","caption":"","selectFormCompId":"","id":"u_elem_9244021800000012","align":"right","elemStyle":"border: 0px solid rgb(169, 169, 169); margin-right: 10px; width: 150px","formCompId":""}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_12951851599999998","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9165709600000024","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_9203782600000024","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n          style=\"font-size: 28px\"><b><font style=\"font-size: 24px\">\u200bREFUND NOTE<\/font><\/b><\/font><\/h1>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_9547652869999999","height":"25"}},{"type":"columns","element":{"split":"8,45,2,38,7","id":"u_elem_9540083030000001","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_95461171","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_E_mail"},{"Label_Name":"Customer_SST_Registration_Number"},{"Label_Name":"Customer_TIN"},{"Related_Fields":["Business_Street"],"Label_Name":"Customer"},{"Related_Fields":["Customer_Registration_Number"],"Label_Name":"Customer"},{"Related_Fields":["Phone_Number"],"Label_Name":"Customer"},{"Related_Fields":["City"],"Label_Name":"Customer_Code"},{"Related_Fields":["Country"],"Label_Name":"Customer_Code"},{"Related_Fields":["Display_Name"],"Label_Name":"Customer_Code"},{"Related_Fields":["Postcode"],"Label_Name":"Customer_Code"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 0\">\n    <tbody>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer SST<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"><font\n                style=\"\"> <span>${Customer_SST_Registration_Number}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          width=\"25%\" style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer TIN<\/font><\/td>\n      <td width=\"1%\"\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n          style=\"border: 0\" width=\"25%\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_TIN}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Name<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\"><b><span><span\n                    style=\"font-weight: 700; font-style: normal\"><span>${Customer_Code.Display_Name}<\/span><span\n          style=\"color: rgb(0, 0, 0); font-family: Arimo; font-size: 10px; font-weight: 700; font-style: normal\">&nbsp;<\/span><\/span><\/span><\/b> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Registration No<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n              face=\"arimo\"> <span>${Customer.Customer_Registration_Number}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\"><font\n          style=\"padding: 5px\">Customer Address<\/font> <br /><\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Customer.Business_Street},<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: 0\"><\/td>\n      <td\n          style=\"border: 0\"><\/td>\n      <td style=\"border: 0\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n              face=\"arimo\"> <span>${Customer_Code.Postcode}<\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp; <span>${Customer_Code.City}<\/span>,<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"border: 0\"><\/td>\n      <td\n          style=\"border: 0\"><\/td>\n      <td style=\"border: 0\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\"> <span>${Customer_Code.Country}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Contact No<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Customer.Phone_Number}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: 0\"><font\n            style=\"padding: 5px; font-size: 10px\" color=\"#000000\"\n          face=\"arimo\">Customer Email<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: 0\"><font style=\"\"><font color=\"#000000\"\n              style=\"font-size: 10px\" face=\"arimo\"> ${Customer_E_mail}<\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9540082969999999","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Due_Date"},{"Label_Name":"Invoice_Date"},{"Label_Name":"Invoice_No"},{"Label_Name":"Supplier_TIN"},{"Label_Name":"Added_Time"},{"Related_Fields":["MSIC_Description"],"Label_Name":"Supplier"},{"Related_Fields":["Account_Number"],"Label_Name":"Customer_Code"},{"Related_Fields":["Currency"],"Label_Name":"Subscriptions"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none; border-collapse: collapse\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"border: none\" width=\"25%\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Supplier TIN<\/font><\/td>\n      <td width=\"1%\"\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n          style=\"border: none\" width=\"25%\"><font color=\"#000000\"\n            style=\"padding: 1px; font-size: 10px\"\n          face=\"arimo\"> <span>${Supplier_TIN}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Supplier MSIC Code<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 1px; font-size: 10px\"\n          face=\"arimo\"> <span>${Supplier.MSIC_Description}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">SST ID<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 1px; font-size: 10px\"\n          face=\"arimo\"> <span>${<span><span>Supplier_SST_Registration_Number<\/span><\/span>}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Customer A/c No<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 1px; font-size: 10px\"\n          face=\"arimo\"> <span>${Customer_Code.Account_Number}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Document No.<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 1px; font-size: 10px\"\n          face=\"arimo\"> <span>${Invoice_No}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Document Date and Time<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 1px; font-size: 10px\"\n          face=\"arimo\"> <span>${Added_Time}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Invoice Date<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n          face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font style=\"font-size: 10px\"\n            color=\"#000000\" face=\"arimo\"> ${Invoice_Date} <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Payment Due<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 1px; font-size: 10px\"\n          face=\"arimo\"> <span>${Due_Date}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"padding: 5px; font-size: 10px\"\n          face=\"arimo\">Deposit<\/font><\/td>\n      <td\n            style=\"border: none\"><font color=\"#000000\"\n            style=\"font-size: 10px\" face=\"arimo\">:<\/font><\/td>\n      <td\n              style=\"border: none\"><span><font style=\"font-size: 10px\"\n                face=\"arimo\"> <font color=\"#000000\" style=\"\"> ${Subscriptions.Currency}&nbsp;<\/font><\/font><\/span><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_32471507","height":"25"}}]}]}}]}]}},{"type":"columns","element":{"split":"7,87,6","id":"u_elem_572976","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_9558952209999996","height":"25"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_9556504219999999","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"color: rgb(0, 0, 0); font-style: normal; text-align: left\"><font\n      style=\"padding: 5px; font-size: 10px\" face=\"arimo\"><b style=\"font-size: 10px\">ATT : FINANCE DEPARTMENT<\/b><\/font><\/h1>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_33404291","height":"25"}}]}]}},{"type":"columns","element":{"split":"6,89,5","id":"u_elem_6477445","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_2344451199999988","height":"25"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_21842282999999523","fields":[],"content":"<div style=\"background-color: rgb(29, 80, 142)\">\n   <table\n    cellspacing=\"0\"\n          style=\"text-align: left; margin: 0px auto; width: 100%; border: 1px solid rgb(51, 51, 51)\">\n    <tbody>\n     <tr>\n      <td\n            style=\"text-align: left; width: 18%; padding-left: 5px\"><font\n            face=\"arimo\" style=\"font-size: 10px\"\n          color=\"#ffffff\"><b>Previous Charges<\/b><\/font><\/td>\n      <td\n              style=\"text-align: center; width: 22%; padding-left: 70px\"><b><font\n              face=\"arimo\" style=\"font-size: 10px\"\n          color=\"#ffffff\">Amount<\/font><\/b><\/td>\n      <td\n              style=\"text-align: center; width: 20%; padding-left: 5px\"><b><font\n              face=\"arimo\" style=\"font-size: 10px\"\n          color=\"#ffffff\">Current Charges<\/font><\/b><\/td>\n      <td\n              style=\"text-align: right; width: 20%; padding-left: 5px\"><b><font\n              face=\"arimo\" style=\"font-size: 10px\" color=\"#ffffff\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Amount&nbsp; &nbsp; &nbsp;<\/font><\/b><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_23861555","height":"25"}},{"type":"columns","element":{"split":"48,9,43","id":"u_elem_6777592999999523","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_224792898962034651","fields":[],"content":"<div\n    style=\"border-width: 1px; border-style: solid; border-color: rgb(68, 68, 68)\">\n   <table\n    cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 1px solid rgb(29, 80, 142); border-collapse: collapse\">\n    <tbody>\n     <tr>\n      <td\n          style=\"padding-left: 5px; border-right: none; border-left: none\"><\/td>\n      <td\n            style=\"text-align: right; padding-left: 5px; border-left: none\"><font\n                  color=\"#000000\"><span><span><font\n              style=\"font-size: 10px\"><span>}<\/span> <\/font> <\/span> <\/span> <span\n          style=\"font-family: Lato, Arimo, sans-serif; font-size: 14px; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"text-align: right; padding-left: 5px; border-right: none; border-left: none\"><br /><\/td>\n      <td\n          style=\"padding-left: 5px; border-left: none\"><br /><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"padding-left: 5px; border-right: none; border-left: none; border-bottom: 1px solid rgb(51, 51, 51)\"><\/td>\n      <td\n            style=\"text-align: right; padding-left: 5px; border-left: none; border-bottom: 1px solid rgb(51, 51, 51)\"><font\n            color=\"#000000\" style=\"font-size: 10px\">&nbsp;<span\n          style=\"font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"text-align: left; padding-left: 5px; border-right: none; border-left: none\"><\/td>\n      <td\n            style=\"text-align: right; padding-left: 5px; border-left: none\"><font\n              color=\"#000000\"><span style=\"font-family: Lato, Arimo, sans-serif; font-size: 14px; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_17855957699999988","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_6777590999999642","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Grand_Total"},{"Label_Name":"Sub_Total_Internet_Charges"},{"Label_Name":"Sub_Total_Monthly_Rental"},{"Label_Name":"Total_Tax"}],"content":"<div\n    style=\"border-width: 1px; border-style: solid; border-color: rgb(68, 68, 68)\">\n   <table\n    style=\"margin: 0 auto; width: 100%; border: 1px solid rgb(29, 80, 142); border-collapse: separate\"\n    cellspacing=\"0\" cellpadding=\"1\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: left\" width=\"20%\"><font face=\"arimo\"\n            color=\"#000000\"\n          style=\"padding-left: 5px; font-size: 10px\">Monthly Rental<\/font><\/td>\n      <td\n          style=\"text-align: right\" width=\"10%\"><font face=\"arimo\"\n                style=\"padding-left: 5px; font-size: 10px\"><span><font\n              color=\"#000000\">${Sub_Total_Monthly_Rental}&nbsp;&nbsp;<\/font> <\/span> <span\n          style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: right\"><font face=\"arimo\"\n            style=\"padding-left: 5px; font-size: 10px\"> <br /><\/font><\/td>\n      <td><font\n            face=\"arimo\"\n          style=\"padding-left: 5px; font-size: 10px\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font face=\"arimo\" color=\"#000000\"\n          style=\"padding-left: 5px; font-size: 10px\">Internet Charges<\/font><\/td>\n      <td\n            style=\"text-align: right\"><font face=\"arimo\"\n                style=\"padding-left: 5px; font-size: 10px\"> <span> <font\n              color=\"#000000\">${Sub_Total_Internet_Charges}&nbsp;&nbsp;<\/font> <\/span> <span\n          style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: right\"><font face=\"arimo\"\n            style=\"padding-left: 5px; font-size: 10px\"> <br /><\/font><\/td>\n      <td><font\n            face=\"arimo\"\n          style=\"padding-left: 5px; font-size: 10px\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font face=\"arimo\" color=\"#000000\"\n          style=\"padding-left: 5px; font-size: 10px\">SST @ 6%<\/font><\/td>\n      <td\n            style=\"text-align: right\"><font face=\"arimo\"\n              style=\"padding-left: 5px; font-size: 10px\"><span\n                style=\"font-weight: 400; font-style: normal\"><span\n                  style=\"color: rgb(68, 68, 68)\"><font\n          color=\"#000000\">${Total_Tax}&nbsp;&nbsp;<\/font> <\/span>&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: right\"><font face=\"arimo\"\n            style=\"padding-left: 5px; font-size: 10px\"> <br /><\/font><\/td>\n      <td><font\n            face=\"arimo\"\n          style=\"padding-left: 5px; font-size: 10px\"> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"border-top: 1px solid rgb(68, 68, 68); border-bottom: 1px solid rgb(68, 68, 68); padding-left: 5px\"><font\n            face=\"arimo\" style=\"font-size: 10px\"\n          color=\"#000000\"><b>Current Charges<\/b><\/font><\/td>\n      <td\n            style=\"text-align: right; border-top: 1px solid rgb(68, 68, 68); border-bottom: 1px solid rgb(68, 68, 68); padding-left: 5px\"><font\n            face=\"arimo\" style=\"font-size: 10px\"> <font\n                color=\"#000000\"> <span><b>${Grand_Total}&nbsp;&nbsp;<\/b><\/span> <span\n          style=\"font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n          style=\"text-align: left\"><\/td>\n      <td\n            style=\"text-align: right\"><span\n              style=\"font-style: normal\"><b style=\"\"><font\n                  color=\"#000000\"><font face=\"arimo\"\n                    style=\"font-size: 10px\"><span style=\"font-style: normal\">&nbsp;<\/span><\/font>&nbsp;<\/font><\/b><\/span> <br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"type":"text","element":{"id":"u_elem_1470045699999988","fields":[],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td width=\"33%\"\n            style=\"padding-left: 5px\"><i style=\"\"><font color=\"#000000\"\n              style=\"font-size: 10px\" face=\"arimo\">E.&amp; O.E.<\/font><\/i><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_23780515999999642","height":"25"}}]}]}},{"type":"columns","element":{"split":"6,88,6","id":"u_elem_19363633999999762","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_2465399199999988","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_24797757999999523","height":"25"}},{"type":"text","element":{"id":"u_elem_2426291899999976","fields":[],"content":"<div style=\"background-color: rgb(29, 80, 142)\">\n   <table\n    cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 1px solid rgb(51, 51, 51)\">\n    <tbody>\n     <tr>\n      <td\n          style=\"\" width=\"33%\"><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_4739732799999952","height":"25"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_2473706899999976","height":"25"}}]}]}},{"type":"columns","element":{"split":"6,39,19,30,6","id":"u_elem_36684585999999642","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_4693284299999952","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Related_Fields":["Organization_Name"],"Label_Name":"Supplier"}],"content":"<div style=\"\">\n   <table\n    style=\"margin: 0px auto; width: 100%; border: none\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"padding: 5px; width: 50%\" width=\"50%\"><font\n            style=\"font-size: 10px\"\n          face=\"arimo\">For direct bank-in, payments are to be made to :<\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left; padding: 5px\"><font\n            style=\"font-size: 10px\"\n                face=\"arimo\">Beneficiary Name :&nbsp; <b><font\n            color=\"#000000\">${Supplier.Organization_Name}<\/font><\/b> <\/font><span style=\"font-size: 12px; color: rgb(68, 68, 68); font-family: Lato, Arimo, sans-serif; font-weight: 400; font-style: normal\">&nbsp; <br /><\/span><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"type":"text","element":{"Fields":[{"Related_Fields":["Finance_Email"],"Label_Name":"Supplier"}],"content":"<div style=\"\">\n   <font style=\"\"><font style=\"font-size: 10px\"\n      face=\"arimo\"> <\/font>\n    <p style=\"\"><font style=\"\"><font\n          style=\"font-size: 10px\" face=\"arimo\"> <font style=\"\"> <i style=\"font-size: 10px\"><span> <i>**If payment is made via bank transfer, please send proof of payment via email ${Supplier.Finance_Email}&nbsp;<\/i> <\/span><\/i><\/font><\/font> <\/font><\/p><\/font>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4713626799999952","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Announcement"},{"Related_Fields":["Announcement_Image"],"Label_Name":"Announcement"}],"content":"<div\n    style=\"border-width: 0px; border-style: solid; border-color: rgb(68, 68, 68)\">\n   <table\n    cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%; border: 1px solid rgb(51, 51, 51)\">\n    <tbody>\n     <tr>\n      <td\n                  width=\"33%\"><font> <b> <i> <font face=\"arimo\"\n                    style=\"font-size: 10px\"> Announcement:<br /><span\n                    style=\"color: rgb(68, 68, 68); font-weight: 700; font-style: italic\"> ${Announcement}<br /><\/span> <span style=\"color: rgb(68, 68, 68); font-weight: 700; font-style: italic\"> ${Announcement.Announcement_Image} <\/span> <br /><br /><br /><br /><br /><\/font> <\/i> <\/b> <\/font><\/td>\n     <\/tr>\n     <tr>\n      <td><br /><\/td>\n     <\/tr>\n     <tr>\n      <td><br /><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_4700663399999976","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_5137140699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_51371405","height":"25"}}]}]}},{"type":"columns","element":{"split":"6,94","id":"u_elem_5131331699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_6667950599999998","height":"401"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_5131331199999988","fields":[],"content":"<div\n    style=\"background: rgba(0, 0, 0, 0); padding: 0px; outline: none\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"><font style=\"font-size: 10px\" face=\"arimo\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"\">\u200b<\/font>\u200b<\/font> <font style=\"\"><b style=\"\">This is a computer generated document and therefore no signature is required<\/b><\/font><\/font> <\/font><\/h1>\n  <\/div>"}},{"type":"spacer","element":{"id":"u_elem_9562520530000001","height":"25"}},{"type":"spacer","element":{"id":"u_elem_4768326100000143","height":"25"}},{"type":"columns","element":{"split":"100","id":"u_elem_60292835","elemStyle":"","collayouts":[{"colElements":[{"type":"columns","element":{"split":"94,6","id":"u_elem_171972815","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_141745238","height":"25"}},{"type":"columns","element":{"split":"100","id":"u_elem_239543545","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_23954354099999998","height":"25"}},{"type":"spacer","element":{"id":"u_elem_25289385","height":"25"}},{"type":"spacer","element":{"id":"u_elem_2532444600000009","height":"25"}},{"type":"spacer","element":{"id":"u_elem_2545459700000003","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_239427345","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_378108532","height":"25"}},{"type":"text","element":{"id":"u_elem_149432635","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-style: normal; text-align: left\"><font\n      style=\"font-size: 10px\" face=\"arimo\"><b>Monthly Charges<\/b><\/font><\/p>\n  <\/div>"}},{"type":"columns","element":{"split":"43,57","id":"u_elem_5496071199999999","elemStyle":"","collayouts":[{"colElements":[{"id":"u_elem_153483945312661637","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-size: 10px","fieldLayoutType":"1","related_Form":"ZC_SUBFORM_1047","labelText":"Monthly Rental","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Monthly_Rental","refFields":[{"valueStyle":"                                              ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); background-color: rgb(29, 80, 142); font-weight: bold","Label_Name":"Description_Monthly_Rental"}],"labelTextStyle":""}}]},{"colElements":[{"id":"u_elem_153483945312682967","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"ZC_SUBFORM_1047","labelText":"Monthly Rental","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Monthly_Rental","refFields":[{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Quantity","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Quantity_Monthly_Rental"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Unit Price","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Unit_Price_Monthly_Rental"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Sub Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Sub_Total_Monthly_Rental"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Tax Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Tax_Amount_Monthly_Rental"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Total_Monthly_Rental"}],"labelTextStyle":""}}]}]}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_17271851900000095","height":"25"}}]}]}},{"type":"columns","element":{"split":"63,11,13,7,6","id":"u_elem_7980334800000191","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_8504349900000095","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal; text-align: left\"><font\n      style=\"font-size: 10px\" face=\"arimo\">Total<\/font><\/p>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Sub_Total_Monthly_Rental"}],"content":"<div style=\"\">\n   <table\n    style=\"text-align: center; margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: center\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font\n                style=\"\">${Sub_Total_Monthly_Rental}&nbsp; &nbsp;<span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Total_Tax_Monthly_Rental"}],"content":"<div style=\"\">\n   <table\n    style=\"text-align: center; margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: center\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><span> <font\n              style=\"\">${Total_Tax_Monthly_Rental}<\/font> <\/span> <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;&nbsp;<\/span><br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Grand_Total_Monthly_Rental"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"text-align: center; margin: 0px auto; width: 100%\">\n    <tbody>\n     <tr>\n      <td\n          width=\"50%\" style=\"text-align: center\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font\n                style=\"\">&nbsp;${Grand_Total_Monthly_Rental} <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_17280600100000143","height":"25"}}]}]}},{"type":"columns","element":{"split":"94,6","id":"u_elem_17250447900000095","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_15387221899999999","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-style: normal; text-align: left\"><font\n      style=\"font-size: 10px\" face=\"arimo\"><b>Internet Charges<\/b><\/font><\/p>\n  <\/div>"}},{"type":"columns","element":{"split":"43,57","id":"u_elem_58346865","elemStyle":"","collayouts":[{"colElements":[{"id":"u_elem_153483945312702744","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-size: 10px; font-family: Arimo","fieldLayoutType":"1","related_Form":"ZC_SUBFORM_1048","labelText":"Internet Charges","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Internet_Charges","refFields":[{"valueStyle":"                                              ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); background-color: rgb(29, 80, 142); font-weight: bold","Label_Name":"Description_Internet_Charges"}],"labelTextStyle":""}}]},{"colElements":[{"id":"u_elem_153483945312708525","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"ZC_SUBFORM_1048","labelText":"Internet Charges","wrapperStyle":"","labelStyle":"width: 50%; background-color: rgba(0, 0, 0, 0); display: none","Label_Name":"Internet_Charges","refFields":[{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Quantity","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Quantity_Internet_Charges"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Unit Price","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Unit_Price_Internet_Charges"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Sub Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Sub_Total_Internet_Charges"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Tax Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Tax_Amount_Internet_Charges"},{"valueStyle":"                       text-align: center                       ","fieldLayoutType":"2","labelText":"Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Total_Internet_Charges"}],"labelTextStyle":"font-weight: bold"}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_17285488600000143","height":"25"}}]}]}},{"type":"columns","element":{"split":"62,12,13,7,6","id":"u_elem_10602336100000143","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_10710375700000048","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal; text-align: left\"><font\n      style=\"font-size: 10px\" face=\"arimo\">Total<\/font><\/p>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Sub_Total_Internet_Charges"}],"content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: center\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><span><font\n              style=\"\">&nbsp; &nbsp;${Sub_Total_Internet_Charges}&nbsp;&nbsp;<\/font> <\/span> <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Total_Tax_Internet_Charges"}],"content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: center\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><span><font\n              style=\"\">&nbsp; &nbsp;${Total_Tax_Internet_Charges}&nbsp; &nbsp;&nbsp;<\/font> <\/span> <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n   <br />\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Grand_Total_Internet_Charges"}],"content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: center\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font\n                style=\"\">&nbsp;${Grand_Total_Internet_Charges} <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <\/font> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_17292984100000143","height":"25"}}]}]}}]}]}}]}]}},{"type":"columns","element":{"split":"6,88,6","id":"u_elem_9023911819999999","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_9036827919999999","height":"25"}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_15545567599999998","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-style: normal; text-align: left\"><font\n      style=\"font-size: 10px\" face=\"arimo\"><b>Call Charges<\/b><\/font><\/p>\n  <\/div>"}},{"type":"columns","element":{"split":"43,57","id":"u_elem_6275261","elemStyle":"","collayouts":[{"colElements":[{"id":"u_elem_153483945312730817","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"ZC_SUBFORM_1049","labelText":"Call Charges","wrapperStyle":"","labelStyle":"width: 50%; display: none","Label_Name":"Call_Charges","refFields":[{"valueStyle":"                                              ","fieldLayoutType":"2","labelText":"Description","labelStyle":"color: rgb(255, 255, 255); background-color: rgb(29, 80, 142); font-weight: bold","Label_Name":"Description_Call_Charges"}],"labelTextStyle":""}}]},{"colElements":[{"id":"u_elem_153483945312736938","type":"lookupfields","element":{"valueStyle":"width: 50%","valueTextStyle":"font-family: Arimo; font-size: 10px","fieldLayoutType":"1","related_Form":"ZC_SUBFORM_1049","labelText":"Call Charges","wrapperStyle":"","labelStyle":"width: 50%; background-color: rgb(255, 255, 255); display: none","Label_Name":"Call_Charges","refFields":[{"valueStyle":"          text-align: center          ","fieldLayoutType":"2","labelText":"Quantity","labelStyle":"background-color: rgb(29, 80, 142); color: rgb(255, 255, 255); text-align: center; font-weight: bold","Label_Name":"Quantity_Call_Charges"},{"valueStyle":"          text-align: center          ","fieldLayoutType":"2","labelText":"Unit Price","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Unit_Price_Call_Charges"},{"valueStyle":"          text-align: center          ","fieldLayoutType":"2","labelText":"Sub Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Sub_Total_Call_Charges"},{"valueStyle":"          text-align: center          ","fieldLayoutType":"2","labelText":"Tax Amount","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Tax_Amount_Call_Charges"},{"valueStyle":"          text-align: center          ","fieldLayoutType":"2","labelText":"Total","labelStyle":"color: rgb(255, 255, 255); font-weight: bold; text-align: center; background-color: rgb(29, 80, 142)","Label_Name":"Total_Call_Charges"}],"labelTextStyle":"font-weight: bold; font-size: 14px"}}]}]}},{"type":"columns","element":{"split":"42,24,13,13,8","id":"u_elem_2358144399999976","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_2333232","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <p\n      style=\"color: rgb(0, 0, 0); font-weight: 400; font-style: normal; text-align: left\"><font\n      style=\"font-size: 10px\" face=\"arimo\">Total<\/font><\/p>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_3125525","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Sub_Total_Call_Charges"}],"content":"<div style=\"\">\n   <table cellspacing=\"0\"\n          style=\"margin: 0px auto; width: 100%\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: center\" width=\"33%\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><font style=\"\"\n              color=\"#000000\">&nbsp; &nbsp;${Sub_Total_Call_Charges}&nbsp; &nbsp;<\/font> <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Total_Tax_Call_Charges"}],"content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td width=\"33%\"\n            style=\"text-align: center\"><font style=\"font-size: 10px\"\n                face=\"arimo\"><span><font color=\"#000000\"\n              style=\"\">&nbsp;${Total_Tax_Call_Charges}&nbsp;<\/font> <\/span> <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Grand_Total_Call_Charges"}],"content":"<div style=\"\">\n   <table style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td width=\"33%\"\n            style=\"text-align: center\"><font style=\"font-size: 10px\"\n                face=\"arimo\"><span><font color=\"#000000\"\n              style=\"\">&nbsp; ${Grand_Total_Call_Charges}<\/font> <\/span> <span style=\"color: rgb(68, 68, 68); font-weight: 400; font-style: normal\">&nbsp;<\/span> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}}]}]}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_9037447410000002","height":"25"}}]}]}},{"type":"columns","element":{"split":"6,88,6","id":"u_elem_129146845","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_17006371100000143","height":"25"}}]},{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Sub_Total"},{"Label_Name":"Sub_Total_Call_Charges"},{"Label_Name":"Sub_Total_Internet_Charges"},{"Label_Name":"Sub_Total_Monthly_Rental"},{"Label_Name":"Total_Tax"},{"Label_Name":"Total_Tax_Call_Charges"},{"Label_Name":"Total_Tax_Internet_Charges"},{"Label_Name":"Total_Tax_Monthly_Rental"}],"content":"<div style=\"background-color: rgba(0, 0, 0, 0)\">\n   <table\n    style=\"margin: 0px auto; width: 100%\"\n          cellspacing=\"0\">\n    <tbody>\n     <tr>\n      <td\n          style=\"text-align: left\" width=\"16%\"><b><font\n              style=\"font-size: 10px\" face=\"arimo\"><font\n                style=\"font-size: 10px\"\n          color=\"#000000\">Tax Summary<\/font> <\/font><\/b><\/td>\n      <td\n          width=\"16%\"><br /><\/td>\n      <td\n          width=\"16%\"><br /><\/td>\n      <td\n          width=\"16%\"><br /><\/td>\n      <td\n        width=\"16%\"><br /><\/td>\n     <\/tr>\n     <tr\n          style=\"background-color: rgb(29, 80, 142)\">\n      <td\n              style=\"text-align: left\"><b><font color=\"#ffffff\"\n              style=\"font-size: 10px\" face=\"arimo\"><font\n            style=\"font-size: 10px\">Description<\/font> <\/font><\/b><\/td>\n      <td><font\n            style=\"font-size: 10px\"\n            face=\"arimo\"><br /><\/font><\/td>\n      <td><font\n            style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n              style=\"text-align: right\"><b><font color=\"#ffffff\"\n              style=\"font-size: 10px\" face=\"arimo\"><font\n          style=\"\"> Amount&nbsp;<br /><\/font> <\/font><\/b><\/td>\n      <td\n              style=\"text-align: right\"><b><font color=\"#ffffff\"\n              style=\"font-size: 10px\" face=\"arimo\"><font\n          style=\"\"> Tax Amount<\/font><br /><\/font><\/b><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n            face=\"arimo\">Monthly Rental<\/font><\/td>\n      <td><font\n            style=\"font-size: 10px\"\n            face=\"arimo\"><br /><\/font><\/td>\n      <td><font\n            style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Sub_Total_Monthly_Rental}<\/span> <br /><\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Total_Tax_Monthly_Rental}<\/span> <br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n            face=\"arimo\">Internet Charges<\/font><\/td>\n      <td><font\n            style=\"font-size: 10px\"\n            face=\"arimo\"><br /><\/font><\/td>\n      <td><font\n            style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"> <span>${Sub_Total_Internet_Charges}<\/span> <br /><\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\"><span>${Total_Tax_Internet_Charges}<\/span><br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n            color=\"#000000\"\n          face=\"arimo\">Call Charges<\/font><\/td>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n            style=\"text-align: left\"><font style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n                face=\"arimo\"><span><font style=\"\"\n          color=\"#000000\">${Sub_Total_Call_Charges}<\/font><\/span><br /><\/font><\/td>\n      <td\n            style=\"text-align: right\"><font style=\"font-size: 10px\"\n                face=\"arimo\"><span><font style=\"\"\n          color=\"#000000\">${Total_Tax_Call_Charges}<\/font><\/span><br /><\/font><\/td>\n     <\/tr>\n     <tr>\n      <td\n            style=\"text-align: left; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51)\"><font\n            style=\"font-size: 10px\" color=\"#000000\"\n          face=\"arimo\"><b>Total<\/b><\/font><\/td>\n      <td\n            style=\"border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51)\"><font\n            style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n            style=\"border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51)\"><font\n            style=\"font-size: 10px\"\n          face=\"arimo\"><br /><\/font><\/td>\n      <td\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51)\"><font\n            style=\"font-size: 10px\" color=\"#000000\" face=\"arimo\"><b\n          style=\"\"> ${Sub_Total} <br /><\/b><\/font><\/td>\n      <td\n            style=\"text-align: right; border-top: 1px solid rgb(51, 51, 51); border-bottom: 1px solid rgb(51, 51, 51)\"><font\n            style=\"font-size: 10px\" face=\"arimo\"><span><font\n                    color=\"#000000\"><b> <font style=\"\">${Total_Tax}<\/font><\/b><\/font> <\/span> <br /><\/font><\/td>\n     <\/tr>\n    <\/tbody>\n   <\/table>\n  <\/div>"}},{"type":"text","element":{"id":"u_elem_161517163","fields":[],"content":"<div style=\"background: rgba(0, 0, 0, 0); padding: 0px\">\n   <h1\n      style=\"text-align: center; color: rgb(0, 0, 0); font-style: normal\"><font\n        style=\"\"> <font face=\"arimo\" style=\"font-size: 10px\"> <font\n            style=\"font-weight: 400\"> <font\n          style=\"\">\u200b<\/font>\u200b<\/font> <font style=\"\"><b style=\"\">This is a computer generated document and therefore no signature is required<\/b><\/font> <\/font> <\/font><\/h1>\n  <\/div>"}}]},{"colElements":[{"type":"spacer","element":{"id":"u_elem_1701381780000019","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_118566535","elemStyle":"","collayouts":[{"colElements":[{"id":"u_elem_30282799000000358","type":"fields","element":{"valueStyle":"width: 50%; text-align: left","valueTextStyle":"font-size: 12px; width: 75%","fieldLayoutType":"2","labelText":"QR Invoice Public Link","wrapperStyle":"","labelStyle":"width: 50%","Label_Name":"QR_Invoice_Public_Link","labelTextStyle":""}},{"type":"spacer","element":{"id":"u_elem_11856653200000048","height":"25"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_17849664699999988","elemStyle":"","collayouts":[{"colElements":[{"type":"spacer","element":{"id":"u_elem_17849664600000024","height":"25"}}]}]}}],"id":1}],"resize":"a4","themeFont":"lato","isHeaderEnabled":false}
-				}
-			}
+	actions
+	{
+		on add
+		{
+			submit
+			(
+   				type = submit
+   				displayname = "Submit"
+			)
+		}
+		on edit
+		{
+			update
+			(
+   				type = submit
+   				displayname = "Update"
+			)
+			cancel
+			(
+   				type = cancel
+   				displayname = "Cancel"
+			)
+		}
+	}
+}

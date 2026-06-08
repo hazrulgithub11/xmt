@@ -148,7 +148,7 @@ form Credit_Note
 	 	column = 1   
 		width = medium
 	)
-	Customer_Code
+	must have Customer_Code
 	(
 		type = picklist	
 		displayname = "Customer Code"
@@ -373,16 +373,6 @@ form Credit_Note
     	displayformat = [Customer_PO_No]
 		sortorder = ascending
 		height = 60px
-	 	row = 4
-	 	column = 2   
-		width = medium
-	)
-	Status
-	(
-		type = picklist
-		maxchar = 100
-		values = {"Draft","Pending Approval","Approved","Rejected","Sent","Open","Closed"}
-		sortorder = ascending
 	 	row = 4
 	 	column = 2   
 		width = medium
@@ -663,15 +653,6 @@ form Credit_Note
 			sortorder = ascending
 			width = medium
 		)
-		Sub_Line_Item_Monthly_Rental
-		(
-			type = picklist	
-			displayname = "Sub Line Item"
-			values  = Subscription_Line_Item.ID
-    		displayformat = [ID]
-			sortorder = ascending
-			width = medium
-		)
 	 	row = 6
 	 	column = 1   
 		width = medium
@@ -816,15 +797,6 @@ form Credit_Note
 			displayname = "Circuit ID Type"
 			values  = Circuit_ID_Type.ID
     		displayformat = [Circuit_ID_Type]
-			sortorder = ascending
-			width = medium
-		)
-		Sub_Line_Item_Internet_Charges
-		(
-			type = picklist	
-			displayname = "Sub Line Item"
-			values  = Subscription_Line_Item.ID
-    		displayformat = [ID]
 			sortorder = ascending
 			width = medium
 		)
@@ -980,15 +952,6 @@ form Credit_Note
 			displayname = "Circuit ID Type"
 			values  = Circuit_ID_Type.ID
     		displayformat = [Circuit_ID_Type]
-			sortorder = ascending
-			width = medium
-		)
-		Sub_Line_Item_Call_Charges
-		(
-			type = picklist	
-			displayname = "Sub Line Item"
-			values  = Subscription_Line_Item.ID
-    		displayformat = [ID]
 			sortorder = ascending
 			width = medium
 		)
@@ -1168,6 +1131,24 @@ form Credit_Note
 	 	column = 2   
 		width = medium
 	)
+	Rejection_Section
+	(
+		type = section
+		displayname = "Rejection Section"
+		visibility = true
+	 	row = 10
+	 	column = 0   
+		width = medium
+	)
+	Rejection_Reason
+	(
+    	type = textarea
+		displayname = "Rejection Reason"
+		height = 100px
+	 	row = 10
+	 	column = 1   
+		width = medium
+	)
 	Credit_Applied_Invoices
 	(
 		type = grid
@@ -1200,7 +1181,7 @@ form Credit_Note
 			displayname = "Amount Credited"
 			width = medium
 		)
-	 	row = 10
+	 	row = 11
 	 	column = 1   
 		width = medium
 	)
@@ -1230,7 +1211,7 @@ form Credit_Note
 			displayname = "Amount Refunded"
 			width = medium
 		)
-	 	row = 11
+	 	row = 12
 	 	column = 1   
 		width = medium
 	)
@@ -1238,26 +1219,8 @@ form Credit_Note
 	(
 		type = section
 		displayname = "System Section"
-	 	row = 12
+	 	row = 13
 	 	column = 0   
-		width = medium
-	)
-	Rejection_Reason
-	(
-    	type = textarea
-		displayname = "Rejection Reason"
-		height = 100px
-	 	row = 12
-	 	column = 1   
-		width = medium
-	)
-	Confirm_resubmission
-	(
-    	type = checkbox
-		displayname = "Confirm resubmission?"
-		initial value = false
-	 	row = 12
-	 	column = 1   
 		width = medium
 	)
 	Invoice_Related_List
@@ -1317,7 +1280,7 @@ form Credit_Note
 			height = 100px
 			width = medium
 		)
-	 	row = 13
+	 	row = 14
 	 	column = 1   
 		width = medium
 	)
@@ -1325,7 +1288,7 @@ form Credit_Note
 	(
 		type = section
 		displayname = "Decision Section"
-	 	row = 14
+	 	row = 15
 	 	column = 0   
 		width = medium
 	)
@@ -1334,7 +1297,7 @@ form Credit_Note
     	type = checkbox
 		displayname = "Customer Name Trigger"
 		initial value = false
-	 	row = 14
+	 	row = 15
 	 	column = 1   
 		width = medium
 	)
@@ -1342,7 +1305,7 @@ form Credit_Note
 	(
     	type = checkbox
 		initial value = false
-	 	row = 14
+	 	row = 15
 	 	column = 1   
 		width = medium
 	)
@@ -1350,7 +1313,7 @@ form Credit_Note
 	(
     	type = checkbox
 		initial value = false
-	 	row = 14
+	 	row = 15
 	 	column = 1   
 		width = medium
 	)

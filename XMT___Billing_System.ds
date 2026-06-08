@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 07-Jun-2026 19:56:43
+ * Generated on : 07-Jun-2026 23:30:33
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -9777,7 +9777,7 @@
 				(
 					type = picklist	
 					displayname = "Item"
-					values  = Transaction_Type.ID
+					values  = Transaction_Type[Charges_Type == "Call Charges"].ID
     				displayformat = [Item_Name]
 					sortorder = ascending
 					width = 100px
@@ -19140,7 +19140,7 @@
 					{
 						custom deluge script
 						(
-											// ── Always disabled (union of both "Disable Fields" blocks) ──────────────────
+											// ── Always disabled — form-level read-only fields ────────────────────────────
 										disable Grand_Total;
 										disable Base_Currency;
 										disable Subscription_Currency;
@@ -19154,7 +19154,37 @@
 										disable Technical_Email;
 										disable Phone_Number;
 										disable Prorate_Note;
-										// ── Disable extra fields if invoices already exist ───────────────────────────
+										// ── Always disabled — Monthly Rental calculated/auto-filled columns ─────────
+										disable Monthly_Rental.Item_Code_Monthly_Rental;
+										disable Monthly_Rental.Classification_Codes_Monthly_Rental;
+										disable Monthly_Rental.Description_Monthly_Rental;
+										disable Monthly_Rental.Quantity_Monthly_Rental;
+										disable Monthly_Rental.Sub_Total_Monthly_Rental;
+										disable Monthly_Rental.Tax_Type_Monthly_Rental;
+										disable Monthly_Rental.Tax_Pct_Monthly_Rental;
+										disable Monthly_Rental.Tax_Amount_Monthly_Rental;
+										disable Monthly_Rental.Total_Monthly_Rental;
+										// ── Always disabled — Internet Charges calculated/auto-filled columns ────────
+										disable Internet_Charges.Item_Code_Internet_Charges;
+										disable Internet_Charges.Classification_Codes_Internet_Charges;
+										disable Internet_Charges.Description_Internet_Charges;
+										disable Internet_Charges.Quantity_Internet_Charges;
+										disable Internet_Charges.Sub_Total_Internet_Charges;
+										disable Internet_Charges.Tax_Type_Internet_Charges;
+										disable Internet_Charges.Tax_Pct_Internet_Charges;
+										disable Internet_Charges.Tax_Amount_Internet_Charges;
+										disable Internet_Charges.Total_Internet_Charges;
+										// ── Always disabled — Call Charges calculated/auto-filled columns ────────────
+										disable Call_Charges.Item_Code_Call_Charges;
+										disable Call_Charges.Classification_Codes_Call_Charges;
+										disable Call_Charges.Description_Call_Charges;
+										disable Call_Charges.Quantity_Call_Charges;
+										disable Call_Charges.Sub_Total_Call_Charges;
+										disable Call_Charges.Tax_Type_Call_Charges;
+										disable Call_Charges.Tax_Pct_Call_Charges;
+										disable Call_Charges.Tax_Amount_Call_Charges;
+										disable Call_Charges.Total_Call_Charges;
+										// ── Lock all editable fields when invoices already exist ─────────────────────
 										if(input.ID != null)
 										{
 											getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
@@ -19173,54 +19203,33 @@
 												disable Prorate;
 												disable Create_Work_Order;
 												disable Work_Order_Type;
+												// Monthly Rental — lock user-editable columns too
 												disable Monthly_Rental.Item_Monthly_Rental;
-												disable Monthly_Rental.Item_Code_Monthly_Rental;
-												disable Monthly_Rental.Classification_Codes_Monthly_Rental;
-												disable Monthly_Rental.Description_Monthly_Rental;
 												disable Monthly_Rental.Quantity_Monthly_Rental;
 												disable Monthly_Rental.Unit_Price_Monthly_Rental;
-												disable Monthly_Rental.Sub_Total_Monthly_Rental;
 												disable Monthly_Rental.Tax_Monthly_Rental;
-												disable Monthly_Rental.Tax_Type_Monthly_Rental;
-												disable Monthly_Rental.Tax_Pct_Monthly_Rental;
-												disable Monthly_Rental.Tax_Amount_Monthly_Rental;
-												disable Monthly_Rental.Total_Monthly_Rental;
 												disable Monthly_Rental.Business_Segment_Monthly_Rental;
 												disable Monthly_Rental.Business_Unit_Monthly_Rental;
 												disable Monthly_Rental.Circuit_ID_Monthly_Rental;
 												disable Monthly_Rental.Circuit_ID_Type_Monthly_Rental;
-												disable Call_Charges.Item_Call_Charges;
-												disable Call_Charges.Item_Code_Call_Charges;
-												disable Call_Charges.Classification_Codes_Call_Charges;
-												disable Call_Charges.Description_Call_Charges;
-												disable Call_Charges.Quantity_Call_Charges;
-												disable Call_Charges.Unit_Price_Call_Charges;
-												disable Call_Charges.Sub_Total_Call_Charges;
-												disable Call_Charges.Tax_Call_Charges;
-												disable Call_Charges.Tax_Type_Call_Charges;
-												disable Call_Charges.Tax_Pct_Call_Charges;
-												disable Call_Charges.Tax_Amount_Call_Charges;
-												disable Call_Charges.Total_Call_Charges;
-												disable Call_Charges.Business_Segment_Call_Charges;
-												disable Call_Charges.Business_Unit_Call_Charges;
-												disable Call_Charges.Circuit_ID_Call_Charges;
-												disable Call_Charges.Circuit_ID_Type_Call_Charges;
+												// Internet Charges — lock user-editable columns too
 												disable Internet_Charges.Item_Internet_Charges;
-												disable Internet_Charges.Item_Code_Internet_Charges;
-												disable Internet_Charges.Classification_Codes_Internet_Charges;
-												disable Internet_Charges.Description_Internet_Charges;
 												disable Internet_Charges.Quantity_Internet_Charges;
 												disable Internet_Charges.Unit_Price_Internet_Charges;
-												disable Internet_Charges.Sub_Total_Internet_Charges;
 												disable Internet_Charges.Tax_Internet_Charges;
-												disable Internet_Charges.Tax_Type_Internet_Charges;
-												disable Internet_Charges.Tax_Pct_Internet_Charges;
-												disable Internet_Charges.Tax_Amount_Internet_Charges;
-												disable Internet_Charges.Total_Internet_Charges;
 												disable Internet_Charges.Business_Segment_Internet_Charges;
 												disable Internet_Charges.Business_Unit_Internet_Charges;
 												disable Internet_Charges.Circuit_ID_Internet_Charges;
 												disable Internet_Charges.Circuit_ID_Type_Internet_Charges;
+												// Call Charges — lock user-editable columns too
+												disable Call_Charges.Item_Call_Charges;
+												disable Call_Charges.Quantity_Call_Charges;
+												disable Call_Charges.Unit_Price_Call_Charges;
+												disable Call_Charges.Tax_Call_Charges;
+												disable Call_Charges.Business_Segment_Call_Charges;
+												disable Call_Charges.Business_Unit_Call_Charges;
+												disable Call_Charges.Circuit_ID_Call_Charges;
+												disable Call_Charges.Circuit_ID_Type_Call_Charges;
 											}
 										}
 						)
@@ -19959,6 +19968,26 @@
 
 				on load
 				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Charge_Category == "Miscellaneous Charges")
+										{
+											hide Call_Charges;
+											clear Call_Charges;
+										}
+										else if(input.Charge_Category == "Fixed Charges")
+										{
+											hide Call_Charges;
+											clear Call_Charges;
+										}
+										else
+										{
+											show Call_Charges;
+										}
+						)
+					}
 					actions 
 					{
 						custom deluge script
@@ -34100,6 +34129,678 @@
 										// Form-level totals
 										input.Grand_Total = calculated_grand_total;
 										input.Grand_Total_Base_Currency = calculated_grand_total_myr;
+						)
+					}
+				}
+
+			}
+			Handle_Charge_Category6 as "Handle_Charge_Category6"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Charge_Category
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Charge_Category == "Miscellaneous Charges")
+										{
+											hide Call_Charges;
+											clear Call_Charges;
+										}
+										else if(input.Charge_Category == "Fixed Charges")
+										{
+											hide Call_Charges;
+											clear Call_Charges;
+										}
+										else
+										{
+											show Call_Charges;
+										}
+						)
+					}
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Monthly_Rental_Ite5 as "Handle_Monthly_Rental_Item"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Monthly_Rental.Item_Monthly_Rental
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+										{
+											alert "Ensure Exchange Rate is not empty before selecting an item.";
+											row.Item_Monthly_Rental=null;
+											return;
+										}
+										if(row.Item_Monthly_Rental == null)
+										{
+											row.Item_Code_Monthly_Rental=null;
+											row.Classification_Codes_Monthly_Rental=null;
+											row.Description_Monthly_Rental=null;
+											row.Quantity_Monthly_Rental=null;
+											row.Unit_Price_Monthly_Rental=null;
+											row.Sub_Total_Monthly_Rental=null;
+											row.Tax_Monthly_Rental=null;
+											row.Tax_Type_Monthly_Rental=null;
+											row.Tax_Pct_Monthly_Rental=null;
+											row.Tax_Amount_Monthly_Rental=null;
+											row.Total_Monthly_Rental=null;
+											row.Circuit_ID_Monthly_Rental=null;
+											row.Circuit_ID_Type_Monthly_Rental=null;
+										}
+										else
+										{
+											itemRecord = Transaction_Type[ID == row.Item_Monthly_Rental];
+											row.Item_Code_Monthly_Rental=itemRecord.Item_Code;
+											row.Classification_Codes_Monthly_Rental=itemRecord.Classification_Codes;
+											row.Description_Monthly_Rental=itemRecord.Description;
+											getTenant = Tenancy[ID == input.Customer_Code];
+											row.Quantity_Monthly_Rental=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+											unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+											row.Unit_Price_Monthly_Rental=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+											row.Tax_Monthly_Rental=itemRecord.Tax;
+											row.Tax_Type_Monthly_Rental=itemRecord.Tax.Tax_Type;
+											row.Tax_Pct_Monthly_Rental=itemRecord.Tax.Tax_Percentage;
+											row.Circuit_ID_Monthly_Rental=itemRecord.Circuit_ID;
+											row.Circuit_ID_Type_Monthly_Rental=itemRecord.Circuit_ID_Type;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Monthly_Rental_Qua as "Handle_Monthly_Rental_Quantity"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Monthly_Rental.Quantity_Monthly_Rental
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(ifnull(row.Quantity_Monthly_Rental,0) <= 0)
+										{
+											alert "Please enter a quantity more than 0";
+											row.Quantity_Monthly_Rental=1;
+											return;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Monthly_Rental_Uni5 as "Handle_Monthly_Rental_Unit_Price"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Monthly_Rental.Unit_Price_Monthly_Rental
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(ifnull(row.Unit_Price_Monthly_Rental,0) <= 0)
+										{
+											alert "Please enter a unit price more than 0";
+											row.Unit_Price_Monthly_Rental=1;
+											return;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Monthly_Rental_Tax5 as "Handle_Monthly_Rental_Tax"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Monthly_Rental.Tax_Monthly_Rental
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											row.Tax_Type_Monthly_Rental=row.Tax_Monthly_Rental.Tax_Type;
+										row.Tax_Pct_Monthly_Rental=row.Tax_Monthly_Rental.Tax_Percentage;
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Addition_Row_Month5 as "Handle_Addition_Row_Monthly_Rental"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on add row of Monthly_Rental
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											clear row.Business_Segment_Monthly_Rental;
+										clear row.Business_Unit_Monthly_Rental;
+										customerInfo = Customer_Profile[ID == input.Customer_Name];
+										if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+										{
+											row.Business_Segment_Monthly_Rental:ui.add(customerInfo.Business_Segment);
+										}
+										else
+										{
+											clear row.Business_Segment_Monthly_Rental;
+											clear row.Business_Unit_Monthly_Rental;
+										}
+						)
+					}
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Deletion_Row_Month5 as "Handle_Deletion_Row_Monthly_Rental"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on delete row of Monthly_Rental
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Business_Segment_M5 as "Handle_Business_Segment_Monthly_Rental"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Monthly_Rental.Business_Segment_Monthly_Rental
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(row.Business_Segment_Monthly_Rental != null)
+										{
+											getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Monthly_Rental].ID.getAll();
+											row.Business_Unit_Monthly_Rental:ui.add(getBusinessUnitIDs);
+										}
+										else
+										{
+											clear row.Business_Unit_Monthly_Rental;
+										}
+						)
+					}
+				}
+
+			}
+			Handle_Internet_Charges_I5 as "Handle_Internet_Charges_Item"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Internet_Charges.Item_Internet_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+										{
+											alert "Ensure Exchange Rate is not empty before selecting an item.";
+											row.Item_Internet_Charges=null;
+											return;
+										}
+										if(row.Item_Internet_Charges == null)
+										{
+											row.Item_Code_Internet_Charges=null;
+											row.Classification_Codes_Internet_Charges=null;
+											row.Description_Internet_Charges=null;
+											row.Quantity_Internet_Charges=null;
+											row.Unit_Price_Internet_Charges=null;
+											row.Sub_Total_Internet_Charges=null;
+											row.Tax_Internet_Charges=null;
+											row.Tax_Type_Internet_Charges=null;
+											row.Tax_Pct_Internet_Charges=null;
+											row.Tax_Amount_Internet_Charges=null;
+											row.Total_Internet_Charges=null;
+											row.Circuit_ID_Internet_Charges=null;
+											row.Circuit_ID_Type_Internet_Charges=null;
+										}
+										else
+										{
+											itemRecord = Transaction_Type[ID == row.Item_Internet_Charges];
+											row.Item_Code_Internet_Charges=itemRecord.Item_Code;
+											row.Classification_Codes_Internet_Charges=itemRecord.Classification_Codes;
+											row.Description_Internet_Charges=itemRecord.Description;
+											getTenant = Tenancy[ID == input.Customer_Code];
+											row.Quantity_Internet_Charges=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+											unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+											row.Unit_Price_Internet_Charges=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+											row.Tax_Internet_Charges=itemRecord.Tax;
+											row.Tax_Type_Internet_Charges=itemRecord.Tax.Tax_Type;
+											row.Tax_Pct_Internet_Charges=itemRecord.Tax.Tax_Percentage;
+											row.Circuit_ID_Internet_Charges=itemRecord.Circuit_ID;
+											row.Circuit_ID_Type_Internet_Charges=itemRecord.Circuit_ID_Type;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Internet_Charges_Q as "Handle_Internet_Charges_Quantity"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Internet_Charges.Quantity_Internet_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(ifnull(row.Quantity_Internet_Charges,0) <= 0)
+										{
+											alert "Please enter a quantity more than 0";
+											row.Quantity_Internet_Charges=1;
+											return;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Internet_Charges_U5 as "Handle_Internet_Charges_Unit_Price"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Internet_Charges.Unit_Price_Internet_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(ifnull(row.Unit_Price_Internet_Charges,0) <= 0)
+										{
+											alert "Please enter a unit price more than 0";
+											row.Unit_Price_Internet_Charges=1;
+											return;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Internet_Charges_T5 as "Handle_Internet_Charges_Tax"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Internet_Charges.Tax_Internet_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											row.Tax_Type_Internet_Charges=row.Tax_Internet_Charges.Tax_Type;
+										row.Tax_Pct_Internet_Charges=row.Tax_Internet_Charges.Tax_Percentage;
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Addition_Row_Inter5 as "Handle_Addition_Row_Internet_Charges"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on add row of Internet_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											clear row.Business_Segment_Internet_Charges;
+										clear row.Business_Unit_Internet_Charges;
+										customerInfo = Customer_Profile[ID == input.Customer_Name];
+										if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+										{
+											row.Business_Segment_Internet_Charges:ui.add(customerInfo.Business_Segment);
+										}
+										else
+										{
+											clear row.Business_Segment_Internet_Charges;
+											clear row.Business_Unit_Internet_Charges;
+										}
+						)
+					}
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Deletion_Row_Inter5 as "Handle_Deletion_Row_Internet_Charges"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on delete row of Internet_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Business_Segment_I5 as "Handle_Business_Segment_Internet_Charges"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Internet_Charges.Business_Segment_Internet_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(row.Business_Segment_Internet_Charges != null)
+										{
+											getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Internet_Charges].ID.getAll();
+											row.Business_Unit_Internet_Charges:ui.add(getBusinessUnitIDs);
+										}
+										else
+										{
+											clear row.Business_Unit_Internet_Charges;
+										}
+						)
+					}
+				}
+
+			}
+			Handle_Call_Charges_Item as "Handle_Call_Charges_Item"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Call_Charges.Item_Call_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+										{
+											alert "Ensure Exchange Rate is not empty before selecting an item.";
+											row.Item_Call_Charges=null;
+											return;
+										}
+										if(row.Item_Call_Charges == null)
+										{
+											row.Item_Code_Call_Charges=null;
+											row.Classification_Codes_Call_Charges=null;
+											row.Description_Call_Charges=null;
+											row.Quantity_Call_Charges=null;
+											row.Unit_Price_Call_Charges=null;
+											row.Sub_Total_Call_Charges=null;
+											row.Tax_Call_Charges=null;
+											row.Tax_Type_Call_Charges=null;
+											row.Tax_Pct_Call_Charges=null;
+											row.Tax_Amount_Call_Charges=null;
+											row.Total_Call_Charges=null;
+											row.Circuit_ID_Call_Charges=null;
+											row.Circuit_ID_Type_Call_Charges=null;
+										}
+										else
+										{
+											itemRecord = Transaction_Type[ID == row.Item_Call_Charges];
+											row.Item_Code_Call_Charges=itemRecord.Item_Code;
+											row.Classification_Codes_Call_Charges=itemRecord.Classification_Codes;
+											row.Description_Call_Charges=itemRecord.Description;
+											getTenant = Tenancy[ID == input.Customer_Code];
+											row.Quantity_Call_Charges=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+											unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+											row.Unit_Price_Call_Charges=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+											row.Tax_Call_Charges=itemRecord.Tax;
+											row.Tax_Type_Call_Charges=itemRecord.Tax.Tax_Type;
+											row.Tax_Pct_Call_Charges=itemRecord.Tax.Tax_Percentage;
+											row.Circuit_ID_Call_Charges=itemRecord.Circuit_ID;
+											row.Circuit_ID_Type_Call_Charges=itemRecord.Circuit_ID_Type;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Call_Charges_Quant5 as "Handle_Call_Charges_Quantity"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Call_Charges.Quantity_Call_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(ifnull(row.Quantity_Call_Charges,0) <= 0)
+										{
+											alert "Please enter a quantity more than 0";
+											row.Quantity_Call_Charges=1;
+											return;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Call_Charges_Unit_ as "Handle_Call_Charges_Unit_Price"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Call_Charges.Unit_Price_Call_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(ifnull(row.Unit_Price_Call_Charges,0) <= 0)
+										{
+											alert "Please enter a unit price more than 0";
+											row.Unit_Price_Call_Charges=1;
+											return;
+										}
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Call_Charges_Tax as "Handle_Call_Charges_Tax"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Call_Charges.Tax_Call_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											row.Tax_Type_Call_Charges=row.Tax_Call_Charges.Tax_Type;
+										row.Tax_Pct_Call_Charges=row.Tax_Call_Charges.Tax_Percentage;
+										input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Addition_Row_Call_5 as "Handle_Addition_Row_Call_Charges"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on add row of Call_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											clear row.Business_Segment_Call_Charges;
+										clear row.Business_Unit_Call_Charges;
+										customerInfo = Customer_Profile[ID == input.Customer_Name];
+										if(customerInfo.ID != null && customerInfo.Business_Segment.size() > 0)
+										{
+											row.Business_Segment_Call_Charges:ui.add(customerInfo.Business_Segment);
+										}
+										else
+										{
+											clear row.Business_Segment_Call_Charges;
+											clear row.Business_Unit_Call_Charges;
+										}
+						)
+					}
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Deletion_Row_Call_5 as "Handle_Deletion_Row_Call_Charges"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on delete row of Call_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											input.User_Input_Trigger = !input.User_Input_Trigger;
+						)
+					}
+				}
+
+			}
+			Handle_Business_Segment_C5 as "Handle_Business_Segment_Call_Charges"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Call_Charges.Business_Segment_Call_Charges
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(row.Business_Segment_Call_Charges != null)
+										{
+											getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Call_Charges].ID.getAll();
+											row.Business_Unit_Call_Charges:ui.add(getBusinessUnitIDs);
+										}
+										else
+										{
+											clear row.Business_Unit_Call_Charges;
+										}
 						)
 					}
 				}

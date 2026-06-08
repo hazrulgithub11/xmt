@@ -36,7 +36,6 @@ Handle_Internet_Charges_I3 as "Handle Internet Charges Item"
 					row.Business_Unit_Internet_Charges=null;
 					row.Circuit_ID_Internet_Charges=null;
 					row.Circuit_ID_Type_Internet_Charges=null;
-					row.Sub_Line_Item_Internet_Charges=null;
 				}
 				else
 				{

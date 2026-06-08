@@ -508,7 +508,7 @@ form Subscription
 		(
 			type = picklist	
 			displayname = "Item"
-			values  = Transaction_Type.ID
+			values  = Transaction_Type[Charges_Type == "Call Charges"].ID
     		displayformat = [Item_Name]
 			sortorder = ascending
 			width = 100px

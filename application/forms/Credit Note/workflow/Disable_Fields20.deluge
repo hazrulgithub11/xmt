@@ -46,7 +46,6 @@ Disable_Fields20 as "Disable Fields"
 				disable Delivery_Country;
 				// Invoice info
 				disable Invoice_No;
-				disable Status;
 				disable Base_Currency;
 				disable Invoice_Currency;
 				disable Sub_Total_Monthly_Rental;
@@ -87,7 +86,7 @@ Disable_Fields20 as "Disable Fields"
 				disable Total_Tax;
 				disable Grand_Total;
 				disable Grand_Total_Base_Currency;
-				if(input.Status != "Pending Approval" && input.Status != "Resubmit")
+				if(input.Blueprint.Current_Stage != "Pending Approval")
 				{
 					disable Rejection_Reason;
 				}
@@ -115,69 +114,6 @@ Disable_Fields20 as "Disable Fields"
 				disable Credits_Used;
 				disable Refund;
 				disable Credits_Remaining;
-			)
-		}
-		actions  (Status == "Approved" || Status == "Rejected" || Status == "Sent" || Status == "Open" || Status == "Closed")
-		{
-			custom deluge script
-			(
-					/*
-				 				 														// Customer info
-				 				 														disable Customer;
-				 				 														disable Customer_Code;
-				 				 														disable Invoice_Date;
-				 				 														disable Due_Date;
-				 				 														disable Payment_Term;
-				 				 														disable Invoice_For_Usage;
-				 				 														// Invoice info
-				 				 														disable Subscriptions;
-				 				 														disable Enable_Reminder;
-				 				 														disable Charge_Category;
-				 				 														disable Announcement;
-				 				 														disable Attachment;
-				 				 														disable Send_Email;
-				 				 														disable Exchange_Rate;
-				 				 														disable Payable_To;
-				 				 														// Monthly Rental
-				 				 														disable Monthly_Rental.Item_Monthly_Rental;
-				 				 														disable Monthly_Rental.Classification_Codes_Monthly_Rental;
-				 				 														disable Monthly_Rental.Description_Monthly_Rental;
-				 				 														disable Monthly_Rental.Quantity_Monthly_Rental;
-				 				 														disable Monthly_Rental.Unit_Price_Monthly_Rental;
-				 				 														disable Monthly_Rental.Tax_Monthly_Rental;
-				 				 														disable Monthly_Rental.Customer_PO_No_Monthly_Rental;
-				 				 														disable Monthly_Rental.Business_Segment_Monthly_Rental;
-				 				 														disable Monthly_Rental.Business_Unit_Monthly_Rental;
-				 				 														disable Monthly_Rental.Circuit_ID_Monthly_Rental;
-				 				 														disable Monthly_Rental.Circuit_ID_Type_Monthly_Rental;
-				 				 														disable Monthly_Rental.Sub_Line_Item_Monthly_Rental;
-				 				 														// Internet Charges
-				 				 														disable Internet_Charges.Item_Internet_Charges;
-				 				 														disable Internet_Charges.Classification_Codes_Internet_Charges;
-				 				 														disable Internet_Charges.Description_Internet_Charges;
-				 				 														disable Internet_Charges.Quantity_Internet_Charges;
-				 				 														disable Internet_Charges.Unit_Price_Internet_Charges;
-				 				 														disable Internet_Charges.Tax_Internet_Charges;
-				 				 														disable Internet_Charges.Customer_PO_No_Internet_Charges;
-				 				 														disable Internet_Charges.Business_Segment_Internet_Charges;
-				 				 														disable Internet_Charges.Business_Unit_Internet_Charges;
-				 				 														disable Internet_Charges.Circuit_ID_Internet_Charges;
-				 				 														disable Internet_Charges.Circuit_ID_Type_Internet_Charges;
-				 				 														disable Internet_Charges.Sub_Line_Item_Internet_Charges;
-				 				 														// Call Charges
-				 				 														disable Call_Charges.Item_Call_Charges;
-				 				 														disable Call_Charges.Classification_Codes_Call_Charges;
-				 				 														disable Call_Charges.Description_Call_Charges;
-				 				 														disable Call_Charges.Quantity_Call_Charges;
-				 				 														disable Call_Charges.Unit_Price_Call_Charges;
-				 				 														disable Call_Charges.Tax_Call_Charges;
-				 				 														disable Call_Charges.Customer_PO_No_Call_Charges;
-				 				 														disable Call_Charges.Business_Segment_Call_Charges;
-				 				 														disable Call_Charges.Business_Unit_Call_Charges;
-				 				 														disable Call_Charges.Circuit_ID_Call_Charges;
-				 				 														disable Call_Charges.Circuit_ID_Type_Call_Charges;
-				 				 														disable Call_Charges.Sub_Line_Item_Call_Charges;
-				 				 														*/
 			)
 		}
 	}

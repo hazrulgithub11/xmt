@@ -36,7 +36,6 @@ Handle_Monthly_Rental_Ite1 as "Handle Monthly Rental Item"
 					row.Business_Unit_Monthly_Rental=null;
 					row.Circuit_ID_Monthly_Rental=null;
 					row.Circuit_ID_Type_Monthly_Rental=null;
-					row.Sub_Line_Item_Monthly_Rental=null;
 				}
 				else
 				{

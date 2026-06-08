@@ -11,47 +11,46 @@ Handle_Internet_Charges_I as "Handle Internet Charges Item"
 		{
 			custom deluge script
 			(
-								if(input.Exchange_Rate == null)
-							{
-								info "Ensure Exchange Rate is not empty";
-								row.Item_Internet_Charges=null;
-								return;
-							}
-							// Internet Charges
-							if(row.Item_Internet_Charges == null)
-							{
-								row.Item_Code_Internet_Charges=null;
-								row.Classification_Codes_Internet_Charges=null;
-								row.Description_Internet_Charges=null;
-								row.Quantity_Internet_Charges=null;
-								row.Unit_Price_Internet_Charges=null;
-								row.Sub_Total_Internet_Charges=null;
-								row.Tax_Internet_Charges=null;
-								row.Tax_Type_Internet_Charges=null;
-								row.Tax_Pct_Internet_Charges=null;
-								row.Tax_Amount_Internet_Charges=null;
-								row.Total_Internet_Charges=null;
-								row.Customer_PO_No_Internet_Charges=null;
-								row.Business_Segment_Internet_Charges=null;
-								row.Business_Unit_Internet_Charges=null;
-								row.Circuit_ID_Internet_Charges=null;
-								row.Circuit_ID_Type_Internet_Charges=null;
-								row.Sub_Line_Item_Internet_Charges=null;
-							}
-							else
-							{
-								row.Item_Code_Internet_Charges=row.Item_Internet_Charges.Item_Code;
-								row.Classification_Codes_Internet_Charges=row.Item_Internet_Charges.Classification_Codes;
-								row.Description_Internet_Charges=row.Item_Internet_Charges.Description;
-								row.Quantity_Internet_Charges=1;
-								row.Unit_Price_Internet_Charges=row.Item_Internet_Charges.Unit_Price;
-								row.Tax_Internet_Charges=row.Item_Internet_Charges.Tax;
-								row.Tax_Type_Internet_Charges=row.Item_Internet_Charges.Tax.Tax_Type;
-								row.Tax_Pct_Internet_Charges=row.Item_Internet_Charges.Tax.Tax_Percentage;
-								row.Circuit_ID_Internet_Charges=row.Item_Internet_Charges.Circuit_ID;
-								row.Circuit_ID_Type_Internet_Charges=row.Item_Internet_Charges.Circuit_ID_Type;
-							}
-							input.User_Input_Trigger = !input.User_Input_Trigger;
+					if(input.Exchange_Rate == null)
+				{
+					info "Ensure Exchange Rate is not empty";
+					row.Item_Internet_Charges=null;
+					return;
+				}
+				// Internet Charges
+				if(row.Item_Internet_Charges == null)
+				{
+					row.Item_Code_Internet_Charges=null;
+					row.Classification_Codes_Internet_Charges=null;
+					row.Description_Internet_Charges=null;
+					row.Quantity_Internet_Charges=null;
+					row.Unit_Price_Internet_Charges=null;
+					row.Sub_Total_Internet_Charges=null;
+					row.Tax_Internet_Charges=null;
+					row.Tax_Type_Internet_Charges=null;
+					row.Tax_Pct_Internet_Charges=null;
+					row.Tax_Amount_Internet_Charges=null;
+					row.Total_Internet_Charges=null;
+					row.Customer_PO_No_Internet_Charges=null;
+					row.Business_Segment_Internet_Charges=null;
+					row.Business_Unit_Internet_Charges=null;
+					row.Circuit_ID_Internet_Charges=null;
+					row.Circuit_ID_Type_Internet_Charges=null;
+				}
+				else
+				{
+					row.Item_Code_Internet_Charges=row.Item_Internet_Charges.Item_Code;
+					row.Classification_Codes_Internet_Charges=row.Item_Internet_Charges.Classification_Codes;
+					row.Description_Internet_Charges=row.Item_Internet_Charges.Description;
+					row.Quantity_Internet_Charges=1;
+					row.Unit_Price_Internet_Charges=row.Item_Internet_Charges.Unit_Price;
+					row.Tax_Internet_Charges=row.Item_Internet_Charges.Tax;
+					row.Tax_Type_Internet_Charges=row.Item_Internet_Charges.Tax.Tax_Type;
+					row.Tax_Pct_Internet_Charges=row.Item_Internet_Charges.Tax.Tax_Percentage;
+					row.Circuit_ID_Internet_Charges=row.Item_Internet_Charges.Circuit_ID;
+					row.Circuit_ID_Type_Internet_Charges=row.Item_Internet_Charges.Circuit_ID_Type;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
 			)
 		}
 	}

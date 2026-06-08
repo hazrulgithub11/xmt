@@ -36,7 +36,6 @@ Handle_Call_Charges_Item4 as "Handle Call Charges Item"
 					row.Business_Unit_Call_Charges=null;
 					row.Circuit_ID_Call_Charges=null;
 					row.Circuit_ID_Type_Call_Charges=null;
-					row.Sub_Line_Item_Call_Charges=null;
 				}
 				else
 				{
