@@ -1,0 +1,27 @@
+Handle_Business_Segment_Internet_Charges as "Handle Business Segment Internet Charges"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Internet_Charges.Business_Segment_Internet_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+				if(row.Business_Segment_Internet_Charges != null)
+				{
+					getBusinessUnitIDs = Business_Unit[Business_Segment == row.Business_Segment_Internet_Charges].ID.getAll();
+					row.Business_Unit_Internet_Charges:ui.add(getBusinessUnitIDs);
+				}
+				else
+				{
+					clear row.Business_Unit_Internet_Charges;
+				}
+			)
+		}
+	}
+
+}

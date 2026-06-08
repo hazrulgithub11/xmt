@@ -1,0 +1,19 @@
+Handle_Deletion_Row_Monthly_Rental as "Handle Deletion Row Monthly Rental"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on delete row of Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}

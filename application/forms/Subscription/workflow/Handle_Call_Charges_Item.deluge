@@ -1,0 +1,57 @@
+Handle_Call_Charges_Item as "Handle Call Charges Item"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Call_Charges.Item_Call_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+				if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+				{
+					alert "Ensure Exchange Rate is not empty before selecting an item.";
+					row.Item_Call_Charges=null;
+					return;
+				}
+				if(row.Item_Call_Charges == null)
+				{
+					row.Item_Code_Call_Charges=null;
+					row.Classification_Codes_Call_Charges=null;
+					row.Description_Call_Charges=null;
+					row.Quantity_Call_Charges=null;
+					row.Unit_Price_Call_Charges=null;
+					row.Sub_Total_Call_Charges=null;
+					row.Tax_Call_Charges=null;
+					row.Tax_Type_Call_Charges=null;
+					row.Tax_Pct_Call_Charges=null;
+					row.Tax_Amount_Call_Charges=null;
+					row.Total_Call_Charges=null;
+					row.Circuit_ID_Call_Charges=null;
+					row.Circuit_ID_Type_Call_Charges=null;
+				}
+				else
+				{
+					itemRecord = Transaction_Type[ID == row.Item_Call_Charges];
+					row.Item_Code_Call_Charges=itemRecord.Item_Code;
+					row.Classification_Codes_Call_Charges=itemRecord.Classification_Codes;
+					row.Description_Call_Charges=itemRecord.Description;
+					getTenant = Tenancy[ID == input.Customer_Code];
+					row.Quantity_Call_Charges=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+					unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+					row.Unit_Price_Call_Charges=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+					row.Tax_Call_Charges=itemRecord.Tax;
+					row.Tax_Type_Call_Charges=itemRecord.Tax.Tax_Type;
+					row.Tax_Pct_Call_Charges=itemRecord.Tax.Tax_Percentage;
+					row.Circuit_ID_Call_Charges=itemRecord.Circuit_ID;
+					row.Circuit_ID_Type_Call_Charges=itemRecord.Circuit_ID_Type;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}

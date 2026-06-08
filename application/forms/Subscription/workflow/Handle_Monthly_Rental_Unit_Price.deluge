@@ -1,0 +1,25 @@
+Handle_Monthly_Rental_Unit_Price as "Handle Monthly Rental Unit Price"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Monthly_Rental.Unit_Price_Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+				if(ifnull(row.Unit_Price_Monthly_Rental,0) <= 0)
+				{
+					alert "Please enter a unit price more than 0";
+					row.Unit_Price_Monthly_Rental=1;
+					return;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}

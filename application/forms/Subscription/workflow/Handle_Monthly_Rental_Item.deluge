@@ -1,0 +1,57 @@
+Handle_Monthly_Rental_Item as "Handle Monthly Rental Item"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Monthly_Rental.Item_Monthly_Rental
+	{
+		actions 
+		{
+			custom deluge script
+			(
+				if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+				{
+					alert "Ensure Exchange Rate is not empty before selecting an item.";
+					row.Item_Monthly_Rental=null;
+					return;
+				}
+				if(row.Item_Monthly_Rental == null)
+				{
+					row.Item_Code_Monthly_Rental=null;
+					row.Classification_Codes_Monthly_Rental=null;
+					row.Description_Monthly_Rental=null;
+					row.Quantity_Monthly_Rental=null;
+					row.Unit_Price_Monthly_Rental=null;
+					row.Sub_Total_Monthly_Rental=null;
+					row.Tax_Monthly_Rental=null;
+					row.Tax_Type_Monthly_Rental=null;
+					row.Tax_Pct_Monthly_Rental=null;
+					row.Tax_Amount_Monthly_Rental=null;
+					row.Total_Monthly_Rental=null;
+					row.Circuit_ID_Monthly_Rental=null;
+					row.Circuit_ID_Type_Monthly_Rental=null;
+				}
+				else
+				{
+					itemRecord = Transaction_Type[ID == row.Item_Monthly_Rental];
+					row.Item_Code_Monthly_Rental=itemRecord.Item_Code;
+					row.Classification_Codes_Monthly_Rental=itemRecord.Classification_Codes;
+					row.Description_Monthly_Rental=itemRecord.Description;
+					getTenant = Tenancy[ID == input.Customer_Code];
+					row.Quantity_Monthly_Rental=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+					unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+					row.Unit_Price_Monthly_Rental=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+					row.Tax_Monthly_Rental=itemRecord.Tax;
+					row.Tax_Type_Monthly_Rental=itemRecord.Tax.Tax_Type;
+					row.Tax_Pct_Monthly_Rental=itemRecord.Tax.Tax_Percentage;
+					row.Circuit_ID_Monthly_Rental=itemRecord.Circuit_ID;
+					row.Circuit_ID_Type_Monthly_Rental=itemRecord.Circuit_ID_Type;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}

@@ -1,0 +1,57 @@
+Handle_Internet_Charges_Item as "Handle Internet Charges Item"
+{
+	type =  form
+	form = Subscription
+
+	record event = on add or edit
+
+	on user input of Internet_Charges.Item_Internet_Charges
+	{
+		actions 
+		{
+			custom deluge script
+			(
+				if(input.Exchange_Rate == null || input.Exchange_Rate == 0)
+				{
+					alert "Ensure Exchange Rate is not empty before selecting an item.";
+					row.Item_Internet_Charges=null;
+					return;
+				}
+				if(row.Item_Internet_Charges == null)
+				{
+					row.Item_Code_Internet_Charges=null;
+					row.Classification_Codes_Internet_Charges=null;
+					row.Description_Internet_Charges=null;
+					row.Quantity_Internet_Charges=null;
+					row.Unit_Price_Internet_Charges=null;
+					row.Sub_Total_Internet_Charges=null;
+					row.Tax_Internet_Charges=null;
+					row.Tax_Type_Internet_Charges=null;
+					row.Tax_Pct_Internet_Charges=null;
+					row.Tax_Amount_Internet_Charges=null;
+					row.Total_Internet_Charges=null;
+					row.Circuit_ID_Internet_Charges=null;
+					row.Circuit_ID_Type_Internet_Charges=null;
+				}
+				else
+				{
+					itemRecord = Transaction_Type[ID == row.Item_Internet_Charges];
+					row.Item_Code_Internet_Charges=itemRecord.Item_Code;
+					row.Classification_Codes_Internet_Charges=itemRecord.Classification_Codes;
+					row.Description_Internet_Charges=itemRecord.Description;
+					getTenant = Tenancy[ID == input.Customer_Code];
+					row.Quantity_Internet_Charges=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+					unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
+					row.Unit_Price_Internet_Charges=unitPriceMYR / ifnull(input.Exchange_Rate,1);
+					row.Tax_Internet_Charges=itemRecord.Tax;
+					row.Tax_Type_Internet_Charges=itemRecord.Tax.Tax_Type;
+					row.Tax_Pct_Internet_Charges=itemRecord.Tax.Tax_Percentage;
+					row.Circuit_ID_Internet_Charges=itemRecord.Circuit_ID;
+					row.Circuit_ID_Type_Internet_Charges=itemRecord.Circuit_ID_Type;
+				}
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+			)
+		}
+	}
+
+}
