@@ -132,19 +132,16 @@ Send_Invoice_To_Customer as "Send Invoice To Customer"
 				row1.Description="Invoice " + getInvoice.Invoice_No + " Subtotal";
 				row1.Debit=0;
 				row1.Credit=ifnull(getInvoice.Sub_Total,0);
-				row1.Invoice=getInvoice.ID;
 				row2 = Journal_Entry.Journal_Entry_Line_Item();
 				row2.Account=4662372000000941743;
 				row2.Description="Invoice " + getInvoice.Invoice_No + " Total Tax";
 				row2.Debit=0;
 				row2.Credit=ifnull(getInvoice.Total_Tax,0);
-				row2.Invoice=getInvoice.ID;
 				row3 = Journal_Entry.Journal_Entry_Line_Item();
 				row3.Account=4662372000000941747;
 				row3.Description="Invoice " + getInvoice.Invoice_No + " Grand Total";
 				row3.Debit=ifnull(getInvoice.Grand_Total,0);
 				row3.Credit=0;
-				row3.Invoice=getInvoice.ID;
 				journalEntryLineItem.insert(row1,row2,row3);
 				newJournalEntryRecord = insert into Journal_Entry
 				[

@@ -66,7 +66,6 @@ Handle_Successful_Deletio as "Handle Successful Deletion of Payment Received"
 				}
 				//thisapp.invoice.recalculate_overdue(input.Customer_Code);
 				getJournalEntry = Journal_Entry[Document_No == input.Payment_Received_No];
-				delete from Journal_Entry_Line_Item[Journal_Entry == getJournalEntry.ID];
 				delete from Journal_Entry[Document_No == input.Payment_Received_No];
 			)
 		}
@@ -97,10 +96,8 @@ Handle_Successful_Deletio as "Handle Successful Deletion of Payment Received"
 					}
 					delete from Payment_Received_Line_Item[ID == paymentReceived.ID];
 					delete from Journal_Entry[Deposits == getDeposit.ID];
-					delete from Journal_Entry_Line_Item[Deposits == getDeposit.ID];
 				}
 				getJournalEntry = Journal_Entry[Document_No == input.Payment_Received_No];
-				delete from Journal_Entry_Line_Item[Journal_Entry == getJournalEntry.ID];
 				delete from Journal_Entry[Document_No == input.Payment_Received_No];
 			)
 		}

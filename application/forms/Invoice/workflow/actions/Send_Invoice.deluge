@@ -105,19 +105,16 @@ Send_Invoice as "Send Invoice"
 							row1.Description="Invoice " + input.Invoice_No + " Subtotal";
 							row1.Debit=0;
 							row1.Credit=ifnull(input.Sub_Total,0);
-							row1.Invoice=input.ID;
 							row2 = Journal_Entry.Journal_Entry_Line_Item();
 							row2.Account=4662372000000941743;
 							row2.Description="Invoice " + input.Invoice_No + " Total Tax";
 							row2.Debit=0;
 							row2.Credit=ifnull(input.Total_Tax,0);
-							row2.Invoice=input.ID;
 							row3 = Journal_Entry.Journal_Entry_Line_Item();
 							row3.Account=4662372000000941747;
 							row3.Description="Invoice " + input.Invoice_No + " Grand Total";
 							row3.Debit=ifnull(input.Grand_Total,0);
 							row3.Credit=0;
-							row3.Invoice=input.ID;
 							journalEntryLineItem.insert(row1,row2,row3);
 							newJournalEntryRecord = insert into Journal_Entry
 							[

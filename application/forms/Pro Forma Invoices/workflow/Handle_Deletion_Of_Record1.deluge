@@ -12,7 +12,6 @@ Handle_Deletion_Of_Record1 as "Handle Deletion Of Record"
 			custom deluge script
 			(
 					get_journal_entry = Journal_Entry[Document_No == input.Invoice_No];
-				delete from Journal_Entry_Line_Item[Journal_Entry == get_journal_entry.ID];
 				delete from Journal_Entry[Document_No == input.Invoice_No];
 			)
 		}

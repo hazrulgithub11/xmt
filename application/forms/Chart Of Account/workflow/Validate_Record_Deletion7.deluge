@@ -18,8 +18,8 @@ Validate_Record_Deletion7 as "Validate Record Deletion"
 				payment_received_list = Payment_Received[Paid_To == input.ID].ID.getAll();
 				tenancy_list = Tenancy[Payable_To.contains(input.ID)].ID.getAll();
 				subscription_list = Subscription[Payable_To.contains(input.ID)].ID.getAll();
-				journal_entry_line_item_list = Journal_Entry_Line_Item[Account == input.ID].ID.getAll();
-				if(invoice_list.size() > 0 || credit_note_list.size() > 0 || debit_note_list.size() > 0 || pro_forma_invoice_list.size() > 0 || payment_received_list.size() > 0 || tenancy_list.size() > 0 || subscription_list.size() > 0 || journal_entry_line_item_list.size() > 0)
+				journal_entry_list = Journal_Entry[Journal_Entry_Line_Item.Account == input.ID].ID.getAll();
+				if(invoice_list.size() > 0 || credit_note_list.size() > 0 || debit_note_list.size() > 0 || pro_forma_invoice_list.size() > 0 || payment_received_list.size() > 0 || tenancy_list.size() > 0 || subscription_list.size() > 0 || journal_entry_list.size() > 0)
 				{
 					alert "This account can't be deleted because it's used in another module.";
 					cancel delete;

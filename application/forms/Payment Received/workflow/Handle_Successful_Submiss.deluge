@@ -38,13 +38,11 @@ Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 				row1.Description="Payment Received " + input.Payment_Received_No + " to " + input.Paid_To.Account + "-" + input.Paid_To.Bank_Account_Number;
 				row1.Debit=ifnull(input.Amount_Received,0);
 				row1.Credit=0;
-				row1.Payment_Received=input.ID;
 				row2 = Journal_Entry.Journal_Entry_Line_Item();
 				row2.Account=4662372000000941747;
 				row2.Description="Payment Received " + input.Payment_Received_No + " Trade and Other Receivables";
 				row2.Debit=0;
 				row2.Credit=ifnull(input.Amount_Received,0);
-				row2.Payment_Received=input.ID;
 				journalEntryLineItem.insert(row1,row2);
 				newJournalEntryRecord = insert into Journal_Entry
 				[

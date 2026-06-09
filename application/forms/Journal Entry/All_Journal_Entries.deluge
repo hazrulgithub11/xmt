@@ -23,6 +23,10 @@ list All_Journal_Entries
 		Difference
 		Date_field as "Date"
 		Document_No as "Document No."
+		Journal_Entry_Line_Item.Account as "Account"
+		Journal_Entry_Line_Item.Description as "Description"
+		Journal_Entry_Line_Item.Debit as "Debit"
+		Journal_Entry_Line_Item.Credit as "Credit"
 	)
 	quickview
 	(
@@ -89,13 +93,12 @@ list All_Journal_Entries
 			datablock2
 			(
 		     	title = "Journal Entry Line Item"
-		     	related field = Journal_Entry_Line_Item
 				fields
 				(
-					Account
-					Description
-					Debit
-					Credit
+					Journal_Entry_Line_Item.Account as "Account"
+					Journal_Entry_Line_Item.Description as "Description"
+					Journal_Entry_Line_Item.Debit as "Debit"
+					Journal_Entry_Line_Item.Credit as "Credit"
 				)
 			)
 			datablock3

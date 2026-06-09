@@ -12,7 +12,6 @@ Handle_Deletion_Of_Invoic as "Handle Deletion Of Invoice"
 			custom deluge script
 			(
 					getJournalEntry = Journal_Entry[Document_No == input.Invoice_No];
-				delete from Journal_Entry_Line_Item[Journal_Entry == getJournalEntry.ID];
 				delete from Journal_Entry[Document_No == input.Invoice_No];
 				if(input.Invoice_Date != null && input.Customer_Code != null)
 				{

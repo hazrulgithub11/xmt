@@ -169,24 +169,18 @@ list Payment_Received_Report
 			datablock3
 			(
 		     	title = "Journal Entry"
-		     	related field = Journal_Entry_Line_Item.Payment_Received
-				fields
-				(
-					Account
-					Debit
-					Credit
-				)
-			)
-			datablock4
-			(
 		     	related field = Journal_Entry.Payment_Received
 				fields
 				(
 					Total_Debit as "Total Debit"
 					Total_Credit as "Total Credit"
+					Journal_Entry_Line_Item.Account as "Account"
+					Journal_Entry_Line_Item.Description as "Description"
+					Journal_Entry_Line_Item.Debit as "Debit"
+					Journal_Entry_Line_Item.Credit as "Credit"
 				)
 			)
-			datablock5
+			datablock4
 			(
 		     	title = "System Information"
 				fields
