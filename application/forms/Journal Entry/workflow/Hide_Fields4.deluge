@@ -18,12 +18,6 @@ Hide_Fields4 as "Hide Fields"
 				hide Payment_Received;
 				hide Deposits;
 				hide Created_By_The_System;
-				hide Journal_Entry_Line_Item.Invoice;
-				hide Journal_Entry_Line_Item.Credit_Note;
-				hide Journal_Entry_Line_Item.Debit_Note;
-				hide Journal_Entry_Line_Item.Deposits;
-				hide Journal_Entry_Line_Item.Journal_Entry;
-				hide Journal_Entry_Line_Item.Payment_Received;
 			)
 		}
 	}

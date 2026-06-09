@@ -11,160 +11,160 @@ Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 		{
 			custom deluge script
 			(
-								thisapp.close_form();
-							openUrl("#Report:Payment_Received_Report","same window");
-							total_still_Owing = 0;
-							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
-							{
-								curr_still_owing = curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
-								curr_payment_received_line_item.Still_Owing=curr_still_owing;
-								total_still_Owing = total_still_Owing + curr_still_owing;
-							}
-							input.Total_Still_Owing = total_still_Owing;
+					thisapp.close_form();
+				openUrl("#Report:Payment_Received_Report","same window");
+				total_still_Owing = 0;
+				for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+				{
+					curr_still_owing = curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+					curr_payment_received_line_item.Still_Owing=curr_still_owing;
+					total_still_Owing = total_still_Owing + curr_still_owing;
+				}
+				input.Total_Still_Owing = total_still_Owing;
 			)
 			custom deluge script
 			(
-								if(input.Payment_Type == "Invoice/Debit Note")
-							{
-								input.Payment_Received_No = thisapp.payment_received.generate_payment_received_no_invoiceDb();
-							}
-							else
-							{
-								input.Payment_Received_No = thisapp.payment_received.generate_payment_received_no_deposit();
-							}
-							journalEntryLineItem = Collection();
-							row1 = Journal_Entry.Journal_Entry_Line_Item();
-							row1.Account=input.Paid_To;
-							row1.Description="Payment Received " + input.Payment_Received_No + " to " + input.Paid_To.Account + "-" + input.Paid_To.Bank_Account_Number;
-							row1.Debit=ifnull(input.Amount_Received,0);
-							row1.Credit=0;
-							row1.Payment_Received=input.ID;
-							row2 = Journal_Entry.Journal_Entry_Line_Item();
-							row2.Account=4662372000000941747;
-							row2.Description="Payment Received " + input.Payment_Received_No + " Trade and Other Receivables";
-							row2.Debit=0;
-							row2.Credit=ifnull(input.Amount_Received,0);
-							row2.Payment_Received=input.ID;
-							journalEntryLineItem.insert(row1,row2);
-							newJournalEntryRecord = insert into Journal_Entry
-							[
-								Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-								Document_No=input.Payment_Received_No
-								Added_User=zoho.loginuser
-								Payment_Received=input.ID
-								Date_field=zoho.currentdate
-								Journal_Entry_Line_Item=journalEntryLineItem
-								Sub_Total_Debit=0
-								Sub_Total_Credit=0
-								Total_Debit=ifnull(input.Amount_Received,0)
-								Total_Credit=ifnull(input.Amount_Received,0)
-								Difference=ifnull(input.Amount_Received,0) - ifnull(input.Amount_Received,0)
-								Created_By_The_System=true
-							];
+					if(input.Payment_Type == "Invoice/Debit Note")
+				{
+					input.Payment_Received_No = thisapp.payment_received.generate_payment_received_no_invoice_and_debit_note();
+				}
+				else
+				{
+					input.Payment_Received_No = thisapp.payment_received.generate_payment_received_no_deposit();
+				}
+				journalEntryLineItem = Collection();
+				row1 = Journal_Entry.Journal_Entry_Line_Item();
+				row1.Account=input.Paid_To;
+				row1.Description="Payment Received " + input.Payment_Received_No + " to " + input.Paid_To.Account + "-" + input.Paid_To.Bank_Account_Number;
+				row1.Debit=ifnull(input.Amount_Received,0);
+				row1.Credit=0;
+				row1.Payment_Received=input.ID;
+				row2 = Journal_Entry.Journal_Entry_Line_Item();
+				row2.Account=4662372000000941747;
+				row2.Description="Payment Received " + input.Payment_Received_No + " Trade and Other Receivables";
+				row2.Debit=0;
+				row2.Credit=ifnull(input.Amount_Received,0);
+				row2.Payment_Received=input.ID;
+				journalEntryLineItem.insert(row1,row2);
+				newJournalEntryRecord = insert into Journal_Entry
+				[
+					Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
+					Document_No=input.Payment_Received_No
+					Added_User=zoho.loginuser
+					Payment_Received=input.ID
+					Date_field=zoho.currentdate
+					Journal_Entry_Line_Item=journalEntryLineItem
+					Sub_Total_Debit=0
+					Sub_Total_Credit=0
+					Total_Debit=ifnull(input.Amount_Received,0)
+					Total_Credit=ifnull(input.Amount_Received,0)
+					Difference=ifnull(input.Amount_Received,0) - ifnull(input.Amount_Received,0)
+					Created_By_The_System=true
+				];
 			)
 		}
 		actions  (Payment_Type == "Invoice/Debit Note")
 		{
 			custom deluge script
 			(
-								for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+					for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+				{
+					if(curr_payment_received_line_item.Allocation > 0)
+					{
+						curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+						if(curr_payment_received_line_item.Invoice_No != null)
+						{
+							curr_get_invoice = Invoice[ID == curr_payment_received_line_item.Invoice_No];
+							// Amount Paid and Amount Due Calculation
+							curr_get_invoice.Amount_Paid=curr_get_invoice.Amount_Paid + curr_payment_received_line_item.Allocation;
+							curr_get_invoice.Amount_Due=curr_get_invoice.Amount_Due - curr_payment_received_line_item.Allocation;
+							// Invoice Blueprint status update
+							if(ifnull(curr_get_invoice.Amount_Due,0) <= 0)
 							{
-								if(curr_payment_received_line_item.Allocation > 0)
-								{
-									curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
-									if(curr_payment_received_line_item.Invoice_No != null)
-									{
-										curr_get_invoice = Invoice[ID == curr_payment_received_line_item.Invoice_No];
-										// Amount Paid and Amount Due Calculation
-										curr_get_invoice.Amount_Paid=curr_get_invoice.Amount_Paid + curr_payment_received_line_item.Allocation;
-										curr_get_invoice.Amount_Due=curr_get_invoice.Amount_Due - curr_payment_received_line_item.Allocation;
-										// Invoice Blueprint status update
-										if(ifnull(curr_get_invoice.Amount_Due,0) <= 0)
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",curr_get_invoice.ID);
-										}
-										else if(ifnull(curr_get_invoice.Amount_Paid,0) > 0)
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_get_invoice.ID);
-										}
-										else if(curr_get_invoice.Due_Date > zoho.currentdate)
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
-										}
-										else
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
-										}
-										thisapp.invoice.recalculate_balances_from(curr_get_invoice.ID);
-									}
-									else if(curr_payment_received_line_item.Debit_Note_No != null)
-									{
-										curr_get_debit_note = Debit_Note[ID == curr_payment_received_line_item.Debit_Note_No];
-										// Amount Paid and Amount Due Calculation
-										curr_get_debit_note.Amount_Paid=curr_get_debit_note.Amount_Paid + curr_payment_received_line_item.Allocation;
-										curr_get_debit_note.Amount_Due=curr_get_debit_note.Amount_Due - curr_payment_received_line_item.Allocation;
-										// Debit Note Blueprint status update
-										if(ifnull(curr_get_debit_note.Amount_Due,0) <= 0)
-										{
-											thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Paid",curr_get_debit_note.ID);
-										}
-										else if(ifnull(curr_get_debit_note.Amount_Paid,0) > 0)
-										{
-											thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",curr_get_debit_note.ID);
-										}
-										else if(curr_get_debit_note.Due_Date > zoho.currentdate)
-										{
-											thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",curr_get_debit_note.ID);
-										}
-										else
-										{
-											thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",curr_get_debit_note.ID);
-										}
-									}
-								}
-								else
-								{
-									delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
-								}
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",curr_get_invoice.ID);
 							}
+							else if(ifnull(curr_get_invoice.Amount_Paid,0) > 0)
+							{
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_get_invoice.ID);
+							}
+							else if(curr_get_invoice.Due_Date > zoho.currentdate)
+							{
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_get_invoice.ID);
+							}
+							else
+							{
+								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
+							}
+							thisapp.invoice.recalculate_balances_from(curr_get_invoice.ID);
+						}
+						else if(curr_payment_received_line_item.Debit_Note_No != null)
+						{
+							curr_get_debit_note = Debit_Note[ID == curr_payment_received_line_item.Debit_Note_No];
+							// Amount Paid and Amount Due Calculation
+							curr_get_debit_note.Amount_Paid=curr_get_debit_note.Amount_Paid + curr_payment_received_line_item.Allocation;
+							curr_get_debit_note.Amount_Due=curr_get_debit_note.Amount_Due - curr_payment_received_line_item.Allocation;
+							// Debit Note Blueprint status update
+							if(ifnull(curr_get_debit_note.Amount_Due,0) <= 0)
+							{
+								thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Paid",curr_get_debit_note.ID);
+							}
+							else if(ifnull(curr_get_debit_note.Amount_Paid,0) > 0)
+							{
+								thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Partially Paid",curr_get_debit_note.ID);
+							}
+							else if(curr_get_debit_note.Due_Date > zoho.currentdate)
+							{
+								thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Sent",curr_get_debit_note.ID);
+							}
+							else
+							{
+								thisapp.blueprint.changeStage("Debit_Note","Debit_Note_Blueprint","Overdue",curr_get_debit_note.ID);
+							}
+						}
+					}
+					else
+					{
+						delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
+					}
+				}
 			)
 		}
 		actions  (Payment_Type == "Deposit")
 		{
 			custom deluge script
 			(
-								for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
-							{
-								curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
-								if(curr_payment_received_line_item.Allocation > 0)
-								{
-									curr_get_pro_forma = Pro_Forma_Invoices[ID == curr_payment_received_line_item.Pro_Forma_Invoice_No];
-									// Amount Paid and Amount Due Calculation
-									curr_get_pro_forma.Amount_Paid=curr_get_pro_forma.Amount_Paid + curr_payment_received_line_item.Allocation;
-									curr_get_pro_forma.Amount_Due=curr_get_pro_forma.Amount_Due - curr_payment_received_line_item.Allocation;
-									// Pro Forma Invoice Blueprint status update
-									if(ifnull(curr_get_pro_forma.Amount_Due,0) <= 0)
-									{
-										thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Paid",curr_get_pro_forma.ID);
-									}
-									else if(ifnull(curr_get_pro_forma.Amount_Paid,0) > 0)
-									{
-										thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Partially Paid",curr_get_pro_forma.ID);
-									}
-									else if(curr_get_pro_forma.Due_Date > zoho.currentdate)
-									{
-										thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
-									}
-									else
-									{
-										thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",curr_get_pro_forma.ID);
-									}
-								}
-								else
-								{
-									delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
-								}
-							}
+					for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+				{
+					curr_payment_received_line_item.Still_Owing=curr_payment_received_line_item.Outstanding_Balance - curr_payment_received_line_item.Allocation;
+					if(curr_payment_received_line_item.Allocation > 0)
+					{
+						curr_get_pro_forma = Pro_Forma_Invoices[ID == curr_payment_received_line_item.Pro_Forma_Invoice_No];
+						// Amount Paid and Amount Due Calculation
+						curr_get_pro_forma.Amount_Paid=curr_get_pro_forma.Amount_Paid + curr_payment_received_line_item.Allocation;
+						curr_get_pro_forma.Amount_Due=curr_get_pro_forma.Amount_Due - curr_payment_received_line_item.Allocation;
+						// Pro Forma Invoice Blueprint status update
+						if(ifnull(curr_get_pro_forma.Amount_Due,0) <= 0)
+						{
+							thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Paid",curr_get_pro_forma.ID);
+						}
+						else if(ifnull(curr_get_pro_forma.Amount_Paid,0) > 0)
+						{
+							thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Partially Paid",curr_get_pro_forma.ID);
+						}
+						else if(curr_get_pro_forma.Due_Date > zoho.currentdate)
+						{
+							thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Sent",curr_get_pro_forma.ID);
+						}
+						else
+						{
+							thisapp.blueprint.changeStage("Pro_Forma_Invoices","Pro_Forma_Invoices_Bluepr","Overdue",curr_get_pro_forma.ID);
+						}
+					}
+					else
+					{
+						delete from Payment_Received_Line_Item[ID == curr_payment_received_line_item.ID];
+					}
+				}
 			)
 		}
 	}

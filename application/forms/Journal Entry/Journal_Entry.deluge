@@ -1,199 +1,199 @@
-		form Journal_Entry
-		{
-			displayname = "Journal Entry"
-			success message = "Journal Entry Added Successfully"
-			Section
-			(
-				type = section
-	 			row = 1
-	 			column = 0   
-				width = medium
-			)
-			unique Journal_Entry_No
-			(
-    			type = text
-				displayname = "Journal Entry No."
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Document_No
-			(
-    			type = text
-				displayname = "Document No."
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Invoice
-			(
-				type = picklist	
-				values  = Invoice.ID
-    			displayformat = [Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Debit_Note
-			(
-				type = picklist	
-				displayname = "Debit Note"
-				values  = Debit_Note.ID
-    			displayformat = [Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Credit_Note
-			(
-				type = picklist	
-				displayname = "Credit Note"
-				values  = Credit_Note.ID
-    			displayformat = [Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Payment_Received
-			(
-				type = picklist	
-				displayname = "Payment Received"
-				values  = Payment_Received.ID
-    			displayformat = [Payment_Received_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Deposits
-			(
-				type = picklist	
-				values  = Pro_Forma_Invoices.ID
-    			displayformat = [Pro_Forma_Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Date_field
-			(
-    			type = date
-				displayname = "Date"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Journal_Entry_Line_Item
-			(
-				type = grid
-				displayname = "Journal Entry Line Item"
-				values  = Journal_Entry_Line_Item.ID
-    			bidirectional = Journal_Entry
-	 			row = 2
-	 			column = 1   
-				width = medium
-			)
-			Section1
-			(
-				type = section
-				displayname = "Section"
-	 			row = 3
-	 			column = 0   
-				width = medium
-			)
-			Sub_Total_Debit
-			(
-				type = decimal
-				displayname = "Sub Total Debit"
-				format = commadotwestern
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Total_Debit
-			(
-				type = decimal
-				displayname = "Total Debit"
-				format = commadotwestern
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Difference
-			(
-				type = decimal
-				format = commadotwestern
-	 			row = 3
-	 			column = 1   
-				width = medium
-			)
-			Sub_Total_Credit
-			(
-				type = decimal
-				displayname = "Sub Total Credit"
-				format = commadotwestern
-	 			row = 3
-	 			column = 2   
-				width = medium
-			)
-			Total_Credit
-			(
-				type = decimal
-				displayname = "Total Credit"
-				format = commadotwestern
-	 			row = 3
-	 			column = 2   
-				width = medium
-			)
-			Section2
-			(
-				type = section
-				displayname = "Section"
-	 			row = 4
-	 			column = 0   
-				width = medium
-			)
-			Created_By_The_System
-			(
-    			type = checkbox
-				displayname = "Created By The System"
-				initial value = false
-	 			row = 4
-	 			column = 1   
-				width = medium
-			)
+form Journal_Entry
+{
+	displayname = "Journal Entry"
+	success message = "Journal Entry Added Successfully"
+	Section
+	(
+		type = section
+	 	row = 1
+	 	column = 0   
+		width = medium
+	)
+	unique Journal_Entry_No
+	(
+    	type = text
+		displayname = "Journal Entry No."
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Document_No
+	(
+    	type = text
+		displayname = "Document No."
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Invoice
+	(
+		type = picklist	
+		values  = Invoice.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Debit_Note
+	(
+		type = picklist	
+		displayname = "Debit Note"
+		values  = Debit_Note.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Credit_Note
+	(
+		type = picklist	
+		displayname = "Credit Note"
+		values  = Credit_Note.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Payment_Received
+	(
+		type = picklist	
+		displayname = "Payment Received"
+		values  = Payment_Received.ID
+    	displayformat = [Payment_Received_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Deposits
+	(
+		type = picklist	
+		values  = Pro_Forma_Invoices.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Date_field
+	(
+    	type = date
+		displayname = "Date"
+		alloweddays = 0,1,2,3,4,5,6
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Journal_Entry_Line_Item
+	(
+		type = grid
+		displayname = "Journal Entry Line Item"
+		values  = Journal_Entry_Line_Item.ID
+    	bidirectional = Journal_Entry
+	 	row = 2
+	 	column = 1   
+		width = medium
+	)
+	Section1
+	(
+		type = section
+		displayname = "Section"
+	 	row = 3
+	 	column = 0   
+		width = medium
+	)
+	Sub_Total_Debit
+	(
+		type = decimal
+		displayname = "Sub Total Debit"
+		format = commadotwestern
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Total_Debit
+	(
+		type = decimal
+		displayname = "Total Debit"
+		format = commadotwestern
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Difference
+	(
+		type = decimal
+		format = commadotwestern
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	Sub_Total_Credit
+	(
+		type = decimal
+		displayname = "Sub Total Credit"
+		format = commadotwestern
+	 	row = 3
+	 	column = 2   
+		width = medium
+	)
+	Total_Credit
+	(
+		type = decimal
+		displayname = "Total Credit"
+		format = commadotwestern
+	 	row = 3
+	 	column = 2   
+		width = medium
+	)
+	Section2
+	(
+		type = section
+		displayname = "Section"
+	 	row = 4
+	 	column = 0   
+		width = medium
+	)
+	Created_By_The_System
+	(
+    	type = checkbox
+		displayname = "Created By The System"
+		initial value = false
+	 	row = 4
+	 	column = 1   
+		width = medium
+	)
 	
-			actions
-			{
-				on add
-				{
-					submit
-					(
-   						type = submit
-   						displayname = "Submit"
-					)
-					reset
-					(
-   						type = reset
-   						displayname = "Reset"
-					)
-				}
-				on edit
-				{
-					update
-					(
-   						type = submit
-   						displayname = "Update"
-					)
-					cancel
-					(
-   						type = cancel
-   						displayname = "Cancel"
-					)
-				}
-			}
+	actions
+	{
+		on add
+		{
+			submit
+			(
+   				type = submit
+   				displayname = "Submit"
+			)
+			reset
+			(
+   				type = reset
+   				displayname = "Reset"
+			)
 		}
+		on edit
+		{
+			update
+			(
+   				type = submit
+   				displayname = "Update"
+			)
+			cancel
+			(
+   				type = cancel
+   				displayname = "Cancel"
+			)
+		}
+	}
+}

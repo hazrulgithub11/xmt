@@ -100,18 +100,18 @@ list Payment_Received_Report
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Delete 
-    	 	)
+			menu
+			(
+				header
+				(
+					Delete 
+				)
 			record
 			(
 				Edit   	   
 				Delete   	   
     		)
-    	)
+			)
     	action
     	(
 			on click
@@ -198,15 +198,15 @@ list Payment_Received_Report
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-			 	"Send Payment Received"
-			 	"Mark As Sent"
-    		 	Delete 
-    	 	)
-    	)
+			menu
+			(
+				header
+				(
+					Edit 
+					"Send Payment Received"
+					"Mark As Sent"
+					Delete 
+				)
+			)
 	)
 }

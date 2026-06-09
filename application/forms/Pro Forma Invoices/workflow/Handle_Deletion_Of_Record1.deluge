@@ -1,0 +1,22 @@
+Handle_Deletion_Of_Record1 as "Handle Deletion Of Record"
+{
+	type =  form
+	form = Pro_Forma_Invoices
+
+	record event = on delete
+
+	on success
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					get_journal_entry = Journal_Entry[Document_No == input.Invoice_No];
+				delete from Journal_Entry_Line_Item[Journal_Entry == get_journal_entry.ID];
+				delete from Journal_Entry[Document_No == input.Invoice_No];
+			)
+		}
+	}
+
+}
+

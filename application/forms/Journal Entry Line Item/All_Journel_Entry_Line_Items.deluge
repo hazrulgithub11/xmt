@@ -5,7 +5,6 @@ list All_Journel_Entry_Line_Items
 	(
 		Description
 		Invoice
-		Deposits
 		Payment_Received as "Payment Received"
 		Credit
 		Debit
@@ -13,6 +12,7 @@ list All_Journel_Entry_Line_Items
 		Journal_Entry as "Journal Entry"
 		Credit_Note as "Credit Note"
 		Debit_Note as "Debit Note"
+		Deposits
 	)
 	quickview
 	(
@@ -28,21 +28,22 @@ list All_Journel_Entry_Line_Items
 					Account
 					Journal_Entry as "Journal Entry"
 					Credit_Note as "Credit Note"
+					Deposits
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-    		 	Delete 
-    	 	)
+			menu
+			(
+				header
+				(
+					Edit 
+					Delete 
+				)
 			record
 			(
 				Edit   	   
     		)
-    	)
+			)
     	action
     	(
 			on click
@@ -66,7 +67,6 @@ list All_Journel_Entry_Line_Items
 				(
 					Description
 					Invoice
-					Deposits
 					Payment_Received as "Payment Received"
 					Credit
 					Debit
@@ -74,15 +74,16 @@ list All_Journel_Entry_Line_Items
 					Journal_Entry as "Journal Entry"
 					Credit_Note as "Credit Note"
 					Debit_Note as "Debit Note"
+					Deposits
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-    	 	)
-    	)
+			menu
+			(
+				header
+				(
+					Edit 
+				)
+			)
 	)
 }

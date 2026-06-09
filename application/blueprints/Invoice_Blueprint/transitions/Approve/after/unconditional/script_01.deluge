@@ -1,4 +1,4 @@
-	// LHDN validation (must run first; aborts transition on failure)
+// LHDN validation (must run first; aborts transition on failure)
 error_messages = list();
 get_organization = Organization_Settings[ID != null];
 organization_environment = get_organization.LHDN_Portal_Environment;
@@ -64,7 +64,7 @@ if(access_token != "" && !general_tin_list.contains(organization_tin))
 			// If org_validation_response is Empty, it means 200 success. 
 			error_messages.add("Missing or invalid TIN and Registration Number. Please enter the correct details to proceed.");
 		}
-	}   catch (e)
+	}	catch (e)
 	{
 		error_messages.add("Failed to validate organization with LHDN: " + e.toString());
 	}
@@ -131,7 +131,7 @@ if(access_token != "" && !general_tin_list.contains(customer_tin))
 			// If customer_validation_response is Empty, it means 200 success.
 			error_messages.add("Missing or invalid customer TIN and Registration Number. Please enter the correct details to proceed.");
 		}
-	}   catch (e)
+	}	catch (e)
 	{
 		error_messages.add("Failed to validate customer with LHDN: " + e.toString());
 	}

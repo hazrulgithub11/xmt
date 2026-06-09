@@ -23,12 +23,6 @@ Disable_Fields5 as "Disable Fields"
 				disable Total_Credit;
 				disable Total_Debit;
 				disable Difference;
-				disable Journal_Entry_Line_Item.Invoice;
-				disable Journal_Entry_Line_Item.Credit_Note;
-				disable Journal_Entry_Line_Item.Debit_Note;
-				disable Journal_Entry_Line_Item.Deposits;
-				disable Journal_Entry_Line_Item.Journal_Entry;
-				disable Journal_Entry_Line_Item.Payment_Received;
 				disable Created_By_The_System;
 			)
 		}

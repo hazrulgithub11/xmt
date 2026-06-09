@@ -1,141 +1,141 @@
-		form Journal_Entry_Line_Item
-		{
-			displayname = "Journal Entry Line Item"
-			success message = "Journel Entry Line Item Added Successfully"
-			Section
-			(
-				type = section
-	 			row = 1
-	 			column = 0   
-				width = medium
-			)
-			Account
-			(
-				type = picklist	
-				values  = Chart_Of_Account.ID
-    			displayformat = [Account]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Description
-			(
-    			type = textarea
-				height = 100px
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Credit
-			(
-				type = decimal
-				format = commadotwestern
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Debit
-			(
-				type = decimal
-				format = commadotwestern
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Invoice
-			(
-				type = picklist	
-				values  = Invoice.ID
-    			displayformat = [Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Debit_Note
-			(
-				type = picklist	
-				displayname = "Debit Note"
-				values  = Debit_Note.ID
-    			displayformat = [Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Credit_Note
-			(
-				type = picklist	
-				displayname = "Credit Note"
-				values  = Credit_Note.ID
-    			displayformat = [Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Deposits
-			(
-				type = picklist	
-				values  = Pro_Forma_Invoices.ID
-    			displayformat = [Pro_Forma_Invoice_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Payment_Received
-			(
-				type = picklist	
-				displayname = "Payment Received"
-				values  = Payment_Received.ID
-    			displayformat = [Payment_Received_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
-			Journal_Entry
-			(
-				type = picklist	
-				displayname = "Journal Entry"
-				values  = Journal_Entry.ID
-    			bidirectional = Journal_Entry_Line_Item
-    			displayformat = [Journal_Entry_No]
-				sortorder = ascending
-	 			row = 1
-	 			column = 1   
-				width = medium
-			)
+form Journal_Entry_Line_Item
+{
+	displayname = "Journal Entry Line Item"
+	success message = "Journel Entry Line Item Added Successfully"
+	Section
+	(
+		type = section
+	 	row = 1
+	 	column = 0   
+		width = medium
+	)
+	Account
+	(
+		type = picklist	
+		values  = Chart_Of_Account.ID
+    	displayformat = [Account]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Description
+	(
+    	type = textarea
+		height = 100px
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Credit
+	(
+		type = decimal
+		format = commadotwestern
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Debit
+	(
+		type = decimal
+		format = commadotwestern
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Invoice
+	(
+		type = picklist	
+		values  = Invoice.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Debit_Note
+	(
+		type = picklist	
+		displayname = "Debit Note"
+		values  = Debit_Note.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Credit_Note
+	(
+		type = picklist	
+		displayname = "Credit Note"
+		values  = Credit_Note.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Deposits
+	(
+		type = picklist	
+		values  = Pro_Forma_Invoices.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Payment_Received
+	(
+		type = picklist	
+		displayname = "Payment Received"
+		values  = Payment_Received.ID
+    	displayformat = [Payment_Received_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
+	Journal_Entry
+	(
+		type = picklist	
+		displayname = "Journal Entry"
+		values  = Journal_Entry.ID
+    	bidirectional = Journal_Entry_Line_Item
+    	displayformat = [Journal_Entry_No]
+		sortorder = ascending
+	 	row = 1
+	 	column = 1   
+		width = medium
+	)
 	
-			actions
-			{
-				on add
-				{
-					submit
-					(
-   						type = submit
-   						displayname = "Submit"
-					)
-					reset
-					(
-   						type = reset
-   						displayname = "Reset"
-					)
-				}
-				on edit
-				{
-					update
-					(
-   						type = submit
-   						displayname = "Update"
-					)
-					cancel
-					(
-   						type = cancel
-   						displayname = "Cancel"
-					)
-				}
-			}
+	actions
+	{
+		on add
+		{
+			submit
+			(
+   				type = submit
+   				displayname = "Submit"
+			)
+			reset
+			(
+   				type = reset
+   				displayname = "Reset"
+			)
 		}
+		on edit
+		{
+			update
+			(
+   				type = submit
+   				displayname = "Update"
+			)
+			cancel
+			(
+   				type = cancel
+   				displayname = "Cancel"
+			)
+		}
+	}
+}
