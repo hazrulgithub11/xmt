@@ -23,10 +23,6 @@ list All_Journal_Entries
 		Difference
 		Date_field as "Date"
 		Document_No as "Document No."
-		Journal_Entry_Line_Item.Account as "Account"
-		Journal_Entry_Line_Item.Description as "Description"
-		Journal_Entry_Line_Item.Debit as "Debit"
-		Journal_Entry_Line_Item.Credit as "Credit"
 	)
 	quickview
 	(
@@ -88,17 +84,6 @@ list All_Journal_Entries
 					Total_Debit as "Total Debit"
 					Total_Credit as "Total Credit"
 					Difference
-				)
-			)
-			datablock2
-			(
-		     	title = "Journal Entry Line Item"
-				fields
-				(
-					Journal_Entry_Line_Item.Account as "Account"
-					Journal_Entry_Line_Item.Description as "Description"
-					Journal_Entry_Line_Item.Debit as "Debit"
-					Journal_Entry_Line_Item.Credit as "Credit"
 				)
 			)
 			datablock3
