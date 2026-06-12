@@ -30,6 +30,7 @@ Handle_Payment_Received_L as "Handle Payment Received Line Item Allocation"
 						row_allocation = outstanding_balance;
 					}
 					row.Allocation = row_allocation;
+					row.Still_Owing = outstanding_balance - row_allocation;
 					payment_received_line_item_document_exchange_rate = 1;
 					if(row.Invoice_No != null)
 					{

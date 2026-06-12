@@ -45,6 +45,7 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 									curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
 									curr_pay_row.Allocation=curr_invoice.Amount_Due;
 									curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * ifnull(curr_invoice.Exchange_Rate,1);
+									curr_pay_row.Still_Owing=ifnull(curr_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
 									input.Payment_Received_Line_Item.insert(curr_pay_row);
 									// Total payment received
 									total_payment_received = total_payment_received + curr_invoice.Amount_Due;
@@ -65,6 +66,7 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 									curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
 									curr_pay_row.Allocation=curr_debit_note.Amount_Due;
 									curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+									curr_pay_row.Still_Owing=ifnull(curr_debit_note.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
 									input.Payment_Received_Line_Item.insert(curr_pay_row);
 									// Total payment received
 									total_payment_received = total_payment_received + curr_debit_note.Amount_Due;
@@ -85,6 +87,7 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 									curr_pay_row.Outstanding_Balance=curr_pro_forma_invoice.Amount_Due;
 									curr_pay_row.Allocation=curr_pro_forma_invoice.Amount_Due;
 									curr_pay_row.Allocation_MYR=curr_pro_forma_invoice.Amount_Due * curr_pro_forma_invoice.Exchange_Rate;
+									curr_pay_row.Still_Owing=ifnull(curr_pro_forma_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
 									input.Payment_Received_Line_Item.insert(curr_pay_row);
 									// Total payment received
 									total_payment_received = total_payment_received + curr_pro_forma_invoice.Amount_Due;

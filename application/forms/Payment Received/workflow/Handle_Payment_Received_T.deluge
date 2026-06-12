@@ -23,6 +23,7 @@ Handle_Payment_Received_T as "Handle Payment Received Trigger"
 							total_still_Owing = 0;
 							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
 							{
+								curr_payment_received_line_item.Still_Owing=ifnull(curr_payment_received_line_item.Outstanding_Balance,0) - ifnull(curr_payment_received_line_item.Allocation,0);
 								total_still_Owing = total_still_Owing + ifnull(curr_payment_received_line_item.Outstanding_Balance,0) - ifnull(curr_payment_received_line_item.Allocation,0);
 							}
 							input.Total_Still_Owing = total_still_Owing;

@@ -24,6 +24,8 @@ Handle_Customer_Name2 as "Handle Customer Name"
 				input.Paid_To = null;
 				input.Payment_Received_Line_Item.clear();
 				input.Amount_Received = 0;
+				input.Payment_Received_Currency = null;
+				input.Amount_Received_MYR = null;
 			)
 		}
 		actions  (Payment_Type == "Invoice/Debit Note" && Customer_Name.ID is not null)
@@ -40,6 +42,7 @@ Handle_Customer_Name2 as "Handle Customer Name"
 				input.Payment_Received_Line_Item.clear();
 				total_payment_amount_received = 0;
 				total_payment_amount_received_myr = 0;
+				payment_received_currency = null;
 				for each  curr_invoice in get_invoice_list
 				{
 					curr_pay_row = Payment_Received.Payment_Received_Line_Item();
@@ -51,9 +54,14 @@ Handle_Customer_Name2 as "Handle Customer Name"
 					curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
 					curr_pay_row.Allocation=curr_invoice.Amount_Due;
 					curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+					curr_pay_row.Still_Owing=ifnull(curr_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
 					input.Payment_Received_Line_Item.insert(curr_pay_row);
 					total_payment_amount_received = total_payment_amount_received + curr_invoice.Amount_Due;
 					total_payment_amount_received_myr = total_payment_amount_received_myr + curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+					if(payment_received_currency == null)
+					{
+						payment_received_currency = curr_invoice.Invoice_Currency;
+					}
 				}
 				for each  curr_debit_note in get_debit_note_list
 				{
@@ -66,10 +74,16 @@ Handle_Customer_Name2 as "Handle Customer Name"
 					curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
 					curr_pay_row.Allocation=curr_debit_note.Amount_Due;
 					curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+					curr_pay_row.Still_Owing=ifnull(curr_debit_note.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
 					input.Payment_Received_Line_Item.insert(curr_pay_row);
 					total_payment_amount_received = total_payment_amount_received + curr_debit_note.Amount_Due;
 					total_payment_amount_received_myr = total_payment_amount_received_myr + curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+					if(payment_received_currency == null)
+					{
+						payment_received_currency = curr_debit_note.Invoice_Currency;
+					}
 				}
+				input.Payment_Received_Currency = ifnull(payment_received_currency,input.Payment_Received_Currency);
 				input.Amount_Received = total_payment_amount_received;
 				input.Amount_Received_MYR = total_payment_amount_received_myr;
 				total_still_Owing = 0;
@@ -97,6 +111,7 @@ Handle_Customer_Name2 as "Handle Customer Name"
 				input.Payment_Received_Line_Item.clear();
 				totalPaymentReceived = 0;
 				totalPaymentReceivedMYR = 0;
+				payment_received_currency = null;
 				for each  pi in getPIs
 				{
 					payRow = Payment_Received.Payment_Received_Line_Item();
@@ -108,10 +123,16 @@ Handle_Customer_Name2 as "Handle Customer Name"
 					payRow.Outstanding_Balance=pi.Amount_Due;
 					payRow.Allocation=pi.Amount_Due;
 					payRow.Allocation_MYR=pi.Amount_Due * pi.Exchange_Rate;
+					payRow.Still_Owing=ifnull(pi.Amount_Due,0) - ifnull(payRow.Allocation,0);
 					input.Payment_Received_Line_Item.insert(payRow);
 					totalPaymentReceived = totalPaymentReceived + pi.Amount_Due;
 					totalPaymentReceivedMYR = totalPaymentReceivedMYR + pi.Amount_Due * pi.Exchange_Rate;
+					if(payment_received_currency == null)
+					{
+						payment_received_currency = pi.Invoice_Currency;
+					}
 				}
+				input.Payment_Received_Currency = ifnull(payment_received_currency,input.Payment_Received_Currency);
 				input.Amount_Received = totalPaymentReceived;
 				input.Amount_Received_MYR = totalPaymentReceivedMYR;
 				total_still_Owing = 0;

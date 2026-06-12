@@ -58,6 +58,7 @@ Validate_Payment_Received as "Validate Payment Received Submission"
 						}
 						row_allocation_myr = row_allocation * payment_received_line_item_document_exchange_rate;
 					}
+					curr_payment_received_line_item.Still_Owing = outstanding_balance - row_allocation;
 					total_payment_amount_received = total_payment_amount_received + row_allocation;
 					total_payment_amount_received_myr = total_payment_amount_received_myr + row_allocation_myr;
 					total_still_Owing = total_still_Owing + outstanding_balance - row_allocation;
