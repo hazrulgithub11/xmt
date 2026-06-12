@@ -1,15 +1,15 @@
-void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list_id, int billing_cycle, int tenant_id, date monthly_billing_date, date actual_billing_date, bool create_second_invoice, date second_monthly_billing_date, date second_actual_billing_date, bool sub_submission)
+void invoice.create_invoice_current_duration(bool is_monthly, int subscription_id, int billing_cycle, int tenant_id, date monthly_billing_date, date actual_billing_date, bool create_second_invoice, date second_monthly_billing_date, date second_actual_billing_date, bool sub_submission)
 {
+	/* --- Fetch tenant and subscription context --- */
 	tenant_info = Tenancy[ID == tenant_id];
 	tenant_final_billing_date = tenant_info.Final_Billing_Date;
 	tenant_next_billing_date = tenant_info.Next_Billing_Date;
-	tenant_last_billing_date = tenant_info.Latest_Billing_Date;
+	tenancy_bill_for = tenant_info.Bill_For;
+	tenancy_bill_every = tenant_info.Bill_Every;
+	tenancy_enable_reminder = tenant_info.Enable_Reminder;
 	customer = tenant_info.Customer_Name;
 	customer_email_address = customer.Email_Address;
-	customer_info = Customer_Profile[ID == customer];
-	bill_for = tenant_info.Bill_For;
-	bill_every = tenant_info.Bill_Every;
-	enable_reminder = tenant_info.Enable_Reminder;
+	/* --- Initialise running totals (accumulated across all line items) --- */
 	sum_sub_total = 0;
 	total_tax = 0;
 	grand_total = 0;
@@ -24,217 +24,226 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 	total_tax_call_charges = 0;
 	grand_total_call_charges = 0;
 	total_deposit_amount = 0;
-	invoice_line_item_collection = Collection();
+	/* --- Fetch subscription details --- */
+	sub_info = Subscription[ID == subscription_id];
+	currency = sub_info.Subscription_Currency;
+	exchange_rate = sub_info.Exchange_Rate;
+	/* Carry forward any pro-forma invoice deposit already collected */
+	pi_grand_total = Pro_Forma_Invoices[ID == sub_info.Pro_Forma_Invoices].Grand_Total;
+	total_deposit_amount = total_deposit_amount + ifnull(pi_grand_total,0);
 	payable_to = List();
-	currency = "";
-	exchange_rate = 1;
 	new_next_billing_date = null;
 	if(is_monthly)
 	{
+		/* Clamp actual_billing_date to at least the start of the billing month */
 		if(actual_billing_date < monthly_billing_date.toStartOfMonth())
 		{
 			actual_billing_date = monthly_billing_date;
 		}
 		due_date = actual_billing_date.addDay(tenant_info.Payment_Term.Days);
+		/* Calculate the next billing date only when billing on the scheduled date */
 		if(monthly_billing_date == actual_billing_date)
 		{
 			new_next_billing_date = actual_billing_date.addMonth(billing_cycle);
-			if(bill_every != "Last Day Of Month")
+			/* Resolve the target day-of-month, handling "Last Day Of Month" specially */
+			if(tenancy_bill_every != "Last Day Of Month")
 			{
-				bill_every_int = bill_every.toLong();
+				bill_every_int = tenancy_bill_every.toLong();
 			}
 			else
 			{
 				bill_every_int = new_next_billing_date.eomonth(0).getDay();
 			}
-			if(new_next_billing_date.getDay() != bill_every_int && new_next_billing_date.getMonth() != 2 && bill_every != "Last Day Of Month")
+			/* Correct the day if it drifted (addMonth can shift the day in short months),
+			   but skip February where day correction is unreliable */
+			if(new_next_billing_date.getDay() != bill_every_int && new_next_billing_date.getMonth() != 2 && tenancy_bill_every != "Last Day Of Month")
 			{
-				new_next_billing_date = toDate(bill_every + "-" + new_next_billing_date.getMonth() + "-" + new_next_billing_date.getYear(),"dd-MM-yyyy");
+				new_next_billing_date = toDate(tenancy_bill_every + "-" + new_next_billing_date.getMonth() + "-" + new_next_billing_date.getYear(),"dd-MM-yyyy");
 			}
 		}
 		else
 		{
+			/* Prorate scenario: next billing stays aligned to the original schedule */
 			new_next_billing_date = monthly_billing_date.addMonth(billing_cycle);
 		}
-		if(bill_every == "Last Day Of Month")
+		/* Snap to last day of month when the tenant bills on the last day */
+		if(tenancy_bill_every == "Last Day Of Month")
 		{
 			new_next_billing_date = new_next_billing_date.eomonth(0);
 		}
 		invoice_usage = thisapp.invoice.get_invoice_usage(actual_billing_date);
-		currency = customer_info.Currency;
-		for each  curr_sub_id in subs_list_id
+		next_billing_date = sub_info.Next_Billing_Date;
+		final_billing_date = sub_info.Final_Billing_Date;
+		last_billing_date = sub_info.Latest_Billing_Date;
+		contract_start_date = sub_info.Contract_Start_Date;
+		contract_end_date = sub_info.Contract_End_Date;
+		prorate = sub_info.Prorate;
+		payable_to.addAll(sub_info.Payable_To);
+		/* --- Determine billing type for line-item calculation --- */
+		billing_type = "";
+		is_final_billing = false;
+		/* Prorate for the first partial month, or when billing started mid-cycle */
+		if(actual_billing_date != monthly_billing_date || (actual_billing_date == monthly_billing_date && last_billing_date == null && actual_billing_date != final_billing_date && contract_start_date.getDay() != actual_billing_date.getDay()))
 		{
-			sub_info = Subscription[ID == curr_sub_id];
-			exchange_rate = sub_info.Exchange_Rate;
-			pi_grand_total = Pro_Forma_Invoices[ID == sub_info.Pro_Forma_Invoices].Grand_Total;
-			total_deposit_amount = total_deposit_amount + ifnull(pi_grand_total,0);
-			next_billing_date = sub_info.Next_Billing_Date;
-			final_billing_date = sub_info.Final_Billing_Date;
-			last_billing_date = sub_info.Latest_Billing_Date;
-			contract_start_date = sub_info.Contract_Start_Date;
-			contract_end_date = sub_info.Contract_End_Date;
-			contract_period = sub_info.Contract_Period;
-			prorate = sub_info.Prorate;
-			payable_to.addAll(sub_info.Payable_To1);
-			billing_type = "";
-			is_final_billing = false;
-			if(actual_billing_date != monthly_billing_date || (actual_billing_date == monthly_billing_date && last_billing_date == null && actual_billing_date != final_billing_date && contract_start_date.getDay() != actual_billing_date.getDay()))
+			if(prorate)
 			{
-				if(prorate)
-				{
-					billing_type = "prorate_start_month";
-				}
-				else
-				{
-					billing_type = "single_period";
-				}
+				billing_type = "prorate_start_month";
 			}
-			else if(actual_billing_date == final_billing_date)
-			{
-				if((contract_end_date.getDay() == contract_end_date.eomonth(0).getDay() && next_billing_date != null) || (next_billing_date == null && !prorate))
-				{
-					billing_type = "single_period";
-					is_final_billing = true;
-				}
-				else
-				{
-					billing_type = "prorate_final_month";
-				}
-			}
-			else if(actual_billing_date == monthly_billing_date && actual_billing_date != final_billing_date)
+			else
 			{
 				billing_type = "single_period";
 			}
-			if(billing_type != "")
+		}
+		/* Final billing date handling */
+		else if(actual_billing_date == final_billing_date)
+		{
+			/* Full period when contract ends on the last day of month, or no next date and no prorate */
+			if((contract_end_date.getDay() == contract_end_date.eomonth(0).getDay() && next_billing_date != null) || (next_billing_date == null && !prorate))
 			{
-				for each  curr_monthly_rental_line_item in sub_info.Monthly_Rental
-				{
-					unit_price = curr_monthly_rental_line_item.Unit_Price_Monthly_Rental;
-					quantity = curr_monthly_rental_line_item.Quantity_Monthly_Rental;
-					tax_pct = curr_monthly_rental_line_item.Tax_Pct_Monthly_Rental;
-					if(billing_type == "prorate_start_month")
-					{
-						line_amounts = thisapp.invoice.calc_line_subtotal("prorate_start_month",unit_price,0,0,contract_start_date,null,null,0,null,null,null);
-						sub_total = line_amounts.get("subTotal");
-						unit_price = line_amounts.get("unitPrice");
-						quantity = line_amounts.get("quantity");
-					}
-					else if(billing_type == "prorate_final_month")
-					{
-						line_amounts = thisapp.invoice.calc_line_subtotal("prorate_final_month",unit_price,0,0,null,contract_end_date,null,0,null,null,null);
-						sub_total = line_amounts.get("subTotal");
-						unit_price = line_amounts.get("unitPrice");
-					}
-					else
-					{
-						sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
-					}
-					line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,is_final_billing);
-					tax_amount = line_tax.get("taxAmount");
-					total = line_tax.get("total");
-					total_myr = total * exchange_rate;
-					sum_sub_total = sum_sub_total + sub_total;
-					total_tax = total_tax + tax_amount;
-					grand_total = grand_total + total;
-					grand_total_myr = grand_total_myr + total_myr;
-					sub_total_monthly_rental = sub_total_monthly_rental + sub_total;
-					total_tax_monthly_rental = total_tax_monthly_rental + tax_amount;
-					grand_total_monthly_rental = grand_total_monthly_rental + total;
-				}
-				for each  curr_internet_charges_line_item in sub_info.Internet_Charges
-				{
-					unit_price = curr_internet_charges_line_item.Unit_Price_Internet_Charges;
-					quantity = curr_internet_charges_line_item.Quantity_Internet_Charges;
-					tax_pct = curr_internet_charges_line_item.Tax_Pct_Internet_Charges;
-					if(billing_type == "prorate_start_month")
-					{
-						line_amounts = thisapp.invoice.calc_line_subtotal("prorate_start_month",unit_price,0,0,contract_start_date,null,null,0,null,null,null);
-						sub_total = line_amounts.get("subTotal");
-						unit_price = line_amounts.get("unitPrice");
-						quantity = line_amounts.get("quantity");
-					}
-					else if(billing_type == "prorate_final_month")
-					{
-						line_amounts = thisapp.invoice.calc_line_subtotal("prorate_final_month",unit_price,0,0,null,contract_end_date,null,0,null,null,null);
-						sub_total = line_amounts.get("subTotal");
-						unit_price = line_amounts.get("unitPrice");
-					}
-					else
-					{
-						sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
-					}
-					line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,is_final_billing);
-					tax_amount = line_tax.get("taxAmount");
-					total = line_tax.get("total");
-					total_myr = total * exchange_rate;
-					sum_sub_total = sum_sub_total + sub_total;
-					total_tax = total_tax + tax_amount;
-					grand_total = grand_total + total;
-					grand_total_myr = grand_total_myr + total_myr;
-					sub_total_internet_charges = sub_total_internet_charges + sub_total;
-					total_tax_internet_charges = total_tax_internet_charges + tax_amount;
-					grand_total_internet_charges = grand_total_internet_charges + total;
-				}
-				for each  curr_call_charges_line_item in sub_info.Call_Charges
-				{
-					unit_price = curr_call_charges_line_item.Unit_Price_Call_Charges;
-					quantity = curr_call_charges_line_item.Quantity_Call_Charges;
-					tax_pct = curr_call_charges_line_item.Tax_Pct_Call_Charges;
-					if(billing_type == "prorate_start_month")
-					{
-						line_amounts = thisapp.invoice.calc_line_subtotal("prorate_start_month",unit_price,0,0,contract_start_date,null,null,0,null,null,null);
-						sub_total = line_amounts.get("subTotal");
-						unit_price = line_amounts.get("unitPrice");
-						quantity = line_amounts.get("quantity");
-					}
-					else if(billing_type == "prorate_final_month")
-					{
-						line_amounts = thisapp.invoice.calc_line_subtotal("prorate_final_month",unit_price,0,0,null,contract_end_date,null,0,null,null,null);
-						sub_total = line_amounts.get("subTotal");
-						unit_price = line_amounts.get("unitPrice");
-					}
-					else
-					{
-						sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
-					}
-					line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,is_final_billing);
-					tax_amount = line_tax.get("taxAmount");
-					total = line_tax.get("total");
-					total_myr = total * exchange_rate;
-					sum_sub_total = sum_sub_total + sub_total;
-					total_tax = total_tax + tax_amount;
-					grand_total = grand_total + total;
-					grand_total_myr = grand_total_myr + total_myr;
-					sub_total_call_charges = sub_total_call_charges + sub_total;
-					total_tax_call_charges = total_tax_call_charges + tax_amount;
-					grand_total_call_charges = grand_total_call_charges + total;
-				}
+				billing_type = "single_period";
+				is_final_billing = true;
+			}
+			else
+			{
+				billing_type = "prorate_final_month";
 			}
 		}
-	}
-	else
-	{
-		due_date = actual_billing_date.addDay(tenant_info.Payment_Term.Days);
-		invoice_usage = thisapp.invoice.get_invoice_usage(monthly_billing_date);
-		sub_id = subs_list_id.get(0);
-		sub_info = Subscription[ID == sub_id];
-		currency = sub_info.Subscription_Currency;
-		exchange_rate = sub_info.Exchange_Rate;
-		pi_grand_total = Pro_Forma_Invoices[ID == sub_info.Pro_Forma_Invoices].Grand_Total;
-		total_deposit_amount = total_deposit_amount + ifnull(pi_grand_total,0);
-		final_billing_date = sub_info.Final_Billing_Date;
-		contract_start_date = sub_info.Contract_Start_Date;
-		contract_end_date = sub_info.Contract_End_Date;
-		payable_to.addAll(sub_info.Payable_To1);
-		if(contract_start_date < monthly_billing_date && actual_billing_date != monthly_billing_date)
+		/* Normal mid-contract billing period */
+		else if(actual_billing_date == monthly_billing_date && actual_billing_date != final_billing_date)
 		{
-			due_date = actual_billing_date.addDay(tenant_info.Payment_Term.Days);
+			billing_type = "single_period";
+		}
+		/* --- Accumulate line items for all charge categories --- */
+		if(billing_type != "")
+		{
+			/* Monthly rental line items */
 			for each  curr_monthly_rental_line_item in sub_info.Monthly_Rental
 			{
 				unit_price = curr_monthly_rental_line_item.Unit_Price_Monthly_Rental;
 				quantity = curr_monthly_rental_line_item.Quantity_Monthly_Rental;
 				tax_pct = curr_monthly_rental_line_item.Tax_Pct_Monthly_Rental;
-				sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+				if(billing_type == "prorate_start_month")
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("prorate_start_month",unit_price,0,0,contract_start_date,null,null,0,null,null,null);
+					unit_price = line_amounts.get("unitPrice");
+					quantity = line_amounts.get("quantity");
+				}
+				else if(billing_type == "prorate_final_month")
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("prorate_final_month",unit_price,0,0,null,contract_end_date,null,0,null,null,null);
+					unit_price = line_amounts.get("unitPrice");
+					quantity = line_amounts.get("quantity");
+				}
+				else
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				}
+				sub_total = line_amounts.get("subTotal");
+				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,is_final_billing);
+				tax_amount = line_tax.get("taxAmount");
+				total = line_tax.get("total");
+				total_myr = total * exchange_rate;
+				sum_sub_total = sum_sub_total + sub_total;
+				total_tax = total_tax + tax_amount;
+				grand_total = grand_total + total;
+				grand_total_myr = grand_total_myr + total_myr;
+				sub_total_monthly_rental = sub_total_monthly_rental + sub_total;
+				total_tax_monthly_rental = total_tax_monthly_rental + tax_amount;
+				grand_total_monthly_rental = grand_total_monthly_rental + total;
+			}
+			/* Internet charges line items */
+			for each  curr_internet_charges_line_item in sub_info.Internet_Charges
+			{
+				unit_price = curr_internet_charges_line_item.Unit_Price_Internet_Charges;
+				quantity = curr_internet_charges_line_item.Quantity_Internet_Charges;
+				tax_pct = curr_internet_charges_line_item.Tax_Pct_Internet_Charges;
+				if(billing_type == "prorate_start_month")
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("prorate_start_month",unit_price,0,0,contract_start_date,null,null,0,null,null,null);
+					unit_price = line_amounts.get("unitPrice");
+					quantity = line_amounts.get("quantity");
+				}
+				else if(billing_type == "prorate_final_month")
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("prorate_final_month",unit_price,0,0,null,contract_end_date,null,0,null,null,null);
+					unit_price = line_amounts.get("unitPrice");
+					quantity = line_amounts.get("quantity");
+				}
+				else
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				}
+				sub_total = line_amounts.get("subTotal");
+				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,is_final_billing);
+				tax_amount = line_tax.get("taxAmount");
+				total = line_tax.get("total");
+				total_myr = total * exchange_rate;
+				sum_sub_total = sum_sub_total + sub_total;
+				total_tax = total_tax + tax_amount;
+				grand_total = grand_total + total;
+				grand_total_myr = grand_total_myr + total_myr;
+				sub_total_internet_charges = sub_total_internet_charges + sub_total;
+				total_tax_internet_charges = total_tax_internet_charges + tax_amount;
+				grand_total_internet_charges = grand_total_internet_charges + total;
+			}
+			/* Call charges line items */
+			for each  curr_call_charges_line_item in sub_info.Call_Charges
+			{
+				unit_price = curr_call_charges_line_item.Unit_Price_Call_Charges;
+				quantity = curr_call_charges_line_item.Quantity_Call_Charges;
+				tax_pct = curr_call_charges_line_item.Tax_Pct_Call_Charges;
+				if(billing_type == "prorate_start_month")
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("prorate_start_month",unit_price,0,0,contract_start_date,null,null,0,null,null,null);
+					unit_price = line_amounts.get("unitPrice");
+					quantity = line_amounts.get("quantity");
+				}
+				else if(billing_type == "prorate_final_month")
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("prorate_final_month",unit_price,0,0,null,contract_end_date,null,0,null,null,null);
+					unit_price = line_amounts.get("unitPrice");
+					quantity = line_amounts.get("quantity");
+				}
+				else
+				{
+					line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				}
+				sub_total = line_amounts.get("subTotal");
+				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,is_final_billing);
+				tax_amount = line_tax.get("taxAmount");
+				total = line_tax.get("total");
+				total_myr = total * exchange_rate;
+				sum_sub_total = sum_sub_total + sub_total;
+				total_tax = total_tax + tax_amount;
+				grand_total = grand_total + total;
+				grand_total_myr = grand_total_myr + total_myr;
+				sub_total_call_charges = sub_total_call_charges + sub_total;
+				total_tax_call_charges = total_tax_call_charges + tax_amount;
+				grand_total_call_charges = grand_total_call_charges + total;
+			}
+		}
+	}
+	else
+	{
+		/* --- Non-monthly billing path --- */
+		due_date = actual_billing_date.addDay(tenant_info.Payment_Term.Days);
+		invoice_usage = thisapp.invoice.get_invoice_usage(monthly_billing_date);
+		final_billing_date = sub_info.Final_Billing_Date;
+		contract_start_date = sub_info.Contract_Start_Date;
+		contract_end_date = sub_info.Contract_End_Date;
+		payable_to.addAll(sub_info.Payable_To);
+		/* Case 1: Contract started before the billing month and billing is delayed (mid-period catch-up) */
+		if(contract_start_date < monthly_billing_date && actual_billing_date != monthly_billing_date)
+		{
+			due_date = actual_billing_date.addDay(tenant_info.Payment_Term.Days);
+			/* Monthly rental line items — full single period */
+			for each  curr_monthly_rental_line_item in sub_info.Monthly_Rental
+			{
+				unit_price = curr_monthly_rental_line_item.Unit_Price_Monthly_Rental;
+				quantity = curr_monthly_rental_line_item.Quantity_Monthly_Rental;
+				tax_pct = curr_monthly_rental_line_item.Tax_Pct_Monthly_Rental;
+				line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				sub_total = line_amounts.get("subTotal");
 				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,false);
 				tax_amount = line_tax.get("taxAmount");
 				total = line_tax.get("total");
@@ -247,12 +256,14 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 				total_tax_monthly_rental = total_tax_monthly_rental + tax_amount;
 				grand_total_monthly_rental = grand_total_monthly_rental + total;
 			}
+			/* Internet charges line items */
 			for each  curr_internet_charges_line_item in sub_info.Internet_Charges
 			{
 				unit_price = curr_internet_charges_line_item.Unit_Price_Internet_Charges;
 				quantity = curr_internet_charges_line_item.Quantity_Internet_Charges;
 				tax_pct = curr_internet_charges_line_item.Tax_Pct_Internet_Charges;
-				sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+				line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				sub_total = line_amounts.get("subTotal");
 				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,false);
 				tax_amount = line_tax.get("taxAmount");
 				total = line_tax.get("total");
@@ -265,12 +276,14 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 				total_tax_internet_charges = total_tax_internet_charges + tax_amount;
 				grand_total_internet_charges = grand_total_internet_charges + total;
 			}
+			/* Call charges line items */
 			for each  curr_call_charges_line_item in sub_info.Call_Charges
 			{
 				unit_price = curr_call_charges_line_item.Unit_Price_Call_Charges;
 				quantity = curr_call_charges_line_item.Quantity_Call_Charges;
 				tax_pct = curr_call_charges_line_item.Tax_Pct_Call_Charges;
-				sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+				line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				sub_total = line_amounts.get("subTotal");
 				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,false);
 				tax_amount = line_tax.get("taxAmount");
 				total = line_tax.get("total");
@@ -284,9 +297,12 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 				grand_total_call_charges = grand_total_call_charges + total;
 			}
 		}
+		/* Case 2: Final billing date — determine whether contract ends on a full or partial period */
 		else if(actual_billing_date == final_billing_date)
 		{
+			/* Project what the end of this billing cycle would be */
 			usage_end_date = final_billing_date.addMonth(billing_cycle);
+			/* Normalise usage_end_date to match contract day-of-month conventions */
 			if(contract_start_date.getDay() == contract_start_date.eomonth(0).getDay() && usage_end_date.getDay() != usage_end_date.eomonth(0).getDay())
 			{
 				usage_end_date = usage_end_date.eomonth(0);
@@ -295,14 +311,17 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 			{
 				usage_end_date = toDate("30-" + usage_end_date.getMonth() + "-" + usage_end_date.getYear(),"dd-MM-yyyy");
 			}
+			/* Sub-case 2a: Projected end aligns with contract end — bill a full period */
 			if(usage_end_date == contract_end_date)
 			{
+				/* Monthly rental line items — full period, flagged as final billing */
 				for each  curr_monthly_rental_line_item in sub_info.Monthly_Rental
 				{
 					unit_price = curr_monthly_rental_line_item.Unit_Price_Monthly_Rental;
 					quantity = curr_monthly_rental_line_item.Quantity_Monthly_Rental;
 					tax_pct = curr_monthly_rental_line_item.Tax_Pct_Monthly_Rental;
-					sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+					line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+					sub_total = line_amounts.get("subTotal");
 					line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,true);
 					tax_amount = line_tax.get("taxAmount");
 					total = line_tax.get("total");
@@ -315,12 +334,14 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 					total_tax_monthly_rental = total_tax_monthly_rental + tax_amount;
 					grand_total_monthly_rental = grand_total_monthly_rental + total;
 				}
+				/* Internet charges line items — full period, flagged as final billing */
 				for each  curr_internet_charges_line_item in sub_info.Internet_Charges
 				{
 					unit_price = curr_internet_charges_line_item.Unit_Price_Internet_Charges;
 					quantity = curr_internet_charges_line_item.Quantity_Internet_Charges;
 					tax_pct = curr_internet_charges_line_item.Tax_Pct_Internet_Charges;
-					sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+					line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+					sub_total = line_amounts.get("subTotal");
 					line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,true);
 					tax_amount = line_tax.get("taxAmount");
 					total = line_tax.get("total");
@@ -333,12 +354,14 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 					total_tax_internet_charges = total_tax_internet_charges + tax_amount;
 					grand_total_internet_charges = grand_total_internet_charges + total;
 				}
+				/* Call charges line items — full period, flagged as final billing */
 				for each  curr_call_charges_line_item in sub_info.Call_Charges
 				{
 					unit_price = curr_call_charges_line_item.Unit_Price_Call_Charges;
 					quantity = curr_call_charges_line_item.Quantity_Call_Charges;
 					tax_pct = curr_call_charges_line_item.Tax_Pct_Call_Charges;
-					sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+					line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+					sub_total = line_amounts.get("subTotal");
 					line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,true);
 					tax_amount = line_tax.get("taxAmount");
 					total = line_tax.get("total");
@@ -354,6 +377,7 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 			}
 			else
 			{
+				/* Sub-case 2b: Contract ends mid-period — prorate using 30-day basis */
 				for each  curr_monthly_rental_line_item in sub_info.Monthly_Rental
 				{
 					unit_price = curr_monthly_rental_line_item.Unit_Price_Monthly_Rental;
@@ -416,14 +440,17 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 				}
 			}
 		}
+		/* Case 3: Regular on-schedule billing — not final, not a catch-up */
 		else if(actual_billing_date == monthly_billing_date && actual_billing_date != final_billing_date)
 		{
+			/* Monthly rental line items */
 			for each  curr_monthly_rental_line_item in sub_info.Monthly_Rental
 			{
 				unit_price = curr_monthly_rental_line_item.Unit_Price_Monthly_Rental;
 				quantity = curr_monthly_rental_line_item.Quantity_Monthly_Rental;
 				tax_pct = curr_monthly_rental_line_item.Tax_Pct_Monthly_Rental;
-				sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+				line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				sub_total = line_amounts.get("subTotal");
 				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,false);
 				tax_amount = line_tax.get("taxAmount");
 				total = line_tax.get("total");
@@ -436,12 +463,14 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 				total_tax_monthly_rental = total_tax_monthly_rental + tax_amount;
 				grand_total_monthly_rental = grand_total_monthly_rental + total;
 			}
+			/* Internet charges line items */
 			for each  curr_internet_charges_line_item in sub_info.Internet_Charges
 			{
 				unit_price = curr_internet_charges_line_item.Unit_Price_Internet_Charges;
 				quantity = curr_internet_charges_line_item.Quantity_Internet_Charges;
 				tax_pct = curr_internet_charges_line_item.Tax_Pct_Internet_Charges;
-				sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+				line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				sub_total = line_amounts.get("subTotal");
 				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,false);
 				tax_amount = line_tax.get("taxAmount");
 				total = line_tax.get("total");
@@ -454,12 +483,14 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 				total_tax_internet_charges = total_tax_internet_charges + tax_amount;
 				grand_total_internet_charges = grand_total_internet_charges + total;
 			}
+			/* Call charges line items */
 			for each  curr_call_charges_line_item in sub_info.Call_Charges
 			{
 				unit_price = curr_call_charges_line_item.Unit_Price_Call_Charges;
 				quantity = curr_call_charges_line_item.Quantity_Call_Charges;
 				tax_pct = curr_call_charges_line_item.Tax_Pct_Call_Charges;
-				sub_total = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null).get("subTotal");
+				line_amounts = thisapp.invoice.calc_line_subtotal("single_period",unit_price,quantity,0,null,null,null,0,null,null,null);
+				sub_total = line_amounts.get("subTotal");
 				line_tax = thisapp.invoice.calc_line_tax(sub_total,tax_pct,false);
 				tax_amount = line_tax.get("taxAmount");
 				total = line_tax.get("total");
@@ -474,6 +505,7 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 			}
 		}
 	}
+	/* --- Create the invoice record --- */
 	inv_no = thisapp.invoice.generate_invoice_number();
 	organization_info = Organization_Settings[ID != null];
 	customer_profile_info = Customer_Profile[ID == customer];
@@ -498,7 +530,7 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 			Customer_Country=ifnull(customer_profile_info.Country,null)
 			Supplier_TIN=organization_info.Supplier_TIN
 			Supplier_SST_Registration_Number=organization_info.SST_ID
-			Subscriptions=subs_list_id
+			Subscriptions=subscription_id
 			Invoice_Date=actual_billing_date
 			Due_Date=due_date
 			Sub_Total_Monthly_Rental=sub_total_monthly_rental
@@ -517,36 +549,36 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 			Exchange_Rate=exchange_rate
 			Payable_To=payable_to
 			Invoice_For_Usage=invoice_usage
-			Enable_Reminder=enable_reminder
+			Enable_Reminder=tenancy_enable_reminder
 			Created_By_The_System=true
 			Added_User=zoho.loginuser
 			Supplier=Organization_Settings[ID != null].ID
 		];
 	}	catch (error)
 	{
-		if(error.containsIgnoreCase("duplicate"))
-		{
-			thisapp.invoice.create_new_invoice_no_for_duplicate(tenant_id,customer,customer_email_address,subs_list_id,actual_billing_date,due_date,monthly_billing_date,tenant_final_billing_date,invoice_line_item_collection,tenant_info.Payment_Term,sum_sub_total,total_tax,grand_total,grand_total_myr,currency,exchange_rate,payable_to,billing_cycle,invoice_usage,enable_reminder,bill_for,total_deposit_amount,is_monthly && sub_submission);
-		}
 		error_msg = error;
 	}
 	if(error_msg == "")
 	{
-		thisapp.invoice.recalculate_balances_from(create_invoice);
+		/* Update tenant billing dates only for monthly, non-submission-triggered invoices */
 		if(is_monthly && !sub_submission)
 		{
 			if(actual_billing_date == tenant_final_billing_date && billing_cycle == 1)
 			{
+				/* Tenant has reached their final billing date — clear the next billing date */
 				tenant_info.Next_Billing_Date=null;
 				tenant_info.Latest_Billing_Date=actual_billing_date;
 			}
 			else if(actual_billing_date == tenant_next_billing_date && billing_cycle == 1)
 			{
+				/* Advance the tenant's next billing date by one cycle */
 				tenant_info.Next_Billing_Date=new_next_billing_date;
 				tenant_info.Latest_Billing_Date=actual_billing_date;
 			}
 		}
-		thisapp.subscription.update_subscription_next_and_last_billing_date(subs_list_id,bill_for,billing_cycle,actual_billing_date,monthly_billing_date,bill_every);
+		/* Sync the subscription's next and latest billing date fields */
+		thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,tenancy_bill_for,billing_cycle,actual_billing_date,monthly_billing_date,tenancy_bill_every);
+		/* Re-push the category subtotals to the invoice record (ensures totals are persisted correctly) */
 		get_invoice = Invoice[ID == create_invoice];
 		get_invoice.Sub_Total_Monthly_Rental=sub_total_monthly_rental;
 		get_invoice.Total_Tax_Monthly_Rental=total_tax_monthly_rental;
@@ -557,9 +589,10 @@ void invoice.create_invoice_current_duration(bool is_monthly, list:int subs_list
 		get_invoice.Sub_Total_Call_Charges=sub_total_call_charges;
 		get_invoice.Total_Tax_Call_Charges=total_tax_call_charges;
 		get_invoice.Grand_Total_Call_Charges=grand_total_call_charges;
+		/* Recursively create the second invoice if requested (e.g. split billing period) */
 		if(create_second_invoice)
 		{
-			thisapp.invoice.create_invoice_current_duration(is_monthly,subs_list_id,billing_cycle,tenant_id,second_monthly_billing_date,second_actual_billing_date,false,null,null,true);
+			thisapp.invoice.create_invoice_current_duration(is_monthly,subscription_id,billing_cycle,tenant_id,second_monthly_billing_date,second_actual_billing_date,false,null,null,true);
 		}
 	}
 }

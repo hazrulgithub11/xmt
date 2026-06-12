@@ -13,19 +13,7 @@ Handle_Deletion_Of_Invoic as "Handle Deletion Of Invoice"
 			(
 					getJournalEntry = Journal_Entry[Document_No == input.Invoice_No];
 				delete from Journal_Entry[Document_No == input.Invoice_No];
-				if(input.Invoice_Date != null && input.Customer_Code != null)
-				{
-					tenantInfo = Tenancy[ID == input.Customer_Code];
-					if(tenantInfo != null && tenantInfo.Customer_Name != null)
-					{
-						customer_id = tenantInfo.Customer_Name.ID;
-						earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
-						if(earliest_later_invoice.ID != null)
-						{
-							thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
-						}
-					}
-				}
+				thisapp.tenancy.calculate_opening_balance_by_tenancy(input.Customer_Code);
 			)
 		}
 		actions  (Blueprint.Current_Stage == "Overdue")

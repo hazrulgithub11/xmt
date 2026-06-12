@@ -226,8 +226,6 @@ if(error_messages.size() > 0)
 	thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Pending Approval",input.ID);
 	return;
 }
-// Balance updates
-thisapp.invoice.recalculate_balances_from(input.ID);
 // Due-date stage routing
 if(input.Due_Date < zoho.currentdate)
 {
@@ -242,16 +240,19 @@ else
 	row1.Description="Invoice " + input.Invoice_No + " Subtotal";
 	row1.Debit=0;
 	row1.Credit=ifnull(input.Sub_Total,0);
+	
 	row2 = Journal_Entry.Journal_Entry_Line_Item();
 	row2.Account=4662372000000941743;
 	row2.Description="Invoice " + input.Invoice_No + " Total Tax";
 	row2.Debit=0;
 	row2.Credit=ifnull(input.Total_Tax,0);
+	
 	row3 = Journal_Entry.Journal_Entry_Line_Item();
 	row3.Account=4662372000000941747;
 	row3.Description="Invoice " + input.Invoice_No + " Grand Total";
 	row3.Debit=ifnull(input.Grand_Total,0);
 	row3.Credit=0;
+
 	journalEntryLineItem.insert(row1,row2,row3);
 	newJournalEntryRecord = insert into Journal_Entry
 	[
@@ -427,3 +428,5 @@ notifyTitle = "Invoice " + input.Invoice_No + " Approved";
 notifyMessage = "Invoice " + input.Invoice_No + " has been approved. Thank you! Please submit it to the customer.";
 zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
 //thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
+thisapp.invoice.calculate_invoice_previous_balance_and_total_amount_due(input.ID);
+thisapp.tenancy.calculate_opening_balance_by_tenancy(input.Customer_Code);

@@ -1,0 +1,69 @@
+---
+description: Evidence citation and terminology standards for XMT BRD — how to trace Deluge code and use canonical module names
+globs: docs/XMT_Billing_Requirements.md
+alwaysApply: false
+---
+
+# XMT BRD Evidence & Terminology
+
+## Code Citation Format
+
+Every `[Confirmed]` or `[Inferred]` rule must include a `Source:` line immediately after it:
+
+```
+**BR-INV-004** When an invoice status transitions to `Sent`, a reminder schedule is activated. [Confirmed]
+Source: `application/Schedule/Creation_Of_Invoice_For_B.deluge`, `thisapp.invoice.*`
+```
+
+Citation targets in priority order:
+1. Global function — `thisapp.{module}.{functionName}` (e.g. `thisapp.invoice.generateNumber`)
+2. Workflow file — `application/forms/{Form}/workflow/{WorkflowName}.deluge`
+3. Schedule file — `application/Schedule/{ScheduleName}.deluge`
+4. Blueprint — named as `{Module}_Blueprint` (e.g. `Invoice_Blueprint`)
+5. Form field — `{FormName}.{FieldName}` (e.g. `Invoice.Status`)
+
+If no source can be identified, the rule **must** be marked `[Open Question]` — do not invent a source.
+
+## Canonical Form / Module Names
+
+Always use these exact names when referencing forms or modules. Do not use display labels, abbreviations, or aliases.
+
+| Canonical Name | Do NOT write |
+|----------------|--------------|
+| `Tenancy` | tenant, tenancy record |
+| `Subscription` | sub, recurring plan |
+| `Subscription_Line_Item` | sub line, line item |
+| `Invoice` | tax invoice, bill |
+| `Pro_Forma_Invoices` | deposit invoice, pro-forma, proforma |
+| `Credit_Note` | CN, credit memo |
+| `Debit_Note` | DN, debit memo |
+| `Refund_Note` | refund, RN |
+| `Payment_Received` | payment, receipt |
+| `Apply_Credit_To_Invoices` | credit application, apply credit |
+| `Journal_Entry` | JE, journal |
+| `Customer_Profile` | customer, client |
+| `Work_Order_Creation` | work order, WO |
+
+## Zoho Creator Platform Terms
+
+Use these terms consistently:
+
+| Term | Meaning |
+|------|---------|
+| **form** | data schema + UI (not "table" or "model") |
+| **workflow** | event-triggered Deluge script (not "automation") |
+| **schedule** | time-triggered Deluge script (not "cron job") |
+| **blueprint** | state machine for document lifecycle (not "approval flow") |
+| **record action** | user-triggered button/function on a record (not "action button") |
+| **subform** | line-item child form embedded in a parent form |
+| **Deluge** | the scripting language (not "ZohoScript" or "custom code") |
+
+## Confidence Decision Guide
+
+Before assigning a tag, ask:
+
+1. Can I point to a specific `.deluge` file or `thisapp.*` call that proves this? → `[Confirmed]`
+2. Does the code structure strongly imply this but I haven't traced every branch? → `[Inferred]`
+3. Is the behavior unclear, commented out, or only partially present? → `[Open Question]`
+
+Never upgrade `[Inferred]` to `[Confirmed]` without a traceable source citation.

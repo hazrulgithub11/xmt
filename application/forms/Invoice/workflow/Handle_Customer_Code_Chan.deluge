@@ -11,42 +11,21 @@ Handle_Customer_Code_Chan as "Handle Customer Code Changes"
 		{
 			custom deluge script
 			(
-								tenancyInfo = Tenancy[ID == input.Customer_Code];
-							input.Enable_Reminder = ifnull(tenancyInfo.Enable_Reminder,null);
-							input.Payable_To = ifnull(tenancyInfo.Payable_To,null);
-							input.Payment_Term = ifnull(tenancyInfo.Payment_Term,null);
-							if(input.Invoice_Date != null && input.Customer_Code != null && input.Payment_Term != null)
-							{
-								input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
-							}
-							if(input.Invoice_Date != null && input.Customer_Code != null)
-							{
-								customer_id_for_balance = ifnull(input.Customer.ID,null);
-								if(customer_id_for_balance == null)
-								{
-									customer_id_for_balance = ifnull(tenancyInfo.Customer_Name.ID,null);
-								}
-								if(customer_id_for_balance != null)
-								{
-									if(input.ID != null && input.ID != 0)
-									{
-										balance_result = thisapp.invoice.invoice_balance_updates(input.ID,null,null,null);
-									}
-									else
-									{
-										balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,customer_id_for_balance,ifnull(input.Amount_Due,0));
-									}
-									input.Previous_Balance = balance_result.get("Previous_Balance");
-									input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
-								}
-							}
-							if(input.Customer_Code == null)
-							{
-								input.Due_Date = null;
-								input.Enable_Reminder = "";
-								input.Previous_Balance = 0;
-								input.Total_Amount_Due = ifnull(input.Amount_Due,0);
-							}
+					tenancyInfo = Tenancy[ID == input.Customer_Code];
+				input.Enable_Reminder = ifnull(tenancyInfo.Enable_Reminder,null);
+				input.Payable_To = ifnull(tenancyInfo.Payable_To,null);
+				input.Payment_Term = ifnull(tenancyInfo.Payment_Term,null);
+				if(input.Invoice_Date != null && input.Customer_Code != null && input.Payment_Term != null)
+				{
+					input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
+				}
+				if(input.Customer_Code == null)
+				{
+					input.Due_Date = null;
+					input.Enable_Reminder = "";
+					input.Previous_Balance = 0;
+					input.Total_Amount_Due = ifnull(input.Amount_Due,0);
+				}
 			)
 		}
 	}

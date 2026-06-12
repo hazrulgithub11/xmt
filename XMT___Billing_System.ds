@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 09-Jun-2026 21:13:41
+ * Generated on : 11-Jun-2026 18:52:41
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -12066,7 +12066,6 @@
 				Supplier
 				Customer.Customer_Name as "Customer Name"
 				Customer
-				Supplier_Name as "Customer Name"
 				Charge_Category as "Charge Category"
 				Grand_Total as "Grand Total"
 				Grand_Total_Base_Currency as "Grand Total (Base Currency)"
@@ -12415,13 +12414,13 @@
 				Customer_Code.Added_User as "Added User"
 				Rejection_Reason as "Rejection Reason"
 				Supplier
-				Supplier_Name as "Customer Name"
 				Charge_Category as "Charge Category"
 				Grand_Total as "Grand Total"
 				Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 				Base_Currency as "Base Currency"
 				Invoice_Currency as "Invoice Currency"
 				Amount_Paid as "Amount Paid"
+				Customer.Customer_Name as "Customer Name"
 			)
 			custom actions
 			(
@@ -12748,7 +12747,6 @@
 				Sub_Total_Internet_Charges as "Sub Total Internet Charges"
 				Total_Tax_Internet_Charges as "Total Tax Internet Charges"
 				Grand_Total_Internet_Charges as "Grand Total Internet Charges"
-				Supplier_Name as "Customer Name"
 				Due_Date as "Due Date"
 				Charge_Category as "Charge Category"
 				Grand_Total as "Grand Total"
@@ -12756,6 +12754,7 @@
 				Base_Currency as "Base Currency"
 				Invoice_Currency as "Invoice Currency"
 				Supplier
+				Customer.Customer_Name as "Customer Name"
 			)
 			custom actions
 			(
@@ -13821,6 +13820,42 @@
                  	url = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:" + report_name + "?Status=Sent&Due_Date_op=22&Due_Date=" + zoho.currentdate;
                  	openUrl(url,"same window");
                  }
+				 void send_email_notification(string doc_type, string doc_no, bigint doc_id)
+                 {
+                 	current_user_email = zoho.loginuserid;
+                 	doc_type_label = "";
+                 	report_status_param = "";
+                 	if(doc_type == "invoice")
+                 	{
+                 		doc_type_label = "Invoice";
+                 		report_status_param = "Status=Pending+Approval";
+                 	}
+                 	else if(doc_type == "credit_note")
+                 	{
+                 		doc_type_label = "Credit Note";
+                 		report_status_param = "Status=Pending+Approval";
+                 	}
+                 	else if(doc_type == "pro_forma")
+                 	{
+                 		doc_type_label = "Pro Forma Invoice";
+                 		report_status_param = "Status=Pending+Approval";
+                 	}
+                 	else if(doc_type == "debit_note")
+                 	{
+                 		doc_type_label = "Debit Note";
+                 		report_status_param = "Status=Pending+Approval";
+                 	}
+                 	notify_title = doc_type_label + " " + doc_no + " Approval Required";
+                 	notify_message = "Please review and approve " + doc_type_label + " " + doc_no + " to complete processing.";
+                 	url_report = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?" + report_status_param;
+                 	sendmail
+                 	[
+                 		from :zoho.adminuserid
+                 		to :current_user_email
+                 		subject :doc_type_label + " " + doc_no + " Approval Required"
+                 		message :"Dear,<br><br>We hope this message finds you well. Please review and approve " + doc_type_label + " " + doc_no + " at your earliest convenience. You can view the record by clicking <a href='" + url_report + "'>here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+                 	]
+                 }
 				 list sort_list(list unsortedList, string sortKey)
                  {
                  	keyList = List();
@@ -13954,6 +13989,20 @@
                  	}
                  	depositNumber = prefix + pad + count;
                  	return depositNumber;
+                 }
+				 void invoice.calculate_invoice_previous_balance_and_total_amount_due(int invoice_id)
+                 {
+                 	get_invoice = Invoice[ID == invoice_id];
+                 	get_customer_id = get_invoice.Customer;
+                 	get_amount_due = get_invoice.Amount_Due;
+                 	previous_balance_of_unpaid_invoices = 0;
+                 	for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Customer == get_customer_id && ID != invoice_id]
+                 	{
+                 		previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+                 	}
+                 	total_amount_due = get_amount_due + previous_balance_of_unpaid_invoices;
+                 	get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
+                 	get_invoice.Total_Amount_Due=total_amount_due;
                  }
 				 map invoice.calc_line_subtotal(string mode, decimal unit_price, decimal quantity, int billing_cycle, date range_start, date range_end, date reference_date, int contract_period, string bill_every, date next_billing_date, date actual_billing_date)
                  {
@@ -14621,8 +14670,6 @@
                  	}
                  	if(error_msg == "")
                  	{
-                 		/* Recalculate cumulative balances for the subscription after inserting the invoice */
-                 		thisapp.invoice.recalculate_balances_from(create_invoice);
                  		/* Update tenant billing dates only for monthly, non-submission-triggered invoices */
                  		if(is_monthly && !sub_submission)
                  		{
@@ -15225,7 +15272,6 @@
                  		}
                  		if(error_msg == "")
                  		{
-                 			thisapp.invoice.recalculate_balances_from(create_invoice);
                  			if(!sub_submission)
                  			{
                  				if(actual_billing_date == tenant_final_billing_date)
@@ -15724,7 +15770,6 @@
                  		}
                  		if(error_msg == "")
                  		{
-                 			thisapp.invoice.recalculate_balances_from(create_invoice);
                  			thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,bill_for,billing_cycle,actual_billing_date,monthly_billing_date,bill_every);
                  			get_invoice = Invoice[ID == create_invoice];
                  			get_invoice.Sub_Total_Monthly_Rental=sub_total_monthly_rental;
@@ -15848,81 +15893,6 @@
                  		monthName = "December";
                  	}
                  	return monthName + " " + usageYear;
-                 }
-				 map invoice.invoice_balance_updates(int invoice_id, date invoice_date, int customer_id, float amount_due)
-                 {
-                 	invoice_date_to_use = invoice_date;
-                 	customer_id_to_use = customer_id;
-                 	current_amount_due = ifnull(amount_due,0);
-                 	persist_balance_to_db = true;
-                 	if(invoice_id != null && invoice_id != 0)
-                 	{
-                 		get_invoice = Invoice[ID == invoice_id];
-                 		if(get_invoice.ID == null || get_invoice.ID == 0)
-                 		{
-                 			result = Map();
-                 			result.put("Previous_Balance",0);
-                 			result.put("Total_Amount_Due",current_amount_due);
-                 			return result;
-                 		}
-                 		if(invoice_date == null)
-                 		{
-                 			invoice_date_to_use = get_invoice.Invoice_Date;
-                 		}
-                 		else
-                 		{
-                 			persist_balance_to_db = false;
-                 		}
-                 		if(customer_id == null)
-                 		{
-                 			customer_id_to_use = get_invoice.Customer.ID;
-                 		}
-                 		if(amount_due == null)
-                 		{
-                 			current_amount_due = ifnull(get_invoice.Amount_Due,0);
-                 		}
-                 	}
-                 	previous_balance_of_unpaid_invoices = 0;
-                 	if(invoice_date_to_use != null && customer_id_to_use != null)
-                 	{
-                 		for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Invoice_Date < invoice_date_to_use && Customer == customer_id_to_use && ID != invoice_id]
-                 		{
-                 			previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
-                 		}
-                 	}
-                 	total_amount_due = current_amount_due + previous_balance_of_unpaid_invoices;
-                 	if(invoice_id != null && invoice_id != 0 && persist_balance_to_db == true)
-                 	{
-                 		get_invoice = Invoice[ID == invoice_id];
-                 		get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
-                 		get_invoice.Total_Amount_Due=total_amount_due;
-                 	}
-                 	result = Map();
-                 	result.put("Previous_Balance",previous_balance_of_unpaid_invoices);
-                 	result.put("Total_Amount_Due",total_amount_due);
-                 	return result;
-                 }
-				 void invoice.recalculate_balances_from(int invoice_id)
-                 {
-                 	thisapp.invoice.invoice_balance_updates(invoice_id,null,null,null);
-                 	get_invoice = Invoice[ID == invoice_id];
-                 	if(get_invoice == null || get_invoice.Invoice_Date == null || get_invoice.Customer == null)
-                 	{
-                 		return;
-                 	}
-                 	customer_id = get_invoice.Customer.ID;
-                 	if(customer_id == null)
-                 	{
-                 		return;
-                 	}
-                 	for each  inv in Invoice[Invoice_Date > get_invoice.Invoice_Date && Customer == customer_id]
-                 	{
-                 		thisapp.invoice.invoice_balance_updates(inv.ID,null,null,null);
-                 	}
-                 	for each  inv in Invoice[Invoice_Date < get_invoice.Invoice_Date && Customer == customer_id && ID != invoice_id]
-                 	{
-                 		thisapp.invoice.invoice_balance_updates(inv.ID,null,null,null);
-                 	}
                  }
 				 string journal_entry.generate_journal_no()
                  {
@@ -16695,6 +16665,16 @@
                  			}
                  		}
                  	}
+                 }
+				 void tenancy.calculate_opening_balance_by_tenancy(int tenancy_id)
+                 {
+                 	tenancy_info = Tenancy[ID = tenancy_id];
+                 	opening_balance = 0;
+                 	for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Customer_Code == tenancy_id]
+                 	{
+                 		opening_balance = opening_balance + curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+                 	}
+                 	tenancy_info.Opening_Balance=opening_balance;
                  }
 				 date tenancy.compute_next_billing_date(int billingCycle, date actualBillingDate, date monthlyBillingDate, string billEvery, date contractStartDate)
                  {
@@ -18347,19 +18327,7 @@
 						(
 											getJournalEntry = Journal_Entry[Document_No == input.Invoice_No];
 										delete from Journal_Entry[Document_No == input.Invoice_No];
-										if(input.Invoice_Date != null && input.Customer_Code != null)
-										{
-											tenantInfo = Tenancy[ID == input.Customer_Code];
-											if(tenantInfo != null && tenantInfo.Customer_Name != null)
-											{
-												customer_id = tenantInfo.Customer_Name.ID;
-												earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
-												if(earliest_later_invoice.ID != null)
-												{
-													thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
-												}
-											}
-										}
+										thisapp.tenancy.calculate_opening_balance_by_tenancy(input.Customer_Code);
 						)
 					}
 					actions  (Blueprint.Current_Stage == "Overdue")
@@ -18692,27 +18660,6 @@
 										{
 											input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
 										}
-										if(input.Invoice_Date != null && input.Customer_Code != null)
-										{
-											customer_id_for_balance = ifnull(input.Customer.ID,null);
-											if(customer_id_for_balance == null)
-											{
-												customer_id_for_balance = ifnull(tenancyInfo.Customer_Name.ID,null);
-											}
-											if(customer_id_for_balance != null)
-											{
-												if(input.ID != null && input.ID != 0)
-												{
-													balance_result = thisapp.invoice.invoice_balance_updates(input.ID,null,null,null);
-												}
-												else
-												{
-													balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,customer_id_for_balance,ifnull(input.Amount_Due,0));
-												}
-												input.Previous_Balance = balance_result.get("Previous_Balance");
-												input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
-											}
-										}
 										if(input.Customer_Code == null)
 										{
 											input.Due_Date = null;
@@ -18734,13 +18681,6 @@
 
 				on success
 				{
-					actions 
-					{
-						custom deluge script
-						(
-											thisapp.invoice.recalculate_balances_from(input.ID);
-						)
-					}
 					actions 
 					{
 						custom deluge script
@@ -18973,19 +18913,6 @@
 											if(input.Payment_Term != null)
 											{
 												input.Due_Date = input.Invoice_Date.addDay(input.Payment_Term.Days);
-											}
-											if(input.Customer != null)
-											{
-												if(input.ID != null && input.ID != 0)
-												{
-													balance_result = thisapp.invoice.invoice_balance_updates(input.ID,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
-												}
-												else
-												{
-													balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
-												}
-												input.Previous_Balance = balance_result.get("Previous_Balance");
-												input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
 											}
 										}
 						)
@@ -19751,7 +19678,6 @@
 													{
 														thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 													}
-													thisapp.invoice.recalculate_balances_from(curr_get_invoice.ID);
 												}
 												else if(curr_payment_received_line_item.Debit_Note_No != null)
 												{
@@ -20010,7 +19936,6 @@
 												{
 													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 												}
-												thisapp.invoice.recalculate_balances_from(curr_get_invoice.ID);
 											}
 											else if(curr_payment_received_line_item.Debit_Note_No != null)
 											{
@@ -20310,8 +20235,6 @@
 											Created_By_The_System=true
 										];
 										getInvoice = Invoice[ID == input.Invoice];
-										//info getInvoice.Invoice_No;
-										thisapp.invoice.recalculate_balances_from(getInvoice.ID);
 										thisapp.close_form();
 					)
 					}
@@ -29198,23 +29121,9 @@
 						(
 											/* Credits Applied Initialization */
 										input.Is_Initialization = true;
-										input.Previous_Balance = 0;
 										input.User_Input_Trigger = !input.User_Input_Trigger;
 										/* Customer Name Trigger Initialization*/
 										input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
-										/* Get Previous Balance of all unpaid invoices */
-										if(input.ID != null && input.ID != 0)
-										{
-											balance_result = thisapp.invoice.invoice_balance_updates(input.ID,null,null,null);
-											input.Previous_Balance = balance_result.get("Previous_Balance");
-											input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
-										}
-										else if(input.Invoice_Date != null && input.Customer != null)
-										{
-											balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
-											input.Previous_Balance = balance_result.get("Previous_Balance");
-											input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
-										}
 										/* Payment Received Line Item — only for saved invoices */
 										if(input.ID != null && input.ID != 0)
 										{
@@ -30030,19 +29939,6 @@
 													info e;
 													input.Exchange_Rate = "";
 												}
-											}
-											if(input.Invoice_Date != null && input.Customer != null)
-											{
-												if(input.ID != null && input.ID != 0)
-												{
-													balance_result = thisapp.invoice.invoice_balance_updates(input.ID,null,null,null);
-												}
-												else
-												{
-													balance_result = thisapp.invoice.invoice_balance_updates(0,input.Invoice_Date,input.Customer.ID,ifnull(input.Amount_Due,0));
-												}
-												input.Previous_Balance = balance_result.get("Previous_Balance");
-												input.Total_Amount_Due = balance_result.get("Total_Amount_Due");
 											}
 											customer_info = Customer_Profile[ID == input.Customer];
 											for each  curr_monthly_rental in input.Monthly_Rental
@@ -33115,6 +33011,240 @@
          				}
          				after
          				{
+							actions 
+							{
+								custom deluge script
+								(
+															// LHDN validation (must run first; aborts transition on failure)
+														error_messages = list();
+														get_organization = Organization_Settings[ID != null];
+														organization_environment = get_organization.LHDN_Portal_Environment;
+														system_api_url = "https://api.myinvois.hasil.gov.my/";
+														if(organization_environment == "SANDBOX")
+														{
+															system_api_url = "https://preprod-api.myinvois.hasil.gov.my/";
+														}
+														else
+														{
+															system_api_url = "https://api.myinvois.hasil.gov.my/";
+														}
+														/* Get LHDN Access Token */
+														client_id = get_organization.Client_ID;
+														client_secret = get_organization.Client_Secret;
+														access_token = "";
+														token_header = Map();
+														token_header.put("Content-Type","application/x-www-form-urlencoded");
+														token_params = Map();
+														token_params.put("client_id",client_id);
+														token_params.put("client_secret",client_secret);
+														token_params.put("grant_type","client_credentials");
+														token_params.put("scope","InvoicingAPI");
+														try 
+														{
+															token_response = invokeurl
+															[
+																url :system_api_url + "connect/token"
+																type :POST
+																parameters:token_params
+																headers:token_header
+															];
+															access_token = token_response.toMap().get("access_token");
+														}catch (e)
+														{
+															error_messages.add("Failed to fetch access token from LHDN: " + e.toString());
+														}
+														if(access_token == null || access_token == "")
+														{
+															error_messages.add("Failed to fetch access token from LHDN. Please check your Client ID and Client Secret.");
+														}
+														// Organization TIN Validation via LHDN
+														organization_tin = input.Supplier_TIN;
+														organization_registration_number_scheme = input.Supplier_ID_Type;
+														organization_registration_number = input.Supplier_Registration_Identification_Passport_Number;
+														general_tin_list = {"EI00000000010","EI00000000020","EI00000000030","EI00000000040"};
+														if(access_token != "" && !general_tin_list.contains(organization_tin))
+														{
+															org_validation_headers = Map();
+															org_validation_headers.put("Authorization",access_token);
+															org_validation_headers.put("Content-Type","application/json");
+															org_validation_url = system_api_url + "api/v1.0/taxpayer/validate/" + organization_tin + "?idType=" + organization_registration_number_scheme + "&idValue=" + organization_registration_number;
+															try 
+															{
+																org_validation_response = invokeurl
+																[
+																	url :org_validation_url
+																	type :GET
+																	headers:org_validation_headers
+																];
+																if(org_validation_response != "")
+																{
+																	// If org_validation_response is Empty, it means 200 success. 
+																	error_messages.add("Missing or invalid TIN and Registration Number. Please enter the correct details to proceed.");
+																}
+															}	catch (e)
+															{
+																error_messages.add("Failed to validate organization with LHDN: " + e.toString());
+															}
+														}
+														/* Organization Settings Validation */
+														org_missing_fields = list();
+														if(ifnull(input.Supplier_Name,"") == "")
+														{
+															org_missing_fields.add("name");
+														}
+														if(ifnull(input.Supplier_Telephone_Number,"") == "")
+														{
+															org_missing_fields.add("phone number");
+														}
+														if(org_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing organization details: " + org_missing_fields.toString() + ".");
+														}
+														org_address_missing_fields = list();
+														if(ifnull(input.Supplier_Country,"") == "")
+														{
+															org_address_missing_fields.add("country");
+														}
+														if(ifnull(input.Supplier_State,"") == "")
+														{
+															org_address_missing_fields.add("state");
+														}
+														if(ifnull(input.Supplier_City,"") == "")
+														{
+															org_address_missing_fields.add("city");
+														}
+														if(ifnull(input.Supplier_Street,"") == "")
+														{
+															org_address_missing_fields.add("street address");
+														}
+														if(ifnull(input.Supplier_Postcode,"") == "")
+														{
+															org_address_missing_fields.add("zip code");
+														}
+														if(org_address_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing organization address details: " + org_address_missing_fields.toString() + ".");
+														}
+														// Customer Validation
+														customer_tin = input.Customer_TIN;
+														customer_reg_scheme = input.Customer_ID_Type;
+														customer_reg_number = input.Customer_Registration_Identification_Passport_Number;
+														if(access_token != "" && !general_tin_list.contains(customer_tin))
+														{
+															customer_validation_headers = Map();
+															customer_validation_headers.put("Authorization",access_token);
+															customer_validation_headers.put("Content-Type","application/json");
+															customer_validation_url = system_api_url + "api/v1.0/taxpayer/validate/" + customer_tin + "?idType=" + customer_reg_scheme + "&idValue=" + customer_reg_number;
+															try 
+															{
+																customer_validation_response = invokeurl
+																[
+																	url :customer_validation_url
+																	type :GET
+																	headers:customer_validation_headers
+																];
+																if(customer_validation_response != "")
+																{
+																	// If customer_validation_response is Empty, it means 200 success.
+																	error_messages.add("Missing or invalid customer TIN and Registration Number. Please enter the correct details to proceed.");
+																}
+															}	catch (e)
+															{
+																error_messages.add("Failed to validate customer with LHDN: " + e.toString());
+															}
+														}
+														customer_missing_fields = list();
+														if(ifnull(input.Customer_Name,"") == "")
+														{
+															customer_missing_fields.add("customer name");
+														}
+														if(ifnull(input.Customer_Telephone_Number,"") == "")
+														{
+															customer_missing_fields.add("phone number");
+														}
+														if(customer_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing customer details: " + customer_missing_fields.toString() + ".");
+														}
+														// Billing address
+														customer_billing_missing_fields = list();
+														if(ifnull(input.Customer_Street,"") == "")
+														{
+															customer_billing_missing_fields.add("billing address");
+														}
+														if(ifnull(input.Customer_City,"") == "")
+														{
+															customer_billing_missing_fields.add("city");
+														}
+														if(ifnull(input.Customer_State,"") == "")
+														{
+															customer_billing_missing_fields.add("state");
+														}
+														if(ifnull(input.Customer_Postcode,"") == "")
+														{
+															customer_billing_missing_fields.add("zip code");
+														}
+														if(ifnull(input.Customer_Country,"") == "")
+														{
+															customer_billing_missing_fields.add("country");
+														}
+														if(customer_billing_missing_fields.size() > 0)
+														{
+															error_messages.add("Missing customer billing details: " + customer_billing_missing_fields.toString() + ".");
+														}
+														// Shipping address — only validated if at least one shipping field is populated
+														customer_shipping_street = ifnull(input.Delivery_Street,"");
+														customer_shipping_city = ifnull(input.Delivery_City,"");
+														customer_shipping_state = ifnull(input.Delivery_State,"");
+														customer_shipping_zip = ifnull(input.Delivery_Postcode,"");
+														customer_shipping_country = ifnull(input.Delivery_Country,"");
+														shipping_address_needed = false;
+														if(customer_shipping_street != "" || customer_shipping_city != "" || customer_shipping_state != "" || customer_shipping_zip != "" || customer_shipping_country != "")
+														{
+															shipping_address_needed = true;
+														}
+														if(shipping_address_needed)
+														{
+															customer_shipping_missing_fields = list();
+															if(customer_shipping_street == "")
+															{
+																customer_shipping_missing_fields.add("shipping address");
+															}
+															if(customer_shipping_city == "")
+															{
+																customer_shipping_missing_fields.add("city");
+															}
+															if(customer_shipping_state == "")
+															{
+																customer_shipping_missing_fields.add("state");
+															}
+															if(customer_shipping_zip == "")
+															{
+																customer_shipping_missing_fields.add("zip code");
+															}
+															if(customer_shipping_country == "")
+															{
+																customer_shipping_missing_fields.add("country");
+															}
+															if(customer_shipping_missing_fields.size() > 0)
+															{
+																error_messages.add("Missing customer shipping details: " + customer_shipping_missing_fields.toString() + ".");
+															}
+														}
+														if(error_messages.size() > 0)
+														{
+															error_message = "";
+															for each  msg in error_messages
+															{
+																error_message = error_message + msg + " ";
+															}
+															error_message = error_message.trim();
+															info error_message;
+															thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
+															return;
+														}
+								)
+							}
          				}
          				chart data
          				{
@@ -33263,7 +33393,7 @@
            			{
                			chart data
                			{
-                   			position : "-129.56352783203124 353.4751562755277"
+                   			position : "-151.2821228557305 342.6158587636781"
                			}
            			}
            			"Rejected"
@@ -33563,8 +33693,6 @@
 															thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Pending Approval",input.ID);
 															return;
 														}
-														// Balance updates
-														thisapp.invoice.recalculate_balances_from(input.ID);
 														// Due-date stage routing
 														if(input.Due_Date < zoho.currentdate)
 														{
@@ -33767,6 +33895,8 @@
 														notifyMessage = "Invoice " + input.Invoice_No + " has been approved. Thank you! Please submit it to the customer.";
 														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
 														//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
+														thisapp.invoice.calculate_invoice_previous_balance_and_total_amount_due(input.ID);
+														thisapp.tenancy.calculate_opening_balance_by_tenancy(input.Customer_Code);
 								)
 							}
          				}
@@ -33774,7 +33904,7 @@
          				{
              				from port : B2
              				to port   : T3
-             				path      : [-75.60351026682716,405.0829860707493,-75.60351026682716,415.0829860707493,-75.60351026682716,449.6349215957947,-8.058579499166505,449.6349215957947,-8.058579499166505,484.18685712084016,-8.058579499166505,494.18685712084016]
+             				path      : [-97.32210529052642,394.2236885588997,-97.32210529052642,404.2236885588997,-97.32210529052642,444.20527283986996,-8.058579499166505,444.20527283986996,-8.058579499166505,484.18685712084016,-8.058579499166505,494.18685712084016]
         				}
   				}
     				Reject as "Reject"
@@ -33808,7 +33938,6 @@
 								custom deluge script
 								(
 															//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														thisapp.invoice.recalculate_balances_from(input.ID);
 														listEmail = List();
 														listEmailID = List();
 														for each  user in User[Role == 4662372000000943011]
@@ -33838,7 +33967,7 @@
          				{
              				from port : R1
              				to port   : L1
-             				path      : [22.81652486358101,379.2790711731385,32.81652486358101,379.2790711731385,135.46124495327484,379.2790711731385,135.46124495327484,335.23743193876345,238.1059650429687,335.23743193876345,248.1059650429687,335.23743193876345]
+             				path      : [1.0979298398817434,368.4197736612889,11.097929839881743,368.4197736612889,124.60194744142522,368.4197736612889,124.60194744142522,335.23743193876345,238.1059650429687,335.23743193876345,248.1059650429687,335.23743193876345]
         				}
   				}
     				Resubmit as "Resubmit"
@@ -33896,7 +34025,6 @@
 														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
 														input.Rejection_Reason = "";
 														//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														thisapp.invoice.recalculate_balances_from(input.ID);
 								)
 							}
          				}
@@ -33904,7 +34032,7 @@
          				{
              				from port : T1
              				to port   : T5
-             				path      : [270.7009818618663,309.43351704115264,270.7009818618663,299.43351704115264,-8.913483919021033,299.43351704115264,-8.913483919021033,321.45433665834014,-8.913483919021033,343.4751562755277,-8.913483919021033,353.4751562755277]
+             				path      : [270.7009818618663,309.43351704115264,270.7009818618663,299.43351704115264,-30.632078942720298,299.43351704115264,-30.632078942720298,316.0246879024154,-30.632078942720298,332.6158587636781,-30.632078942720298,342.6158587636781]
         				}
   				}
     				Send_For_Approval as "Send For Approval"
@@ -33921,38 +34049,16 @@
 							{
 								custom deluge script
 								(
-															//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-														thisapp.invoice.recalculate_balances_from(input.ID);
-														listEmail = List();
-														listEmailID = List();
-														for each  user in User[Role == 4662372000000943015]
-														{
-															email = user.Email;
-															listEmail.add(email);
-															listEmailID.add(email.toLowerCase());
-														}
-														//listEmailID.add(zoho.adminuserid);
-														//listEmail.add("test@aplikasi.us");
-														notifyTitle = "Invoice " + input.Invoice_No + " Approval Required";
-														notifyMessage = "Please review and approve Invoice " + input.Invoice_No + " to complete processing.";
-														urlReport = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?Status=Pending+Approval";
-														//Send Mail & App Notify To Parts Coordinator
-														// sendmail
-														// [
-														// 	from :zoho.adminuserid
-														// 	to :listEmail
-														// 	subject :"Invoice " + input.Invoice_No + " Approval Required"
-														// 	message :"Dear,<br><br>We hope this message finds you well. Please review and approve invoice " + input.Invoice_No + " at your earliest convenience.Can view the record by click <a href=" + urlReport + ">here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
-														// ]
-														zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
+															// Invoice
+														thisapp.send_email_notification("invoice",input.Invoice_No,input.ID);
 								)
 							}
          				}
          				chart data
          				{
-             				from port : B3
+             				from port : B4
              				to port   : T2
-             				path      : [-64.44000610351563,195.50532979522163,-64.44000610351563,205.50532979522163,-64.44000610351563,274.49024303537465,-75.60351026682716,274.49024303537465,-75.60351026682716,343.4751562755277,-75.60351026682716,353.4751562755277]
+             				path      : [-54.900989040477384,195.50532979522163,-54.900989040477384,205.50532979522163,-54.900989040477384,269.06059427944984,-97.32210529052642,269.06059427944984,-97.32210529052642,332.6158587636781,-97.32210529052642,342.6158587636781]
         				}
   				}
     				Send_Invoice as "Send Invoice"
@@ -33986,7 +34092,6 @@
 															{
 																thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
 															}
-															thisapp.invoice.recalculate_balances_from(input.ID);
 															if(input.Customer.Credit_Available > 0)
 															{
 																getCustomerProfile = Customer_Profile[ID == input.Customer];
@@ -34202,12 +34307,20 @@
          				}
          				after
          				{
+							actions 
+							{
+								custom deluge script
+								(
+															input.Previous_Balance = 0;
+														thisapp.tenancy.calculate_opening_balance_by_tenancy(input.Customer_Code);
+								)
+							}
          				}
          				chart data
          				{
              				from port : L1
              				to port   : L1
-             				path      : [-60.15463459453122,519.990772018451,-70.15463459453122,519.990772018451,-139.56352783203124,519.990772018451,-139.56352783203124,449.63492159579476,-139.56352783203124,379.2790711731385,-129.56352783203124,379.2790711731385]
+             				path      : [-60.15463459453122,519.990772018451,-70.15463459453122,519.990772018451,-161.2821228557305,519.990772018451,-161.2821228557305,444.20527283986996,-161.2821228557305,368.4197736612889,-151.2821228557305,368.4197736612889]
         				}
   				}
         			}
@@ -35084,12 +35197,6 @@
 														if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
 															input.Amount_Due = input.Grand_Total;
-															customer_id = input.Customer.ID;
-															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
-															if(earliest_later_invoice.ID != null)
-															{
-																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
-															}
 														}
 														if(input.Due_Date < zoho.currentdate)
 														{
@@ -35199,13 +35306,6 @@
 															if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
 															input.Amount_Due = input.Grand_Total;
-															Status = "Rejected";
-															customer_id = input.Customer.ID;
-															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
-															if(earliest_later_invoice.ID != null)
-															{
-																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
-															}
 														}
 														listEmail = List();
 														listEmailID = List();
@@ -35294,13 +35394,6 @@
 														if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
 															input.Amount_Due = input.Grand_Total;
-															Status = "Pending Approval";
-															customer_id = input.Customer.ID;
-															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
-															if(earliest_later_invoice.ID != null)
-															{
-																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
-															}
 														}
 								)
 							}
@@ -35329,12 +35422,6 @@
 															if(input.Invoice_Date != null && input.Customer_Code != null)
 														{
 															input.Amount_Due = input.Grand_Total;
-															customer_id = input.Customer.ID;
-															earliest_later_invoice = Invoice[Invoice_Date > input.Invoice_Date && Customer == customer_id] sort by Invoice_Date;
-															if(earliest_later_invoice.ID != null)
-															{
-																thisapp.invoice.recalculate_balances_from(earliest_later_invoice.ID);
-															}
 														}
 														listEmail = List();
 														listEmailID = List();
@@ -35704,10 +35791,6 @@
 											]
 										}
 					)
-					on click
-					(
-						thisapp.invoice.recalculate_balances_from(input.ID);
-					)
 					}
 					actions  ((Blueprint.Current_Stage == "Approved" && Customer.Credit_Available <= 0) || (Blueprint.Current_Stage == "Approved" && Customer.Credit_Available is null))
 					{
@@ -35820,10 +35903,6 @@
 										{
 											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
 										}
-					)
-					on click
-					(
-						thisapp.invoice.recalculate_balances_from(input.ID);
 					)
 					}
 					actions  (Blueprint.Current_Stage == "Approved" && Customer.Credit_Available > 0)
@@ -38736,7 +38815,7 @@
 								Invoice_No as "Invoice No."
 								Blueprint.Current_Stage as "Current Stage"
 								Supplier
-								Supplier_Name as "Customer Name"
+								Customer.Customer_Name as "Customer Name"
 								Invoice_Date as "Invoice Date"
 								Due_Date as "Due Date"
 								Charge_Category as "Charge Category"
@@ -39648,7 +39727,7 @@
 							(
 								Invoice_No as "Invoice No."
 								Supplier
-								Supplier_Name as "Customer Name"
+								Customer.Customer_Name as "Customer Name"
 								Invoice_Date as "Invoice Date"
 								Due_Date as "Due Date"
 								Charge_Category as "Charge Category"
@@ -40543,7 +40622,7 @@
 							(
 								Invoice_No as "Invoice No."
 								Supplier
-								Supplier_Name as "Customer Name"
+								Customer.Customer_Name as "Customer Name"
 								Invoice_Date as "Invoice Date"
 								Due_Date as "Due Date"
 								Charge_Category as "Charge Category"

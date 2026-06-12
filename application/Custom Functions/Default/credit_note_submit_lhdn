@@ -1,4 +1,0 @@
-collection credit_note_submit_lhdn(string invoice, string organization, string customer)
-{
-return collection();
-}

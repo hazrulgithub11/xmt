@@ -1,4 +1,4 @@
-	if(input.Invoice_UUID == null || input.Invoice_UUID == "" || input.Invoice_UUID == null || input.Invoice_UUID == "")
+if(input.Invoice_UUID == null || input.Invoice_UUID == "" || input.Invoice_UUID == null || input.Invoice_UUID == "")
 {
 	info "Ensure to submit invoice to LHDN";
 	thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Approved",input.ID);
@@ -14,7 +14,6 @@ else
 	{
 		thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
 	}
-	thisapp.invoice.recalculate_balances_from(input.ID);
 	if(input.Customer.Credit_Available > 0)
 	{
 		getCustomerProfile = Customer_Profile[ID == input.Customer];

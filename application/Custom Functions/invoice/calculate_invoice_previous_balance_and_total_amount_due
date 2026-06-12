@@ -1,0 +1,14 @@
+void invoice.calculate_invoice_previous_balance_and_total_amount_due(int invoice_id)
+{
+	get_invoice = Invoice[ID == invoice_id];
+	get_customer_id = get_invoice.Customer;
+	get_amount_due = get_invoice.Amount_Due;
+	previous_balance_of_unpaid_invoices = 0;
+	for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Customer == get_customer_id && ID != invoice_id]
+	{
+		previous_balance_of_unpaid_invoices = previous_balance_of_unpaid_invoices + curr_invoice.Amount_Due;
+	}
+	total_amount_due = get_amount_due + previous_balance_of_unpaid_invoices;
+	get_invoice.Previous_Balance=previous_balance_of_unpaid_invoices;
+	get_invoice.Total_Amount_Due=total_amount_due;
+}

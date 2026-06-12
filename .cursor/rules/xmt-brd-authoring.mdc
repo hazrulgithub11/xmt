@@ -1,0 +1,92 @@
+---
+description: Authoring standards for XMT_Billing_Requirements.md — requirement IDs, confidence tags, module section template, status tracking
+globs: docs/XMT_Billing_Requirements.md
+alwaysApply: false
+---
+
+# XMT BRD Authoring Standards
+
+## Requirement IDs
+
+Every business rule **must** have a unique ID using the format `BR-{MODULE}-{NNN}`:
+
+| Module | Prefix |
+|--------|--------|
+| Subscription / Tenancy | `BR-SUB` |
+| Pro Forma Invoice | `BR-PFI` |
+| Invoice | `BR-INV` |
+| Credit Note | `BR-CN` |
+| Debit Note | `BR-DN` |
+| Refund Note | `BR-RN` |
+| Payment Received | `BR-PAY` |
+| Journal Entry | `BR-JNL` |
+| Shared / Cross-module | `BR-SHR` |
+
+Example:
+```
+**BR-INV-001** When an invoice is saved with status `Draft`, the invoice number must be generated using `thisapp.invoice.generateNumber`.
+```
+
+## Confidence Tags
+
+Every requirement must end with a confidence tag on the same line:
+
+- `[Confirmed]` — behavior verified directly in Deluge code
+- `[Inferred]` — behavior strongly implied by code structure but not explicitly traced
+- `[Open Question]` — behavior unknown or ambiguous; must also be logged in §9
+
+❌ Do not state requirements as fact if you cannot trace them to code.
+✅ Mark them `[Inferred]` or `[Open Question]` instead.
+
+## Rule Writing Template
+
+Use imperative, single-responsibility sentences:
+
+```
+**BR-{MODULE}-{NNN}** When [trigger/condition], system must [behavior][, unless [exception]]. [Confidence]
+```
+
+Avoid:
+- Vague phrasing: "handles", "manages", "deals with"
+- Passive voice: "is generated", "will be set"
+- Bundling multiple rules into one sentence
+
+## Module Section Template
+
+Every module in §5 must follow this exact structure (do not skip subsections):
+
+```markdown
+### 5.X Module Name
+
+#### Purpose
+One paragraph: what this module represents and its role in the billing chain.
+
+#### When and How It Is Created
+Describe creation triggers: manual form, workflow, schedule, conversion from another document.
+
+#### Business Rules and Validations
+List each rule with ID, requirement sentence, and confidence tag.
+
+#### Calculations
+Line total, tax, balance impact formulas with field name references.
+
+#### Relationships to Other Modules
+Upstream (what creates this) and downstream (what this feeds into).
+
+#### Status Lifecycle
+List all statuses and valid transitions. Reference the Blueprint name if applicable.
+
+#### Implementation Status
+`Done` | `Partial` | `Not Started` — with one-line note on gaps if Partial.
+```
+
+## Synchronization Requirements
+
+After completing any module:
+1. Update the corresponding row in **§8 Implementation Status Matrix**
+2. Log any `[Open Question]` items in **§9 Open Questions**
+3. Update **§6 Document Conversion Matrix** if the module converts to/from other documents
+
+## Reference Module
+
+**§5.3 Invoice is the canonical reference module.** Write it first and in full. All other modules must match its depth and tone.

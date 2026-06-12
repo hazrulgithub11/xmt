@@ -1,0 +1,36 @@
+void send_email_notification(string doc_type, string doc_no, bigint doc_id)
+{
+	current_user_email = zoho.loginuserid;
+	doc_type_label = "";
+	report_status_param = "";
+	if(doc_type == "invoice")
+	{
+		doc_type_label = "Invoice";
+		report_status_param = "Status=Pending+Approval";
+	}
+	else if(doc_type == "credit_note")
+	{
+		doc_type_label = "Credit Note";
+		report_status_param = "Status=Pending+Approval";
+	}
+	else if(doc_type == "pro_forma")
+	{
+		doc_type_label = "Pro Forma Invoice";
+		report_status_param = "Status=Pending+Approval";
+	}
+	else if(doc_type == "debit_note")
+	{
+		doc_type_label = "Debit Note";
+		report_status_param = "Status=Pending+Approval";
+	}
+	notify_title = doc_type_label + " " + doc_no + " Approval Required";
+	notify_message = "Please review and approve " + doc_type_label + " " + doc_no + " to complete processing.";
+	url_report = "https://creatorapp.zoho.com" + zoho.appuri + "#Report:All_Invoices?" + report_status_param;
+	sendmail
+	[
+		from :zoho.adminuserid
+		to :current_user_email
+		subject :doc_type_label + " " + doc_no + " Approval Required"
+		message :"Dear,<br><br>We hope this message finds you well. Please review and approve " + doc_type_label + " " + doc_no + " at your earliest convenience. You can view the record by clicking <a href='" + url_report + "'>here</a>.<br><br>Best Regards,<br>XMT Technologies Sdn Bhd"
+	]
+}

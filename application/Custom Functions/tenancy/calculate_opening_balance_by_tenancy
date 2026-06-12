@@ -1,0 +1,10 @@
+void tenancy.calculate_opening_balance_by_tenancy(int tenancy_id)
+{
+	tenancy_info = Tenancy[ID = tenancy_id];
+	opening_balance = 0;
+	for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Customer_Code == tenancy_id]
+	{
+		opening_balance = opening_balance + curr_invoice.Amount_Due * curr_invoice.Exchange_Rate;
+	}
+	tenancy_info.Opening_Balance=opening_balance;
+}

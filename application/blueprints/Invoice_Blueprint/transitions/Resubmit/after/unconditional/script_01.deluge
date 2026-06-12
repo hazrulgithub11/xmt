@@ -1,4 +1,4 @@
-	listEmail = List();
+listEmail = List();
 listEmailID = List();
 for each  user in User[Role == 4662372000000943015]
 {
@@ -20,7 +20,5 @@ sendmail
 notifyTitle = "Resubmitted Invoice " + input.Invoice_No + " Rejected – Action Required";
 notifyMessage = "A resubmitted Invoice " + input.Invoice_No + " is awaiting your approval.";
 zoho.pushNotification(listEmailID,notifyTitle,notifyMessage,"All_Invoices",input.ID);
-input.Confirm_resubmission = false;
 input.Rejection_Reason = "";
 //thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-thisapp.invoice.recalculate_balances_from(input.ID);

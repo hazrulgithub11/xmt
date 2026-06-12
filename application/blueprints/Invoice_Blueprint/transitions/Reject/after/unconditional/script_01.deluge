@@ -1,5 +1,4 @@
-	//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
-thisapp.invoice.recalculate_balances_from(input.ID);
+//thisapp.invoice.recalculate_overdue(input.Customer_Code,input.ID);
 listEmail = List();
 listEmailID = List();
 for each  user in User[Role == 4662372000000943011]

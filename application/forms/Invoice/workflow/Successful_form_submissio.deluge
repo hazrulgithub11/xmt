@@ -11,84 +11,77 @@ Successful_form_submissio as "Successful form submission of invoice"
 		{
 			custom deluge script
 			(
-								thisapp.invoice.recalculate_balances_from(input.ID);
+					// Credits Applied
+				credits_applied_list = Invoice[ID = input.ID].Credits_Applied;
+				input_credits_applied_list = input.Credits_Applied;
+				for each  curr_credits_applied in credits_applied_list
+				{
+					curr_ca_credit_note_id = curr_credits_applied.CA_Credit_Note;
+					curr_ca_apply_credit_to_invoice_line_id = curr_credits_applied.CA_Apply_Credit_To_Invoice_Line_ID;
+					is_input_cai_apply_credit_to_invoice_line_id_existed = false;
+					for each  curr_input_credits_applied in input_credits_applied_list
+					{
+						curr_input_ca_apply_credit_to_invoice_line_id = curr_input_credits_applied.CA_Apply_Credit_To_Invoice_Line_ID;
+						if(curr_input_ca_apply_credit_to_invoice_line_id == curr_ca_apply_credit_to_invoice_line_id)
+						{
+							is_input_cai_apply_credit_to_invoice_line_id_existed = true;
+							break;
+						}
+					}
+					if(is_input_cai_apply_credit_to_invoice_line_id_existed == false)
+					{
+						// Delete Apply_Credit_To_Invoice_Line
+						delete from Apply_Credit_To_Invoice_Line[ID == curr_ca_apply_credit_to_invoice_line_id.toLong()];
+						// Credit note calculation (Credit note form)
+						input_credit_note = Credit_Note[ID = curr_ca_credit_note_id];
+						// Refund Calculation (Credit note form)
+						input_credit_note.Refund_History=null;
+						refund_note_list = Refund_Note[Reference_Credit_Note = curr_ca_credit_note_id];
+						refund_total = 0;
+						for each  curr_refund_note in refund_note_list
+						{
+							curr_new_refund_history_row = Credit_Note.Refund_History();
+							curr_new_refund_history_row.Refund_History_Refund_Note=curr_refund_note.ID;
+							curr_new_refund_history_row.Refund_History_Amount_Refunded=curr_refund_note.Grand_Total;
+							curr_new_refund_history_row.Refund_History_Date=curr_refund_note.Invoice_Date;
+							refund_total = refund_total + curr_refund_note.Grand_Total;
+							input_credit_note.Refund_History.insert(curr_new_refund_history_row);
+						}
+						// Apply Credit To Invoices Calculation (Credit note form)
+						input_credit_note.Credit_Applied_Invoices=null;
+						apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note = curr_ca_credit_note_id];
+						credits_used_total = 0;
+						for each  curr_apply_credit_to_invoice_line in apply_credit_to_invoice_line_list
+						{
+							curr_new_credit_applied_invoices_row = Credit_Note.Credit_Applied_Invoices();
+							curr_new_credit_applied_invoices_row.CAI_Apply_Credit_To_Invoice_Line_ID=curr_apply_credit_to_invoice_line.ID;
+							curr_new_credit_applied_invoices_row.CAI_Date=curr_apply_credit_to_invoice_line.Amount_Applied_Date;
+							curr_new_credit_applied_invoices_row.CAI_Invoice_No=curr_apply_credit_to_invoice_line.Invoice;
+							curr_new_credit_applied_invoices_row.CAI_Amount_Credited=curr_apply_credit_to_invoice_line.Amount_Applied;
+							credits_used_total = credits_used_total + curr_apply_credit_to_invoice_line.Amount_Applied;
+							input_credit_note.Credit_Applied_Invoices.insert(curr_new_credit_applied_invoices_row);
+						}
+						// All calculation (Credit note form)
+						input_credit_note.Refund=refund_total;
+						input_credit_note.Credits_Used=credits_used_total;
+						input_credit_note.Credits_Remaining=input_credit_note.Grand_Total - refund_total - credits_used_total;
+						if(input_credit_note.Credits_Remaining > 0)
+						{
+							thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input_credit_note.ID);
+						}
+						if(input_credit_note.Credits_Remaining == 0)
+						{
+							thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input_credit_note.ID);
+						}
+					}
+				}
 			)
 		}
 		actions 
 		{
 			custom deluge script
 			(
-								// Credits Applied
-							credits_applied_list = Invoice[ID = input.ID].Credits_Applied;
-							input_credits_applied_list = input.Credits_Applied;
-							for each  curr_credits_applied in credits_applied_list
-							{
-								curr_ca_credit_note_id = curr_credits_applied.CA_Credit_Note;
-								curr_ca_apply_credit_to_invoice_line_id = curr_credits_applied.CA_Apply_Credit_To_Invoice_Line_ID;
-								is_input_cai_apply_credit_to_invoice_line_id_existed = false;
-								for each  curr_input_credits_applied in input_credits_applied_list
-								{
-									curr_input_ca_apply_credit_to_invoice_line_id = curr_input_credits_applied.CA_Apply_Credit_To_Invoice_Line_ID;
-									if(curr_input_ca_apply_credit_to_invoice_line_id == curr_ca_apply_credit_to_invoice_line_id)
-									{
-										is_input_cai_apply_credit_to_invoice_line_id_existed = true;
-										break;
-									}
-								}
-								if(is_input_cai_apply_credit_to_invoice_line_id_existed == false)
-								{
-									// Delete Apply_Credit_To_Invoice_Line
-									delete from Apply_Credit_To_Invoice_Line[ID == curr_ca_apply_credit_to_invoice_line_id.toLong()];
-									// Credit note calculation (Credit note form)
-									input_credit_note = Credit_Note[ID = curr_ca_credit_note_id];
-									// Refund Calculation (Credit note form)
-									input_credit_note.Refund_History=null;
-									refund_note_list = Refund_Note[Reference_Credit_Note = curr_ca_credit_note_id];
-									refund_total = 0;
-									for each  curr_refund_note in refund_note_list
-									{
-										curr_new_refund_history_row = Credit_Note.Refund_History();
-										curr_new_refund_history_row.Refund_History_Refund_Note=curr_refund_note.ID;
-										curr_new_refund_history_row.Refund_History_Amount_Refunded=curr_refund_note.Grand_Total;
-										curr_new_refund_history_row.Refund_History_Date=curr_refund_note.Invoice_Date;
-										refund_total = refund_total + curr_refund_note.Grand_Total;
-										input_credit_note.Refund_History.insert(curr_new_refund_history_row);
-									}
-									// Apply Credit To Invoices Calculation (Credit note form)
-									input_credit_note.Credit_Applied_Invoices=null;
-									apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note = curr_ca_credit_note_id];
-									credits_used_total = 0;
-									for each  curr_apply_credit_to_invoice_line in apply_credit_to_invoice_line_list
-									{
-										curr_new_credit_applied_invoices_row = Credit_Note.Credit_Applied_Invoices();
-										curr_new_credit_applied_invoices_row.CAI_Apply_Credit_To_Invoice_Line_ID=curr_apply_credit_to_invoice_line.ID;
-										curr_new_credit_applied_invoices_row.CAI_Date=curr_apply_credit_to_invoice_line.Amount_Applied_Date;
-										curr_new_credit_applied_invoices_row.CAI_Invoice_No=curr_apply_credit_to_invoice_line.Invoice;
-										curr_new_credit_applied_invoices_row.CAI_Amount_Credited=curr_apply_credit_to_invoice_line.Amount_Applied;
-										credits_used_total = credits_used_total + curr_apply_credit_to_invoice_line.Amount_Applied;
-										input_credit_note.Credit_Applied_Invoices.insert(curr_new_credit_applied_invoices_row);
-									}
-									// All calculation (Credit note form)
-									input_credit_note.Refund=refund_total;
-									input_credit_note.Credits_Used=credits_used_total;
-									input_credit_note.Credits_Remaining=input_credit_note.Grand_Total - refund_total - credits_used_total;
-									if(input_credit_note.Credits_Remaining > 0)
-									{
-										thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input_credit_note.ID);
-									}
-									if(input_credit_note.Credits_Remaining == 0)
-									{
-										thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input_credit_note.ID);
-									}
-								}
-							}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-								openUrl("#Report:All_Invoices","same window");
+					openUrl("#Report:All_Invoices","same window");
 			)
 		}
 	}
