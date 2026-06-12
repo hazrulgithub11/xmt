@@ -93,6 +93,7 @@ Handle_Successful_Submiss as "Handle Successful Submission of Payment Received"
 							{
 								thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_get_invoice.ID);
 							}
+							thisapp.tenancy.calculate_opening_balance_by_tenancy(curr_get_invoice.Customer_Code);
 						}
 						else if(curr_payment_received_line_item.Debit_Note_No != null)
 						{

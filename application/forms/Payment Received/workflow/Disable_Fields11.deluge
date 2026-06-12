@@ -11,32 +11,35 @@ Disable_Fields11 as "Disable Fields"
 		{
 			custom deluge script
 			(
-								disable Customer_Name;
-							disable Customer_Code;
-							disable Customer_TIN;
-							disable Customer_SST;
-							disable Customer_Email;
-							disable Payment_Received_No;
-							disable Organization;
-							disable Amount_Received;
-							disable Payment_Received_Currency;
-							disable Amount_Received_MYR;
-							disable Single_Record_Payment;
-							disable Total_Still_Owing;
-							disable Payment_Type_Single_Record;
-							disable Payment_Received_Line_Item.Reference_No;
-							disable Payment_Received_Line_Item.Pro_Forma_Invoice_No;
-							disable Payment_Received_Line_Item.Invoice_No;
-							disable Payment_Received_Line_Item.Document_Date;
-							disable Payment_Received_Line_Item.Amount;
-							disable Payment_Received_Line_Item.Outstanding_Balance;
-							disable Payment_Received_Line_Item.Allocation_MYR;
-							disable Payment_Received_Line_Item.Payment_Received;
-							disable Payment_Received_Line_Item.Still_Owing;
-							if(input.Payment_Type == "Deposit")
-							{
-								disable Payment_Received_Line_Item.Allocation;
-							}
+				disable Customer_TIN;
+				disable Customer_SST;
+				disable Customer_Email;
+				disable Payment_Received_No;
+				disable Organization;
+				disable Amount_Received;
+				disable Payment_Received_Currency;
+				disable Amount_Received_MYR;
+				disable Single_Record_Payment;
+				disable Total_Still_Owing;
+				disable Payment_Type_Single_Record;
+				disable Payment_Received_Line_Item.Reference_No;
+				disable Payment_Received_Line_Item.Pro_Forma_Invoice_No;
+				disable Payment_Received_Line_Item.Invoice_No;
+				disable Payment_Received_Line_Item.Document_Date;
+				disable Payment_Received_Line_Item.Amount;
+				disable Payment_Received_Line_Item.Outstanding_Balance;
+				disable Payment_Received_Line_Item.Allocation_MYR;
+				disable Payment_Received_Line_Item.Payment_Received;
+				disable Payment_Received_Line_Item.Still_Owing;
+				if(input.Single_Record_Payment == true)
+				{
+					disable Customer_Name;
+					disable Customer_Code;
+				}
+				if(input.Payment_Type == "Deposit")
+				{
+					disable Payment_Received_Line_Item.Allocation;
+				}
 			)
 		}
 	}

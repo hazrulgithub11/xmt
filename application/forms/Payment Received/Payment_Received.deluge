@@ -137,7 +137,17 @@ form Payment_Received
 	 	column = 0   
 		width = medium
 	)
-	Amount_Received
+	must have Payment_Received_Currency
+	(
+		type = picklist
+		displayname = "Payment Received Currency"
+		maxchar = 100
+		values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
+	 	row = 3
+	 	column = 1   
+		width = medium
+	)
+	must have Amount_Received
 	(
 		type = decimal
 		displayname = "Amount Received"
@@ -146,25 +156,7 @@ form Payment_Received
 	 	column = 1   
 		width = medium
 	)
-	must have Currency
-	(
-		type = picklist
-		maxchar = 100
-		values = {"AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BOV","BRL","BSD","BTN","BWP","BYN","BZD","CAD","CDF","CHE","CHF","CHW","CLF","CLP","CNH","CNY","COP","COU","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRU","MUR","MVR","MWK","MXN","MXV","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLE","SLL","SOS","SRD","SSP","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","USN","UYI","UYU","UYW","UZS","VED","VES","VND","VUV","WST","XAF","XAG","XAU","XBA","XBB","XBC","XBD","XCD","XDR","XOF","XPD","XPF","XPT","XSU","XUA","XXX","YER","ZAR","ZMW","ZWL"}
-	 	row = 3
-	 	column = 1   
-		width = medium
-	)
-	must have Exchange_Rate
-	(
-		type = decimal
-		displayname = "Exchange Rate"
-		format = commadotwestern
-	 	row = 3
-	 	column = 1   
-		width = medium
-	)
-	Amount_Received_MYR
+	must have Amount_Received_MYR
 	(
 		type = decimal
 		displayname = "Amount Received (MYR)"
@@ -228,10 +220,10 @@ form Payment_Received
 	 	column = 1   
 		width = medium
 	)
-	Send_Email
+	Payment_Received_Trigger
 	(
     	type = checkbox
-		displayname = "Send Email"
+		displayname = "Payment Received Trigger"
 		initial value = false
 	 	row = 4
 	 	column = 1   
@@ -263,7 +255,7 @@ form Payment_Received
 		type = picklist	
 		displayname = "Pro Forma Invoices"
 		values  = Pro_Forma_Invoices.ID
-    	displayformat = [Pro_Forma_Invoice_No]
+    	displayformat = [Invoice_No]
 		sortorder = ascending
 	 	row = 4
 	 	column = 2   

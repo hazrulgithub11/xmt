@@ -11,33 +11,82 @@ Validate_Payment_Received as "Validate Payment Received Submission"
 		{
 			custom deluge script
 			(
-								no_curr_payment_received_line_item = true;
-							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
-							{
-								if(curr_payment_received_line_item.Allocation != null)
-								{
-									no_curr_payment_received_line_item = false;
-									break;
-								}
-							}
-							if(no_curr_payment_received_line_item == true)
-							{
-								if(input.Payment_Type == "Invoice/Debit Note")
-								{
-									alert "Cannot record payment: No available invoices / debit notes to apply this payment. Please ensure there is an open invoice / debit note for this customer before submitting.";
-								}
-								else if(input.Payment_Type == "Deposit")
-								{
-									alert "Cannot record payment: No available deposits to apply this payment. Please ensure there is an open deposits for this customer before submitting.";
-								}
-								cancel submit;
-							}
-							total_still_Owing = 0;
-							for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
-							{
-								total_still_Owing = total_still_Owing + ifnull(curr_payment_received_line_item.Outstanding_Balance,0) - ifnull(curr_payment_received_line_item.Allocation,0);
-							}
-							input.Total_Still_Owing = total_still_Owing;
+					line_item_count = 0;
+				has_positive_allocation = false;
+				total_payment_amount_received = 0;
+				total_payment_amount_received_myr = 0;
+				total_still_Owing = 0;
+				for each  curr_payment_received_line_item in input.Payment_Received_Line_Item
+				{
+					line_item_count = line_item_count + 1;
+					row_allocation = ifnull(curr_payment_received_line_item.Allocation,0);
+					outstanding_balance = ifnull(curr_payment_received_line_item.Outstanding_Balance,0);
+					if(row_allocation < 0)
+					{
+						alert "Allocation cannot be negative for payment received line items.";
+						cancel submit;
+					}
+					if(row_allocation > outstanding_balance)
+					{
+						alert "The allocation amount cannot exceed the outstanding balance for " + ifnull(curr_payment_received_line_item.Reference_No,"the selected document") + ".";
+						cancel submit;
+					}
+					if(row_allocation > 0)
+					{
+						if(curr_payment_received_line_item.Invoice_No == null && curr_payment_received_line_item.Debit_Note_No == null && curr_payment_received_line_item.Pro_Forma_Invoice_No == null)
+						{
+							alert "Payment Received line item requires a document reference — invoice, debit note, or pro forma invoice.";
+							cancel submit;
+						}
+						has_positive_allocation = true;
+					}
+					row_allocation_myr = 0;
+					if(row_allocation > 0)
+					{
+						payment_received_line_item_document_exchange_rate = 1;
+						if(curr_payment_received_line_item.Invoice_No != null)
+						{
+							payment_received_line_item_document_exchange_rate = ifnull(curr_payment_received_line_item.Invoice_No.Exchange_Rate,1);
+						}
+						else if(curr_payment_received_line_item.Debit_Note_No != null)
+						{
+							payment_received_line_item_document_exchange_rate = ifnull(curr_payment_received_line_item.Debit_Note_No.Exchange_Rate,1);
+						}
+						else if(curr_payment_received_line_item.Pro_Forma_Invoice_No != null)
+						{
+							payment_received_line_item_document_exchange_rate = ifnull(curr_payment_received_line_item.Pro_Forma_Invoice_No.Exchange_Rate,1);
+						}
+						row_allocation_myr = row_allocation * payment_received_line_item_document_exchange_rate;
+					}
+					total_payment_amount_received = total_payment_amount_received + row_allocation;
+					total_payment_amount_received_myr = total_payment_amount_received_myr + row_allocation_myr;
+					total_still_Owing = total_still_Owing + outstanding_balance - row_allocation;
+				}
+				if(line_item_count == 0)
+				{
+					if(input.Payment_Type == "Invoice/Debit Note")
+					{
+						alert "Cannot record payment: No available invoices / debit notes to apply this payment. Please ensure there is an open invoice / debit note for this customer before submitting.";
+					}
+					else if(input.Payment_Type == "Deposit")
+					{
+						alert "Cannot record payment: No available deposits to apply this payment. Please ensure there is an open deposits for this customer before submitting.";
+					}
+					cancel submit;
+				}
+				if(has_positive_allocation == false)
+				{
+					alert "Please allocate payment to at least one document before submitting.";
+					cancel submit;
+				}
+				if(total_payment_amount_received <= 0)
+				{
+					alert "Total payment amount must be greater than zero.";
+					cancel submit;
+				}
+				input.Amount_Received = total_payment_amount_received;
+				input.Amount_Received_MYR = total_payment_amount_received_myr;
+				input.Total_Still_Owing = total_still_Owing;
 			)
 		}
 	}
