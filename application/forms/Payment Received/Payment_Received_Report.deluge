@@ -26,13 +26,9 @@ list Payment_Received_Report
 		(
 			display = total	
 		)
-		Customer_Name.Added_Time as "Added Time"
-		Customer_Name.Added_User as "Added User"
-		Customer_Name.Modified_Time as "Modified Time"
-		Customer_Code.Modified_User as "Modified User"
 		Total_Still_Owing as "Total Still Owing"
 		Payment_Type as "Payment Type"
-		Modified_Time as "Modified Time"
+		Modified_Time as "Payment Received Modified Time"
 	)
 	sort by
 	(
@@ -180,17 +176,7 @@ list Payment_Received_Report
 					Journal_Entry_Line_Item.Credit as "Credit"
 				)
 			)
-			datablock4
-			(
-		     	title = "System Information"
-				fields
-				(
-					Customer_Name.Added_Time as "Added Time"
-					Customer_Name.Added_User as "Added User"
-					Customer_Name.Modified_Time as "Modified Time"
-					Customer_Code.Modified_User as "Modified User"
-				)
-			)
+			
 		)
 			menu
 			(

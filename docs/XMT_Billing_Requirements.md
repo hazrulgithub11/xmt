@@ -150,6 +150,7 @@ This section maps each billing module to its primary anchor points in `XMT___Bil
 
 - If split local files differ from DS, treat `XMT___Billing_System.ds` as authoritative.
 - Use split files only as secondary references after DS behavior is confirmed.
+- Current branch file-change check for tenancy/invoice/subscription/payment-received scope: no new or deleted files detected; only modifications to `XMT___Billing_System.ds` and `application/forms/Payment Received/Payment_Received_Report.deluge`.
 
 ---
 
@@ -161,8 +162,8 @@ Source: `XMT___Billing_System.ds` schedule `W1st_Remainder_Invoice_Due`, form fi
 **BR-SHR-002** When an `Invoice` is not in `Draft` or `Paid` stage, system must send the final reminder email at two weeks after `Due_Date` using an active "Invoice Reminder / Final" template, with attachment template selected by `Charge_Category`. [Confirmed]  
 Source: `XMT___Billing_System.ds` schedule `Final_Invoice_Reminder`, form filter `Invoice[Blueprint.Current_Stage != "Paid" && Blueprint.Current_Stage != "Draft"]`, form `Email_Templates`.
 
-**BR-SHR-003** When an `Invoice` is in `Sent` or `Partially Paid` stage and passes due date threshold, system must transition the record to `Overdue` through `Invoice_Blueprint`. [Confirmed]  
-Source: `XMT___Billing_System.ds` schedule `Change_Status_To_Overdue`, `thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",...)`.
+**BR-SHR-003** When an `Invoice` is selected by the overdue schedule query and passes due date threshold logic, system must transition the record to `Overdue` through `Invoice_Blueprint`. [Confirmed]  
+Source: `XMT___Billing_System.ds` schedule `Change_status_to_Overdue_`, `thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",...)`.
 
 **BR-SHR-004** When `Subscription_Schedule` runs daily, system must query billable `Tenancy` and `Subscription` records and create invoices using `thisapp.invoice.create_invoice_current_duration` or `thisapp.invoice.create_invoice_previous_duration` based on `Bill_For` and billing cycle context. [Confirmed]  
 Source: `XMT___Billing_System.ds` schedule `Subscription_Schedule`, `thisapp.tenancy.convert_bill_cycle_to_int`, `thisapp.tenancy.get_monthly_billing_date_from_actual`, `thisapp.invoice.create_invoice_current_duration`, `thisapp.invoice.create_invoice_previous_duration`.
@@ -262,7 +263,8 @@ Source: `XMT___Billing_System.ds` workflow `User_Input_Trigger_Workfl5` (`form =
 Source: `XMT___Billing_System.ds` form `Subscription` field `Subscription_Status`; workflow `Initialize_Form_Defaults_`; function `thisapp.subscription.update_subscription_next_and_last_billing_date`; forms `Subscription` and `Tenancy`.
 
 #### Implementation Status
-`Partial` — Core tenancy/subscription defaults, validations, and billing-driven invoice generation are implemented; lifecycle behavior remains distributed across large workflow blocks and schedule/function paths with limited explicit handling for `Terminated` subscriptions.
+`Partial` — Core tenancy/subscription defaults, validations, and billing-driven invoice generation are implemented; lifecycle behavior remains distributed across large workflow blocks and schedule/function paths with limited explicit handling for `Terminated` subscriptions.  
+Latest DS delta: billing-generation paths were refactored to helper-based calculations (`thisapp.invoice.create_invoice_current_duration_helper`, `thisapp.invoice.create_invoice_previous_duration_helper`, `thisapp.invoice.calculate_subtotal_item_line`, `thisapp.invoice.calculate_tax_item_line`) and normalized tenancy-cycle variable usage (`tenancy_billing_cycle_int`) in subscription/tenancy-driven invoice creation calls.
 
 ---
 
@@ -427,7 +429,8 @@ Source: `XMT___Billing_System.ds` workflow `User_Input_Trigger_Workfl` (`form = 
 Source: `XMT___Billing_System.ds` blueprint `Invoice_Blueprint`, functions `Bulk_Send_For_Approval_In`, `Bulk_Approve_Invoices`, workflow/schedule calls to `thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint",...)`.
 
 #### Implementation Status
-`Partial` — Core invoice lifecycle, validations, calculations, reminders, and posting logic are implemented; some lifecycle behavior is split across blueprint, workflows, functions, and schedules and should be consolidated during refactoring.
+`Partial` — Core invoice lifecycle, validations, calculations, reminders, and posting logic are implemented; some lifecycle behavior is split across blueprint, workflows, functions, and schedules and should be consolidated during refactoring.  
+Latest DS delta: overdue schedule anchor moved from `Change_Status_To_Overdue` to `Change_status_to_Overdue_`, and schedule filter logic now includes `Approved` stage with updated condition expression.
 
 ---
 
@@ -749,7 +752,8 @@ Source: `XMT___Billing_System.ds` workflows `Handle_Payment_Received_L`, `Handle
 Source: `XMT___Billing_System.ds` workflow blocks for `Payment_Received` and `Apply_Credit_To_Invoices`, plus absence of module-specific blueprint declarations.
 
 #### Implementation Status
-`Partial` — Receipt numbering/allocation, journal posting, reversal logic, and credit-application propagation are implemented, but orchestration is spread across multiple workflow paths and cross-module side effects.
+`Partial` — Receipt numbering/allocation, journal posting, reversal logic, and credit-application propagation are implemented, but orchestration is spread across multiple workflow paths and cross-module side effects.  
+Latest DS delta: payment receipt/report output removed several system metadata fields (`Added_Time`, `Added_User`, `Customer_Name.Modified_Time`, `Customer_Code.Modified_User`) and relabeled report `Modified_Time` to `Payment Received Modified Time`; payment posting blocks also include explicit stage updates and opening-balance recalculation calls in updated script paths.
 
 ---
 
@@ -863,14 +867,14 @@ Source: `XMT___Billing_System.ds` blueprints (`Invoice_Blueprint`, `Pro_Forma_In
 
 | Module | Status | Note |
 |---|---|---|
-| `Subscription` / `Tenancy` | `Partial` | Billing cadence and invoice generation are implemented, but status/lifecycle logic is spread across workflows, schedule, and helper functions. |
+| `Subscription` / `Tenancy` | `Partial` | Billing cadence and invoice generation remain implemented, with recent DS refactor to helper-based invoice amount calculations and tenancy-cycle parameter normalization. |
 | `Pro_Forma_Invoices` | `Partial` | Core validation, totals, approval/sending, and deposit-payment flows are implemented, with workflow/navigation inconsistencies to confirm. |
 | `Credit_Note` | `Partial` | Core credit lifecycle, calculations, and credit/refund interactions are implemented across workflows, blueprint transitions, and record actions. |
 | `Debit_Note` | `Partial` | Core validation, totals, conversion, blueprint routing, payment-state updates, and LHDN submission are implemented across multiple execution paths. |
 | `Refund_Note` | `Partial` | Core refund validation, totaling, credit-note synchronization, and LHDN submission are implemented, but lifecycle is workflow-driven without a dedicated blueprint. |
-| `Payment_Received` | `Partial` | Allocation and reversal flows, journal linkage, and `Apply_Credit_To_Invoices` propagation are implemented, with behavior distributed across multi-form workflows. |
+| `Payment_Received` | `Partial` | Allocation/reversal and journal linkage remain implemented, with current DS/report cleanup removing system metadata columns and relabeling receipt modified-time output. |
 | `Journal_Entry` | `Partial` | Ledger posting and cleanup are implemented through upstream module flows, with limited standalone lifecycle logic on the journal form itself. |
-| `Invoice` | `Partial` | End-to-end behavior exists, but logic is distributed across workflow, blueprint, record actions, and schedule paths. |
+| `Invoice` | `Partial` | End-to-end behavior exists, with current DS schedule update using `Change_status_to_Overdue_` and revised overdue selection condition alongside existing distributed workflow/blueprint logic. |
 
 ---
 
@@ -879,3 +883,4 @@ Source: `XMT___Billing_System.ds` blueprints (`Invoice_Blueprint`, `Pro_Forma_In
 1. `Invoice` schedule filters use both `"paid"` and `"Paid"` stage values in different places. Confirm canonical paid-stage casing in `Invoice_Blueprint` and whether normalization is required. (Observed in `W1st_Remainder_Invoice_Due` vs `Final_Invoice_Reminder` filters.)
 2. `Subscription` supports status value `Terminated`, but traced billing-update logic only transitions to `Inactive` on final billing completion. Confirm required behavior for `Terminated` and whether invoice generation must stop immediately on that status.
 3. `Pro_Forma_Invoices` workflow `Handle_Submission_Form_an6` opens `#Report:Debit_Notes` on success. Confirm whether this is intentional or should redirect to Pro Forma report.
+4. Overdue schedule condition in `Change_status_to_Overdue_` is currently expressed as `Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" && Due_Date < today`; confirm intended precedence and whether `Due_Date < today` should apply to all included stages.
