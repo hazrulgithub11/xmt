@@ -26,6 +26,12 @@ Handle_Customer_Code_Chan as "Handle Customer Code Changes"
 					input.Previous_Balance = 0;
 					input.Total_Amount_Due = ifnull(input.Amount_Due,0);
 				}
+				else if(input.Customer != null)
+				{
+					exclude_invoice_id = ifnull(input.ID,0);
+					input.Previous_Balance = thisapp.invoice.get_previous_balance_for_customer(input.Customer,exclude_invoice_id);
+					input.Total_Amount_Due = ifnull(input.Amount_Due,0) + ifnull(input.Previous_Balance,0);
+				}
 			)
 		}
 	}

@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 14-Jun-2026 18:57:19
+ * Generated on : 14-Jun-2026 21:11:14
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -11862,35 +11862,6 @@
 				Customer_Name ascending
 			)
 		}
-		default list All_Tenancies
-		{
-			displayName = "All Tenancies"
-			show all rows from Tenancy    
-			(
-				Customer_Code as "Customer Code"
-				Customer_Name as "Customer Name"
-				(
-					view = All_Customers_Profile
-				)
-				Project_Location_Telco_Provider as "Project/Location/Telco Provider"
-				Building
-				Account_Type as "Account Type"
-				Account_Number as "Account Number"
-				Bill_Every as "Bill Every"
-				Tenant_Name as "Tenant Name"
-				Payable_To as "Payable To"
-				Technical_Email as "Technical Email"
-				Phone_Number as "Technical Phone Number"
-				(
-					displayformat = plainnumber 
-				)
-				Customer_Name.Email_Address as "Email Address"
-			)
-			sort by
-			(
-				Customer_Code ascending
-			)
-		}
 		default list All_Subscriptions
 		{
 			displayName = "All Subscriptions"
@@ -13703,6 +13674,52 @@
 				confirmation before execution
 				(
 					message for individual record = "Execute the Send Email action for this record?"
+					confirm button text = "Yes"		
+					cancel button text = "No"
+				)
+				)
+			)
+		}
+		list All_Tenancies
+		{
+			displayName = "All Tenancies"
+			show all rows from Tenancy    
+			(
+				Customer_Code as "Customer Code"
+				Customer_Name as "Customer Name"
+				(
+					view = All_Customers_Profile
+				)
+				Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+				Building
+				Account_Type as "Account Type"
+				Account_Number as "Account Number"
+				Bill_Every as "Bill Every"
+				Tenant_Name as "Tenant Name"
+				Payable_To as "Payable To"
+				Technical_Email as "Technical Email"
+				Phone_Number as "Technical Phone Number"
+				(
+					displayformat = plainnumber 
+				)
+				Customer_Name.Email_Address as "Email Address"
+				Customer_Name.Customer_Name as "Customer Name"
+			)
+			sort by
+			(
+				Customer_Code ascending
+			)
+			custom actions
+			(
+				"Create Account"
+				(
+	  			workflow = Create_Account_in_Desk1
+				show action in view header = true
+				show action in edit record menu = true
+				confirmation before execution
+				(
+					message for individual record = "Execute the Create Account action for this record?"
+					message for multiple records = "Execute the Create Account action for the selected ${record_count} records?"
 					confirm button text = "Yes"		
 					cancel button text = "No"
 				)
@@ -17380,18 +17397,6 @@
 					actions 
 					{
 						openURL("#Report:All_Customers_Profile","new window");
-					}
-				}
-			}
-			Direct_to_Form_Properties2 as "Direct to - Form Properties"
-			{
-				type =  presuccess
-				form = Tenancy
-				on start
-				{
-					actions 
-					{
-						openURL("#Report:All_Tenancies","new window");
 					}
 				}
 			}
@@ -32228,6 +32233,18 @@
 				}
 
 			}
+			Direct_to_Form_Properties2 as "Direct to - Form Properties"
+			{
+				type =  presuccess
+				form = Tenancy
+				on start
+				{
+					actions 
+					{
+						openURL("#Report:All_Tenancies","new window");
+					}
+				}
+			}
 		}
 
 		schedule
@@ -35717,19 +35734,6 @@
 					}
 				}
 			}
-			Create_Account_in_Desk1 as "Create Account in Desk"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-				on start
-				{
-					actions 
-					{
-						thisapp.tenancy.create_account_desk(ID);
-					}
-				}
-			}
 			Convert_To_Credit_Note as "Convert To Credit Note"
 			{
 				type =  functions
@@ -36974,115 +36978,16 @@
 					}
 				}
 			}
-			Create_Account29 as "Create Account"
+			Create_Account_in_Desk1 as "Create Account in Desk"
 			{
 				type =  functions
 				form = Tenancy
 				execution type = for each record	
-					status = inactive
 				on start
 				{
 					actions 
 					{
-						xmt_billing_system.invoice_submit_lhdn();
-					}
-				}
-			}
-			Create_Account30 as "Create Account"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-					status = inactive
-				on start
-				{
-					actions 
-					{
-						xmt_billing_system.invoice_submit_lhdn();
-					}
-				}
-			}
-			Create_Account31 as "Create Account"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-					status = inactive
-				on start
-				{
-					actions 
-					{
-						xmt_billing_system.invoice_submit_lhdn();
-					}
-				}
-			}
-			Create_Account32 as "Create Account"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-					status = inactive
-				on start
-				{
-					actions 
-					{
-						xmt_billing_system.invoice_submit_lhdn();
-					}
-				}
-			}
-			Create_Account33 as "Create Account"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-					status = inactive
-				on start
-				{
-					actions 
-					{
-						xmt_billing_system.invoice_submit_lhdn();
-					}
-				}
-			}
-			Create_Account34 as "Create Account"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-					status = inactive
-				on start
-				{
-					actions 
-					{
-						xmt_billing_system.invoice_submit_lhdn();
-					}
-				}
-			}
-			Create_Account35 as "Create Account"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-					status = inactive
-				on start
-				{
-					actions 
-					{
-						xmt_billing_system.invoice_submit_lhdn();
-					}
-				}
-			}
-			Create_Account36 as "Create Account"
-			{
-				type =  functions
-				form = Tenancy
-				execution type = for each record	
-					status = inactive
-				on start
-				{
-					actions 
-					{
-						xmt_billing_system.invoice_submit_lhdn();
+						thisapp.tenancy.CreateAccountDesk(ID);
 					}
 				}
 			}
@@ -37125,10 +37030,6 @@
 					{
 						enabled= Create,Viewall,Modifyall,Import,Export,Tab,read_comm,write_comm 
 						allFieldsVisible= true 
-						ReportPermissions
-						{
-							All_Tenancies={"View","Edit","Delete"}
-						}
 					}
 					Customer_Statement
 					{
@@ -37369,10 +37270,6 @@
 					{
 						enabled= Create,Viewall,Modifyall,Import,Export,Tab 
 						allFieldsVisible= true 
-						ReportPermissions
-						{
-							All_Tenancies={"View","Edit","Delete"}
-						}
 					}
 					Customer_Statement
 					{
@@ -38062,98 +37959,6 @@
 							(
 								Edit 
 								Duplicate 
-								Delete 
-							)
-						)
-				)
-			}
-			report All_Tenancies
-			{
-				quickview
-				(
-					layout
-					(
-						datablock1
-						(
-							fields
-							(
-								Customer_Code as "Customer Code"
-								Payable_To as "Payable To"
-								Technical_Email as "Technical Email"
-								Phone_Number as "Technical Phone Number"
-								Customer_Name.Email_Address as "Email Address"
-								Customer_Name as "Customer Name"
-								Project_Location_Telco_Provider as "Project/Location/Telco Provider"
-							)
-						)
-					)
-						menu
-						(
-							header
-							(
-								Edit 
-								Duplicate 
-								Delete 
-								Add 
-								Print 
-								Import 
-								Export 
-							)
-						record
-						(
-							Edit   	   
-							Duplicate   	   
-							Print   	   
-							Delete   	   
-    					)
-						)
-    				action
-    				(
-						on click
-						(
-							View Record   	   
-    					)
-						on right click
-						(
-							Edit   	   
-							Delete   	   
-							Duplicate   	   
-							Print   	   
-							View Record   	   
-    					)
-     				)
-				)
-
-				detailview
-				(
-					layout
-					(
-						datablock1
-						(
-							fields
-							(
-								Customer_Code as "Customer Code"
-								Customer_Name as "Customer Name"
-								Project_Location_Telco_Provider as "Project/Location/Telco Provider"
-								Building
-								Account_Type as "Account Type"
-								Account_Number as "Account Number"
-								Bill_Every as "Bill Every"
-								Tenant_Name as "Tenant Name"
-								Payable_To as "Payable To"
-								Technical_Email as "Technical Email"
-								Phone_Number as "Technical Phone Number"
-								Customer_Name.Email_Address as "Email Address"
-							)
-						)
-					)
-						menu
-						(
-							header
-							(
-								Edit 
-								Duplicate 
-								Print 
 								Delete 
 							)
 						)
@@ -41689,6 +41494,103 @@
 						)
 				)
 			}
+			report All_Tenancies
+			{
+				quickview
+				(
+					layout
+					(
+						datablock1
+						(
+							fields
+							(
+								Customer_Code as "Customer Code"
+								Customer_Name.Customer_Name as "Customer Name"
+								Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+								Building
+								Account_Type as "Account Type"
+								Account_Number as "Account Number"
+								Bill_Every as "Bill Every"
+								Tenant_Name as "Tenant Name"
+								Payable_To as "Payable To"
+								Technical_Email as "Technical Email"
+								Phone_Number as "Technical Phone Number"
+								Customer_Name.Email_Address as "Email Address"
+							)
+						)
+					)
+						menu
+						(
+							header
+							(
+								Edit 
+								Duplicate 
+								Delete 
+								Add 
+								Print 
+								Import 
+								Export 
+							)
+						record
+						(
+							Edit   	   
+							Duplicate   	   
+							Print   	   
+							Delete   	   
+    					)
+						)
+    				action
+    				(
+						on click
+						(
+							View Record   	   
+    					)
+						on right click
+						(
+							Edit   	   
+							Delete   	   
+							Duplicate   	   
+							Print   	   
+							View Record   	   
+    					)
+     				)
+				)
+
+				detailview
+				(
+					layout
+					(
+						datablock1
+						(
+							fields
+							(
+								Customer_Code as "Customer Code"
+								Customer_Name as "Customer Name"
+								Project_Location_Telco_Provider as "Project/Location/Telco Provider"
+								Building
+								Account_Type as "Account Type"
+								Account_Number as "Account Number"
+								Bill_Every as "Bill Every"
+								Tenant_Name as "Tenant Name"
+								Payable_To as "Payable To"
+								Technical_Email as "Technical Email"
+								Phone_Number as "Technical Phone Number"
+								Customer_Name.Email_Address as "Email Address"
+							)
+						)
+					)
+						menu
+						(
+							header
+							(
+								Edit 
+								Duplicate 
+								Print 
+								Delete 
+							)
+						)
+				)
+			}
 		}
 		menu
 		{
@@ -41925,13 +41827,13 @@
 						icon = "travel-world"
 					}
 				}
-				section Tenancies
+				section Tenancy
 				{
-					displayname = "Tenancies"
+					displayname = "Tenancy"
 					icon = "tech-desktop"
 					report All_Tenancies
 					{
-						icon = "travel-world"
+						icon = "tech-desktop"
 					}
 				}
 				section Subscriptions1

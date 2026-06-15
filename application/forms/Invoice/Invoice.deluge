@@ -1104,6 +1104,26 @@ form Invoice
 	 	column = 2   
 		width = medium
 	)
+	Adjustment
+	(
+		type = decimal
+		displayname = "Adjustment"
+		format = commadotwestern
+		initial value = 0
+	 	row = 9
+	 	column = 2   
+		width = medium
+	)
+	Overdue_Charges
+	(
+		type = decimal
+		displayname = "Overdue Charges"
+		format = commadotwestern
+		initial value = 0
+	 	row = 9
+	 	column = 2   
+		width = medium
+	)
 	Total_Amount_Due
 	(
 		type = decimal

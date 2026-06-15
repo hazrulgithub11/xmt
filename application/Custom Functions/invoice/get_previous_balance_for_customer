@@ -1,0 +1,9 @@
+float invoice.get_previous_balance_for_customer(int customer_id, int exclude_invoice_id)
+{
+	previous_balance = 0;
+	for each  curr_invoice in Invoice[Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Overdue","Partially Paid"} && Customer == customer_id && ID != exclude_invoice_id]
+	{
+		previous_balance = previous_balance + curr_invoice.Amount_Due;
+	}
+	return previous_balance;
+}

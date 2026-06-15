@@ -16,6 +16,12 @@ Load_of_the_form_Initiali as "Load of the form Initialization"
 				input.User_Input_Trigger = !input.User_Input_Trigger;
 				/* Customer Name Trigger Initialization*/
 				input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
+				if(input.Customer != null)
+				{
+					exclude_invoice_id = ifnull(input.ID,0);
+					input.Previous_Balance = thisapp.invoice.get_previous_balance_for_customer(input.Customer,exclude_invoice_id);
+					input.Total_Amount_Due = ifnull(input.Amount_Due,0) + ifnull(input.Previous_Balance,0);
+				}
 				/* Payment Received Line Item — only for saved invoices */
 				if(input.ID != null && input.ID != 0)
 				{

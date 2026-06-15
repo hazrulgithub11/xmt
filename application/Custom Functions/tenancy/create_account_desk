@@ -1,4 +1,4 @@
-map tenancy.CreateAccountDesk(int tenantID)
+map tenancy.create_account_desk(int tenantID)
 {
 	tenantRec = Tenancy[ID == tenantID];
 	tenant_name = tenantRec.Tenant_Name;
