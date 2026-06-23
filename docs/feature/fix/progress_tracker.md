@@ -19,7 +19,7 @@ Status legend:
 - [x] 02 - `Reference_Invoice` field added + exported (`02-fix-credit-note-reference-invoice-field.md`)
 - [x] 03 - Credit Note blueprint structure aligned (`03-fix-credit-note-blueprint-structure.md`)
 - [x] 04 - Status engine hardened (no early Open/Closed) (`04-fix-credit-note-status-engine-hardening.md`)
-- [ ] 05 - Convert path fixed (`05-fix-credit-note-convert-path.md`)
+- [x] 05 - Convert path fixed (`05-fix-credit-note-convert-path.md`)
 - [ ] 06 - Apply/Refund guards fixed (`06-fix-credit-note-apply-refund-guards.md`)
 - [ ] 07 - LHDN reference payload fixed (`07-fix-credit-note-lhdn-reference.md`)
 - [ ] 08 - Test matrix passed + rollout complete (`08-fix-credit-note-test-and-rollout.md`)
@@ -28,7 +28,7 @@ Status legend:
 
 ## Current Sprint Snapshot
 
-- Current step: `05 - Convert path`
+- Current step: `06 - Apply/Refund guards`
 - Owner: `TBD`
 - Started at: `2026-06-23`
 - Target finish: `TBD`
@@ -85,15 +85,15 @@ Status legend:
 - Notes: `Apply/refund Status writes deferred to Step 06.`
 
 ### 05 - Convert Path
-- Status: `[ ]`
+- Status: `[x]`
 - Doc: `docs/feature/fix/05-fix-credit-note-convert-path.md`
 - Key checks:
-  - [ ] Convert sets `Reference_Invoice` correctly
-  - [ ] CN number generated once only
-  - [ ] Convert output remains Draft
-  - [ ] `Paid` stage condition case corrected
-- Completed by / date: `TBD`
-- Notes: ``
+  - [x] Convert sets `Reference_Invoice` correctly
+  - [x] CN number generated once only (removed from convert insert)
+  - [x] Convert output explicitly `changeStage` → Draft
+  - [x] `Paid` stage condition case corrected on All_Invoices
+- Completed by / date: `2026-06-23`
+- Notes: `CN number assigned in Handle_Invoice_Creation1 on add success.`
 
 ### 06 - Apply/Refund Guards
 - Status: `[ ]`
@@ -142,6 +142,7 @@ Status legend:
 
 ## Change Log
 
+- `2026-06-23` - Step 05 complete: convert sets Reference_Invoice, single numbering, Draft stage, Paid condition fix
 - `2026-06-23` - Step 04 complete: stage-guarded Open/Closed, Draft on create, submission workflow cleaned
 - `2026-06-23` - Step 03 complete: blueprint utilization transitions fixed, `Approved_to_Closed` added
 - `2026-06-23` - Step 02 complete: `Reference_Invoice` field, reports, validator workflow, `.ds` sync

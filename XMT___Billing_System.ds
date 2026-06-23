@@ -12090,7 +12090,7 @@
 	  			workflow = Convert_To_Credit_Note
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "paid" || Blueprint.Current_Stage == "Overdue")
+				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Paid" || Blueprint.Current_Stage == "Overdue")
 				confirmation before execution
 				(
 					message for individual record = "Execute the  action for this record?"
@@ -35528,7 +35528,7 @@
 												Delivery_Postcode=input.Delivery_Postcode
 												Delivery_Country=input.Delivery_Country
 												Delivery_State=input.Delivery_State
-												Invoice_No=thisapp.credit_note.generate_credit_note_no()
+												Reference_Invoice=input.ID
 												Subscriptions=input.Subscriptions
 												Invoice_Date=zoho.currentdate
 												Invoice_For_Usage=input.Invoice_For_Usage
@@ -35560,6 +35560,7 @@
 												Credits_Remaining=input.Grand_Total
 												Added_User=zoho.loginuser
 											];
+											thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Draft",create_credit_note_id.toLong());
 											// Add item row to item subform
 											total_monthly_rental = 0;
 											total_internet_charges = 0;

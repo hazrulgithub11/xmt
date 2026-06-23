@@ -57,7 +57,6 @@ list All_Invoices
 		Supplier
 		Customer.Customer_Name as "Customer Name"
 		Customer
-		Supplier_Name as "Customer Name"
 		Charge_Category as "Charge Category"
 		Grand_Total as "Grand Total"
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
@@ -65,7 +64,7 @@ list All_Invoices
 		Invoice_Currency as "Invoice Currency"
 		Exchange_Rate as "Exchange Rate"
 		Amount_Paid as "Amount Paid"
-		Blueprint.Current_Stage as "Current Stage"
+		Blueprint.Current_Stage as "Status"
 	)
 	sort by
 	(
@@ -79,12 +78,6 @@ list All_Invoices
 				show action in view header = true
 				condition = (Blueprint.Current_Stage == "Pending Approval")
 		)
-		"Calculate Overdue"
-		(
-	  			workflow = Calculate_Overdue
-				show action in view header = true
-				condition = (Blueprint.Current_Stage == "Draft" || Blueprint.Current_Stage == "Pending Approval" || Blueprint.Current_Stage == "Approved")
-		)
 		"Record Payment"
 		(
 	  			workflow = Record_Payment_Invoice
@@ -97,7 +90,7 @@ list All_Invoices
 	  			workflow = Convert_To_Credit_Note
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "paid" || Blueprint.Current_Stage == "Overdue")
+				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Paid" || Blueprint.Current_Stage == "Overdue")
 				confirmation before execution
 				(
 					message for individual record = "Execute the  action for this record?"
@@ -168,9 +161,9 @@ list All_Invoices
 				fields
 				(
 					Invoice_No as "Invoice No."
-					Blueprint.Current_Stage as "Current Stage"
+					Blueprint.Current_Stage as "Status"
 					Supplier
-					Supplier_Name as "Customer Name"
+					Customer.Customer_Name as "Customer Name"
 					Invoice_Date as "Invoice Date"
 					Due_Date as "Due Date"
 					Charge_Category as "Charge Category"
@@ -178,18 +171,20 @@ list All_Invoices
 					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 					Base_Currency as "Base Currency"
 					Invoice_Currency as "Invoice Currency"
+					Previous_Balance as "Previous Balance"
 					Exchange_Rate as "Exchange Rate"
 					Amount_Paid as "Amount Paid"
+					Total_Amount_Due as "Total Amount Due"
 					Invoice_UUID as "Invoice UUID"
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    	 	)
-    	)
+			menu
+			(
+				header
+				(
+				)
+			)
     	action
     	(
 			on click
@@ -214,18 +209,18 @@ list All_Invoices
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-    		 	Delete 
-			 	"Send Email"
-			 	"Submit Invoice to LHDN"
-			 	"Convert To Credit Note"
-			 	"Convert To Debit Note"
-			 	"Record Payment"
-    	 	)
-    	)
+			menu
+			(
+				header
+				(
+					Edit 
+					Delete 
+					"Send Email"
+					"Submit Invoice to LHDN"
+					"Convert To Credit Note"
+					"Convert To Debit Note"
+					"Record Payment"
+				)
+			)
 	)
 }
