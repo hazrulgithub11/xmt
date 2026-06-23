@@ -94,7 +94,7 @@ list Credit_Notes
 	  			workflow = Submit_Credit_Note_to_LHD1
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved")
+				condition = (Blueprint.Current_Stage == "Closed")
 				confirmation before execution
 				(
 					message for individual record = "Could you please confirm whether we need to submit the credit note to LHDN?"

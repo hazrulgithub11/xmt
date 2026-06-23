@@ -21,14 +21,14 @@ Status legend:
 - [x] 04 - Status engine hardened (no early Open/Closed) (`04-fix-credit-note-status-engine-hardening.md`)
 - [x] 05 - Convert path fixed (`05-fix-credit-note-convert-path.md`)
 - [x] 06 - Apply/Refund guards fixed (`06-fix-credit-note-apply-refund-guards.md`)
-- [ ] 07 - LHDN reference payload fixed (`07-fix-credit-note-lhdn-reference.md`)
+- [x] 07 - LHDN reference payload fixed (`07-fix-credit-note-lhdn-reference.md`)
 - [ ] 08 - Test matrix passed + rollout complete (`08-fix-credit-note-test-and-rollout.md`)
 
 ---
 
 ## Current Sprint Snapshot
 
-- Current step: `07 - LHDN reference payload`
+- Current step: `08 - Testing + rollout`
 - Owner: `TBD`
 - Started at: `2026-06-23`
 - Target finish: `TBD`
@@ -107,15 +107,15 @@ Status legend:
 - Notes: `Refund picker stage filter deferred; report actions gated. Workflow file: Successful_form_submissio1 (not an5).`
 
 ### 07 - LHDN Reference Payload
-- Status: `[ ]`
+- Status: `[x]`
 - Doc: `docs/feature/fix/07-fix-credit-note-lhdn-reference.md`
 - Key checks:
-  - [ ] LHDN action visible only when Closed
-  - [ ] `reference_invoice_list` includes `Reference_Invoice` when present
-  - [ ] Deduplication of references validated
-  - [ ] Convert+refund-only case verified
-- Completed by / date: `TBD`
-- Notes: ``
+  - [x] LHDN action visible only when Closed
+  - [x] `reference_invoice_list` includes `Reference_Invoice` when present
+  - [x] Deduplication of references validated
+  - [x] Convert+refund-only case verified (logic)
+- Completed by / date: `2026-06-23`
+- Notes: `Manual LHDN payload test deferred to Step 08.`
 
 ### 08 - Testing + Rollout
 - Status: `[ ]`
@@ -142,6 +142,7 @@ Status legend:
 
 ## Change Log
 
+- `2026-06-23` - Step 07 complete: LHDN reference_invoice_list includes Reference_Invoice; Submit button Closed-only
 - `2026-06-23` - Step 06 complete: apply/refund guards, Reference_Invoice default, deletion blocks, guarded Open/Closed
 - `2026-06-23` - Step 05 complete: convert sets Reference_Invoice, single numbering, Draft stage, Paid condition fix
 - `2026-06-23` - Step 04 complete: stage-guarded Open/Closed, Draft on create, submission workflow cleaned

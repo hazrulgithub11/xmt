@@ -13305,7 +13305,7 @@
 	  			workflow = Submit_Credit_Note_to_LHD1
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved")
+				condition = (Blueprint.Current_Stage == "Closed")
 				confirmation before execution
 				(
 					message for individual record = "Could you please confirm whether we need to submit the credit note to LHDN?"
@@ -36111,6 +36111,20 @@
 										// Invoice info
 										reference_invoice_list = {};
 										used_reference_invoice_no_list = {};
+										if(input.Reference_Invoice != null)
+										{
+											reference_invoice_no = input.Reference_Invoice.Invoice_No;
+											reference_invoice_uuid = input.Reference_Invoice.Invoice_UUID;
+											if(reference_invoice_uuid != null && reference_invoice_uuid != "")
+											{
+												if(used_reference_invoice_no_list.contains(reference_invoice_no) == false)
+												{
+													curr_reference_invoice = {"credit_applied_invoice_no":reference_invoice_no,"credit_applied_invoice_uuid":reference_invoice_uuid};
+													reference_invoice_list.add(curr_reference_invoice);
+													used_reference_invoice_no_list.add(reference_invoice_no);
+												}
+											}
+										}
 										for each  curr_credit_applied_invoice in input.Credit_Applied_Invoices
 										{
 											curr_get_credit_applied_invoice = Invoice[ID = curr_credit_applied_invoice.CAI_Invoice_No];
