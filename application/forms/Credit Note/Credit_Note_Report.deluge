@@ -18,7 +18,6 @@ list Credit_Note_Report1
 		Supplier_Telephone_Number as "Telephone Number"
 		(
 			displayformat = plainnumber 
-			linktodial = enable
 		)
 		Supplier_City as "City"
 		Supplier_Country as "Country"
@@ -35,7 +34,6 @@ list Credit_Note_Report1
 		Customer_Telephone_Number as "Telephone Number"
 		(
 			displayformat = plainnumber 
-			linktodial = enable
 		)
 		Customer_City as "City"
 		Customer_Country as "Country"
@@ -50,7 +48,6 @@ list Credit_Note_Report1
 		Invoice_Public_Link as "Invoice Public Link"
 		QR_Invoice_Public_Link as "QR Invoice Public Link"
 		Subscriptions
-		Status
 		Invoice_Date as "Invoice Date"
 		Invoice_For_Usage as "Invoice For Usage"
 		Payment_Term as "Payment Term"
@@ -59,7 +56,6 @@ list Credit_Note_Report1
 		Charge_Category as "Charge Category"
 		Announcement
 		Attachment
-		Send_Email as "Send Email"
 		Base_Currency as "Base Currency"
 		Invoice_Currency as "Invoice Currency"
 		Exchange_Rate as "Exchange Rate"
@@ -77,8 +73,8 @@ list Credit_Note_Report1
 		Grand_Total as "Grand Total"
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Payable_To as "Payable To"
+		Reference_Invoice as "Reference Invoice"
 		Rejection_Reason as "Rejection Reason"
-		Confirm_resubmission as "Confirm resubmission?"
 		User_Input_Trigger
 	)
 	quickview
@@ -99,21 +95,21 @@ list Credit_Note_Report1
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-    		 	Duplicate 
-    		 	Delete 
-    	 	)
+			menu
+			(
+				header
+				(
+					Edit 
+					Duplicate 
+					Delete 
+				)
 			record
 			(
 				Edit   	   
 				Duplicate   	   
 				Delete   	   
     		)
-    	)
+			)
     	action
     	(
 			on click
@@ -176,7 +172,6 @@ list Credit_Note_Report1
 					Invoice_Public_Link as "Invoice Public Link"
 					QR_Invoice_Public_Link as "QR Invoice Public Link"
 					Subscriptions
-					Status
 					Invoice_Date as "Invoice Date"
 					Invoice_For_Usage as "Invoice For Usage"
 					Payment_Term as "Payment Term"
@@ -185,7 +180,6 @@ list Credit_Note_Report1
 					Charge_Category as "Charge Category"
 					Announcement
 					Attachment
-					Send_Email as "Send Email"
 					Base_Currency as "Base Currency"
 					Invoice_Currency as "Invoice Currency"
 					Exchange_Rate as "Exchange Rate"
@@ -204,19 +198,18 @@ list Credit_Note_Report1
 					Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 					Payable_To as "Payable To"
 					Rejection_Reason as "Rejection Reason"
-					Confirm_resubmission as "Confirm resubmission?"
 					User_Input_Trigger
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-    		 	Duplicate 
-    		 	Delete 
-    	 	)
-    	)
+			menu
+			(
+				header
+				(
+					Edit 
+					Duplicate 
+					Delete 
+				)
+			)
 	)
 }

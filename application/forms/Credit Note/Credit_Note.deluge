@@ -466,15 +466,6 @@ form Credit_Note
 	 	column = 2   
 		width = medium
 	)
-	Send_Email
-	(
-    	type = checkbox
-		displayname = "Send Email"
-		initial value = false
-	 	row = 4
-	 	column = 2   
-		width = medium
-	)
 	Transaction_Info
 	(
 		type = section
@@ -1074,6 +1065,17 @@ form Credit_Note
     	displayformat = [Account + " - " + Bank_Account_Number]
 		sortorder = ascending
 		height = 60px
+	 	row = 9
+	 	column = 2   
+		width = medium
+	)
+	Reference_Invoice
+	(
+		type = picklist	
+		displayname = "Reference Invoice"
+		values  = Invoice.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
 	 	row = 9
 	 	column = 2   
 		width = medium

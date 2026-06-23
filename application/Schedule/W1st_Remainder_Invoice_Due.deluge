@@ -1,4 +1,3 @@
-
 W1st_Remainder_Invoice_Due as "1st Remainder Invoice Due Date"
 {
 	type =  schedule

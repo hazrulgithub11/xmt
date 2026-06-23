@@ -18,7 +18,7 @@
 
 | Transition | From | To | Scripts |
 |---|---|---|---|
-| [Approve](transitions/Approve/) | Pending Approval | Approved | 0 |
+| [Approve](transitions/Approve/) | Pending Approval | Approved | 1 |
 | [Reject](transitions/Reject/) | Pending Approval | Rejected | 0 |
 | [Resubmit](transitions/Resubmit/) | Rejected | Pending Approval | 0 |
 | [Send For Approval](transitions/Send_For_Approval/) | Draft | Pending Approval | 0 |

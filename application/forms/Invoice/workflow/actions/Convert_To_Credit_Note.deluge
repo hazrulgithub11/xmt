@@ -1,15 +1,4 @@
-Convert_To_Credit_Note as "Convert To Credit Note"
-{
-	type =  functions
-	form = Invoice
-	execution type = for each record    
-	on start
-	{
-		actions 
-		{
-		on click
-		(
-			errorMessage = "";
+errorMessage = "";
 create_credit_note_id = null;
 try 
 {
@@ -58,7 +47,6 @@ try
 		Charge_Category=input.Charge_Category
 		Announcement=input.Announcement
 		Attachment=input.Attachment
-		Send_Email=input.Send_Email
 		Base_Currency=input.Base_Currency
 		Invoice_Currency=input.Invoice_Currency
 		Exchange_Rate=input.Exchange_Rate
@@ -185,9 +173,3 @@ else
 {
 	openUrl("#Form:Alert_Message?Error_Message=" + errorMessage,"popup window","height=auto,width=auto");
 }
-
-		)
-		}
-	}
-}
-

@@ -1,0 +1,228 @@
+// LHDN validation (must run first; aborts transition on failure)
+error_messages = list();
+get_organization = Organization_Settings[ID != null];
+organization_environment = get_organization.LHDN_Portal_Environment;
+system_api_url = "https://api.myinvois.hasil.gov.my/";
+if(organization_environment == "SANDBOX")
+{
+	system_api_url = "https://preprod-api.myinvois.hasil.gov.my/";
+}
+else
+{
+	system_api_url = "https://api.myinvois.hasil.gov.my/";
+}
+/* Get LHDN Access Token */
+client_id = get_organization.Client_ID;
+client_secret = get_organization.Client_Secret;
+access_token = "";
+token_header = Map();
+token_header.put("Content-Type","application/x-www-form-urlencoded");
+token_params = Map();
+token_params.put("client_id",client_id);
+token_params.put("client_secret",client_secret);
+token_params.put("grant_type","client_credentials");
+token_params.put("scope","InvoicingAPI");
+try 
+{
+	token_response = invokeurl
+	[
+		url :system_api_url + "connect/token"
+		type :POST
+		parameters:token_params
+		headers:token_header
+	];
+	access_token = token_response.toMap().get("access_token");
+}catch (e)
+{
+	error_messages.add("Failed to fetch access token from LHDN: " + e.toString());
+}
+if(access_token == null || access_token == "")
+{
+	error_messages.add("Failed to fetch access token from LHDN. Please check your Client ID and Client Secret.");
+}
+// Organization TIN Validation via LHDN
+organization_tin = input.Supplier_TIN;
+organization_registration_number_scheme = input.Supplier_ID_Type;
+organization_registration_number = input.Supplier_Registration_Identification_Passport_Number;
+general_tin_list = {"EI00000000010","EI00000000020","EI00000000030","EI00000000040"};
+if(access_token != "" && !general_tin_list.contains(organization_tin))
+{
+	org_validation_headers = Map();
+	org_validation_headers.put("Authorization",access_token);
+	org_validation_headers.put("Content-Type","application/json");
+	org_validation_url = system_api_url + "api/v1.0/taxpayer/validate/" + organization_tin + "?idType=" + organization_registration_number_scheme + "&idValue=" + organization_registration_number;
+	try 
+	{
+		org_validation_response = invokeurl
+		[
+			url :org_validation_url
+			type :GET
+			headers:org_validation_headers
+		];
+		if(org_validation_response != "")
+		{
+			// If org_validation_response is Empty, it means 200 success. 
+			error_messages.add("Missing or invalid TIN and Registration Number. Please enter the correct details to proceed.");
+		}
+	}	catch (e)
+	{
+		error_messages.add("Failed to validate organization with LHDN: " + e.toString());
+	}
+}
+/* Organization Settings Validation */
+org_missing_fields = list();
+if(ifnull(input.Supplier_Name,"") == "")
+{
+	org_missing_fields.add("name");
+}
+if(ifnull(input.Supplier_Telephone_Number,"") == "")
+{
+	org_missing_fields.add("phone number");
+}
+if(org_missing_fields.size() > 0)
+{
+	error_messages.add("Missing organization details: " + org_missing_fields.toString() + ".");
+}
+org_address_missing_fields = list();
+if(ifnull(input.Supplier_Country,"") == "")
+{
+	org_address_missing_fields.add("country");
+}
+if(ifnull(input.Supplier_State,"") == "")
+{
+	org_address_missing_fields.add("state");
+}
+if(ifnull(input.Supplier_City,"") == "")
+{
+	org_address_missing_fields.add("city");
+}
+if(ifnull(input.Supplier_Street,"") == "")
+{
+	org_address_missing_fields.add("street address");
+}
+if(ifnull(input.Supplier_Postcode,"") == "")
+{
+	org_address_missing_fields.add("zip code");
+}
+if(org_address_missing_fields.size() > 0)
+{
+	error_messages.add("Missing organization address details: " + org_address_missing_fields.toString() + ".");
+}
+// Customer Validation
+customer_tin = input.Customer_TIN;
+customer_reg_scheme = input.Customer_ID_Type;
+customer_reg_number = input.Customer_Registration_Identification_Passport_Number;
+if(access_token != "" && !general_tin_list.contains(customer_tin))
+{
+	customer_validation_headers = Map();
+	customer_validation_headers.put("Authorization",access_token);
+	customer_validation_headers.put("Content-Type","application/json");
+	customer_validation_url = system_api_url + "api/v1.0/taxpayer/validate/" + customer_tin + "?idType=" + customer_reg_scheme + "&idValue=" + customer_reg_number;
+	try 
+	{
+		customer_validation_response = invokeurl
+		[
+			url :customer_validation_url
+			type :GET
+			headers:customer_validation_headers
+		];
+		if(customer_validation_response != "")
+		{
+			// If customer_validation_response is Empty, it means 200 success.
+			error_messages.add("Missing or invalid customer TIN and Registration Number. Please enter the correct details to proceed.");
+		}
+	}	catch (e)
+	{
+		error_messages.add("Failed to validate customer with LHDN: " + e.toString());
+	}
+}
+customer_missing_fields = list();
+if(ifnull(input.Customer_Name,"") == "")
+{
+	customer_missing_fields.add("customer name");
+}
+if(ifnull(input.Customer_Telephone_Number,"") == "")
+{
+	customer_missing_fields.add("phone number");
+}
+if(customer_missing_fields.size() > 0)
+{
+	error_messages.add("Missing customer details: " + customer_missing_fields.toString() + ".");
+}
+// Billing address
+customer_billing_missing_fields = list();
+if(ifnull(input.Customer_Street,"") == "")
+{
+	customer_billing_missing_fields.add("billing address");
+}
+if(ifnull(input.Customer_City,"") == "")
+{
+	customer_billing_missing_fields.add("city");
+}
+if(ifnull(input.Customer_State,"") == "")
+{
+	customer_billing_missing_fields.add("state");
+}
+if(ifnull(input.Customer_Postcode,"") == "")
+{
+	customer_billing_missing_fields.add("zip code");
+}
+if(ifnull(input.Customer_Country,"") == "")
+{
+	customer_billing_missing_fields.add("country");
+}
+if(customer_billing_missing_fields.size() > 0)
+{
+	error_messages.add("Missing customer billing details: " + customer_billing_missing_fields.toString() + ".");
+}
+// Shipping address — only validated if at least one shipping field is populated
+customer_shipping_street = ifnull(input.Delivery_Street,"");
+customer_shipping_city = ifnull(input.Delivery_City,"");
+customer_shipping_state = ifnull(input.Delivery_State,"");
+customer_shipping_zip = ifnull(input.Delivery_Postcode,"");
+customer_shipping_country = ifnull(input.Delivery_Country,"");
+shipping_address_needed = false;
+if(customer_shipping_street != "" || customer_shipping_city != "" || customer_shipping_state != "" || customer_shipping_zip != "" || customer_shipping_country != "")
+{
+	shipping_address_needed = true;
+}
+if(shipping_address_needed)
+{
+	customer_shipping_missing_fields = list();
+	if(customer_shipping_street == "")
+	{
+		customer_shipping_missing_fields.add("shipping address");
+	}
+	if(customer_shipping_city == "")
+	{
+		customer_shipping_missing_fields.add("city");
+	}
+	if(customer_shipping_state == "")
+	{
+		customer_shipping_missing_fields.add("state");
+	}
+	if(customer_shipping_zip == "")
+	{
+		customer_shipping_missing_fields.add("zip code");
+	}
+	if(customer_shipping_country == "")
+	{
+		customer_shipping_missing_fields.add("country");
+	}
+	if(customer_shipping_missing_fields.size() > 0)
+	{
+		error_messages.add("Missing customer shipping details: " + customer_shipping_missing_fields.toString() + ".");
+	}
+}
+if(error_messages.size() > 0)
+{
+	error_message = "";
+	for each  msg in error_messages
+	{
+		error_message = error_message + msg + " ";
+	}
+	error_message = error_message.trim();
+	info error_message;
+	thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
+	return;
+}

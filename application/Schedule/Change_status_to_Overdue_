@@ -1,0 +1,19 @@
+Change_status_to_Overdue_ as "Change status to Overdue when due date is reached"
+{
+	type =  schedule
+	form = Invoice[Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" && Due_Date < today]
+	start = Due_Date at "18:25:00"
+	frequency = daily
+	time zone = "Asia/Singapore"
+	on start
+	{
+		actions 
+		{
+		on load
+		(
+			thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
+		)
+		}
+	}
+}
+

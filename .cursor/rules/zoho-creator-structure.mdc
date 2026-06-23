@@ -1,0 +1,53 @@
+---
+description: Zoho Creator repo layout — functions vs workflows vs schedules (do not confuse)
+alwaysApply: true
+---
+
+# Zoho Creator — Where Code Lives
+
+**Functions and workflows are NOT the same thing in Zoho Creator.** Pick the artifact type first, then the folder.
+
+## Quick decision
+
+| User intent | Artifact | Folder |
+|---|---|---|
+| Reusable logic called from many places | **Custom Function** | `application/Custom Functions/{namespace}/{name}` |
+| Runs when form loads, field changes, validates, or saves | **Form Workflow** | `application/forms/{Form}/workflow/*.deluge` |
+| Button / bulk action on a form or report | **Record Action** | `application/forms/{Form}/workflow/actions/*.deluge` |
+| Runs on a timer or date field | **Schedule** | `application/Schedule/*` |
+| Runs on blueprint stage change | **Blueprint transition** | `application/blueprints/{Blueprint}/transitions/...` |
+| Field definitions | **Form** | `application/forms/{Form}/{Form}.deluge` |
+| Report / list view | **Report** | `application/forms/{Form}/{Report}.deluge` (`list` block) |
+
+## Custom Functions ≠ Record Actions
+
+Both are called "functions" in conversation — in this repo they are different files:
+
+- **Custom Function** — pure Deluge, no workflow wrapper. Signature uses namespace: `Map invoice.calc_line_tax(...)`. Called via `thisapp.invoice.calc_line_tax(...)`. Lives in `Custom Functions/`.
+- **Record Action** — workflow DSL with `type = functions`, `on click`, `execution type = for each record`. Lives in `workflow/actions/`. **Never** put record-action DSL in `Custom Functions/`.
+
+## Form Workflow signals
+
+Form workflows start with a named block and `type = form`:
+
+```
+Handle_Exchange_Rate as "Handle Exchange Rate"
+{
+	type =  form
+	form = Invoice
+	record event = on add or edit
+	on user input of Exchange_Rate { ... }
+}
+```
+
+Common triggers: `on load`, `on user input of Field`, `on validate`, `on success`, `on delete`.
+
+## Before editing
+
+1. Confirm the target file exists locally **and** in `XMT___Billing_System.ds` (see `double-check` rule). If missing from `.ds`, tell the user to sync from live Creator first.
+2. Read a sibling file in the same folder and match its format exactly.
+3. Do not invent Zoho DSL keywords — copy patterns from existing files in this repo.
+
+## Deep reference
+
+For full format templates and anti-patterns, read `.cursor/skills/zoho-creator-deluge/SKILL.md`.

@@ -14,6 +14,21 @@ Handle_Customer_Name_Chan3 as "Handle Customer Name Changes"
 					input.Customer_Name_Trigger = !input.Customer_Name_Trigger;
 			)
 		}
+		actions 
+		{
+			custom deluge script
+			(
+					invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
+				if(invoice_id_list.size() == 0)
+				{
+					input.Reference_Invoice:ui.add({});
+				}
+				else
+				{
+					input.Reference_Invoice:ui.add(invoice_id_list);
+				}
+			)
+		}
 	}
 
 }

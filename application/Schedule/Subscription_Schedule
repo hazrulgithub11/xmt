@@ -1,0 +1,69 @@
+Subscription_Schedule as "Subscription_Schedule"
+{
+	type =  schedule
+	start = "2026-01-01 00:00:00"
+	frequency = daily
+	time zone = "Asia/Singapore"
+	on start
+	{
+		actions 
+		{
+		on load
+		(
+			// Monthly
+				tenancy_list = Tenancy[Billing_Cycle == "Monthly"];
+				for each  curr_tenancy in tenancy_list
+				{
+					curr_tenancy_id = curr_tenancy.ID;
+					curr_actual_billing_date = curr_tenancy.Next_Billing_Date;
+					curr_tenancy_bill_for = curr_tenancy.Bill_For;
+					curr_tenancy_billing_cycle = curr_tenancy.Billing_Cycle;
+					curr_tenancy_bill_every = curr_tenancy.Bill_Every;
+					curr_tenancy_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(curr_tenancy_billing_cycle);
+					subscription_id_list = Subscription[Customer_Code = curr_tenancy_id && Next_Billing_Date = curr_actual_billing_date && Subscription_Status == "Active"].ID.getAll();
+					if(subscription_id_list.size() > 0)
+					{
+						monthly_billing_date = thisapp.tenancy.get_monthly_billing_date_from_actual(curr_tenancy_bill_every,curr_actual_billing_date);
+						for each  curr_subscription_id in subscription_id_list
+						{
+							if(curr_tenancy_bill_for == "Current Duration")
+							{
+								thisapp.invoice.create_invoice_current_duration(true,curr_subscription_id,monthly_billing_date,curr_actual_billing_date,false,null,null,false);
+							}
+							else
+							{
+								thisapp.invoice.create_invoice_previous_duration(true,curr_subscription_id,monthly_billing_date,curr_actual_billing_date,false,null,null,false);
+							}
+						}
+					}
+				}
+				// Non-Monthly
+				tenancy_list = Tenancy[Billing_Cycle != "Monthly"];
+				for each  curr_tenancy in tenancy_list
+				{
+					curr_tenancy_id = curr_tenancy.ID;
+					curr_actual_billing_date = curr_tenancy.Next_Billing_Date;
+					curr_tenancy_bill_for = curr_tenancy.Bill_For;
+					curr_tenancy_billing_cycle = curr_tenancy.Billing_Cycle;
+					curr_tenancy_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(curr_tenancy_billing_cycle);
+					subscription_id_list = Subscription[Customer_Code = curr_tenancy_id && Next_Billing_Date = curr_actual_billing_date && Subscription_Status == "Active"].ID.getAll();
+					if(subscription_id_list.size() > 0)
+					{
+						for each  curr_subscription_id in subscription_id_list
+						{
+							if(curr_tenancy_bill_for == "Current Duration")
+							{
+								thisapp.invoice.create_invoice_current_duration(false,curr_subscription_id,curr_actual_billing_date,curr_actual_billing_date,false,null,null,false);
+							}
+							else
+							{
+								thisapp.invoice.create_invoice_previous_duration(false,curr_subscription_id,curr_actual_billing_date,curr_actual_billing_date,false,null,null,false);
+							}
+						}
+					}
+				}
+		)
+		}
+	}
+}
+

@@ -51,7 +51,6 @@ list Credit_Notes
 		Charge_Category as "Charge Category"
 		Announcement
 		Attachment
-		Send_Email as "Send Email"
 		Base_Currency as "Base Currency"
 		Invoice_Currency as "Invoice Currency"
 		Exchange_Rate as "Exchange Rate"
@@ -69,8 +68,8 @@ list Credit_Notes
 		Grand_Total as "Grand Total"
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Payable_To as "Payable To"
+		Reference_Invoice as "Reference Invoice"
 		Rejection_Reason as "Rejection Reason"
-		Confirm_resubmission as "Confirm resubmission?"
 		User_Input_Trigger
 		Credits_Used as "Credits Used"
 		Refund
@@ -88,13 +87,14 @@ list Credit_Notes
 	  			workflow = Apply_Credits_to_Invoices
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Status == "Approved" || Status == "Open")
+				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open")
 		)
 		"Submit Credit Note to LHDN"
 		(
 	  			workflow = Submit_Credit_Note_to_LHD1
 				show action in view header = true
 				show action in edit record menu = true
+				condition = (Blueprint.Current_Stage == "Approved")
 				confirmation before execution
 				(
 					message for individual record = "Could you please confirm whether we need to submit the credit note to LHDN?"
@@ -107,7 +107,7 @@ list Credit_Notes
 	  			workflow = Create_Refund_Note_From_C
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Status == "Approved" || Status == "Open")
+				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open")
 		)
 	)
 	quickview
@@ -120,6 +120,7 @@ list Credit_Notes
 				(
 					Invoice_No as "Invoice No."
 					Blueprint.Current_Stage as "Status"
+					Reference_Invoice as "Reference Invoice"
 					Supplier_Name as "Supplier Name"
 					Customer_Name as "Customer Name"
 					Invoice_Date as "Invoice Date"
@@ -136,20 +137,20 @@ list Credit_Notes
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Add 
-    		 	Print 
-    		 	Import 
-    		 	Export 
-    	 	)
+			menu
+			(
+				header
+				(
+					Add 
+					Print 
+					Import 
+					Export 
+				)
 			record
 			(
 				Print   	   
     		)
-    	)
+			)
     	action
     	(
 			on click
@@ -180,17 +181,17 @@ list Credit_Notes
 				)
 			)
 		)
-		menu
-    	(
-    	 	header
-    	 	(
-    		 	Edit 
-    		 	Print 
-    		 	Delete 
-			 	"Apply Credits to Invoices"
-			 	"Create Refund Note"
-			 	"Submit Credit Note to LHDN"
-    	 	)
-    	)
+			menu
+			(
+				header
+				(
+					Edit 
+					Print 
+					Delete 
+					"Apply Credits to Invoices"
+					"Create Refund Note"
+					"Submit Credit Note to LHDN"
+				)
+			)
 	)
 }

@@ -1,0 +1,145 @@
+# Credit Note Fix Progress Tracker
+
+Scope:
+- Source issues: `docs/feature/creditNote_wrong.md`
+- Target behavior: `docs/feature/creditNote_Flow.md`
+- Execution guide: `docs/feature/fix/creditNote_Invoice.md`
+
+Status legend:
+- `[ ]` Not started
+- `[-]` In progress
+- `[x]` Done
+- `[!]` Blocked
+
+---
+
+## Master Checklist
+
+- [x] 01 - Preflight complete (`01-fix-credit-note-preflight.md`)
+- [x] 02 - `Reference_Invoice` field added + exported (`02-fix-credit-note-reference-invoice-field.md`)
+- [ ] 03 - Credit Note blueprint structure aligned (`03-fix-credit-note-blueprint-structure.md`)
+- [ ] 04 - Status engine hardened (no early Open/Closed) (`04-fix-credit-note-status-engine-hardening.md`)
+- [ ] 05 - Convert path fixed (`05-fix-credit-note-convert-path.md`)
+- [ ] 06 - Apply/Refund guards fixed (`06-fix-credit-note-apply-refund-guards.md`)
+- [ ] 07 - LHDN reference payload fixed (`07-fix-credit-note-lhdn-reference.md`)
+- [ ] 08 - Test matrix passed + rollout complete (`08-fix-credit-note-test-and-rollout.md`)
+
+---
+
+## Current Sprint Snapshot
+
+- Current step: `03 - Blueprint structure`
+- Owner: `TBD`
+- Started at: `2026-06-23`
+- Target finish: `TBD`
+- Current risk/blocker: `None — preflight complete`
+
+---
+
+## Detailed Step Tracking
+
+### 01 - Preflight
+- Status: `[x]`
+- Doc: `docs/feature/fix/01-fix-credit-note-preflight.md`
+- Key checks:
+  - [x] Required artifacts exist in local export and `XMT___Billing_System.ds`
+  - [x] Missing artifacts synced from live Creator (if any) — none required; `Reference_Invoice` deferred to Step 02
+  - [x] Rollback notes captured (see Preflight results section in step doc)
+  - [x] Batch deployment plan confirmed (Batches A–D)
+- Completed by / date: `2026-06-23`
+- Notes: `Sync drift: Credit_Notes action conditions (Status vs Blueprint.Current_Stage); All_Invoices "paid" case.`
+
+### 02 - Reference Invoice Field
+- Status: `[x]`
+- Doc: `docs/feature/fix/02-fix-credit-note-reference-invoice-field.md`
+- Key checks:
+  - [x] `Reference_Invoice` added to `Credit_Note` form (optional picklist)
+  - [x] Field visible in Credit Notes list + quickview and Credit Note Report
+  - [x] Selection validation workflow implemented (`Handle_reference_invoice_2`)
+  - [x] Customer change filters picker; null allowed for standalone CN
+  - [x] Export sync in local files and `XMT___Billing_System.ds`
+- Completed by / date: `2026-06-23`
+- Notes: `Deploy field + workflows to live Creator, then re-export. Convert mapping deferred to Step 05.`
+
+### 03 - Blueprint Structure
+- Status: `[ ]`
+- Doc: `docs/feature/fix/03-fix-credit-note-blueprint-structure.md`
+- Key checks:
+  - [ ] Stage structure confirmed (`Draft`, `Pending Approval`, `Rejected`, `Approved`, `Open`, `Closed`)
+  - [ ] Utilization transition criteria corrected
+  - [ ] `Approved -> Closed` path supported
+  - [ ] Blueprint export synced locally
+- Completed by / date: `TBD`
+- Notes: ``
+
+### 04 - Status Engine Hardening
+- Status: `[ ]`
+- Doc: `docs/feature/fix/04-fix-credit-note-status-engine-hardening.md`
+- Key checks:
+  - [ ] No Open/Closed updates on Draft/Pending/Rejected
+  - [ ] Stage changes use `changeStage(...)` where needed
+  - [ ] Manual add/reopen stays Draft before approval
+- Completed by / date: `TBD`
+- Notes: ``
+
+### 05 - Convert Path
+- Status: `[ ]`
+- Doc: `docs/feature/fix/05-fix-credit-note-convert-path.md`
+- Key checks:
+  - [ ] Convert sets `Reference_Invoice` correctly
+  - [ ] CN number generated once only
+  - [ ] Convert output remains Draft
+  - [ ] `Paid` stage condition case corrected
+- Completed by / date: `TBD`
+- Notes: ``
+
+### 06 - Apply/Refund Guards
+- Status: `[ ]`
+- Doc: `docs/feature/fix/06-fix-credit-note-apply-refund-guards.md`
+- Key checks:
+  - [ ] Apply/Refund actions hidden before approval
+  - [ ] Apply flow prefers `Reference_Invoice` when valid
+  - [ ] Draft-stage destructive credit row delete blocked
+  - [ ] Open/Closed transitions consistent after utilization
+- Completed by / date: `TBD`
+- Notes: ``
+
+### 07 - LHDN Reference Payload
+- Status: `[ ]`
+- Doc: `docs/feature/fix/07-fix-credit-note-lhdn-reference.md`
+- Key checks:
+  - [ ] LHDN action visible only when Closed
+  - [ ] `reference_invoice_list` includes `Reference_Invoice` when present
+  - [ ] Deduplication of references validated
+  - [ ] Convert+refund-only case verified
+- Completed by / date: `TBD`
+- Notes: ``
+
+### 08 - Testing + Rollout
+- Status: `[ ]`
+- Doc: `docs/feature/fix/08-fix-credit-note-test-and-rollout.md`
+- Key checks:
+  - [ ] End-to-end test matrix passed
+  - [ ] Regression checks passed
+  - [ ] Rollback package prepared
+  - [ ] Final export sync completed
+- Completed by / date: `TBD`
+- Notes: ``
+
+---
+
+## Issue Closure Mapping (`creditNote_wrong.md`)
+
+- Convert path: #1-10 -> Steps 02, 04, 05, 06
+- Manual path: #11 -> Step 04
+- Status/approval: #14, #16-17, #21 -> Steps 03, 04, 06
+- LHDN: #23-25 -> Step 07
+- Already aligned/no change expected: #12, #18-20, #22, #26
+
+---
+
+## Change Log
+
+- `2026-06-23` - Step 02 complete: `Reference_Invoice` field, reports, validator workflow, `.ds` sync
+- `2026-06-23` - Step 01 preflight complete; rollback snapshot and deploy batches documented
+- `YYYY-MM-DD HH:mm` - Tracker created

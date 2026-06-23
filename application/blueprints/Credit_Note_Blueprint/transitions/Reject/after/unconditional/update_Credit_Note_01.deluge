@@ -1,4 +1,0 @@
-update Credit_Note[ID == input.ID]
-[
-Status = "Rejected"
-]
