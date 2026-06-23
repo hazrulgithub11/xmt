@@ -25479,16 +25479,19 @@
 					{
 						custom deluge script
 						(
-											openUrl("#Report:Credit_Notes","same window");
-										// Open or Close
-										if(input.Credits_Remaining > 0)
+											current_stage = input.Blueprint.Current_Stage;
+										if(current_stage == "Approved" || current_stage == "Open")
 										{
-											thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input.ID);
+											if(input.Credits_Remaining > 0 && current_stage != "Open")
+											{
+												thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input.ID);
+											}
+											else if(input.Credits_Remaining == 0 && current_stage != "Closed")
+											{
+												thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
+											}
 										}
-										if(input.Credits_Remaining == 0)
-										{
-											thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
-										}
+										openUrl("#Report:Credit_Notes","same window");
 						)
 					}
 				}
@@ -25508,6 +25511,7 @@
 						custom deluge script
 						(
 											input.Invoice_No = thisapp.credit_note.generate_credit_note_no();
+										thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Draft",input.ID);
 						)
 					}
 				}

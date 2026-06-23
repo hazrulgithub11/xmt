@@ -147,17 +147,6 @@ User_Input_Trigger_Workfl2 as "User_Input_Trigger_Workflow"
 					input_credit_note.Credits_Used=credits_used_total;
 					input.Credits_Remaining = input.Grand_Total - refund_total - credits_used_total;
 					input_credit_note.Credits_Remaining=input.Credits_Remaining;
-					// Open or Close
-					if(input_credit_note.Credits_Remaining > 0)
-					{
-						input.Status = "Open";
-						input_credit_note.Status="Open";
-					}
-					if(input_credit_note.Credits_Remaining == 0)
-					{
-						input.Status = "Closed";
-						input_credit_note.Status="Closed";
-					}
 				}
 			)
 		}

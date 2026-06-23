@@ -18,7 +18,7 @@ Status legend:
 - [x] 01 - Preflight complete (`01-fix-credit-note-preflight.md`)
 - [x] 02 - `Reference_Invoice` field added + exported (`02-fix-credit-note-reference-invoice-field.md`)
 - [x] 03 - Credit Note blueprint structure aligned (`03-fix-credit-note-blueprint-structure.md`)
-- [ ] 04 - Status engine hardened (no early Open/Closed) (`04-fix-credit-note-status-engine-hardening.md`)
+- [x] 04 - Status engine hardened (no early Open/Closed) (`04-fix-credit-note-status-engine-hardening.md`)
 - [ ] 05 - Convert path fixed (`05-fix-credit-note-convert-path.md`)
 - [ ] 06 - Apply/Refund guards fixed (`06-fix-credit-note-apply-refund-guards.md`)
 - [ ] 07 - LHDN reference payload fixed (`07-fix-credit-note-lhdn-reference.md`)
@@ -28,7 +28,7 @@ Status legend:
 
 ## Current Sprint Snapshot
 
-- Current step: `04 - Status engine hardening`
+- Current step: `05 - Convert path`
 - Owner: `TBD`
 - Started at: `2026-06-23`
 - Target finish: `TBD`
@@ -74,14 +74,15 @@ Status legend:
 - Notes: `Apply blueprint changes in live Creator blueprint editor, then re-export.`
 
 ### 04 - Status Engine Hardening
-- Status: `[ ]`
+- Status: `[x]`
 - Doc: `docs/feature/fix/04-fix-credit-note-status-engine-hardening.md`
 - Key checks:
-  - [ ] No Open/Closed updates on Draft/Pending/Rejected
-  - [ ] Stage changes use `changeStage(...)` where needed
-  - [ ] Manual add/reopen stays Draft before approval
-- Completed by / date: `TBD`
-- Notes: ``
+  - [x] No Open/Closed updates on Draft/Pending/Rejected
+  - [x] Stage changes use `changeStage(...)` where needed
+  - [x] Manual add/reopen stays Draft before approval
+  - [x] Removed unguarded Open/Closed from `Handle_Submission_Form_an4` on save
+- Completed by / date: `2026-06-23`
+- Notes: `Apply/refund Status writes deferred to Step 06.`
 
 ### 05 - Convert Path
 - Status: `[ ]`
@@ -141,6 +142,7 @@ Status legend:
 
 ## Change Log
 
+- `2026-06-23` - Step 04 complete: stage-guarded Open/Closed, Draft on create, submission workflow cleaned
 - `2026-06-23` - Step 03 complete: blueprint utilization transitions fixed, `Approved_to_Closed` added
 - `2026-06-23` - Step 02 complete: `Reference_Invoice` field, reports, validator workflow, `.ds` sync
 - `2026-06-23` - Step 01 preflight complete; rollback snapshot and deploy batches documented

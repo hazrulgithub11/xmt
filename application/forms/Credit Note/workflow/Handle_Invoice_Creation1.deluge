@@ -12,11 +12,8 @@ Handle_Invoice_Creation1 as "Handle Invoice Creation"
 			custom deluge script
 			(
 					input.Invoice_No = thisapp.credit_note.generate_credit_note_no();
+				thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Draft",input.ID);
 			)
-		update Credit_Note[ID == input.ID]
-		[
-			Status = "Draft"
-		]
 		}
 	}
 
