@@ -1,0 +1,6 @@
+{
+  "link_name": "Approved_to_Closed",
+  "display_name": "Approved to Closed",
+  "from_stage": "Approved",
+  "to_stage": "Closed"
+}

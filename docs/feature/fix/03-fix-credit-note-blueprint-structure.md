@@ -39,3 +39,37 @@ If deleting any transition:
 - Blueprint supports utilization stage movement from approved state.
 - No transition criterion incorrectly blocks normal credit usage flow.
 - Ready for workflow hardening in Step 04.
+
+---
+
+## Step 03 results (2026-06-23)
+
+### Blueprint transition changes
+
+| Transition | From → To | Change |
+|---|---|---|
+| `Converted_to_Open` | Approved → Open | Removed LHDN criteria (`Invoice_UUID` / `QR_Invoice_Public_Link`) — utilization no longer gated on CN submission fields |
+| `Approved_to_Closed` | Approved → Closed | **Added** — supports full credit use/refund in one action via `changeStage` |
+| `Converted_to_Closed` | Open → Closed | Unchanged (no criteria) |
+| `Revert_to_Pending_Approva` | Approved → Pending Approval | Replaced harmful auto-criteria with `(ID == 0)` — prevents auto-revert on every approved CN missing CN LHDN UUID |
+
+### Approval path (unchanged)
+`Send_For_Approval`, `Approve` (LHDN validation script), `Reject`, `Resubmit`
+
+### Files updated
+- `application/blueprints/Credit_Note_Blueprint/blueprint.json`
+- `application/blueprints/Credit_Note_Blueprint/BLUEPRINT.md`
+- `application/blueprints/Credit_Note_Blueprint/transitions/Approved_to_Closed/`
+- `application/blueprints/Credit_Note_Blueprint/transitions/Converted_to_Open/before/` (criteria removed)
+- `application/blueprints/Credit_Note_Blueprint/transitions/Revert_to_Pending_Approva/before/phase_config.ds`
+- `XMT___Billing_System.ds` (`Credit_Note_Blueprint` section)
+
+### Deploy to live Creator
+1. Open **Credit Note Blueprint** in Creator blueprint editor.
+2. **Converted to Open** — remove before-transition criteria.
+3. **Approved to Closed** — add transition Approved → Closed (no criteria).
+4. **Revert to Pending Approval** — set criteria to `(ID == 0)` or remove auto-trigger.
+5. Re-export blueprint + full app.
+
+### Next step
+Step 04 will wire `changeStage` calls in workflows to use these paths only after approval.

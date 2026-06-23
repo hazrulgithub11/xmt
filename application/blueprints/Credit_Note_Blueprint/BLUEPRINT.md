@@ -23,8 +23,9 @@
 | [Resubmit](transitions/Resubmit/) | Rejected | Pending Approval | 0 |
 | [Send For Approval](transitions/Send_For_Approval/) | Draft | Pending Approval | 0 |
 | [Converted to Open](transitions/Converted_to_Open/) | Approved | Open | 0 |
+| [Approved to Closed](transitions/Approved_to_Closed/) | Approved | Closed | 0 |
 | [Converted to Closed](transitions/Converted_to_Closed/) | Open | Closed | 0 |
-| [Revert to Pending Approval](transitions/Revert_to_Pending_Approva/) | Approved | Pending Approval | 0 |
+| [Revert to Pending Approval](transitions/Revert_to_Pending_Approva/) | Approved | Pending Approval | 0 (disabled auto: `ID == 0`) |
 
 ## Folder layout
 

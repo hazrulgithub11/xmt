@@ -32574,7 +32574,6 @@
          				to stage = "Open"
          				before
          				{
-            				transition criteria = (Invoice_UUID is not null && QR_Invoice_Public_Link is not null)
          				}
          				after
          				{
@@ -32584,6 +32583,24 @@
              				from port : R1
              				to port   : L1
              				path      : [66.82163184065921,457.7328804520865,76.82163184065921,457.7328804520865,140.64597183755842,457.7328804520865,140.64597183755842,457.27621810460784,204.47031183445762,457.27621810460784,214.47031183445762,457.27621810460784]
+        				}
+  				}
+    				Approved_to_Closed as "Approved to Closed"
+    				{
+         				type = normal
+         				from stage = "Approved"
+         				to stage = "Closed"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : R1
+             				to port   : L1
+             				path      : [66.82163184065921,457.7328804520865,76.82163184065921,457.7328804520865,200.64597183755842,457.7328804520865,300.64597183755842,454.68470530901345,435.97878824089366,454.68470530901345,445.97878824089366,454.68470530901345]
         				}
   				}
     				Converted_to_Closed as "Converted to Closed"
@@ -32611,7 +32628,7 @@
          				to stage = "Pending Approval"
          				before
          				{
-            				transition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)
+            				transition criteria = (ID == 0)
          				}
          				after
          				{

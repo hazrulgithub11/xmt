@@ -17,7 +17,7 @@ Status legend:
 
 - [x] 01 - Preflight complete (`01-fix-credit-note-preflight.md`)
 - [x] 02 - `Reference_Invoice` field added + exported (`02-fix-credit-note-reference-invoice-field.md`)
-- [ ] 03 - Credit Note blueprint structure aligned (`03-fix-credit-note-blueprint-structure.md`)
+- [x] 03 - Credit Note blueprint structure aligned (`03-fix-credit-note-blueprint-structure.md`)
 - [ ] 04 - Status engine hardened (no early Open/Closed) (`04-fix-credit-note-status-engine-hardening.md`)
 - [ ] 05 - Convert path fixed (`05-fix-credit-note-convert-path.md`)
 - [ ] 06 - Apply/Refund guards fixed (`06-fix-credit-note-apply-refund-guards.md`)
@@ -28,7 +28,7 @@ Status legend:
 
 ## Current Sprint Snapshot
 
-- Current step: `03 - Blueprint structure`
+- Current step: `04 - Status engine hardening`
 - Owner: `TBD`
 - Started at: `2026-06-23`
 - Target finish: `TBD`
@@ -62,15 +62,16 @@ Status legend:
 - Notes: `Deploy field + workflows to live Creator, then re-export. Convert mapping deferred to Step 05.`
 
 ### 03 - Blueprint Structure
-- Status: `[ ]`
+- Status: `[x]`
 - Doc: `docs/feature/fix/03-fix-credit-note-blueprint-structure.md`
 - Key checks:
-  - [ ] Stage structure confirmed (`Draft`, `Pending Approval`, `Rejected`, `Approved`, `Open`, `Closed`)
-  - [ ] Utilization transition criteria corrected
-  - [ ] `Approved -> Closed` path supported
-  - [ ] Blueprint export synced locally
-- Completed by / date: `TBD`
-- Notes: ``
+  - [x] Stage structure confirmed (`Draft`, `Pending Approval`, `Rejected`, `Approved`, `Open`, `Closed`)
+  - [x] Utilization transition criteria corrected (LHDN fields removed from `Converted_to_Open`)
+  - [x] `Approved -> Closed` path added (`Approved_to_Closed`)
+  - [x] `Revert_to_Pending_Approva` auto-revert disabled (`ID == 0`)
+  - [x] Blueprint export synced locally + `XMT___Billing_System.ds`
+- Completed by / date: `2026-06-23`
+- Notes: `Apply blueprint changes in live Creator blueprint editor, then re-export.`
 
 ### 04 - Status Engine Hardening
 - Status: `[ ]`
@@ -140,6 +141,7 @@ Status legend:
 
 ## Change Log
 
+- `2026-06-23` - Step 03 complete: blueprint utilization transitions fixed, `Approved_to_Closed` added
 - `2026-06-23` - Step 02 complete: `Reference_Invoice` field, reports, validator workflow, `.ds` sync
 - `2026-06-23` - Step 01 preflight complete; rollback snapshot and deploy batches documented
 - `YYYY-MM-DD HH:mm` - Tracker created

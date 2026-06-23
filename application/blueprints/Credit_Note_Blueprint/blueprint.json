@@ -97,7 +97,23 @@
         "after": []
       },
       "phase_raw": {
-        "before": "\n            \t\t\t\ttransition criteria = (Invoice_UUID is not null && QR_Invoice_Public_Link is not null)\n         \t\t\t\t",
+        "before": "\n         \t\t\t\t",
+        "during": null,
+        "after": "\n         \t\t\t\t"
+      }
+    },
+    {
+      "link_name": "Approved_to_Closed",
+      "display_name": "Approved to Closed",
+      "from_stage": "Approved",
+      "to_stage": "Closed",
+      "phases": {
+        "before": [],
+        "during": [],
+        "after": []
+      },
+      "phase_raw": {
+        "before": "\n         \t\t\t\t",
         "during": null,
         "after": "\n         \t\t\t\t"
       }
@@ -129,7 +145,7 @@
         "after": []
       },
       "phase_raw": {
-        "before": "\n            \t\t\t\ttransition criteria = (Invoice_UUID is null || QR_Invoice_Public_Link is null)\n         \t\t\t\t",
+        "before": "\n            \t\t\t\ttransition criteria = (ID == 0)\n         \t\t\t\t",
         "during": null,
         "after": "\n         \t\t\t\t"
       }
