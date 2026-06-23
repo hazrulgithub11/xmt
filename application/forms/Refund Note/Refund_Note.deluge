@@ -466,15 +466,6 @@ form Refund_Note
 	 	column = 2   
 		width = medium
 	)
-	Send_Email
-	(
-    	type = checkbox
-		displayname = "Send Email"
-		initial value = false
-	 	row = 4
-	 	column = 2   
-		width = medium
-	)
 	Transaction_Info
 	(
 		type = section

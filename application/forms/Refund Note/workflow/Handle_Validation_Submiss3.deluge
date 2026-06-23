@@ -11,52 +11,41 @@ Handle_Validation_Submiss3 as "Handle Validation Submission"
 		{
 			custom deluge script
 			(
-					countItem = 0;
+					// Count Total Line Items
+				count_item = 0;
 				for each  curr_monthly_rental in input.Monthly_Rental
 				{
-					countItem = countItem + 1;
+					count_item = count_item + 1;
 				}
 				for each  curr_internet_charge in input.Internet_Charges
 				{
-					countItem = countItem + 1;
+					count_item = count_item + 1;
 				}
 				for each  curr_call_charge in input.Call_Charges
 				{
-					countItem = countItem + 1;
+					count_item = count_item + 1;
 				}
-				if(countItem == 0)
+				if(count_item == 0)
 				{
 					alert "Add at least one item need to be added.";
 					cancel submit;
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					chargesCategories = input.Charge_Category;
-				if(chargesCategories.containsIgnoreCase("Telephone Charges"))
+				// Validate Call Charges for Telephone Category
+				charges_categories = input.Charge_Category;
+				if(charges_categories.containsIgnoreCase("Telephone Charges"))
 				{
-					rowNumber = 0;
-					for each  callCharges in input.Call_Charges
+					row_number = 0;
+					for each  call_charges in input.Call_Charges
 					{
-						rowNumber = rowNumber + 1;
+						row_number = row_number + 1;
 					}
-					if(rowNumber == 0)
+					if(row_number == 0)
 					{
 						alert "Please fill Call Charges";
 						cancel submit;
 					}
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					// Quantity and Unit Price validation
-				// Monthly Rental
+				// Validate Monthly Rental Quantity & Unit Price
 				for each  curr_monthly_rental in input.Monthly_Rental
 				{
 					if(ifnull(curr_monthly_rental.Quantity_Monthly_Rental,0) <= 0)
@@ -70,7 +59,7 @@ Handle_Validation_Submiss3 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-				// Internet Charges
+				// Validate Internet Charges Quantity & Unit Price
 				for each  curr_internet_charges in input.Internet_Charges
 				{
 					if(ifnull(curr_internet_charges.Quantity_Internet_Charges,0) <= 0)
@@ -84,7 +73,7 @@ Handle_Validation_Submiss3 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-				// Call Charges
+				// Validate Call Charges Quantity & Unit Price
 				for each  curr_call_charges in input.Call_Charges
 				{
 					if(ifnull(curr_call_charges.Quantity_Call_Charges,0) <= 0)
@@ -98,24 +87,14 @@ Handle_Validation_Submiss3 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					if(input.Reference_Credit_Note.Credits_Remaining < input.Grand_Total)
+				// Validate Refund Amount Does Not Exceed Credit Remaining
+				if(input.Reference_Credit_Note.Credits_Remaining < input.Grand_Total)
 				{
 					alert "The refund amount cannot exceed the credit remaining of " + input.Reference_Credit_Note.Credits_Remaining;
 					cancel submit;
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					if(Is_Refund_Note_Created_from_Credit_Note == false)
+				// Validate Refund Note Created from Credit Note
+				if(Is_Refund_Note_Created_from_Credit_Note == false)
 				{
 					alert "Please create refund note from credit note.";
 					cancel submit;
