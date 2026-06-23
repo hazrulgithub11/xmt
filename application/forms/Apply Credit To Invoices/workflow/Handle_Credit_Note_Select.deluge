@@ -5,7 +5,7 @@ Handle_Credit_Note_Select as "Handle Credit Note Selection"
 
 	record event = on add or edit
 
-	on user input of Credit_Note
+	on user input of invoice
 	{
 		actions 
 		{

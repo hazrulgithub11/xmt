@@ -26099,9 +26099,13 @@
 
 				field rules
 				{
-					actions 
+					actions
 					{
 					hide add row of Credit_Applied_Invoices,Refund_History;
+					}
+					actions  (Blueprint.Current_Stage == "Draft" || Blueprint.Current_Stage == "Pending Approval" || Blueprint.Current_Stage == "Rejected")
+					{
+					hide delete row of Credit_Applied_Invoices,Refund_History;
 					}
 				}
 
@@ -26859,13 +26863,17 @@
 										input_credit_note.Refund=refund_total;
 										input_credit_note.Credits_Used=credits_used_total;
 										input_credit_note.Credits_Remaining=input_credit_note.Grand_Total - refund_total - credits_used_total;
-										if(input_credit_note.Credits_Remaining > 0)
+										current_stage = input_credit_note.Blueprint.Current_Stage;
+										if(current_stage == "Approved" || current_stage == "Open")
 										{
-											thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input_credit_note.ID);
-										}
-										if(input_credit_note.Credits_Remaining == 0)
-										{
-											thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input_credit_note.ID);
+											if(input_credit_note.Credits_Remaining > 0 && current_stage != "Open")
+											{
+												thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input_credit_note.ID);
+											}
+											else if(input_credit_note.Credits_Remaining == 0 && current_stage != "Closed")
+											{
+												thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input_credit_note.ID);
+											}
 										}
 						)
 					}
@@ -27944,7 +27952,16 @@
 					{
 						custom deluge script
 						(
-											number_credit_applied = 0;
+											if(input.invoice != null)
+										{
+											current_stage = Credit_Note[ID == input.invoice].Blueprint.Current_Stage;
+											if(current_stage != "Approved" && current_stage != "Open")
+											{
+												alert "Credits can only be applied after the credit note is approved.";
+												cancel submit;
+											}
+										}
+										number_credit_applied = 0;
 										total_amount_credit_applied = 0;
 										for each  curr_unpaid_invoice in input.Unpaid_Invoices
 										{
@@ -27958,8 +27975,11 @@
 												alert "The credit amount cannot exceed the invoice’s outstanding balance.";
 												cancel submit;
 											}
-											number_credit_applied = number_credit_applied + 1;
-											total_amount_credit_applied = total_amount_credit_applied + curr_unpaid_invoice.Credits_To_Apply;
+											if(curr_unpaid_invoice.Credits_To_Apply > 0)
+											{
+												number_credit_applied = number_credit_applied + 1;
+												total_amount_credit_applied = total_amount_credit_applied + curr_unpaid_invoice.Credits_To_Apply;
+											}
 										}
 										if(number_credit_applied == 0)
 										{
@@ -28196,13 +28216,17 @@
 										input_credit_note.Refund=refund_total;
 										input_credit_note.Credits_Used=credits_used_total;
 										input_credit_note.Credits_Remaining=input_credit_note.Grand_Total - refund_total - credits_used_total;
-										if(input_credit_note.Credits_Remaining > 0)
+										current_stage = input_credit_note.Blueprint.Current_Stage;
+										if(current_stage == "Approved" || current_stage == "Open")
 										{
-											thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input_credit_note.ID);
-										}
-										if(input_credit_note.Credits_Remaining == 0)
-										{
-											thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input_credit_note.ID);
+											if(input_credit_note.Credits_Remaining > 0 && current_stage != "Open")
+											{
+												thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input_credit_note.ID);
+											}
+											else if(input_credit_note.Credits_Remaining == 0 && current_stage != "Closed")
+											{
+												thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input_credit_note.ID);
+											}
 										}
 										// Clean up
 										delete from Apply_Credit_To_Invoices[ID == input.ID];
@@ -28580,6 +28604,8 @@
 											// Credits Note fields
 										clear Unpaid_Invoices;
 										input.Credits_Remaining = input.invoice.Credits_Remaining;
+										get_credit_note = Credit_Note[ID == input.invoice];
+										reference_invoice_id = get_credit_note.Reference_Invoice;
 										// Invoice selection
 										unpaid_invoice_list = Invoice[Customer == input.invoice.Customer && Amount_Due > 0 && Blueprint.Current_Stage in {"Sent","Partially Paid","Overdue"}];
 										for each  curr_unpaid_invoice in unpaid_invoice_list
@@ -28590,6 +28616,15 @@
 											curr_new_invoice_row.Grand_Total=curr_unpaid_invoice.Grand_Total;
 											curr_new_invoice_row.Amount_Due=curr_unpaid_invoice.Amount_Due;
 											curr_new_invoice_row.Credits_To_Apply=0;
+											if(reference_invoice_id != null && curr_unpaid_invoice.ID == reference_invoice_id)
+											{
+												credits_to_apply = curr_unpaid_invoice.Amount_Due;
+												if(credits_to_apply > input.Credits_Remaining)
+												{
+													credits_to_apply = input.Credits_Remaining;
+												}
+												curr_new_invoice_row.Credits_To_Apply=credits_to_apply;
+											}
 											input.Unpaid_Invoices.insert(curr_new_invoice_row);
 										}
 						)

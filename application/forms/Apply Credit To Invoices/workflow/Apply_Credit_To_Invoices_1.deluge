@@ -11,7 +11,16 @@ Apply_Credit_To_Invoices_1 as "Apply Credit To Invoices Validation"
 		{
 			custom deluge script
 			(
-					number_credit_applied = 0;
+					if(input.invoice != null)
+				{
+					current_stage = Credit_Note[ID == input.invoice].Blueprint.Current_Stage;
+					if(current_stage != "Approved" && current_stage != "Open")
+					{
+						alert "Credits can only be applied after the credit note is approved.";
+						cancel submit;
+					}
+				}
+				number_credit_applied = 0;
 				total_amount_credit_applied = 0;
 				for each  curr_unpaid_invoice in input.Unpaid_Invoices
 				{
@@ -25,15 +34,18 @@ Apply_Credit_To_Invoices_1 as "Apply Credit To Invoices Validation"
 						alert "The credit amount cannot exceed the invoice’s outstanding balance.";
 						cancel submit;
 					}
-					number_credit_applied = number_credit_applied + 1;
-					total_amount_credit_applied = total_amount_credit_applied + curr_unpaid_invoice.Credits_To_Apply;
+					if(curr_unpaid_invoice.Credits_To_Apply > 0)
+					{
+						number_credit_applied = number_credit_applied + 1;
+						total_amount_credit_applied = total_amount_credit_applied + curr_unpaid_invoice.Credits_To_Apply;
+					}
 				}
 				if(number_credit_applied == 0)
 				{
 					alert "Please apply a credit amount to at least one invoice before submitting.";
 					cancel submit;
 				}
-				if(total_amount_credit_applied > input.Credit_Note.Credits_Remaining)
+				if(total_amount_credit_applied > input.invoice.Credits_Remaining)
 				{
 					alert "The total credit applied exceeds the remaining available credit on this credit note.";
 					cancel submit;

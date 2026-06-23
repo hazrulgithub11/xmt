@@ -11,18 +11,18 @@ Apply_Credit_To_Invoices_ as "Apply Credit To Invoices Initialization"
 		{
 			custom deluge script
 			(
-					if(input.Credit_Note == null)
+					if(input.invoice == null)
 				{
 					used_credit_note_id_list = List();
 					for each  curr_apply_credit_to_invoices in Apply_Credit_To_Invoices
 					{
-						if(curr_apply_credit_to_invoices.Credit_Note != null)
+						if(curr_apply_credit_to_invoices.invoice != null)
 						{
-							used_credit_note_id_list.add(curr_apply_credit_to_invoices.Credit_Note);
+							used_credit_note_id_list.add(curr_apply_credit_to_invoices.invoice);
 						}
 					}
 					credit_note_id_with_credits_remaining_list = List();
-					for each  curr_credit_note in Credit_Note[Status == "Approved" || Status == "Open"]
+					for each  curr_credit_note in Credit_Note[Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open"]
 					{
 						if(curr_credit_note.Credits_Remaining > 0)
 						{
@@ -37,7 +37,7 @@ Apply_Credit_To_Invoices_ as "Apply Credit To Invoices Initialization"
 							credit_note_selection_list.add(curr_credit_note_id);
 						}
 					}
-					input.Credit_Note:ui.add(credit_note_selection_list);
+					input.invoice:ui.add(credit_note_selection_list);
 				}
 				else
 				{
