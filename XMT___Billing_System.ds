@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 23-Jun-2026 02:40:41
+ * Generated on : 23-Jun-2026 04:15:52
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -1763,25 +1763,25 @@
 			)
 			Payable_To
 			(
-				type = list
+				type = list	
 				displayname = "Payable To"
 				values  = Chart_Of_Account[Account_Type == "Bank"].ID
     			displayformat = [Account + " - " + Bank_Account_Number]
 				sortorder = ascending
 				height = 60px
 	 			row = 9
-	 			column = 2
+	 			column = 2   
 				width = medium
 			)
 			Reference_Invoice
 			(
-				type = picklist
+				type = picklist	
 				displayname = "Reference Invoice"
 				values  = Invoice.ID
     			displayformat = [Invoice_No]
 				sortorder = ascending
 	 			row = 9
-	 			column = 2
+	 			column = 2   
 				width = medium
 			)
 			Credits_Used
@@ -1790,7 +1790,7 @@
 				displayname = "Credits Used"
 				initial value = 0
 	 			row = 9
-	 			column = 2
+	 			column = 2   
 				width = medium
 			)
 			Refund
@@ -25365,76 +25365,6 @@
 				}
 
 			}
-			Handle_reference_invoice_2 as "Handle reference invoice selection"
-			{
-				type =  form
-				form = Credit_Note
-
-				record event = on add or edit
-
-				on user input of Reference_Invoice
-				{
-					actions 
-					{
-						custom deluge script
-						(
-											if(input.Reference_Invoice != null)
-										{
-											if(input.Reference_Invoice.Invoice_UUID == null || input.Reference_Invoice.Invoice_UUID == "" || input.Reference_Invoice.Invoice_Public_Link == null || input.Reference_Invoice.Invoice_Public_Link == "")
-											{
-												invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
-												clear Reference_Invoice;
-												input.Reference_Invoice:ui.add(invoice_id_list);
-												alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
-											}
-											else
-											{
-												// Access token checking
-												client_id = input.Supplier.Client_ID;
-												client_secret = input.Supplier.Client_Secret;
-												organization_environment = input.Supplier.LHDN_Portal_Environment;
-												if(organization_environment == "SANDBOX")
-												{
-													invoicing_portal_url = "https://preprod.myinvois.hasil.gov.my/";
-													system_api_url = "https://preprod-api.myinvois.hasil.gov.my/";
-												}
-												else
-												{
-													invoicing_portal_url = "https://myinvois.hasil.gov.my/";
-													system_api_url = "https://api.myinvois.hasil.gov.my/";
-												}
-												access_token_response = invokeurl
-												[
-													url :system_api_url + "connect/token"
-													type :POST
-													parameters:{"client_id":client_id,"client_secret":client_secret,"grant_type":"client_credentials","scope":"InvoicingAPI"}
-													headers:{"Content-Type":"application/x-www-form-urlencoded"}
-												];
-												access_token = access_token_response.get("access_token");
-												// Get all invoice
-												global_headers = Map();
-												global_headers.put("Content-Type","application/json");
-												global_headers.put("Authorization",access_token);
-												reference_invoice_invoice_uuid = input.Reference_Invoice.Invoice_UUID;
-												get_document_url = system_api_url + "api/v1.0/documents/" + reference_invoice_invoice_uuid + "/raw";
-												get_document_response = invokeurl
-												[
-													url :get_document_url
-													type :GET
-													headers:global_headers
-												];
-												invoice_status = get_document_response.get("status");
-												if(invoice_status != "Valid")
-												{
-													alert "The selected invoice cannot be used as a reference. Please ensure the invoice has a valid UUID, Public Link, and has been successfully submitted to LHDN.";
-												}
-											}
-										}
-						)
-					}
-				}
-
-			}
 			Handle_Customer_Code_Chan4 as "Handle Customer Code Changes"
 			{
 				type =  form
@@ -26099,7 +26029,7 @@
 
 				field rules
 				{
-					actions
+					actions 
 					{
 					hide add row of Credit_Applied_Invoices,Refund_History;
 					}
@@ -31964,6 +31894,76 @@
 				}
 
 			}
+			Handle_reference_invoice_2 as "Handle reference invoice selection"
+			{
+				type =  form
+				form = Credit_Note
+
+				record event = on add or edit
+
+				on user input of Reference_Invoice
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Reference_Invoice != null)
+										{
+											if(input.Reference_Invoice.Invoice_UUID == null || input.Reference_Invoice.Invoice_UUID == "" || input.Reference_Invoice.Invoice_Public_Link == null || input.Reference_Invoice.Invoice_Public_Link == "")
+											{
+												invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
+												clear Reference_Invoice;
+												input.Reference_Invoice:ui.add(invoice_id_list);
+												alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
+											}
+											else
+											{
+												// Access token checking
+												client_id = input.Supplier.Client_ID;
+												client_secret = input.Supplier.Client_Secret;
+												organization_environment = input.Supplier.LHDN_Portal_Environment;
+												if(organization_environment == "SANDBOX")
+												{
+													invoicing_portal_url = "https://preprod.myinvois.hasil.gov.my/";
+													system_api_url = "https://preprod-api.myinvois.hasil.gov.my/";
+												}
+												else
+												{
+													invoicing_portal_url = "https://myinvois.hasil.gov.my/";
+													system_api_url = "https://api.myinvois.hasil.gov.my/";
+												}
+												access_token_response = invokeurl
+												[
+													url :system_api_url + "connect/token"
+													type :POST
+													parameters:{"client_id":client_id,"client_secret":client_secret,"grant_type":"client_credentials","scope":"InvoicingAPI"}
+													headers:{"Content-Type":"application/x-www-form-urlencoded"}
+												];
+												access_token = access_token_response.get("access_token");
+												// Get all invoice
+												global_headers = Map();
+												global_headers.put("Content-Type","application/json");
+												global_headers.put("Authorization",access_token);
+												reference_invoice_invoice_uuid = input.Reference_Invoice.Invoice_UUID;
+												get_document_url = system_api_url + "api/v1.0/documents/" + reference_invoice_invoice_uuid + "/raw";
+												get_document_response = invokeurl
+												[
+													url :get_document_url
+													type :GET
+													headers:global_headers
+												];
+												invoice_status = get_document_response.get("status");
+												if(invoice_status != "Valid")
+												{
+													alert "The selected invoice cannot be used as a reference. Please ensure the invoice has a valid UUID, Public Link, and has been successfully submitted to LHDN.";
+												}
+											}
+										}
+						)
+					}
+				}
+
+			}
 		}
 
 		schedule
@@ -32250,7 +32250,7 @@
                 			from port : B
                 			to port   : T3
                 			position  : "-95.55350394125907 -8.999999999999996"
-                			path      : [-67.70350394125907,27.840000000000003,-67.70350394125907,37.84,-67.70350394125907,44.011512795594435,-68.70350394125902,44.011512795594435,-68.70350394125902,50.183025591188866,-68.70350394125902,60.183025591188866]
+                			path      : [-67.70350394125907,27.840000000000003,-67.70350394125907,37.84,-67.70350394125907,44.011512795594435,-68.70765242453538,44.011512795594435,-68.70765242453538,50.183025591188866,-68.70765242453538,60.183025591188866]
             			}
         			}
         			stages
@@ -32294,7 +32294,7 @@
            			{
                			chart data
                			{
-                   			position : "445.97878824089366 428.88079041140264"
+                   			position : "449.97878824089366 427.88079041140264"
                			}
            			}
         			}
@@ -32549,7 +32549,7 @@
          				{
              				from port : B3
              				to port   : T3
-             				path      : [-68.2273151919844,270.8851378613053,-68.2273151919844,280.8851378613053,-68.2273151919844,351.40705170789045,14.725576745294497,351.40705170789045,14.725576745294497,421.92896555447567,14.725576745294497,431.92896555447567]
+             				path      : [-68.44610715365432,270.88644706540686,-68.44610715365432,280.88644706540686,-68.44610715365432,351.40770630994126,14.74242435576813,351.40770630994126,14.74242435576813,421.92896555447567,14.74242435576813,431.92896555447567]
         				}
   				}
     				Reject as "Reject"
@@ -32567,7 +32567,7 @@
          				{
              				from port : R1
              				to port   : L1
-             				path      : [7.962711155821722,245.08122296369447,17.962711155821722,245.08122296369447,205.8686247713025,245.08122296369447,205.8686247713025,269.6347269049534,393.7745383867833,269.6347269049534,403.7745383867833,269.6347269049534]
+             				path      : [7.5251272324818785,245.08187756574526,17.52512723248188,245.08187756574526,205.64983280963258,245.08187756574526,205.64983280963258,269.6353815070042,393.7745383867833,269.6353815070042,403.7745383867833,269.6353815070042]
         				}
   				}
     				Resubmit as "Resubmit"
@@ -32585,7 +32585,7 @@
          				{
              				from port : T3
              				to port   : T5
-             				path      : [452.55958884347615,243.83081200734262,452.55958884347615,233.83081200734262,452.55958884347615,209.27730806608366,214.39614560834792,209.27730806608366,-23.76729762678032,209.27730806608366,-23.76729762678032,219.27730806608366]
+             				path      : [452.5707754432076,243.83081200734262,452.5707754432076,233.83081200734262,452.5707754432076,209.27730806608366,214.2194122734887,209.27730806608366,-24.131950896230194,209.27730806608366,-24.131950896230194,219.27730806608366]
         				}
   				}
     				Send_For_Approval as "Send For Approval"
@@ -32603,7 +32603,7 @@
          				{
              				from port : B3
              				to port   : T3
-             				path      : [-68.70350394125902,111.79085538641047,-68.70350394125902,121.79085538641047,-68.70350394125902,165.53408172624705,-68.2273151919844,165.53408172624705,-68.2273151919844,209.27730806608366,-68.2273151919844,219.27730806608366]
+             				path      : [-68.70765242453538,111.79216459051204,-68.70765242453538,121.79216459051204,-68.70765242453538,165.53473632829787,-68.44610715365432,165.53473632829787,-68.44610715365432,209.27730806608366,-68.44610715365432,219.27730806608366]
         				}
   				}
     				Converted_to_Open as "Converted to Open"
@@ -32621,25 +32621,7 @@
          				{
              				from port : R1
              				to port   : L1
-             				path      : [66.82163184065921,457.7328804520865,76.82163184065921,457.7328804520865,140.64597183755842,457.7328804520865,140.64597183755842,457.27621810460784,204.47031183445762,457.27621810460784,214.47031183445762,457.27621810460784]
-        				}
-  				}
-    				Approved_to_Closed as "Approved to Closed"
-    				{
-         				type = normal
-         				from stage = "Approved"
-         				to stage = "Closed"
-         				before
-         				{
-         				}
-         				after
-         				{
-         				}
-         				chart data
-         				{
-             				from port : R1
-             				to port   : L1
-             				path      : [66.82163184065921,457.7328804520865,76.82163184065921,457.7328804520865,200.64597183755842,457.7328804520865,300.64597183755842,454.68470530901345,435.97878824089366,454.68470530901345,445.97878824089366,454.68470530901345]
+             				path      : [66.85532706160647,457.73353505413723,76.85532706160647,457.73353505413723,140.66281944803205,457.73353505413723,140.66281944803205,457.2768727066586,204.47031183445762,457.2768727066586,214.47031183445762,457.2768727066586]
         				}
   				}
     				Converted_to_Closed as "Converted to Closed"
@@ -32657,7 +32639,7 @@
          				{
              				from port : R1
              				to port   : L1
-             				path      : [292.797431790812,457.27621810460784,302.797431790812,457.27621810460784,369.3881100158528,457.27621810460784,369.3881100158528,454.68470530901345,435.97878824089366,454.68470530901345,445.97878824089366,454.68470530901345]
+             				path      : [292.81278594730617,457.2768727066586,302.81278594730617,457.2768727066586,371.3957870940999,457.2768727066586,371.3957870940999,453.6853599110642,439.97878824089366,453.6853599110642,449.97878824089366,453.6853599110642]
         				}
   				}
     				Revert_to_Pending_Approva as "Revert to Pending Approval"
@@ -32667,7 +32649,6 @@
          				to stage = "Pending Approval"
          				before
          				{
-            				transition criteria = (ID == 0)
          				}
          				after
          				{
@@ -32676,7 +32657,25 @@
          				{
              				from port : L1
              				to port   : L1
-             				path      : [-37.370478350070215,457.7328804520865,-47.370478350070215,457.7328804520865,-154.41734153979053,457.7328804520865,-154.41734153979053,351.40705170789045,-154.41734153979053,245.08122296369447,-144.41734153979053,245.08122296369447]
+             				path      : [-37.370478350070215,457.73353505413723,-47.370478350070215,457.73353505413723,-154.41734153979053,457.73353505413723,-154.41734153979053,351.40770630994126,-154.41734153979053,245.08187756574526,-144.41734153979053,245.08187756574526]
+        				}
+  				}
+    				Approved_to_Closed as "Approved to Closed"
+    				{
+         				type = normal
+         				from stage = "Approved"
+         				to stage = "Closed"
+         				before
+         				{
+         				}
+         				after
+         				{
+         				}
+         				chart data
+         				{
+             				from port : B3
+             				to port   : B3
+             				path      : [14.74242435576813,483.53810455379886,14.74242435576813,493.53810455379886,493.02502529731794,493.53810455379886,493.02502529731794,491.5140169822623,493.02502529731794,489.48992941072584,493.02502529731794,479.48992941072584]
         				}
   				}
         			}
@@ -40809,6 +40808,7 @@
 							(
 								Invoice_No as "Invoice No."
 								Blueprint.Current_Stage as "Status"
+								Reference_Invoice as "Reference Invoice"
 								Supplier_Name as "Supplier Name"
 								Customer_Name as "Customer Name"
 								Invoice_Date as "Invoice Date"

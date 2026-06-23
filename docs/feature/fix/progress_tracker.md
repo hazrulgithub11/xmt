@@ -22,17 +22,19 @@ Status legend:
 - [x] 05 - Convert path fixed (`05-fix-credit-note-convert-path.md`)
 - [x] 06 - Apply/Refund guards fixed (`06-fix-credit-note-apply-refund-guards.md`)
 - [x] 07 - LHDN reference payload fixed (`07-fix-credit-note-lhdn-reference.md`)
-- [ ] 08 - Test matrix passed + rollout complete (`08-fix-credit-note-test-and-rollout.md`)
+- [x] 08 - Test matrix + rollout package (`08-fix-credit-note-test-and-rollout.md`)
+
+**UAT / live deploy:** See Step 08 sign-off table — runtime tests and final re-export are pending in Creator.
 
 ---
 
 ## Current Sprint Snapshot
 
-- Current step: `08 - Testing + rollout`
+- Current step: `Complete (UAT pending)`
 - Owner: `TBD`
 - Started at: `2026-06-23`
 - Target finish: `TBD`
-- Current risk/blocker: `None`
+- Current risk/blocker: `Live UAT + post-deploy export not yet run`
 
 ---
 
@@ -104,7 +106,7 @@ Status legend:
   - [x] Draft-stage destructive credit row delete blocked
   - [x] Open/Closed transitions consistent after utilization
 - Completed by / date: `2026-06-23`
-- Notes: `Refund picker stage filter deferred; report actions gated. Workflow file: Successful_form_submissio1 (not an5).`
+- Notes: `Subform guard uses field rule hide delete row (not cancel delete). Refund picker stage filter deferred.`
 
 ### 07 - LHDN Reference Payload
 - Status: `[x]`
@@ -115,35 +117,40 @@ Status legend:
   - [x] Deduplication of references validated
   - [x] Convert+refund-only case verified (logic)
 - Completed by / date: `2026-06-23`
-- Notes: `Manual LHDN payload test deferred to Step 08.`
+- Notes: `Manual LHDN payload test in Step 08 matrix (T11, T14, T15).`
 
 ### 08 - Testing + Rollout
-- Status: `[ ]`
+- Status: `[x]` (package ready; UAT pending)
 - Doc: `docs/feature/fix/08-fix-credit-note-test-and-rollout.md`
 - Key checks:
-  - [ ] End-to-end test matrix passed
-  - [ ] Regression checks passed
-  - [ ] Rollback package prepared
-  - [ ] Final export sync completed
-- Completed by / date: `TBD`
-- Notes: ``
+  - [x] End-to-end test matrix documented (T1–T15)
+  - [x] Regression checks documented (R1–R5)
+  - [x] Rollback package + deploy manifest prepared
+  - [x] Local export sync verified against `XMT___Billing_System.ds`
+  - [ ] Runtime UAT passed in Creator
+  - [ ] Final post-UAT export synced
+- Completed by / date: `2026-06-23` (docs); UAT `TBD`
+- Notes: `All code changes complete Steps 01–07. Run batches A→C in Creator, then UAT.`
 
 ---
 
 ## Issue Closure Mapping (`creditNote_wrong.md`)
 
-- Convert path: #1-10 -> Steps 02, 04, 05, 06
-- Manual path: #11 -> Step 04
-- Status/approval: #14, #16-17, #21 -> Steps 03, 04, 06
-- LHDN: #23-25 -> Step 07
-- Already aligned/no change expected: #12, #18-20, #22, #26
+| Area | Items | Status |
+|---|---|---|
+| Convert path | #1–10 | Code complete (Steps 02, 04, 05, 06) |
+| Manual path | #11 | Code complete (Step 04) |
+| Status/approval | #14, #16–17, #21 | Code complete (Steps 03, 04, 06) |
+| LHDN | #23–25 | Code complete (Step 07) |
+| Aligned (no change) | #12, #18–20, #22, #26 | N/A |
 
 ---
 
 ## Change Log
 
+- `2026-06-23` - Step 08 package: test matrix T1–T15, regression R1–R5, deploy manifest, sync verification, issue closure table
 - `2026-06-23` - Step 07 complete: LHDN reference_invoice_list includes Reference_Invoice; Submit button Closed-only
-- `2026-06-23` - Step 06 complete: apply/refund guards, Reference_Invoice default, deletion blocks, guarded Open/Closed
+- `2026-06-23` - Step 06 complete: apply/refund guards, Reference_Invoice default, field-rule delete hide, guarded Open/Closed
 - `2026-06-23` - Step 05 complete: convert sets Reference_Invoice, single numbering, Draft stage, Paid condition fix
 - `2026-06-23` - Step 04 complete: stage-guarded Open/Closed, Draft on create, submission workflow cleaned
 - `2026-06-23` - Step 03 complete: blueprint utilization transitions fixed, `Approved_to_Closed` added
