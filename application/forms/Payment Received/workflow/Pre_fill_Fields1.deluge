@@ -36,20 +36,27 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 								get_invoice_list = Invoice[ID == input.Invoice];
 								for each  curr_invoice in get_invoice_list
 								{
-									curr_pay_row = Payment_Received.Payment_Received_Line_Item();
-									curr_pay_row.Reference_No=curr_invoice.Invoice_No;
-									curr_pay_row.Invoice_No=curr_invoice.ID;
-									curr_pay_row.Description="Payment Received For " + curr_invoice.Invoice_For_Usage + " INV " + curr_invoice.Invoice_No;
-									curr_pay_row.Document_Date=curr_invoice.Invoice_Date;
-									curr_pay_row.Amount=curr_invoice.Grand_Total;
-									curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
-									curr_pay_row.Allocation=curr_invoice.Amount_Due;
-									curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * ifnull(curr_invoice.Exchange_Rate,1);
-									curr_pay_row.Still_Owing=ifnull(curr_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
-									input.Payment_Received_Line_Item.insert(curr_pay_row);
-									// Total payment received
-									total_payment_received = total_payment_received + curr_invoice.Amount_Due;
-									total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+									if(ifnull(curr_invoice.Amount_Due,0) > 0)
+									{
+										curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+										curr_pay_row.Reference_No=curr_invoice.Invoice_No;
+										curr_pay_row.Invoice_No=curr_invoice.ID;
+										curr_pay_row.Description="Payment Received For " + curr_invoice.Invoice_For_Usage + " INV " + curr_invoice.Invoice_No;
+										curr_pay_row.Document_Date=curr_invoice.Invoice_Date;
+										curr_pay_row.Amount=curr_invoice.Grand_Total;
+										curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
+										curr_pay_row.Allocation=curr_invoice.Amount_Due;
+										curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * ifnull(curr_invoice.Exchange_Rate,1);
+										curr_pay_row.Still_Owing=ifnull(curr_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
+										input.Payment_Received_Line_Item.insert(curr_pay_row);
+										// Total payment received
+										total_payment_received = total_payment_received + curr_invoice.Amount_Due;
+										total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+									}
+									else
+									{
+										alert "This invoice has no outstanding balance to apply payment against.";
+									}
 								}
 							}
 							else if(input.Payment_Type_Single_Record == "Debit Note")
@@ -57,20 +64,27 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 								get_debit_note_list = Debit_Note[ID == input.Debit_Note];
 								for each  curr_debit_note in get_debit_note_list
 								{
-									curr_pay_row = Payment_Received.Payment_Received_Line_Item();
-									curr_pay_row.Reference_No=curr_debit_note.Invoice_No;
-									curr_pay_row.Debit_Note_No=curr_debit_note.ID;
-									curr_pay_row.Description="Payment Received For Debit Note " + curr_debit_note.Invoice_No;
-									curr_pay_row.Document_Date=curr_debit_note.Invoice_Date;
-									curr_pay_row.Amount=curr_debit_note.Grand_Total;
-									curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
-									curr_pay_row.Allocation=curr_debit_note.Amount_Due;
-									curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
-									curr_pay_row.Still_Owing=ifnull(curr_debit_note.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
-									input.Payment_Received_Line_Item.insert(curr_pay_row);
-									// Total payment received
-									total_payment_received = total_payment_received + curr_debit_note.Amount_Due;
-									total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+									if(ifnull(curr_debit_note.Amount_Due,0) > 0)
+									{
+										curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+										curr_pay_row.Reference_No=curr_debit_note.Invoice_No;
+										curr_pay_row.Debit_Note_No=curr_debit_note.ID;
+										curr_pay_row.Description="Payment Received For Debit Note " + curr_debit_note.Invoice_No;
+										curr_pay_row.Document_Date=curr_debit_note.Invoice_Date;
+										curr_pay_row.Amount=curr_debit_note.Grand_Total;
+										curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
+										curr_pay_row.Allocation=curr_debit_note.Amount_Due;
+										curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+										curr_pay_row.Still_Owing=ifnull(curr_debit_note.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
+										input.Payment_Received_Line_Item.insert(curr_pay_row);
+										// Total payment received
+										total_payment_received = total_payment_received + curr_debit_note.Amount_Due;
+										total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+									}
+									else
+									{
+										alert "This debit note has no outstanding balance to apply payment against.";
+									}
 								}
 							}
 							else if(input.Payment_Type_Single_Record == "Pro Forma Invoice")
@@ -78,20 +92,27 @@ Pre_fill_Fields1 as "Pre-fill Fields"
 								get_pro_forma_invoice_list = Pro_Forma_Invoices[ID == input.Pro_Forma_Invoices];
 								for each  curr_pro_forma_invoice in get_pro_forma_invoice_list
 								{
-									curr_pay_row = Payment_Received.Payment_Received_Line_Item();
-									curr_pay_row.Reference_No=curr_pro_forma_invoice.Invoice_No;
-									curr_pay_row.Pro_Forma_Invoice_No=curr_pro_forma_invoice.ID;
-									curr_pay_row.Description="Payment Received For DEP " + curr_pro_forma_invoice.Invoice_No;
-									curr_pay_row.Document_Date=curr_pro_forma_invoice.Invoice_Date;
-									curr_pay_row.Amount=curr_pro_forma_invoice.Grand_Total;
-									curr_pay_row.Outstanding_Balance=curr_pro_forma_invoice.Amount_Due;
-									curr_pay_row.Allocation=curr_pro_forma_invoice.Amount_Due;
-									curr_pay_row.Allocation_MYR=curr_pro_forma_invoice.Amount_Due * curr_pro_forma_invoice.Exchange_Rate;
-									curr_pay_row.Still_Owing=ifnull(curr_pro_forma_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
-									input.Payment_Received_Line_Item.insert(curr_pay_row);
-									// Total payment received
-									total_payment_received = total_payment_received + curr_pro_forma_invoice.Amount_Due;
-									total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+									if(ifnull(curr_pro_forma_invoice.Amount_Due,0) > 0)
+									{
+										curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+										curr_pay_row.Reference_No=curr_pro_forma_invoice.Invoice_No;
+										curr_pay_row.Pro_Forma_Invoice_No=curr_pro_forma_invoice.ID;
+										curr_pay_row.Description="Payment Received For DEP " + curr_pro_forma_invoice.Invoice_No;
+										curr_pay_row.Document_Date=curr_pro_forma_invoice.Invoice_Date;
+										curr_pay_row.Amount=curr_pro_forma_invoice.Grand_Total;
+										curr_pay_row.Outstanding_Balance=curr_pro_forma_invoice.Amount_Due;
+										curr_pay_row.Allocation=curr_pro_forma_invoice.Amount_Due;
+										curr_pay_row.Allocation_MYR=curr_pro_forma_invoice.Amount_Due * curr_pro_forma_invoice.Exchange_Rate;
+										curr_pay_row.Still_Owing=ifnull(curr_pro_forma_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
+										input.Payment_Received_Line_Item.insert(curr_pay_row);
+										// Total payment received
+										total_payment_received = total_payment_received + curr_pro_forma_invoice.Amount_Due;
+										total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+									}
+									else
+									{
+										alert "This deposit has no outstanding balance to apply payment against.";
+									}
 								}
 							}
 							input.Amount_Received = total_payment_received;

@@ -64,12 +64,14 @@ try
 		Grand_Total=input.Grand_Total
 		Grand_Total_Base_Currency=input.Grand_Total_Base_Currency
 		Payable_To=input.Payable_To
+		Invoice_No=thisapp.credit_note.generate_credit_note_no()
 		Credits_Used=0
 		Refund=0
 		Credits_Remaining=input.Grand_Total
 		Added_User=zoho.loginuser
 	];
-	thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Draft",create_credit_note_id.toLong());
+	// Credit_Note_Blueprint start stage is already "Draft" on insert.
+	// changeStage to Draft here fails: record is not yet active on the blueprint.
 	// Add item row to item subform
 	total_monthly_rental = 0;
 	total_internet_charges = 0;

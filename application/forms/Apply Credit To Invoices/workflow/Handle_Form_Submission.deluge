@@ -40,6 +40,25 @@ Handle_Form_Submission as "Handle Form Submission"
 						}
 						curr_input_invoice.Credits_Applied_Total=curr_credits_applied_total;
 						curr_input_invoice.Amount_Due=curr_input_invoice.Grand_Total - curr_input_invoice.Amount_Paid - curr_credits_applied_total;
+						// Invoice Blueprint status update
+						if(ifnull(curr_input_invoice.Amount_Due,0) <= 0)
+						{
+							thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",curr_input_invoice.ID);
+						}
+						else if(ifnull(curr_input_invoice.Amount_Paid,0) > 0 || ifnull(curr_credits_applied_total,0) > 0)
+						{
+							thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_input_invoice.ID);
+						}
+						else if(curr_input_invoice.Due_Date > zoho.currentdate)
+						{
+							thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_input_invoice.ID);
+						}
+						else
+						{
+							thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_input_invoice.ID);
+						}
+						thisapp.invoice.calculate_invoice_previous_balance_and_total_amount_due(curr_input_invoice.ID);
+						thisapp.tenancy.calculate_opening_balance_by_tenancy(curr_input_invoice.Customer_Code);
 					}
 				}
 				// Credit note calculation (Credit note form)

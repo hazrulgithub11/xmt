@@ -33,8 +33,8 @@ Handle_Customer_Name2 as "Handle Customer Name"
 			custom deluge script
 			(
 					customerInfo = Customer_Profile[ID == input.Customer_Name];
-				get_invoice_list = Invoice[(Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue") && Customer == input.Customer_Name];
-				get_debit_note_list = Debit_Note[(Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue") && Customer == input.Customer_Name];
+				get_invoice_list = Invoice[(Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue") && Customer == input.Customer_Name && Amount_Due > 0];
+				get_debit_note_list = Debit_Note[(Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue") && Customer == input.Customer_Name && Amount_Due > 0];
 				if(get_invoice_list.count() == 0 && get_debit_note_list.count() == 0 && input.Customer_Name != null)
 				{
 					alert "There are no unpaid invoices associated with this customer code.";
@@ -103,7 +103,7 @@ Handle_Customer_Name2 as "Handle Customer Name"
 				//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 				subTotal = 0;
 				totalTax = 0;
-				getPIs = Pro_Forma_Invoices[(Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue") && Customer_Code == input.Customer_Code];
+				getPIs = Pro_Forma_Invoices[(Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue") && Customer_Code == input.Customer_Code && Amount_Due > 0];
 				if(getPIs.ID == null && input.Customer_Code != null)
 				{
 					alert "There are no unpaid deposits associated with this customer code.";
