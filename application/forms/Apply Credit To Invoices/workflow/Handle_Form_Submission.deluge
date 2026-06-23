@@ -18,7 +18,7 @@ Handle_Form_Submission as "Handle Form Submission"
 						insert into Apply_Credit_To_Invoice_Line
 						[
 							Invoice=curr_unpaid_invoice.Invoice
-							Credit_Note=input.Credit_Note
+							Credit_Note=input.invoice
 							Amount_Applied_Date=today
 							Amount_Applied=curr_unpaid_invoice.Credits_To_Apply
 							Added_User=zoho.loginuser
@@ -43,10 +43,10 @@ Handle_Form_Submission as "Handle Form Submission"
 					}
 				}
 				// Credit note calculation (Credit note form)
-				input_credit_note = Credit_Note[ID = input.Credit_Note];
+				input_credit_note = Credit_Note[ID = input.invoice];
 				// Refund Calculation (Credit note form)
 				input_credit_note.Refund_History=null;
-				refund_note_list = Refund_Note[Reference_Credit_Note = input.Credit_Note];
+				refund_note_list = Refund_Note[Reference_Credit_Note = input.invoice];
 				refund_total = 0;
 				for each  curr_refund_note in refund_note_list
 				{
@@ -59,7 +59,7 @@ Handle_Form_Submission as "Handle Form Submission"
 				}
 				// Apply Credit To Invoices Calculation (Credit note form)
 				input_credit_note.Credit_Applied_Invoices=null;
-				apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note = input.Credit_Note];
+				apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note = input.invoice];
 				credits_used_total = 0;
 				for each  curr_apply_credit_to_invoice_line in apply_credit_to_invoice_line_list
 				{
@@ -77,11 +77,11 @@ Handle_Form_Submission as "Handle Form Submission"
 				input_credit_note.Credits_Remaining=input_credit_note.Grand_Total - refund_total - credits_used_total;
 				if(input_credit_note.Credits_Remaining > 0)
 				{
-					input_credit_note.Status="Open";
+					thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input_credit_note.ID);
 				}
 				if(input_credit_note.Credits_Remaining == 0)
 				{
-					input_credit_note.Status="Closed";
+					thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input_credit_note.ID);
 				}
 				// Clean up
 				delete from Apply_Credit_To_Invoices[ID == input.ID];
