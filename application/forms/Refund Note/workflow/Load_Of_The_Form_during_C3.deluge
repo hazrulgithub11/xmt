@@ -29,6 +29,76 @@ Load_Of_The_Form_during_C3 as "Load Of The Form during Creation"
 				input.Supplier_State = getOrganization.State;
 				input.Base_Currency = getOrganization.Base_Currency;
 				hide Invoice_No;
+				// Copy line items from the source Credit Note so the user can review/adjust before submitting
+				if(input.Reference_Credit_Note != null)
+				{
+					get_cn = Credit_Note[ID == input.Reference_Credit_Note];
+					for each  curr_mr in get_cn.Monthly_Rental
+					{
+						rn_mr = Refund_Note.Monthly_Rental();
+						rn_mr.Item_Monthly_Rental = curr_mr.Item_Monthly_Rental;
+						rn_mr.Item_Code_Monthly_Rental = curr_mr.Item_Code_Monthly_Rental;
+						rn_mr.Classification_Codes_Monthly_Rental = curr_mr.Classification_Codes_Monthly_Rental;
+						rn_mr.Description_Monthly_Rental = curr_mr.Description_Monthly_Rental;
+						rn_mr.Quantity_Monthly_Rental = curr_mr.Quantity_Monthly_Rental;
+						rn_mr.Unit_Price_Monthly_Rental = curr_mr.Unit_Price_Monthly_Rental;
+						rn_mr.Sub_Total_Monthly_Rental = curr_mr.Sub_Total_Monthly_Rental;
+						rn_mr.Tax_Monthly_Rental = curr_mr.Tax_Monthly_Rental;
+						rn_mr.Tax_Type_Monthly_Rental = curr_mr.Tax_Type_Monthly_Rental;
+						rn_mr.Tax_Pct_Monthly_Rental = curr_mr.Tax_Pct_Monthly_Rental;
+						rn_mr.Tax_Amount_Monthly_Rental = curr_mr.Tax_Amount_Monthly_Rental;
+						rn_mr.Total_Monthly_Rental = curr_mr.Total_Monthly_Rental;
+						rn_mr.Business_Segment_Monthly_Rental = curr_mr.Business_Segment_Monthly_Rental;
+						rn_mr.Business_Unit_Monthly_Rental = curr_mr.Business_Unit_Monthly_Rental;
+						rn_mr.Circuit_ID_Monthly_Rental = curr_mr.Circuit_ID_Monthly_Rental;
+						rn_mr.Circuit_ID_Type_Monthly_Rental = curr_mr.Circuit_ID_Type_Monthly_Rental;
+						input.Monthly_Rental.insert(rn_mr);
+					}
+					for each  curr_ic in get_cn.Internet_Charges
+					{
+						rn_ic = Refund_Note.Internet_Charges();
+						rn_ic.Item_Internet_Charges = curr_ic.Item_Internet_Charges;
+						rn_ic.Item_Code_Internet_Charges = curr_ic.Item_Code_Internet_Charges;
+						rn_ic.Classification_Codes_Internet_Charges = curr_ic.Classification_Codes_Internet_Charges;
+						rn_ic.Description_Internet_Charges = curr_ic.Description_Internet_Charges;
+						rn_ic.Quantity_Internet_Charges = curr_ic.Quantity_Internet_Charges;
+						rn_ic.Unit_Price_Internet_Charges = curr_ic.Unit_Price_Internet_Charges;
+						rn_ic.Sub_Total_Internet_Charges = curr_ic.Sub_Total_Internet_Charges;
+						rn_ic.Tax_Internet_Charges = curr_ic.Tax_Internet_Charges;
+						rn_ic.Tax_Type_Internet_Charges = curr_ic.Tax_Type_Internet_Charges;
+						rn_ic.Tax_Pct_Internet_Charges = curr_ic.Tax_Pct_Internet_Charges;
+						rn_ic.Tax_Amount_Internet_Charges = curr_ic.Tax_Amount_Internet_Charges;
+						rn_ic.Total_Internet_Charges = curr_ic.Total_Internet_Charges;
+						rn_ic.Business_Segment_Internet_Charges = curr_ic.Business_Segment_Internet_Charges;
+						rn_ic.Business_Unit_Internet_Charges = curr_ic.Business_Unit_Internet_Charges;
+						rn_ic.Circuit_ID_Internet_Charges = curr_ic.Circuit_ID_Internet_Charges;
+						rn_ic.Circuit_ID_Type_Internet_Charges = curr_ic.Circuit_ID_Type_Internet_Charges;
+						input.Internet_Charges.insert(rn_ic);
+					}
+					for each  curr_cc in get_cn.Call_Charges
+					{
+						rn_cc = Refund_Note.Call_Charges();
+						rn_cc.Item_Call_Charges = curr_cc.Item_Call_Charges;
+						rn_cc.Item_Code_Call_Charges = curr_cc.Item_Code_Call_Charges;
+						rn_cc.Classification_Codes_Call_Charges = curr_cc.Classification_Codes_Call_Charges;
+						rn_cc.Description_Call_Charges = curr_cc.Description_Call_Charges;
+						rn_cc.Quantity_Call_Charges = curr_cc.Quantity_Call_Charges;
+						rn_cc.Unit_Price_Call_Charges = curr_cc.Unit_Price_Call_Charges;
+						rn_cc.Sub_Total_Call_Charges = curr_cc.Sub_Total_Call_Charges;
+						rn_cc.Tax_Call_Charges = curr_cc.Tax_Call_Charges;
+						rn_cc.Tax_Type_Call_Charges = curr_cc.Tax_Type_Call_Charges;
+						rn_cc.Tax_Pct_Call_Charges = curr_cc.Tax_Pct_Call_Charges;
+						rn_cc.Tax_Amount_Call_Charges = curr_cc.Tax_Amount_Call_Charges;
+						rn_cc.Total_Call_Charges = curr_cc.Total_Call_Charges;
+						rn_cc.Business_Segment_Call_Charges = curr_cc.Business_Segment_Call_Charges;
+						rn_cc.Business_Unit_Call_Charges = curr_cc.Business_Unit_Call_Charges;
+						rn_cc.Circuit_ID_Call_Charges = curr_cc.Circuit_ID_Call_Charges;
+						rn_cc.Circuit_ID_Type_Call_Charges = curr_cc.Circuit_ID_Type_Call_Charges;
+						input.Call_Charges.insert(rn_cc);
+					}
+					// Recalculate totals
+					input.User_Input_Trigger = !input.User_Input_Trigger;
+				}
 			)
 		}
 	}
