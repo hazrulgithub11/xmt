@@ -1,0 +1,18 @@
+string credit_note.credit_mode_from_invoice_stage(int invoice_id)
+{
+	ref_invoice = Invoice[ID == invoice_id];
+	if(ref_invoice.ID == null)
+	{
+		return "";
+	}
+	ref_stage = ref_invoice.Blueprint.Current_Stage;
+	if(ref_stage == "Sent" || ref_stage == "Overdue")
+	{
+		return "Mode A - Debt Reduction";
+	}
+	else if(ref_stage == "Partially Paid" || ref_stage == "Paid")
+	{
+		return "Mode B - Open Credit";
+	}
+	return "";
+}
