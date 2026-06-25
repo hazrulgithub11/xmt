@@ -90,13 +90,13 @@ Use a **sandbox / test customer** and test invoices. Record CN ID, invoice ID, a
 
 | # | Scenario | Steps | Expected | Pass |
 |---|----------|-------|----------|------|
-| T11-1 | Manual CN — Sent reference invoice | Pick a Sent (unpaid) invoice | `Credit_Mode = "Mode A - Debt Reduction"` | [ ] |
-| T11-2 | Manual CN — Overdue reference invoice | Pick an Overdue invoice | `Credit_Mode = "Mode A - Debt Reduction"` | [ ] |
-| T11-3 | Manual CN — Partially Paid reference | Pick a Partially Paid invoice | `Credit_Mode = "Mode B - Open Credit"` | [ ] |
-| T11-4 | Manual CN — Paid reference invoice | Pick a Paid invoice | `Credit_Mode = "Mode B - Open Credit"` | [ ] |
-| T11-5 | Non-eligible invoice stage | Pick Draft or Pending Approval invoice | **Blocked** — invoice stage not eligible | [ ] |
-| T11-6 | Convert — Sent/Overdue source | Convert from Sent invoice | `Credit_Mode = "Mode A - Debt Reduction"` | [ ] |
-| T11-7 | Convert — Partially Paid/Paid source | Convert from Paid invoice | `Credit_Mode = "Mode B - Open Credit"` | [ ] |
+| T11-1 | Manual CN — Sent reference invoice | Pick a Sent (unpaid) invoice | `Credit_Mode = "Mode A - Debt Reduction"` | [x] |
+| T11-2 | Manual CN — Overdue reference invoice | Pick an Overdue invoice | `Credit_Mode = "Mode A - Debt Reduction"` | [x] |
+| T11-3 | Manual CN — Partially Paid reference | Pick a Partially Paid invoice | `Credit_Mode = "Mode B - Open Credit"` | [x] |
+| T11-4 | Manual CN — Paid reference invoice | Pick a Paid invoice | `Credit_Mode = "Mode B - Open Credit"` | [x] |
+| T11-5 | Non-eligible invoice stage | Pick Draft or Pending Approval invoice | **Blocked** — invoice stage not eligible | [x] |
+| T11-6 | Convert — Sent/Overdue source | Convert from Sent invoice | `Credit_Mode = "Mode A - Debt Reduction"` | [x] |
+| T11-7 | Convert — Partially Paid/Paid source | Convert from Paid invoice | `Credit_Mode = "Mode B - Open Credit"` | [x] |
 
 ### Section 4 — Cumulative cap (Step 12)
 

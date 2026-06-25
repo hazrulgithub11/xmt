@@ -36,7 +36,7 @@ Status legend:
 
 - [x] 09 - `Reference_Invoice` mandatory + LHDN UUID block (`09-fix-credit-note-mandatory-reference.md`)
 - [x] 10 - Clone invoice lines from reference; reduce-only rule (`10-fix-credit-note-clone-invoice-lines.md`)
-- [ ] 11 - `Credit_Mode` field + lock Mode A vs Mode B at creation (`11-fix-credit-note-credit-mode-field.md`)
+- [x] 11 - `Credit_Mode` field + lock Mode A vs Mode B at creation (`11-fix-credit-note-credit-mode-field.md`)
 - [ ] 12 - Cumulative approved CN cap at save + approval recheck (`12-fix-credit-note-cumulative-cap.md`)
 - [ ] 13 - Mode A: auto-apply on approval → Closed; hide Apply/Refund (`13-fix-credit-note-mode-a-auto-apply.md`)
 - [ ] 14 - Mode B: apply same ref if Amount_Due > 0; other invoices; refund (`14-fix-credit-note-mode-b-apply-controls.md`)
@@ -57,10 +57,10 @@ Status legend:
 
 ### Phase 2
 
-- Current step: `Step 11 ready to start`
+- Current step: `Step 12 ready to start`
 - Owner: `TBD`
 - Started at: `2026-06-24`
-- Current risk/blocker: `None for Step 09`
+- Current risk/blocker: `None for Step 11`
 
 ---
 
@@ -195,6 +195,22 @@ Status legend:
 - Completed by / date: `2026-06-25`
 - Notes: `Clone uses clear + insert pattern (Refund Note load workflow). Re-clone guarded to Draft/Rejected/new only.`
 
+### 11 - Credit_Mode Field (Mode A / Mode B at Creation)
+
+- Status: `[x]`
+- Doc: `docs/feature/fix credit note/11-fix-credit-note-credit-mode-field.md`
+- Key checks:
+  - [x] `Credit_Mode` field on `Credit_Note` form
+  - [x] Mode detection on manual reference selection (`Handle_reference_invoice_2`)
+  - [x] Mode set on convert (`Convert_To_Credit_Note`)
+  - [x] Save guard for missing mode on Draft/new (`Handle_Validation_Submiss2`)
+  - [x] Field disabled in UI (`Disable_Fields20`)
+  - [x] `Credit_Mode` column in `Credit_Notes` and `Credit_Note_Report`
+  - [x] UAT T11-1 to T11-7 passed
+  - [ ] Post-deploy re-export to `XMT___Billing_System.ds`
+- Completed by / date: `2026-06-25`
+- Notes: `Mode locked at creation from reference invoice blueprint stage. Field hidden from form UX (report column for finance). Steps 13–14 consume Credit_Mode.`
+
 ---
 
 ## Issue Closure Mapping (`creditNote_wrong.md`)
@@ -213,6 +229,7 @@ Status legend:
 
 ## Change Log
 
+- `2026-06-25` - Step 11 complete: `Credit_Mode` field, Mode A/B detection (manual + convert), save guard, report column; UAT T11-1 to T11-7 passed
 - `2026-06-25` - Step 10 complete: clone invoice lines on reference selection, reduce-only validation, line subform add-row blocked, item identity fields locked
 - `2026-06-24` - Phase 2 planning complete: Steps 09–15 written; index and tracker updated
 - `2026-06-23` - Step 08 package: test matrix T1–T15, regression R1–R5, deploy manifest, sync verification, issue closure table

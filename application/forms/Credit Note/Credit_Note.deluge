@@ -397,6 +397,16 @@ form Credit_Note
 	 	column = 2   
 		width = medium
 	)
+	Credit_Mode
+	(
+		type = picklist
+		displayname = "Credit Mode"
+		maxchar = 100
+		values = {"Mode A - Debt Reduction","Mode B - Open Credit"}
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
 	must have Invoice_For_Usage
 	(
     	type = text

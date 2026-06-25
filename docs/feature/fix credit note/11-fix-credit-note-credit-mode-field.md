@@ -149,12 +149,12 @@ The current logic **locks mode at creation** — i.e., the stage read is taken w
 
 ## Exit criteria
 
-- [ ] `Credit_Mode` field added to `Credit_Note` form and visible in reports
-- [ ] Manual CN: pick Sent/Overdue invoice → `Credit_Mode = "Mode A - Debt Reduction"`
-- [ ] Manual CN: pick Partially Paid/Paid invoice → `Credit_Mode = "Mode B - Open Credit"`
-- [ ] Manual CN: pick Draft/Pending/Approved (non-eligible) invoice → **blocked with message**
-- [ ] Convert from Sent/Overdue invoice → `Credit_Mode = "Mode A"`
-- [ ] Convert from Partially Paid/Paid invoice → `Credit_Mode = "Mode B"`
-- [ ] `Credit_Mode` is read-only in form layout (user cannot change it)
-- [ ] `Credit_Mode` null on existing CNs does not crash form load
+- [x] `Credit_Mode` field added to `Credit_Note` form and visible in reports
+- [x] Manual CN: pick Sent/Overdue invoice → `Credit_Mode = "Mode A - Debt Reduction"`
+- [x] Manual CN: pick Partially Paid/Paid invoice → `Credit_Mode = "Mode B - Open Credit"`
+- [x] Manual CN: pick Draft/Pending/Approved (non-eligible) invoice → **blocked with message**
+- [x] Convert from Sent/Overdue invoice → `Credit_Mode = "Mode A"`
+- [x] Convert from Partially Paid/Paid invoice → `Credit_Mode = "Mode B"`
+- [x] `Credit_Mode` is read-only in form layout (user cannot change it)
+- [x] `Credit_Mode` null on existing CNs does not crash form load
 - [ ] `Credit_Note.deluge`, `Credit_Notes.deluge`, `Convert_To_Credit_Note.deluge`, `Handle_reference_invoice_2.deluge` synced to `XMT___Billing_System.ds`

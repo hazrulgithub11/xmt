@@ -17,6 +17,7 @@ Handle_reference_invoice_2 as "Handle reference invoice selection"
 					{
 						invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
 						clear Reference_Invoice;
+						clear Credit_Mode;
 						input.Reference_Invoice:ui.add(invoice_id_list);
 						alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
 					}
@@ -134,6 +135,23 @@ Handle_reference_invoice_2 as "Handle reference invoice selection"
 									input.Call_Charges.insert(cn_cc);
 								}
 								input.User_Input_Trigger = !input.User_Input_Trigger;
+							}
+							ref_stage = Invoice[ID == input.Reference_Invoice].Blueprint.Current_Stage;
+							if(ref_stage == "Sent" || ref_stage == "Overdue")
+							{
+								input.Credit_Mode = "Mode A - Debt Reduction";
+							}
+							else if(ref_stage == "Partially Paid" || ref_stage == "Paid")
+							{
+								input.Credit_Mode = "Mode B - Open Credit";
+							}
+							else
+							{
+								invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
+								clear Reference_Invoice;
+								clear Credit_Mode;
+								input.Reference_Invoice:ui.add(invoice_id_list);
+								alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note. Choose a different invoice.";
 							}
 						}
 					}

@@ -74,6 +74,7 @@ list Credit_Note_Report1
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Payable_To as "Payable To"
 		Reference_Invoice as "Reference Invoice"
+		Credit_Mode as "Credit Mode"
 		Rejection_Reason as "Rejection Reason"
 		User_Input_Trigger
 	)

@@ -1,5 +1,21 @@
 errorMessage = "";
 create_credit_note_id = null;
+source_stage = input.Blueprint.Current_Stage;
+CN_Credit_Mode = "";
+if(source_stage == "Sent" || source_stage == "Overdue")
+{
+	CN_Credit_Mode = "Mode A - Debt Reduction";
+}
+else if(source_stage == "Partially Paid" || source_stage == "Paid")
+{
+	CN_Credit_Mode = "Mode B - Open Credit";
+}
+else
+{
+	errorMessage = "Invoice stage '" + source_stage + "' is not eligible for a credit note.";
+}
+if(errorMessage == "")
+{
 try 
 {
 	create_credit_note_id = insert into Credit_Note
@@ -38,6 +54,7 @@ try
 		Delivery_Country=input.Delivery_Country
 		Delivery_State=input.Delivery_State
 		Reference_Invoice=input.ID
+		Credit_Mode=CN_Credit_Mode
 		Subscriptions=input.Subscriptions
 		Invoice_Date=zoho.currentdate
 		Invoice_For_Usage=input.Invoice_For_Usage
@@ -166,6 +183,7 @@ try
 }catch (error)
 {
 	errorMessage = error;
+}
 }
 if(errorMessage == "")
 {

@@ -46,6 +46,7 @@ Disable_Fields20 as "Disable Fields"
 				disable Delivery_Country;
 				// Invoice info
 				disable Invoice_No;
+				disable Credit_Mode;
 				disable Base_Currency;
 				disable Invoice_Currency;
 				disable Sub_Total_Monthly_Rental;
