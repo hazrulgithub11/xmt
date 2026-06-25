@@ -37,7 +37,7 @@ Status legend:
 - [x] 09 - `Reference_Invoice` mandatory + LHDN UUID block (`09-fix-credit-note-mandatory-reference.md`)
 - [x] 10 - Clone invoice lines from reference; reduce-only rule (`10-fix-credit-note-clone-invoice-lines.md`)
 - [x] 11 - `Credit_Mode` field + lock Mode A vs Mode B at creation (`11-fix-credit-note-credit-mode-field.md`)
-- [ ] 12 - Cumulative approved CN cap at save + approval recheck (`12-fix-credit-note-cumulative-cap.md`)
+- [x] 12 - Cumulative approved CN cap at save + approval recheck (`12-fix-credit-note-cumulative-cap.md`)
 - [ ] 13 - Mode A: auto-apply on approval → Closed; hide Apply/Refund (`13-fix-credit-note-mode-a-auto-apply.md`)
 - [ ] 14 - Mode B: apply same ref if Amount_Due > 0; other invoices; refund (`14-fix-credit-note-mode-b-apply-controls.md`)
 - [ ] 15 - Test matrix v2, deploy Batch E–I, rollback package (`15-fix-credit-note-test-matrix-v2.md`)
@@ -57,10 +57,10 @@ Status legend:
 
 ### Phase 2
 
-- Current step: `Step 12 ready to start`
+- Current step: `Step 13 ready to start`
 - Owner: `TBD`
 - Started at: `2026-06-24`
-- Current risk/blocker: `None for Step 11`
+- Current risk/blocker: `None for Step 12`
 
 ---
 
@@ -177,7 +177,7 @@ Status legend:
   - [x] Field-selection validator unchanged (`Handle_reference_invoice_2`)
   - [ ] Convert pre-guard skipped (record action `alert` limitation; mitigated by invoice stage)
   - [ ] Alert message tweak in `Handle_reference_invoice_2` skipped (existing message sufficient)
-  - [ ] Post-deploy re-export to `XMT___Billing_System.ds`
+  - [x] Post-deploy re-export to `XMT___Billing_System.ds`
 - Completed by / date: `2026-06-25`
 - Notes: `Validation lives in Handle_Validation_Submiss2 (not Handle_Submission_Form_an4 — single event per workflow). Manual creation blocked without LHDN-validated reference.`
 
@@ -191,7 +191,7 @@ Status legend:
   - [x] Item identity fields read-only (`Disable_Fields20`)
   - [x] Block add row on line subforms (`Disable_Addition_And_Dele3`)
   - [x] Convert path verified — copies all line fields (`Convert_To_Credit_Note`)
-  - [ ] Post-deploy re-export to `XMT___Billing_System.ds`
+  - [x] Post-deploy re-export to `XMT___Billing_System.ds`
 - Completed by / date: `2026-06-25`
 - Notes: `Clone uses clear + insert pattern (Refund Note load workflow). Re-clone guarded to Draft/Rejected/new only.`
 
@@ -207,9 +207,25 @@ Status legend:
   - [x] Field disabled in UI (`Disable_Fields20`)
   - [x] `Credit_Mode` column in `Credit_Notes` and `Credit_Note_Report`
   - [x] UAT T11-1 to T11-7 passed
-  - [ ] Post-deploy re-export to `XMT___Billing_System.ds`
+  - [x] Post-deploy re-export to `XMT___Billing_System.ds`
 - Completed by / date: `2026-06-25`
 - Notes: `Mode locked at creation from reference invoice blueprint stage. Field hidden from form UX (report column for finance). Steps 13–14 consume Credit_Mode.`
+
+### 12 - Cumulative Approved CN Cap (Save + Approval)
+
+- Status: `[x]`
+- Doc: `docs/feature/fix credit note/12-fix-credit-note-cumulative-cap.md`
+- Key checks:
+  - [x] Save-time cap in `Handle_Validation_Submiss2` (`on validate`, after per-line reduce-only checks)
+  - [x] Approval-time recheck in `Approve/after/unconditional/script_01.deluge` (before LHDN validation)
+  - [x] Only **Approved** CNs count toward cap at save (Draft/Pending not reserved — V1)
+  - [x] Approval breach reverts to **Pending Approval** via `changeStage`
+  - [x] Save guard covers new record (`input.ID == null`), Draft, Rejected, and Pending Approval
+  - [x] `cn_grand_total` summed from line totals at validate (not stale `input.Grand_Total`)
+  - [x] UAT T12-1 to T12-6 passed (save block, approval race, cap messages)
+  - [x] Post-deploy re-export to `XMT___Billing_System.ds`
+- Completed by / date: `2026-06-25`
+- Notes: `Save validation lives in Handle_Validation_Submiss2 (not Handle_Submission_Form_an4). UAT found stage null on add skipped cap — fixed. changeStage uses stage name 3rd arg, record ID 4th (not transition link name).`
 
 ---
 
@@ -229,7 +245,7 @@ Status legend:
 
 ## Change Log
 
-- `2026-06-25` - Step 11 complete: `Credit_Mode` field, Mode A/B detection (manual + convert), save guard, report column; UAT T11-1 to T11-7 passed
+- `2026-06-25` - Step 12 complete: cumulative cap at save (`Handle_Validation_Submiss2`) + approval recheck (`script_01`); UAT T12-1 to T12-6 passed; fixes for null stage on add and `changeStage` arg order
 - `2026-06-25` - Step 10 complete: clone invoice lines on reference selection, reduce-only validation, line subform add-row blocked, item identity fields locked
 - `2026-06-24` - Phase 2 planning complete: Steps 09–15 written; index and tracker updated
 - `2026-06-23` - Step 08 package: test matrix T1–T15, regression R1–R5, deploy manifest, sync verification, issue closure table

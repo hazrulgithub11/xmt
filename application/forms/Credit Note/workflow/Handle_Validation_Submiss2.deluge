@@ -169,6 +169,42 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
+				// Cumulative cap: approved CNs on same reference invoice must not exceed original invoice total
+				if(input.Reference_Invoice != null && (input.ID == null || cn_stage == "Draft" || cn_stage == "Rejected" || cn_stage == "Pending Approval"))
+				{
+					ref_invoice_id = input.Reference_Invoice;
+					original_total = Invoice[ID == ref_invoice_id].Grand_Total;
+					approved_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && Blueprint.Current_Stage == "Approved" && ID != input.ID];
+					approved_cn_total = 0;
+					for each  cn in approved_cn_list
+					{
+						approved_cn_total = approved_cn_total + cn.Grand_Total;
+					}
+					remaining_creditable = original_total - approved_cn_total;
+					// Sum line totals — input.Grand_Total may be stale/0 during on validate before save
+					cn_grand_total = 0;
+					for each  curr_mr in input.Monthly_Rental
+					{
+						cn_grand_total = cn_grand_total + ifnull(curr_mr.Total_Monthly_Rental,0);
+					}
+					for each  curr_ic in input.Internet_Charges
+					{
+						cn_grand_total = cn_grand_total + ifnull(curr_ic.Total_Internet_Charges,0);
+					}
+					for each  curr_cc in input.Call_Charges
+					{
+						cn_grand_total = cn_grand_total + ifnull(curr_cc.Total_Call_Charges,0);
+					}
+					if(cn_grand_total == 0)
+					{
+						cn_grand_total = ifnull(input.Grand_Total,0);
+					}
+					if(cn_grand_total > remaining_creditable)
+					{
+						alert "This credit note amount (RM " + cn_grand_total + ") exceeds the remaining creditable amount (RM " + remaining_creditable + ") for the referenced invoice. Reduce the credit note amount or lines.";
+						cancel submit;
+					}
+				}
 				// Validate Monthly Rental Quantity & Unit Price
 				for each  curr_monthly_rental in input.Monthly_Rental
 				{

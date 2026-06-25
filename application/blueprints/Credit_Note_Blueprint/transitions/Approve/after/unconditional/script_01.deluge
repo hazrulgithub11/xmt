@@ -1,4 +1,23 @@
-// LHDN validation (must run first; aborts transition on failure)
+// Cumulative cap check (must run before LHDN validation)
+if(input.Reference_Invoice != null)
+{
+	ref_invoice_id = input.Reference_Invoice;
+	original_total = Invoice[ID == ref_invoice_id].Grand_Total;
+	approved_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && Blueprint.Current_Stage == "Approved" && ID != input.ID];
+	approved_cn_total = 0;
+	for each  cn in approved_cn_list
+	{
+		approved_cn_total = approved_cn_total + cn.Grand_Total;
+	}
+	remaining_creditable = original_total - approved_cn_total;
+	if(input.Grand_Total > remaining_creditable)
+	{
+		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
+		info "Approval rejected: cumulative credit note cap exceeded. Original invoice total: " + original_total + ", Already approved: " + approved_cn_total + ", This CN: " + input.Grand_Total + ", Remaining: " + remaining_creditable;
+		return;
+	}
+}
+// LHDN validation (aborts transition on failure)
 error_messages = list();
 get_organization = Organization_Settings[ID != null];
 organization_environment = get_organization.LHDN_Portal_Environment;
