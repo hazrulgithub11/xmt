@@ -9,7 +9,7 @@ Disable_Addition_And_Dele3 as "Disable Addition And Deletion Row"
 	{
 		actions 
 		{
-		hide add row of Credit_Applied_Invoices,Refund_History;
+		hide add row of Monthly_Rental,Internet_Charges,Call_Charges,Credit_Applied_Invoices,Refund_History;
 		}
 		actions  (Blueprint.Current_Stage == "Draft" || Blueprint.Current_Stage == "Pending Approval" || Blueprint.Current_Stage == "Rejected")
 		{

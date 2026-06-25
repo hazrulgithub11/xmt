@@ -113,33 +113,42 @@ After cloning, the following fields must be read-only (UI level or save-time gua
 
 Implement read-only via `Disable_Fields` workflow (mirror `Disable_Fields20.deluge` pattern already in Credit Note folder) triggered after line clone.
 
-### 4. Add per-line save guard in `Handle_Submission_Form_an4.deluge`
+### 4. Add per-line save guard in `Handle_Validation_Submiss2.deluge`
 
-On save, validate that no line exceeds the source invoice line values:
+On save, validate that no line exceeds the source invoice line values (use nested loop — subforms do not support `.first()`):
 
 ```deluge
-ref_invoice_id = input.Reference_Invoice;
+ref_invoice = Invoice[ID == input.Reference_Invoice];
 
-// Check Monthly_Rental lines
-for each cn_row in input.Monthly_Rental
+for each curr_monthly_rental in input.Monthly_Rental
 {
-    item_code = cn_row.Item_Code_Monthly_Rental;
-    source_row = Invoice.Monthly_Rental[Invoice == ref_invoice_id && Item_Code_Monthly_Rental == item_code].first();
-    if(source_row != null)
+    item_code = curr_monthly_rental.Item_Code_Monthly_Rental;
+    source_row_found = false;
+    for each source_row in ref_invoice.Monthly_Rental
     {
-        if(cn_row.Quantity_Monthly_Rental > source_row.Quantity_Monthly_Rental)
+        if(source_row.Item_Code_Monthly_Rental == item_code)
         {
-            alert("Credit note qty for " + item_code + " exceeds original invoice qty. Reduce the quantity.");
-            cancel submit;
-        }
-        if(cn_row.Unit_Price_Monthly_Rental > source_row.Unit_Price_Monthly_Rental)
-        {
-            alert("Credit note unit price for " + item_code + " exceeds original invoice unit price.");
-            cancel submit;
+            source_row_found = true;
+            if(curr_monthly_rental.Quantity_Monthly_Rental > source_row.Quantity_Monthly_Rental)
+            {
+                alert "Credit note qty for " + item_code + " exceeds original invoice qty. Reduce the quantity.";
+                cancel submit;
+            }
+            if(curr_monthly_rental.Unit_Price_Monthly_Rental > source_row.Unit_Price_Monthly_Rental)
+            {
+                alert "Credit note unit price for " + item_code + " exceeds original invoice unit price.";
+                cancel submit;
+            }
+            break;
         }
     }
+    if(source_row_found == false)
+    {
+        alert "Credit note line item " + item_code + " does not exist on the reference invoice.";
+        cancel submit;
+    }
 }
-// Repeat same pattern for Internet and Call_Charges subforms
+// Repeat same pattern for Internet_Charges and Call_Charges subforms
 ```
 
 ### 5. Convert path — verify lines already cloned
@@ -166,12 +175,12 @@ If user clears and re-selects a different reference invoice (before save), `Hand
 
 ## Exit criteria
 
-- [ ] Manual CN: pick `Reference_Invoice` → lines auto-populate from that invoice
-- [ ] Lines match source invoice exactly (item code, tax, qty, price)
-- [ ] User reduces qty on a line → `Sub_Total` and `Grand_Total` recalculate
-- [ ] User tries to enter qty > source qty → blocked at save with message
-- [ ] User tries to enter unit price > source price → blocked at save
-- [ ] Item code fields are read-only on CN form
-- [ ] Convert from invoice: lines already match (existing behavior verified)
-- [ ] Change `Reference_Invoice` in Draft → lines reload from new reference
-- [ ] `Handle_reference_invoice_2.deluge` and `Handle_Submission_Form_an4.deluge` synced to `XMT___Billing_System.ds`
+- [x] Manual CN: pick `Reference_Invoice` → lines auto-populate from that invoice
+- [x] Lines match source invoice exactly (item code, tax, qty, price)
+- [x] User reduces qty on a line → `Sub_Total` and `Grand_Total` recalculate
+- [x] User tries to enter qty > source qty → blocked at save with message
+- [x] User tries to enter unit price > source price → blocked at save
+- [x] Item code fields are read-only on CN form
+- [x] Convert from invoice: lines already match (existing behavior verified)
+- [x] Change `Reference_Invoice` in Draft → lines reload from new reference
+- [ ] `Handle_reference_invoice_2.deluge` and `Handle_Validation_Submiss2.deluge` synced to `XMT___Billing_System.ds`

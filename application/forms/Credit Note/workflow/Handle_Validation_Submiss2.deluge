@@ -62,6 +62,104 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
+				// Validate lines do not exceed source invoice (reduce-only)
+				ref_invoice = Invoice[ID == input.Reference_Invoice];
+				for each  curr_monthly_rental in input.Monthly_Rental
+				{
+					item_code = curr_monthly_rental.Item_Code_Monthly_Rental;
+					if(item_code == null || item_code == "")
+					{
+						item_code = curr_monthly_rental.Item_Monthly_Rental.Item_Code;
+					}
+					source_row_found = false;
+					for each  invoice_mr in ref_invoice.Monthly_Rental
+					{
+						if(invoice_mr.Item_Monthly_Rental.Item_Code == item_code)
+						{
+							source_row_found = true;
+							if(curr_monthly_rental.Quantity_Monthly_Rental > invoice_mr.Quantity_Monthly_Rental)
+							{
+								alert "Credit note qty for " + item_code + " exceeds original invoice qty. Reduce the quantity.";
+								cancel submit;
+							}
+							if(curr_monthly_rental.Unit_Price_Monthly_Rental > invoice_mr.Unit_Price_Monthly_Rental)
+							{
+								alert "Credit note unit price for " + item_code + " exceeds original invoice unit price.";
+								cancel submit;
+							}
+							break;
+						}
+					}
+					if(source_row_found == false)
+					{
+						alert "Credit note line item " + item_code + " does not exist on the reference invoice.";
+						cancel submit;
+					}
+				}
+				for each  curr_internet_charges in input.Internet_Charges
+				{
+					item_code = curr_internet_charges.Item_Code_Internet_Charges;
+					if(item_code == null || item_code == "")
+					{
+						item_code = curr_internet_charges.Item_Internet_Charges.Item_Code;
+					}
+					source_row_found = false;
+					for each  invoice_ic in ref_invoice.Internet_Charges
+					{
+						if(invoice_ic.Item_Internet_Charges.Item_Code == item_code)
+						{
+							source_row_found = true;
+							if(curr_internet_charges.Quantity_Internet_Charges > invoice_ic.Quantity_Internet_Charges)
+							{
+								alert "Credit note qty for " + item_code + " exceeds original invoice qty. Reduce the quantity.";
+								cancel submit;
+							}
+							if(curr_internet_charges.Unit_Price_Internet_Charges > invoice_ic.Unit_Price_Internet_Charges)
+							{
+								alert "Credit note unit price for " + item_code + " exceeds original invoice unit price.";
+								cancel submit;
+							}
+							break;
+						}
+					}
+					if(source_row_found == false)
+					{
+						alert "Credit note line item " + item_code + " does not exist on the reference invoice.";
+						cancel submit;
+					}
+				}
+				for each  curr_call_charges in input.Call_Charges
+				{
+					item_code = curr_call_charges.Item_Code_Call_Charges;
+					if(item_code == null || item_code == "")
+					{
+						item_code = curr_call_charges.Item_Call_Charges.Item_Code;
+					}
+					source_row_found = false;
+					for each  invoice_cc in ref_invoice.Call_Charges
+					{
+						if(invoice_cc.Item_Call_Charges.Item_Code == item_code)
+						{
+							source_row_found = true;
+							if(curr_call_charges.Quantity_Call_Charges > invoice_cc.Quantity_Call_Charges)
+							{
+								alert "Credit note qty for " + item_code + " exceeds original invoice qty. Reduce the quantity.";
+								cancel submit;
+							}
+							if(curr_call_charges.Unit_Price_Call_Charges > invoice_cc.Unit_Price_Call_Charges)
+							{
+								alert "Credit note unit price for " + item_code + " exceeds original invoice unit price.";
+								cancel submit;
+							}
+							break;
+						}
+					}
+					if(source_row_found == false)
+					{
+						alert "Credit note line item " + item_code + " does not exist on the reference invoice.";
+						cancel submit;
+					}
+				}
 				// Validate Monthly Rental Quantity & Unit Price
 				for each  curr_monthly_rental in input.Monthly_Rental
 				{

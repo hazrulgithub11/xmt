@@ -35,7 +35,7 @@ Status legend:
 ### Phase 2 — Steps 09–15 (New flow requirements from updated `creditNote_Flow.md`)
 
 - [x] 09 - `Reference_Invoice` mandatory + LHDN UUID block (`09-fix-credit-note-mandatory-reference.md`)
-- [ ] 10 - Clone invoice lines from reference; reduce-only rule (`10-fix-credit-note-clone-invoice-lines.md`)
+- [x] 10 - Clone invoice lines from reference; reduce-only rule (`10-fix-credit-note-clone-invoice-lines.md`)
 - [ ] 11 - `Credit_Mode` field + lock Mode A vs Mode B at creation (`11-fix-credit-note-credit-mode-field.md`)
 - [ ] 12 - Cumulative approved CN cap at save + approval recheck (`12-fix-credit-note-cumulative-cap.md`)
 - [ ] 13 - Mode A: auto-apply on approval → Closed; hide Apply/Refund (`13-fix-credit-note-mode-a-auto-apply.md`)
@@ -57,7 +57,7 @@ Status legend:
 
 ### Phase 2
 
-- Current step: `Step 10 ready to start`
+- Current step: `Step 11 ready to start`
 - Owner: `TBD`
 - Started at: `2026-06-24`
 - Current risk/blocker: `None for Step 09`
@@ -181,6 +181,20 @@ Status legend:
 - Completed by / date: `2026-06-25`
 - Notes: `Validation lives in Handle_Validation_Submiss2 (not Handle_Submission_Form_an4 — single event per workflow). Manual creation blocked without LHDN-validated reference.`
 
+### 10 - Clone Invoice Lines (Reduce-Only)
+
+- Status: `[x]`
+- Doc: `docs/feature/fix credit note/10-fix-credit-note-clone-invoice-lines.md`
+- Key checks:
+  - [x] Line clone on `Reference_Invoice` selection (`Handle_reference_invoice_2`)
+  - [x] Reduce-only save guard (`Handle_Validation_Submiss2`)
+  - [x] Item identity fields read-only (`Disable_Fields20`)
+  - [x] Block add row on line subforms (`Disable_Addition_And_Dele3`)
+  - [x] Convert path verified — copies all line fields (`Convert_To_Credit_Note`)
+  - [ ] Post-deploy re-export to `XMT___Billing_System.ds`
+- Completed by / date: `2026-06-25`
+- Notes: `Clone uses clear + insert pattern (Refund Note load workflow). Re-clone guarded to Draft/Rejected/new only.`
+
 ---
 
 ## Issue Closure Mapping (`creditNote_wrong.md`)
@@ -199,7 +213,7 @@ Status legend:
 
 ## Change Log
 
-- `2026-06-25` - Step 09 complete: `Reference_Invoice` mandatory, save UUID guard, field repositioned to Invoice Info; convert guard + message tweak skipped
+- `2026-06-25` - Step 10 complete: clone invoice lines on reference selection, reduce-only validation, line subform add-row blocked, item identity fields locked
 - `2026-06-24` - Phase 2 planning complete: Steps 09–15 written; index and tracker updated
 - `2026-06-23` - Step 08 package: test matrix T1–T15, regression R1–R5, deploy manifest, sync verification, issue closure table
 - `2026-06-23` - Step 07 complete: LHDN reference_invoice_list includes Reference_Invoice; Submit button Closed-only
