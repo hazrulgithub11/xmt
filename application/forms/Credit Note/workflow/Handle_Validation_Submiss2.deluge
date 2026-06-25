@@ -11,59 +11,58 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 		{
 			custom deluge script
 			(
-					input.User_Input_Trigger = !input.User_Input_Trigger;
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					countItem = 0;
+					// Toggle User Input Trigger
+				input.User_Input_Trigger = !input.User_Input_Trigger;
+				// Validate Reference Invoice is set and LHDN-submitted
+				if(input.Reference_Invoice != null)
+				{
+					ref_uuid = input.Reference_Invoice.Invoice_UUID;
+					if(ref_uuid == null || ref_uuid == "")
+					{
+						alert "Reference Invoice does not have a valid LHDN UUID. Submit the invoice to LHDN first, then create the credit note.";
+						cancel submit;
+					}
+				}
+				else
+				{
+					alert "A Credit Note must be linked to a reference invoice. Please select a Reference_Invoice.";
+					cancel submit;
+				}
+				// Count Total Line Items
+				count_item = 0;
 				for each  curr_monthly_rental in input.Monthly_Rental
 				{
-					countItem = countItem + 1;
+					count_item = count_item + 1;
 				}
 				for each  curr_internet_charge in input.Internet_Charges
 				{
-					countItem = countItem + 1;
+					count_item = count_item + 1;
 				}
 				for each  curr_call_charge in input.Call_Charges
 				{
-					countItem = countItem + 1;
+					count_item = count_item + 1;
 				}
-				if(countItem == 0)
+				if(count_item == 0)
 				{
 					alert "Add at least one item need to be added.";
 					cancel submit;
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					chargesCategories = input.Charge_Category;
-				if(chargesCategories.containsIgnoreCase("Telephone Charges"))
+				// Validate Call Charges for Telephone Category
+				charges_categories = input.Charge_Category;
+				if(charges_categories.containsIgnoreCase("Telephone Charges"))
 				{
-					rowNumber = 0;
-					for each  callCharges in input.Call_Charges
+					row_number = 0;
+					for each  call_charges in input.Call_Charges
 					{
-						rowNumber = rowNumber + 1;
+						row_number = row_number + 1;
 					}
-					if(rowNumber == 0)
+					if(row_number == 0)
 					{
 						alert "Please fill Call Charges";
 						cancel submit;
 					}
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					// Quantity and Unit Price validation
-				// Monthly Rental
+				// Validate Monthly Rental Quantity & Unit Price
 				for each  curr_monthly_rental in input.Monthly_Rental
 				{
 					if(ifnull(curr_monthly_rental.Quantity_Monthly_Rental,0) <= 0)
@@ -77,7 +76,7 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-				// Internet Charges
+				// Validate Internet Charges Quantity & Unit Price
 				for each  curr_internet_charges in input.Internet_Charges
 				{
 					if(ifnull(curr_internet_charges.Quantity_Internet_Charges,0) <= 0)
@@ -91,7 +90,7 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-				// Call Charges
+				// Validate Call Charges Quantity & Unit Price
 				for each  curr_call_charges in input.Call_Charges
 				{
 					if(ifnull(curr_call_charges.Quantity_Call_Charges,0) <= 0)
@@ -105,13 +104,8 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					for each  curr_credit_applied_invoice in input.Credit_Applied_Invoices
+				// Validate Applied Invoices Submitted to LHDN
+				for each  curr_credit_applied_invoice in input.Credit_Applied_Invoices
 				{
 					curr_get_credit_applied_invoice = Invoice[ID = curr_credit_applied_invoice.CAI_Invoice_No];
 					curr_get_credit_applied_invoice_uuid = curr_get_credit_applied_invoice.Invoice_UUID;
@@ -121,21 +115,13 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-			)
-		}
-		actions 
-		{
-			custom deluge script
-			(
-					if(input.Credits_Remaining < 0)
+				// Validate Credits Remaining Not Negative
+				if(input.Credits_Remaining < 0)
 				{
 					alert "Please ensure that the credit note amount is not less than the total credits already refunded to the customer.";
 					cancel submit;
 				}
-			)
-			custom deluge script
-			(
-					/* Refund History List */
+				// Sync Deleted Refund History & Remove Orphaned Refund Notes
 				refund_history_list = Credit_Note[ID = input.ID].Refund_History;
 				input_refund_history_list = input.Refund_History;
 				for each  curr_refund_history in refund_history_list
@@ -156,7 +142,7 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						delete from Refund_Note[ID == curr_refund_history_refund_note_id];
 					}
 				}
-				/* Credit Applied Invoices List */
+				// Sync Deleted Credit Applied Invoices & Recalculate Invoice Credits
 				credit_applied_invoices_list = Credit_Note[ID = input.ID].Credit_Applied_Invoices;
 				input_credit_applied_invoices_list = input.Credit_Applied_Invoices;
 				for each  curr_credit_applied_invoices in credit_applied_invoices_list

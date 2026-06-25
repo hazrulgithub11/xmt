@@ -17,7 +17,7 @@ Block any credit note save that has no `Reference_Invoice`, and ensure the refer
 ## Primary files
 - `application/forms/Credit Note/Credit_Note.deluge` — form field required flag
 - `application/forms/Credit Note/workflow/Handle_reference_invoice_2.deluge` — existing UUID validator
-- `application/forms/Credit Note/workflow/Handle_Submission_Form_an4.deluge` — save/submit guard
+- `application/forms/Credit Note/workflow/Handle_Validation_Submiss2.deluge` — save/submit guard (`on validate`)
 
 ## Dependency
 Step 02 must already be deployed (field exists). Steps 03–07 should be deployed first so the form is stable before adding this hard block.
@@ -39,7 +39,7 @@ Reference_Invoice
 
 ### 2. Add a save-time guard for UUID presence
 
-The existing `Handle_reference_invoice_2.deluge` already validates UUID on **field selection**. Add a matching guard in `Handle_Submission_Form_an4.deluge` (on `on validate` or `on success`) so that a CN cannot be saved if the linked invoice lacks `Invoice_UUID`:
+The existing `Handle_reference_invoice_2.deluge` already validates UUID on **field selection**. Add a matching guard in `Handle_Validation_Submiss2.deluge` (`on validate`) so that a CN cannot be saved if the linked invoice lacks `Invoice_UUID`:
 
 ```deluge
 if(input.Reference_Invoice != null)
@@ -59,7 +59,7 @@ else
 }
 ```
 
-### 3. Convert path — verify already set
+### 3. Convert path — verify already set (optional)
 
 `Convert_To_Credit_Note.deluge` (Step 05) already does:
 
@@ -67,23 +67,23 @@ else
 Reference_Invoice = input.ID
 ```
 
-Confirm the source invoice's `Invoice_UUID` is present before allowing convert. Add a pre-convert guard in `Convert_To_Credit_Note.deluge`:
+**Optional** pre-convert guard — only if you need to block convert before insert (record actions often cannot use `alert`; use `openUrl` to `Alert_Message` or a report `condition` on the button instead):
 
 ```deluge
 if(input.Invoice_UUID == null || input.Invoice_UUID == "")
 {
-    alert("This invoice has not been submitted to LHDN yet. Submit it to LHDN first before creating a Credit Note.");
+    openUrl("#Form:Alert_Message?Error_Message=" + zoho.encryption.urlEncode("This invoice has not been submitted to LHDN yet. Submit it to LHDN first before creating a Credit Note."),"popup window","height=auto,width=auto");
     return;
 }
 ```
 
-### 4. Update `Handle_reference_invoice_2.deluge` message
+**Deployed (Step 09):** Skipped. Convert button is already limited to `Sent` / `Partially Paid` / `Paid` / `Overdue`; in practice those invoices should already be LHDN-submitted. Any CN created without UUID is still blocked on the next manual save via Step 2.
 
-The existing workflow already clears the field if UUID is missing. Update the warning message to be explicit:
+### 4. Update `Handle_reference_invoice_2.deluge` message (optional)
 
-```deluge
-alert("This invoice has not been submitted to LHDN. A credit note must reference a validated (LHDN-submitted) invoice. Please choose a different invoice.");
-```
+The existing workflow already clears the field if UUID is missing. Message tweak is cosmetic only.
+
+**Deployed (Step 09):** Skipped — existing alert is sufficient.
 
 ### 5. Remove null-reference tolerance in action guards
 
@@ -102,10 +102,10 @@ If a "Reference Invoice" section shows "(optional)" label text anywhere in the C
 
 ## Exit criteria
 
-- [ ] Manual Credit Note → Add → Save without picking `Reference_Invoice` → **blocked with message**
-- [ ] Manual Credit Note → Add → Pick invoice with no `Invoice_UUID` → **blocked with message**
-- [ ] Manual Credit Note → Add → Pick LHDN-validated invoice → **allowed, saves as Draft**
-- [ ] Convert from unsubmitted invoice → **blocked with message**
-- [ ] Convert from LHDN-validated invoice → **allowed**
-- [ ] Existing CNs with null `Reference_Invoice` are not broken on open/edit (read-only path only)
+- [x] Manual Credit Note → Add → Save without picking `Reference_Invoice` → **blocked with message**
+- [x] Manual Credit Note → Add → Pick invoice with no `Invoice_UUID` → **blocked with message**
+- [x] Manual Credit Note → Add → Pick LHDN-validated invoice → **allowed, saves as Draft**
+- [ ] Convert from unsubmitted invoice → **not blocked at convert** (skipped; mitigated by invoice stage + save guard on edit)
+- [x] Convert from LHDN-validated invoice → **allowed**
+- [x] Existing CNs with null `Reference_Invoice` are not broken on open/edit (read-only path only)
 - [ ] `Credit_Note.deluge` and `XMT___Billing_System.ds` synced after deploy

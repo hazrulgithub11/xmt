@@ -386,6 +386,17 @@ form Credit_Note
 	 	column = 2   
 		width = medium
 	)
+	must have Reference_Invoice
+	(
+		type = picklist	
+		displayname = "Reference Invoice"
+		values  = Invoice.ID
+    	displayformat = [Invoice_No]
+		sortorder = ascending
+	 	row = 4
+	 	column = 2   
+		width = medium
+	)
 	must have Invoice_For_Usage
 	(
     	type = text
@@ -1065,17 +1076,6 @@ form Credit_Note
     	displayformat = [Account + " - " + Bank_Account_Number]
 		sortorder = ascending
 		height = 60px
-	 	row = 9
-	 	column = 2   
-		width = medium
-	)
-	Reference_Invoice
-	(
-		type = picklist	
-		displayname = "Reference Invoice"
-		values  = Invoice.ID
-    	displayformat = [Invoice_No]
-		sortorder = ascending
 	 	row = 9
 	 	column = 2   
 		width = medium
