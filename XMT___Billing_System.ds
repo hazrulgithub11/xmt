@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 23-Jun-2026 04:15:52
+ * Generated on : 24-Jun-2026 19:26:26
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -9144,6 +9144,36 @@
 	 			column = 1   
 				width = medium
 			)
+			must have Billing_Cycle
+			(
+				type = picklist
+				displayname = "Billing Cycle"
+				maxchar = 100
+				values = {"Monthly","Quarterly","Half Yearly","Yearly"}
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			must have Bill_Every
+			(
+				type = picklist
+				displayname = "Bill Every"
+				maxchar = 100
+				values = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","Last Day Of Month"}
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			must have Bill_For
+			(
+				type = picklist
+				displayname = "Bill For"
+				maxchar = 100
+				values = {"Current Duration","Previous Duration"}
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
 			must have Contract_End_Date
 			(
     			type = date
@@ -9773,6 +9803,21 @@
 					displayname = "Amount Paid"
 					width = medium
 				)
+				Row_Type
+				(
+					type = picklist
+					displayname = "Row Type"
+					maxchar = 100
+					values = {"Planned","Actual"}
+					width = medium
+				)
+				Period_Start
+				(
+    				type = date
+					displayname = "Period Start"
+					alloweddays = 0,1,2,3,4,5,6
+					width = medium
+				)
 	 			row = 8
 	 			column = 1   
 				width = medium
@@ -9994,36 +10039,6 @@
 	 			column = 1   
 				width = medium
 			)
-			must have Billing_Cycle
-			(
-				type = picklist
-				displayname = "Billing Cycle"
-				maxchar = 100
-				values = {"Monthly","Quarterly","Half Yearly","Yearly"}
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Bill_Every
-			(
-				type = picklist
-				displayname = "Bill Every"
-				maxchar = 100
-				values = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","Last Day Of Month"}
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			must have Bill_For
-			(
-				type = picklist
-				displayname = "Bill For"
-				maxchar = 100
-				values = {"Current Duration","Previous Duration"}
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
 			must have Payment_Term
 			(
 				type = picklist	
@@ -10076,33 +10091,6 @@
 	 			column = 2   
 				width = medium
 				personal data = true
-			)
-			Latest_Billing_Date
-			(
-    			type = date
-				displayname = "Latest Billing Date"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			Next_Billing_Date
-			(
-    			type = date
-				displayname = "Next Billing Date"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 1
-	 			column = 2   
-				width = medium
-			)
-			Final_Billing_Date
-			(
-    			type = date
-				displayname = "Final Billing Date"
-				alloweddays = 0,1,2,3,4,5,6
-	 			row = 1
-	 			column = 2   
-				width = medium
 			)
 			Street
 			(
@@ -11926,9 +11914,6 @@
 				)
 				Next_Billing_Date as "Next Billing Date"
 				Latest_Billing_Date as "Latest Billing Date"
-				Customer_Code.Bill_For as "Bill For"
-				Customer_Code.Billing_Cycle as "Billing Cycle"
-				Customer_Code.Bill_Every as "Bill Every"
 				Final_Billing_Date as "Final Billing Date"
 				Customer_Name.Modified_Time as "Modified Time"
 				Customer_Name.Added_Time as "Added Time"
@@ -13739,7 +13724,6 @@
 				Building
 				Account_Type as "Account Type"
 				Account_Number as "Account Number"
-				Bill_Every as "Bill Every"
 				Tenant_Name as "Tenant Name"
 				Payable_To as "Payable To"
 				Technical_Email as "Technical Email"
@@ -14177,14 +14161,12 @@
                  	subscription_final_billing_date = subscription_info.Final_Billing_Date;
                  	subscription_contract_start_date = subscription_info.Contract_Start_Date;
                  	subscription_contract_end_date = subscription_info.Contract_End_Date;
+                 	subscription_bill_for = subscription_info.Bill_For;
+                 	subscription_bill_every = subscription_info.Bill_Every;
+                 	subscription_billing_cycle = subscription_info.Billing_Cycle;
+                 	subscription_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(subscription_billing_cycle);
                  	/* --- Fetch tenant and subscription context --- */
                  	tenancy_info = Tenancy[ID == subscription_info.Customer_Code];
-                 	tenant_final_billing_date = tenancy_info.Final_Billing_Date;
-                 	tenant_next_billing_date = tenancy_info.Next_Billing_Date;
-                 	tenancy_bill_for = tenancy_info.Bill_For;
-                 	tenancy_bill_every = tenancy_info.Bill_Every;
-                 	tenancy_billing_cycle = tenancy_info.Billing_Cycle;
-                 	tenancy_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(tenancy_billing_cycle);
                  	tenancy_enable_reminder = tenancy_info.Enable_Reminder;
                  	customer = tenancy_info.Customer_Name;
                  	customer_email_address = customer.Email_Address;
@@ -14203,11 +14185,11 @@
                  		/* Calculate the next billing date only when billing on the scheduled date */
                  		if(monthly_billing_date == actual_billing_date)
                  		{
-                 			new_next_billing_date = actual_billing_date.addMonth(tenancy_billing_cycle_int);
+                 			new_next_billing_date = actual_billing_date.addMonth(subscription_billing_cycle_int);
                  			/* Resolve the target day-of-month, handling "Last Day Of Month" specially */
-                 			if(tenancy_bill_every != "Last Day Of Month")
+                 			if(subscription_bill_every != "Last Day Of Month")
                  			{
-                 				bill_every_int = tenancy_bill_every.toLong();
+                 				bill_every_int = subscription_bill_every.toLong();
                  			}
                  			else
                  			{
@@ -14215,18 +14197,18 @@
                  			}
                  			/* Correct the day if it drifted (addMonth can shift the day in short months),
                  			   but skip February where day correction is unreliable */
-                 			if(new_next_billing_date.getDay() != bill_every_int && new_next_billing_date.getMonth() != 2 && tenancy_bill_every != "Last Day Of Month")
+                 			if(new_next_billing_date.getDay() != bill_every_int && new_next_billing_date.getMonth() != 2 && subscription_bill_every != "Last Day Of Month")
                  			{
-                 				new_next_billing_date = toDate(tenancy_bill_every + "-" + new_next_billing_date.getMonth() + "-" + new_next_billing_date.getYear(),"dd-MM-yyyy");
+                 				new_next_billing_date = toDate(subscription_bill_every + "-" + new_next_billing_date.getMonth() + "-" + new_next_billing_date.getYear(),"dd-MM-yyyy");
                  			}
                  		}
                  		else
                  		{
                  			/* Prorate scenario: next billing stays aligned to the original schedule */
-                 			new_next_billing_date = monthly_billing_date.addMonth(tenancy_billing_cycle_int);
+                 			new_next_billing_date = monthly_billing_date.addMonth(subscription_billing_cycle_int);
                  		}
                  		/* Snap to last day of month when the tenant bills on the last day */
-                 		if(tenancy_bill_every == "Last Day Of Month")
+                 		if(subscription_bill_every == "Last Day Of Month")
                  		{
                  			new_next_billing_date = new_next_billing_date.eomonth(0);
                  		}
@@ -14358,7 +14340,7 @@
                  		else if(actual_billing_date == subscription_final_billing_date)
                  		{
                  			/* Project what the end of this billing cycle would be */
-                 			usage_end_date = subscription_final_billing_date.addMonth(tenancy_billing_cycle_int);
+                 			usage_end_date = subscription_final_billing_date.addMonth(subscription_billing_cycle_int);
                  			/* Normalise usage_end_date to match contract day-of-month conventions */
                  			if(subscription_contract_start_date.getDay() == subscription_contract_start_date.eomonth(0).getDay() && usage_end_date.getDay() != usage_end_date.eomonth(0).getDay())
                  			{
@@ -14545,42 +14527,8 @@
                  	}
                  	if(error_msg == "")
                  	{
-                 		/* Update tenant billing dates for non-submission-triggered invoices */
-                 		if(!sub_submission)
-                 		{
-                 			if(is_monthly)
-                 			{
-                 				if(actual_billing_date == tenant_final_billing_date)
-                 				{
-                 					/* Tenant has reached their final billing date — clear the next billing date */
-                 					tenancy_info.Next_Billing_Date=null;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 				else if(actual_billing_date == tenant_next_billing_date)
-                 				{
-                 					/* Advance the tenant's next billing date by one cycle */
-                 					tenancy_info.Next_Billing_Date=new_next_billing_date;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 			}
-                 			else
-                 			{
-                 				/* Non-monthly: advance tenancy dates using compute_next_billing_date to preserve day-of-month */
-                 				new_next_billing_date = thisapp.tenancy.compute_next_billing_date(tenancy_billing_cycle_int,actual_billing_date,monthly_billing_date,tenancy_bill_every,subscription_contract_start_date);
-                 				if(actual_billing_date == tenant_final_billing_date)
-                 				{
-                 					tenancy_info.Next_Billing_Date=null;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 				else if(actual_billing_date == tenant_next_billing_date)
-                 				{
-                 					tenancy_info.Next_Billing_Date=new_next_billing_date;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 			}
-                 		}
                  		/* Sync the subscription's next and latest billing date fields */
-                 		thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,tenancy_bill_for,tenancy_billing_cycle_int,actual_billing_date,monthly_billing_date,tenancy_bill_every);
+                 		thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,subscription_bill_for,subscription_billing_cycle_int,actual_billing_date,monthly_billing_date,subscription_bill_every);
                  		/* Re-push the category subtotals to the invoice record (ensures totals are persisted correctly) */
                  		get_invoice = Invoice[ID == create_invoice];
                  		get_invoice.Sub_Total_Monthly_Rental=sub_total_monthly_rental;
@@ -14648,31 +14596,28 @@
                  	last_billing_date = subscription_info.Latest_Billing_Date;
                  	next_billing_date = subscription_info.Next_Billing_Date;
                  	final_billing_date = subscription_info.Final_Billing_Date;
+                 	bill_for = subscription_info.Bill_For;
+                 	bill_every = subscription_info.Bill_Every;
+                 	subscription_billing_cycle = subscription_info.Billing_Cycle;
+                 	subscription_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(subscription_billing_cycle);
                  	subscription_prorate = subscription_info.Prorate;
                  	subscription_payable_to = subscription_info.Payable_To;
                  	contract_end_date = subscription_info.Contract_End_Date;
                  	contract_start_date = subscription_info.Contract_Start_Date;
                  	/* --- Fetch tenant and subscription context --- */
                  	tenancy_info = Tenancy[ID == subscription_info.Customer_Code];
-                 	tenant_final_billing_date = tenancy_info.Final_Billing_Date;
                  	customer = tenancy_info.Customer_Name;
                  	customer_email_address = customer.Email_Address;
-                 	bill_for = tenancy_info.Bill_For;
-                 	bill_every = tenancy_info.Bill_Every;
-                 	tenancy_billing_cycle = tenancy_info.Billing_Cycle;
-                 	tenancy_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(tenancy_billing_cycle);
                  	enable_reminder = tenancy_info.Enable_Reminder;
                  	due_date = actual_billing_date.addDay(tenancy_info.Payment_Term.Days);
                  	/* BRANCH A: Monthly billing logic */
                  	if(is_monthly)
                  	{
-                 		tenant_next_billing_date = tenancy_info.Next_Billing_Date;
-                 		tenant_last_billing_date = tenancy_info.Latest_Billing_Date;
                  		currency = subscription_info.Subscription_Currency;
                  		/* Calculate the next billing date by advancing one billing_cycle from today or from monthly_billing_date */
                  		if(monthly_billing_date == actual_billing_date)
                  		{
-                 			new_next_billing_date = actual_billing_date.addMonth(tenancy_billing_cycle_int);
+                 			new_next_billing_date = actual_billing_date.addMonth(subscription_billing_cycle_int);
                  			/* Resolve bill_every to a day integer; Last Day Of Month uses the last day of the computed month */
                  			if(bill_every != "Last Day Of Month")
                  			{
@@ -14690,7 +14635,7 @@
                  		}
                  		else
                  		{
-                 			new_next_billing_date = monthly_billing_date.addMonth(tenancy_billing_cycle_int);
+                 			new_next_billing_date = monthly_billing_date.addMonth(subscription_billing_cycle_int);
                  		}
                  		/* Snap next billing date to end of month when using Last Day Of Month mode */
                  		if(bill_every == "Last Day Of Month")
@@ -14807,24 +14752,8 @@
                  		}
                  		if(error_msg == "")
                  		{
-                 			/* Skip tenant date updates when this is a secondary invoice in a two-invoice run */
-                 			if(!sub_submission)
-                 			{
-                 				if(actual_billing_date == tenant_final_billing_date)
-                 				{
-                 					/* Contract is ending — clear next billing date */
-                 					tenancy_info.Next_Billing_Date=null;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 				else if(actual_billing_date == tenant_next_billing_date)
-                 				{
-                 					/* Advance the tenant billing schedule by one cycle */
-                 					tenancy_info.Next_Billing_Date=new_next_billing_date;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 			}
                  			/* Advance the subscription's own next and last billing dates */
-                 			thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,bill_for,tenancy_billing_cycle_int,actual_billing_date,monthly_billing_date,bill_every);
+                 			thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,bill_for,subscription_billing_cycle_int,actual_billing_date,monthly_billing_date,bill_every);
                  			/* Post-insert correction: write breakdown sub-totals that could not be set atomically */
                  			get_invoice = Invoice[ID == create_invoice];
                  			get_invoice.Sub_Total_Monthly_Rental=sub_total_monthly_rental;
@@ -14848,7 +14777,7 @@
                  	{
                  		/* Currency comes from the subscription itself rather than the customer profile */
                  		currency = subscription_info.Subscription_Currency;
-                 		invoice_usage = thisapp.get_invoice_usage(actual_billing_date.subMonth(tenancy_billing_cycle_int));
+                 		invoice_usage = thisapp.get_invoice_usage(actual_billing_date.subMonth(subscription_billing_cycle_int));
                  		/* Select calculation strategy for non-monthly billing based on contract state */
                  		if(last_billing_date == null && final_billing_date != actual_billing_date && contract_start_date != actual_billing_date)
                  		{
@@ -14879,7 +14808,7 @@
                  			else
                  			{
                  				/* Partial final period — prorate from previous cycle start or contract start depending on history */
-                 				if(last_billing_date == null && contract_start_date < monthly_billing_date.subMonth(tenancy_billing_cycle_int).toStartOfMonth())
+                 				if(last_billing_date == null && contract_start_date < monthly_billing_date.subMonth(subscription_billing_cycle_int).toStartOfMonth())
                  				{
                  					if(subscription_prorate)
                  					{
@@ -14895,7 +14824,7 @@
                  				else
                  				{
                  					/* Prorate from the start of the previous billing cycle to the contract end date */
-                 					totals = thisapp.invoice.create_invoice_previous_duration_helper(subscription_id,"days30",subscription_exchange_rate,monthly_billing_date.subMonth(tenancy_billing_cycle_int),contract_end_date,false);
+                 					totals = thisapp.invoice.create_invoice_previous_duration_helper(subscription_id,"days30",subscription_exchange_rate,monthly_billing_date.subMonth(subscription_billing_cycle_int),contract_end_date,false);
                  				}
                  			}
                  		}
@@ -14971,23 +14900,7 @@
                  		if(error_msg == "")
                  		{
                  			/* Advance the subscription's billing dates for the non-monthly cycle */
-                 			thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,bill_for,tenancy_billing_cycle_int,actual_billing_date,monthly_billing_date,bill_every);
-                 			/* Update tenancy dates for non-submission-triggered non-monthly invoices */
-                 			if(!sub_submission)
-                 			{
-                 				tenant_next_billing_date_b = tenancy_info.Next_Billing_Date;
-                 				new_next_billing_date = thisapp.tenancy.compute_next_billing_date(tenancy_billing_cycle_int,actual_billing_date,monthly_billing_date,bill_every,contract_start_date);
-                 				if(actual_billing_date == tenant_final_billing_date)
-                 				{
-                 					tenancy_info.Next_Billing_Date=null;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 				else if(actual_billing_date == tenant_next_billing_date_b)
-                 				{
-                 					tenancy_info.Next_Billing_Date=new_next_billing_date;
-                 					tenancy_info.Latest_Billing_Date=actual_billing_date;
-                 				}
-                 			}
+                 			thisapp.subscription.update_subscription_next_and_last_billing_date(subscription_id,bill_for,subscription_billing_cycle_int,actual_billing_date,monthly_billing_date,bill_every);
                  			/* Post-insert correction of breakdown sub-totals */
                  			get_invoice = Invoice[ID == create_invoice];
                  			get_invoice.Sub_Total_Monthly_Rental=sub_total_monthly_rental;
@@ -15826,162 +15739,35 @@
                  			return note;
                  		}
                  	}
-                 	if(p_start < today.toStartOfMonth())
-                 	{
-                 		cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(p_cycle);
-                 		if(p_cycle == "Monthly")
-                 		{
-                 			if(p_every == "Last Day Of Month" || (p_every == "29" && today.getMonth() == 2 && !thisapp.is_leap_year(today.getYear())))
-                 			{
-                 				cbd = toDate("01-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy").eomonth(0);
-                 			}
-                 			else
-                 			{
-                 				cbd = toDate(p_every + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
-                 			}
-                 			next_raw = cbd.addMonth(cycle_int);
-                 			if(p_for == "Current Duration")
-                 			{
-                 				period_left = monthsBetween(cbd,p_end);
-                 				period_end = next_raw.subDay(1);
-                 				if(p_prorate)
-                 				{
-                 					if(period_left > 0)
-                 					{
-                 						note = "This invoice will include backdated charges from " + p_start + " to " + period_end + ".";
-                 					}
-                 					else
-                 					{
-                 						note = "This invoice will include backdated charges from " + p_start + " to the contract end date " + p_end + ".";
-                 					}
-                 				}
-                 				else
-                 				{
-                 					if(period_left > 0)
-                 					{
-                 						note = "This invoice will only cover the current billing period from " + cbd + " to " + period_end + ".";
-                 					}
-                 					else
-                 					{
-                 						note = "No invoice will be created, as the contract period has ended.";
-                 					}
-                 				}
-                 			}
-                 			else
-                 			{
-                 				nbd = next_raw;
-                 				period_left = monthsBetween(nbd,p_end);
-                 				if(p_every == "Last Day Of Month" && nbd.getDay() != nbd.eomonth(0).getDay() && nbd.getMonth() != 2)
-                 				{
-                 					nbd = toDate(nbd.eomonth(0).getDay() + "-" + nbd.getMonth() + "-" + nbd.getYear(),"dd-MM-yyyy");
-                 				}
-                 				else if(p_every == "29" && nbd.getDay() != 29 && nbd.getMonth() != 2)
-                 				{
-                 					nbd = toDate("29-" + nbd.getMonth() + "-" + nbd.getYear(),"dd-MM-yyyy");
-                 				}
-                 				if(p_prorate)
-                 				{
-                 					if(period_left >= 0)
-                 					{
-                 						note = "The first invoice will include backdated charges from " + p_start + " to " + nbd + ".";
-                 					}
-                 					else
-                 					{
-                 						note = "This invoice will include backdated charges from " + p_start + " to the contract end date " + p_end + ".";
-                 					}
-                 				}
-                 				else
-                 				{
-                 					if(period_left >= 0)
-                 					{
-                 						note = "The first invoice will only cover the current billing period from " + cbd + " to " + nbd + ".";
-                 					}
-                 					else
-                 					{
-                 						note = "No invoice will be created, as the contract period has ended.";
-                 					}
-                 				}
-                 			}
-                 		}
-                 		else
-                 		{
-                 			if(p_start.getDay() == p_start.eomonth(0).getDay())
-                 			{
-                 				cbd = today.eomonth(0);
-                 				nbd = cbd.addMonth(cycle_int).eomonth(0);
-                 			}
-                 			else
-                 			{
-                 				cbd = toDate(p_start.getDay() + "-" + today.getMonth() + "-" + today.getYear(),"dd-MM-yyyy");
-                 				nbd = cbd.addMonth(cycle_int);
-                 			}
-                 			if(p_for == "Current Duration")
-                 			{
-                 				period_left = monthsBetween(cbd,p_end);
-                 				add_month_value = (period_left / cycle_int).toNumber() * cycle_int;
-                 				period_end = nbd.subDay(1);
-                 				if(p_prorate)
-                 				{
-                 					if(add_month_value <= 0)
-                 					{
-                 						note = "The first invoice will include backdated charges from " + p_start + " to the contract end date " + p_end + ".";
-                 					}
-                 					else
-                 					{
-                 						note = "This invoice will include backdated charges from " + p_start + " to " + period_end + ".";
-                 					}
-                 				}
-                 				else
-                 				{
-                 					if(add_month_value <= 0)
-                 					{
-                 						note = "No invoice will be created, as the contract period has ended.";
-                 					}
-                 					else
-                 					{
-                 						note = "The first invoice will only cover the current billing period from " + cbd + " to " + period_end + ".";
-                 					}
-                 				}
-                 			}
-                 			else
-                 			{
-                 				period_left = monthsBetween(nbd,p_end);
-                 				if(p_prorate)
-                 				{
-                 					if(period_left > 0)
-                 					{
-                 						note = "This invoice will include backdated charges from " + p_start + " to " + nbd + ".";
-                 					}
-                 					else
-                 					{
-                 						note = "The first invoice will include backdated charges from " + p_start + " to the contract end date " + p_end + ".";
-                 					}
-                 				}
-                 				else
-                 				{
-                 					if(period_left > 0)
-                 					{
-                 						note = "The first invoice will only cover the current billing period from " + cbd + " to " + nbd + ".";
-                 					}
-                 					else
-                 					{
-                 						note = "No invoice will be created, as the contract period has ended.";
-                 					}
-                 				}
-                 			}
-                 		}
-                 	}
                  	return note;
                  }
 				 void subscription.get_subsId_tenatId_nextBillingDate(string customerPONo)
                  {
-                 	getSubs = Subscription[Customer_PO_No == "TWSPC1"];
+                 	getSubs = Subscription[Customer_PO_No == customerPONo];
                  	getTenant = Tenancy[ID = getSubs.Customer_Code];
                  	info "customerPoNo:" + getSubs.Customer_PO_No;
                  	info "subscriptionID:" + getSubs.ID;
-                 	info "billCycle:" + thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+                 	info "billCycle:" + thisapp.tenancy.convert_bill_cycle_to_int(getSubs.Billing_Cycle);
                  	info "tenantID:" + getSubs.Customer_Code;
                  	info "nextBillingDate:" + getSubs.Next_Billing_Date;
+                 }
+				 date subscription.resolve_billing_date_for_contract_day(date contract_start_date, date reference_date)
+                 {
+                 	last_day = toDate("01-" + reference_date.getMonth() + "-" + reference_date.getYear(),"dd-MM-yyyy").eomonth(0);
+                 	if(contract_start_date.getDay() > last_day.getDay())
+                 	{
+                 		return last_day;
+                 	}
+                 	return toDate(contract_start_date.getDay() + "-" + reference_date.getMonth() + "-" + reference_date.getYear(),"dd-MM-yyyy");
+                 }
+				 date subscription.resolve_billing_day_for_month(string bill_every, date reference_date)
+                 {
+                 	last_day = toDate("01-" + reference_date.getMonth() + "-" + reference_date.getYear(),"dd-MM-yyyy").eomonth(0);
+                 	if(bill_every == "Last Day Of Month" || bill_every.toNumber() > last_day.getDay())
+                 	{
+                 		return last_day;
+                 	}
+                 	return toDate(bill_every + "-" + reference_date.getMonth() + "-" + reference_date.getYear(),"dd-MM-yyyy");
                  }
 				 map subscription.resolve_desk_account_and_contact(int subsId)
                  {
@@ -16435,19 +16221,6 @@
                  	accNumber = prefix + pad + count;
                  	return accNumber;
                  }
-				 date tenancy.get_billing_date_for_contract_day(date contractStartDate, date referenceDate)
-                 {
-                 	return toDate(contractStartDate.getDay() + "-" + referenceDate.getMonth() + "-" + referenceDate.getYear(),"dd-MM-yyyy");
-                 }
-				 date tenancy.get_billing_every_date(string bill_every, date reference_date)
-                 {
-                 	last_day = toDate("01-" + reference_date.getMonth() + "-" + reference_date.getYear(),"dd-MM-yyyy").eomonth(0);
-                 	if(bill_every == "Last Day Of Month" || bill_every.toNumber() > last_day.getDay())
-                 	{
-                 		return last_day;
-                 	}
-                 	return toDate(bill_every + "-" + reference_date.getMonth() + "-" + reference_date.getYear(),"dd-MM-yyyy");
-                 }
 				 string tenancy.get_desk_account_id_for_tenancy(int tenancyId, string customerCodeDisplay, string deskRecordId)
                  {
                  	desk_account_id = ifnull(deskRecordId,"");
@@ -16707,9 +16480,6 @@
 						custom deluge script
 						(
 											hide Account_Number;
-										hide Next_Billing_Date;
-										hide Latest_Billing_Date;
-										hide Final_Billing_Date;
 						)
 					}
 				}
@@ -16729,20 +16499,9 @@
 						custom deluge script
 						(
 											disable Account_Number;
-										disable Next_Billing_Date;
-										disable Latest_Billing_Date;
-										disable Final_Billing_Date;
 										disable Display_Name;
 										disable Record_ID;
 										disable Opening_Balance;
-										//disable Overdue_Charges;
-										getSubs = Subscription[Subscription_Status == "Active" && Customer_Code == input.ID].ID.getAll();
-										if(getSubs.size() > 0)
-										{
-											disable Bill_Every;
-											disable Bill_For;
-											disable Billing_Cycle;
-										}
 						)
 					}
 					actions 
@@ -16823,7 +16582,7 @@
 					{
 						custom deluge script
 						(
-											if(input.Customer_Code == null || input.Contract_Start_Date == null || input.Contract_Period == null)
+											if(input.Customer_Code == null || input.Contract_Start_Date == null || input.Contract_Period == null || input.Billing_Cycle == null)
 										{
 											return;
 										}
@@ -16832,8 +16591,7 @@
 										{
 											input.Contract_End_Date = new_end_date;
 										}
-										get_tenant = Tenancy[ID == input.Customer_Code];
-										input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,get_tenant.Billing_Cycle,get_tenant.Bill_For,get_tenant.Bill_Every,input.Prorate);
+										input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,input.Billing_Cycle,input.Bill_For,input.Bill_Every,input.Prorate);
 						)
 					}
 				}
@@ -16867,7 +16625,10 @@
 											input.Contact = get_tenant.Contact;
 											input.Technical_Email = get_tenant.Technical_Email;
 											input.Phone_Number = get_tenant.Phone_Number;
-											quantity = thisapp.tenancy.convert_bill_cycle_to_int(get_tenant.Billing_Cycle);
+											input.Billing_Cycle = ifnull(input.Billing_Cycle,null);
+											input.Bill_Every = ifnull(input.Bill_Every,null);
+											input.Bill_For = ifnull(input.Bill_For,null);
+											quantity = thisapp.tenancy.convert_bill_cycle_to_int(input.Billing_Cycle);
 											// Monthly Rental
 											for each  curr_monthly_rental_line_item in input.Monthly_Rental
 											{
@@ -16908,6 +16669,9 @@
 											input.Contact = null;
 											input.Technical_Email = null;
 											input.Phone_Number = null;
+											input.Billing_Cycle = null;
+											input.Bill_Every = null;
+											input.Bill_For = null;
 											// Monthly Rental
 											for each  curr_monthly_rental_line_item in input.Monthly_Rental
 											{
@@ -16950,16 +16714,14 @@
 						custom deluge script
 						(
 											input.Contract_End_Date = input.Contract_Start_Date.addMonth(input.Contract_Period);
-										getTenant = Tenancy[ID == input.Customer_Code];
-										input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,getTenant.Billing_Cycle,getTenant.Bill_For,getTenant.Bill_Every,input.Prorate);
+										input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,input.Billing_Cycle,input.Bill_For,input.Bill_Every,input.Prorate);
 						)
 					}
 					actions 
 					{
 						custom deluge script
 						(
-											getTenant = Tenancy[ID == input.Customer_Code];
-										if((getTenant.Billing_Cycle == "Monthly" && getTenant.Bill_For == "Current Duration" && input.Contract_Start_Date > today.toStartOfMonth() && input.Contract_Start_Date.getDay() != 1 && input.Contract_Start_Date <= today.eomonth(0)) || (getTenant.Billing_Cycle == "Monthly" && getTenant.Bill_For == "Previous Duration" && input.Contract_Start_Date > today.subMonth(1).toStartOfMonth() && input.Contract_Start_Date <= today.eomonth(0) && input.Contract_Start_Date.getDay() != 1) || input.Contract_Start_Date < today.toStartOfMonth())
+											if((input.Billing_Cycle == "Monthly" && input.Bill_For == "Current Duration" && input.Contract_Start_Date > today.toStartOfMonth() && input.Contract_Start_Date.getDay() != 1 && input.Contract_Start_Date <= today.eomonth(0)) || (input.Billing_Cycle == "Monthly" && input.Bill_For == "Previous Duration" && input.Contract_Start_Date > today.subMonth(1).toStartOfMonth() && input.Contract_Start_Date <= today.eomonth(0) && input.Contract_Start_Date.getDay() != 1) || (input.Billing_Cycle != null && input.Contract_Start_Date < today.toStartOfMonth()))
 										{
 											show Prorate_Note;
 											show Prorate;
@@ -17020,6 +16782,9 @@
 										input.Contract_End_Date = null;
 										input.Prorate = false;
 										input.Prorate_Note = "";
+										input.Billing_Cycle = null;
+										input.Bill_Every = null;
+										input.Bill_For = null;
 										// Monthly Rental
 										for each  curr_monthly_rental_line_item in input.Monthly_Rental
 										{
@@ -17111,15 +16876,14 @@
 					{
 						custom deluge script
 						(
-											if(input.Contract_Period != 0 && input.Contract_Period != null && input.Contract_Start_Date != null)
+											if(input.Contract_Period != 0 && input.Contract_Period != null && input.Contract_Start_Date != null && input.Billing_Cycle != null)
 										{
 											if(input.Contract_End_Date.getMonth() != input.Contract_Start_Date.addMonth(input.Contract_Period).getMonth() || input.Contract_End_Date.getYear() != input.Contract_Start_Date.addMonth(input.Contract_Period).getYear())
 											{
 												alert "Please select a contract end date that matches the subscription's period end date.";
 												input.Contract_End_Date = input.Contract_Start_Date.addMonth(input.Contract_Period);
 											}
-											get_tenant = Tenancy[ID == input.Customer_Code];
-											input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,get_tenant.Billing_Cycle,get_tenant.Bill_For,get_tenant.Bill_Every,input.Prorate);
+											input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,input.Billing_Cycle,input.Bill_For,input.Bill_Every,input.Prorate);
 										}
 						)
 					}
@@ -17162,7 +16926,7 @@
 				}
 
 			}
-			Validations_on_subscripti as "Validations on subscription submission"
+			Validations_on_form_submi as "Validations on form submission"
 			{
 				type =  form
 				form = Subscription
@@ -17175,7 +16939,13 @@
 					{
 						custom deluge script
 						(
-											// Toggle User Input Trigger
+											// Bill Every is required for Monthly billing cycle
+										if(input.Billing_Cycle == "Monthly" && input.Bill_Every == null || input.Bill_Every == "")
+										{
+											alert(Bill_Every,"Bill Every is required when Billing Cycle is Monthly.");
+											cancel submit;
+										}
+										// Toggle User Input Trigger
 										input.User_Input_Trigger = !input.User_Input_Trigger;
 										// Count Total Line Items across all grids
 										count_item = 0;
@@ -18299,20 +18069,27 @@
 											get_invoice_list = Invoice[ID == input.Invoice];
 											for each  curr_invoice in get_invoice_list
 											{
-												curr_pay_row = Payment_Received.Payment_Received_Line_Item();
-												curr_pay_row.Reference_No=curr_invoice.Invoice_No;
-												curr_pay_row.Invoice_No=curr_invoice.ID;
-												curr_pay_row.Description="Payment Received For " + curr_invoice.Invoice_For_Usage + " INV " + curr_invoice.Invoice_No;
-												curr_pay_row.Document_Date=curr_invoice.Invoice_Date;
-												curr_pay_row.Amount=curr_invoice.Grand_Total;
-												curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
-												curr_pay_row.Allocation=curr_invoice.Amount_Due;
-												curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * ifnull(curr_invoice.Exchange_Rate,1);
-												curr_pay_row.Still_Owing=ifnull(curr_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
-												input.Payment_Received_Line_Item.insert(curr_pay_row);
-												// Total payment received
-												total_payment_received = total_payment_received + curr_invoice.Amount_Due;
-												total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+												if(ifnull(curr_invoice.Amount_Due,0) > 0)
+												{
+													curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+													curr_pay_row.Reference_No=curr_invoice.Invoice_No;
+													curr_pay_row.Invoice_No=curr_invoice.ID;
+													curr_pay_row.Description="Payment Received For " + curr_invoice.Invoice_For_Usage + " INV " + curr_invoice.Invoice_No;
+													curr_pay_row.Document_Date=curr_invoice.Invoice_Date;
+													curr_pay_row.Amount=curr_invoice.Grand_Total;
+													curr_pay_row.Outstanding_Balance=curr_invoice.Amount_Due;
+													curr_pay_row.Allocation=curr_invoice.Amount_Due;
+													curr_pay_row.Allocation_MYR=curr_invoice.Amount_Due * ifnull(curr_invoice.Exchange_Rate,1);
+													curr_pay_row.Still_Owing=ifnull(curr_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
+													input.Payment_Received_Line_Item.insert(curr_pay_row);
+													// Total payment received
+													total_payment_received = total_payment_received + curr_invoice.Amount_Due;
+													total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+												}
+												else
+												{
+													alert "This invoice has no outstanding balance to apply payment against.";
+												}
 											}
 										}
 										else if(input.Payment_Type_Single_Record == "Debit Note")
@@ -18320,20 +18097,27 @@
 											get_debit_note_list = Debit_Note[ID == input.Debit_Note];
 											for each  curr_debit_note in get_debit_note_list
 											{
-												curr_pay_row = Payment_Received.Payment_Received_Line_Item();
-												curr_pay_row.Reference_No=curr_debit_note.Invoice_No;
-												curr_pay_row.Debit_Note_No=curr_debit_note.ID;
-												curr_pay_row.Description="Payment Received For Debit Note " + curr_debit_note.Invoice_No;
-												curr_pay_row.Document_Date=curr_debit_note.Invoice_Date;
-												curr_pay_row.Amount=curr_debit_note.Grand_Total;
-												curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
-												curr_pay_row.Allocation=curr_debit_note.Amount_Due;
-												curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
-												curr_pay_row.Still_Owing=ifnull(curr_debit_note.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
-												input.Payment_Received_Line_Item.insert(curr_pay_row);
-												// Total payment received
-												total_payment_received = total_payment_received + curr_debit_note.Amount_Due;
-												total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+												if(ifnull(curr_debit_note.Amount_Due,0) > 0)
+												{
+													curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+													curr_pay_row.Reference_No=curr_debit_note.Invoice_No;
+													curr_pay_row.Debit_Note_No=curr_debit_note.ID;
+													curr_pay_row.Description="Payment Received For Debit Note " + curr_debit_note.Invoice_No;
+													curr_pay_row.Document_Date=curr_debit_note.Invoice_Date;
+													curr_pay_row.Amount=curr_debit_note.Grand_Total;
+													curr_pay_row.Outstanding_Balance=curr_debit_note.Amount_Due;
+													curr_pay_row.Allocation=curr_debit_note.Amount_Due;
+													curr_pay_row.Allocation_MYR=curr_debit_note.Amount_Due * curr_debit_note.Exchange_Rate;
+													curr_pay_row.Still_Owing=ifnull(curr_debit_note.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
+													input.Payment_Received_Line_Item.insert(curr_pay_row);
+													// Total payment received
+													total_payment_received = total_payment_received + curr_debit_note.Amount_Due;
+													total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+												}
+												else
+												{
+													alert "This debit note has no outstanding balance to apply payment against.";
+												}
 											}
 										}
 										else if(input.Payment_Type_Single_Record == "Pro Forma Invoice")
@@ -18341,20 +18125,27 @@
 											get_pro_forma_invoice_list = Pro_Forma_Invoices[ID == input.Pro_Forma_Invoices];
 											for each  curr_pro_forma_invoice in get_pro_forma_invoice_list
 											{
-												curr_pay_row = Payment_Received.Payment_Received_Line_Item();
-												curr_pay_row.Reference_No=curr_pro_forma_invoice.Invoice_No;
-												curr_pay_row.Pro_Forma_Invoice_No=curr_pro_forma_invoice.ID;
-												curr_pay_row.Description="Payment Received For DEP " + curr_pro_forma_invoice.Invoice_No;
-												curr_pay_row.Document_Date=curr_pro_forma_invoice.Invoice_Date;
-												curr_pay_row.Amount=curr_pro_forma_invoice.Grand_Total;
-												curr_pay_row.Outstanding_Balance=curr_pro_forma_invoice.Amount_Due;
-												curr_pay_row.Allocation=curr_pro_forma_invoice.Amount_Due;
-												curr_pay_row.Allocation_MYR=curr_pro_forma_invoice.Amount_Due * curr_pro_forma_invoice.Exchange_Rate;
-												curr_pay_row.Still_Owing=ifnull(curr_pro_forma_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
-												input.Payment_Received_Line_Item.insert(curr_pay_row);
-												// Total payment received
-												total_payment_received = total_payment_received + curr_pro_forma_invoice.Amount_Due;
-												total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+												if(ifnull(curr_pro_forma_invoice.Amount_Due,0) > 0)
+												{
+													curr_pay_row = Payment_Received.Payment_Received_Line_Item();
+													curr_pay_row.Reference_No=curr_pro_forma_invoice.Invoice_No;
+													curr_pay_row.Pro_Forma_Invoice_No=curr_pro_forma_invoice.ID;
+													curr_pay_row.Description="Payment Received For DEP " + curr_pro_forma_invoice.Invoice_No;
+													curr_pay_row.Document_Date=curr_pro_forma_invoice.Invoice_Date;
+													curr_pay_row.Amount=curr_pro_forma_invoice.Grand_Total;
+													curr_pay_row.Outstanding_Balance=curr_pro_forma_invoice.Amount_Due;
+													curr_pay_row.Allocation=curr_pro_forma_invoice.Amount_Due;
+													curr_pay_row.Allocation_MYR=curr_pro_forma_invoice.Amount_Due * curr_pro_forma_invoice.Exchange_Rate;
+													curr_pay_row.Still_Owing=ifnull(curr_pro_forma_invoice.Amount_Due,0) - ifnull(curr_pay_row.Allocation,0);
+													input.Payment_Received_Line_Item.insert(curr_pay_row);
+													// Total payment received
+													total_payment_received = total_payment_received + curr_pro_forma_invoice.Amount_Due;
+													total_payment_received_myr = total_payment_received_myr + curr_pay_row.Allocation_MYR;
+												}
+												else
+												{
+													alert "This deposit has no outstanding balance to apply payment against.";
+												}
 											}
 										}
 										input.Amount_Received = total_payment_received;
@@ -18526,8 +18317,8 @@
 						custom deluge script
 						(
 											customerInfo = Customer_Profile[ID == input.Customer_Name];
-										get_invoice_list = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" && Customer == input.Customer_Name];
-										get_debit_note_list = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" && Customer == input.Customer_Name];
+										get_invoice_list = Invoice[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" && Customer == input.Customer_Name && Amount_Due > 0];
+										get_debit_note_list = Debit_Note[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" && Customer == input.Customer_Name && Amount_Due > 0];
 										if(get_invoice_list.count() == 0 && get_debit_note_list.count() == 0 && input.Customer_Name != null)
 										{
 											alert "There are no unpaid invoices associated with this customer code.";
@@ -18596,7 +18387,7 @@
 										//input.Paid_To2 = ifnull(tenancyInfo.Payable_To1,null);
 										subTotal = 0;
 										totalTax = 0;
-										getPIs = Pro_Forma_Invoices[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" && Customer_Code == input.Customer_Code];
+										getPIs = Pro_Forma_Invoices[Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Overdue" && Customer_Code == input.Customer_Code && Amount_Due > 0];
 										if(getPIs.ID == null && input.Customer_Code != null)
 										{
 											alert "There are no unpaid deposits associated with this customer code.";
@@ -20909,13 +20700,7 @@
 					{
 						custom deluge script
 						(
-											// Bill Every is required for Monthly billing cycle
-										if(input.Billing_Cycle == "Monthly" && input.Bill_Every == null || input.Bill_Every == "")
-										{
-											alert(Bill_Every,"Bill Every is required when Billing Cycle is Monthly.");
-											cancel submit;
-										}
-										// Generate Account Number for new tenancy records (Account_Number field must NOT be mandatory in Creator)
+											// Generate Account Number for new tenancy records (Account_Number field must NOT be mandatory in Creator)
 										if(input.Account_Number == null || input.Account_Number == "")
 										{
 											if(input.Account_Type == null || input.Account_Type == "")
@@ -21250,6 +21035,31 @@
 						custom deluge script
 						(
 											input.Subscription_No = thisapp.subscription.generate_subscription_no();
+						)
+					}
+					actions 
+					{
+						custom deluge script
+						(
+											// Subscription info
+										subscription_contract_start_date = input.Contract_Start_Date;
+										subscription_contract_end_date = input.Contract_End_Date;
+										subscription_contract_period = input.Contract_Period;
+										subscription_bill_for = input.Bill_For;
+										subscription_bill_every = input.Bill_Every;
+										subscription_billing_cycle = input.Billing_Cycle;
+										subscription_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(subscription_billing_cycle);
+										subscription_id = input.ID;
+										if(subscription_billing_cycle == "Monthly")
+										{
+											current_billing_every_date = thisapp.subscription.resolve_billing_day_for_month(subscription_bill_every,today);
+											start_billing_every_date = thisapp.subscription.resolve_billing_day_for_month(subscription_bill_every,subscription_contract_start_date);
+										}
+										else
+										{
+											current_billing_every_date = thisapp.subscription.resolve_billing_date_for_contract_day(subscription_contract_start_date,today);
+											start_billing_every_date = thisapp.subscription.resolve_billing_date_for_contract_day(subscription_contract_start_date,subscription_contract_start_date);
+										}
 						)
 					}
 				}
@@ -22404,41 +22214,6 @@
 				}
 
 			}
-			Handle_Billing_Cycle as "Handle Billing Cycle"
-			{
-				type =  form
-				form = Tenancy
-
-				record event = on add or edit
-
-				on user input of Billing_Cycle
-				{
-					actions  (Billing_Cycle != "Monthly")
-					{
-						custom deluge script
-						(
-											input.Bill_Every = "";
-						)
-					}
-				}
-
-			}
-			Field_Rule_Billing_Cycle as "Field Rule Billing Cycle"
-			{
-				type =  form
-				form = Tenancy
-
-				record event = on add or edit
-
-				field rules
-				{
-					actions  (Billing_Cycle != "Monthly")
-					{
-						hide Bill_Every;
-					}
-				}
-
-			}
 			Validate_Active_Template1 as "Validate Active Template"
 			{
 				type =  form
@@ -22495,172 +22270,128 @@
 					{
 						custom deluge script
 						(
-											get_invoices = Invoice[Subscriptions == input.ID].ID.getAll();
+											/*
+										get_invoices = Invoice[Subscriptions == input.ID].ID.getAll();
 										if(get_invoices.size() == 0)
 										{
-											// Tenancy info
-											tenancy_info = Tenancy[ID == input.Customer_Code];
-											tenant_next_billing_date = tenancy_info.Next_Billing_Date;
-											tenant_last_billing_date = tenancy_info.Latest_Billing_Date;
-											tenant_final_billing_date = tenancy_info.Final_Billing_Date;
-											tenancy_bill_for = tenancy_info.Bill_For;
-											tenancy_bill_every = tenancy_info.Bill_Every;
-											tenancy_billing_cycle = tenancy_info.Billing_Cycle;
-											tenancy_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(tenancy_billing_cycle);
 											// Subscription info
 											subscription_contract_start_date = input.Contract_Start_Date;
 											subscription_contract_end_date = input.Contract_End_Date;
 											subscription_contract_period = input.Contract_Period;
+											subscription_bill_for = input.Bill_For;
+											subscription_bill_every = input.Bill_Every;
+											subscription_billing_cycle = input.Billing_Cycle;
+											subscription_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(subscription_billing_cycle);
 											subscription_id = input.ID;
-											if(tenancy_billing_cycle == "Monthly")
+											if(subscription_billing_cycle == "Monthly")
 											{
-												current_billing_every_date = thisapp.tenancy.get_billing_every_date(tenancy_bill_every,today);
-												start_billing_every_date = thisapp.tenancy.get_billing_every_date(tenancy_bill_every,subscription_contract_start_date);
+												current_billing_every_date = thisapp.subscription.resolve_billing_day_for_month(subscription_bill_every,today);
+												start_billing_every_date = thisapp.subscription.resolve_billing_day_for_month(subscription_bill_every,subscription_contract_start_date);
 											}
 											else
 											{
-												current_billing_every_date = thisapp.tenancy.get_billing_date_for_contract_day(subscription_contract_start_date,today);
-												start_billing_every_date = thisapp.tenancy.get_billing_date_for_contract_day(subscription_contract_start_date,subscription_contract_start_date);
+												current_billing_every_date = thisapp.subscription.resolve_billing_date_for_contract_day(subscription_contract_start_date,today);
+												start_billing_every_date = thisapp.subscription.resolve_billing_date_for_contract_day(subscription_contract_start_date,subscription_contract_start_date);
 											}
-											if(tenancy_bill_for == "Current Duration")
+											if(subscription_bill_for == "Current Duration")
 											{
-												if(tenancy_billing_cycle == "Monthly")
+												if(subscription_billing_cycle == "Monthly")
 												{
-													/* Handle Latest Billing Date, Next Billing Date and Final Billing For Subscription And Tenant Based On Bill For determining whether to create Invoice Now Or Later */
-													if(tenancy_bill_every == "Last Day Of Month")
+													last_day_of_end_month = subscription_contract_end_date.eomonth(0).getDay();
+													if(subscription_bill_every == "Last Day Of Month" || subscription_bill_every.toLong() > last_day_of_end_month)
 													{
-														bill_every_int = subscription_contract_end_date.eomonth(0).getDay();
+														bill_every_int = last_day_of_end_month;
 													}
 													else
 													{
-														bill_every_int = tenancy_bill_every.toLong();
+														bill_every_int = subscription_bill_every.toLong();
 													}
+													// ── Resolve anchor date depending on whether contract has started ──
 													if(subscription_contract_start_date < today.toStartOfMonth())
 													{
-														/* Determine Subscription Final Billing Date*/
-														contract_period_left = monthsBetween(current_billing_every_date,subscription_contract_end_date);
-														if(contract_period_left > 0)
+														anchor_date = current_billing_every_date;
+														contract_periods_left = monthsBetween(anchor_date,subscription_contract_end_date);
+														if(contract_periods_left > 0)
 														{
-															input.Latest_Billing_Date = today;
-															next_billing_date = current_billing_every_date.addMonth(tenancy_billing_cycle_int);
-															subscription_final_billing_date = current_billing_every_date.addMonth(contract_period_left);
-															subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,tenancy_bill_every);
-															next_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(next_billing_date,tenancy_bill_every);
-															input.Next_Billing_Date = next_billing_date;
-															//Update tenant next billing date if tenant last billing date null
-															if(tenant_next_billing_date == null)
-															{
-																tenancy_info.Next_Billing_Date=next_billing_date;
-															}
-															input.Final_Billing_Date = subscription_final_billing_date;
-															if(daysBetween(today,next_billing_date) <= 5)
-															{
-																thisapp.invoice.create_invoice_current_duration(true,subscription_id,current_billing_every_date,subscription_contract_start_date,true,next_billing_date,next_billing_date,true);
-																if(tenant_next_billing_date == null)
-																{
-																	tenancy_info.Next_Billing_Date=next_billing_date.addMonth(tenancy_billing_cycle_int);
-																}
-															}
-															else
-															{
-																thisapp.invoice.create_invoice_current_duration(true,subscription_id,current_billing_every_date,subscription_contract_start_date,false,null,null,true);
-															}
-														}
-														//Update tenant last billing date if tenant last billing date null
-														if(tenant_last_billing_date == null)
-														{
-															tenancy_info.Latest_Billing_Date=today;
+															next_billing_date = anchor_date.addMonth(subscription_billing_cycle_int);
+															clean_periods = (contract_periods_left / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int;
+															subscription_final_billing_date = anchor_date.addMonth(clean_periods);
+															invoice_start_date = subscription_contract_start_date;
+															create_invoice = true;
 														}
 													}
-													else if(subscription_contract_start_date >= today.toStartOfMonth() && subscription_contract_start_date <= today.eomonth(0) && subscription_contract_start_date <= today)
+													else if(subscription_contract_start_date <= today)
 													{
-														//Contract Start Date Is The Same As Current Month And Year.
-														input.Latest_Billing_Date = today;
-														if(tenant_last_billing_date == null)
+														anchor_date = current_billing_every_date;
+														more_periods = monthsBetween(anchor_date.addMonth(subscription_billing_cycle_int),subscription_contract_end_date);
+														if(more_periods > 0)
 														{
-															tenancy_info.Latest_Billing_Date=subscription_contract_start_date;
-														}
-														if(monthsBetween(current_billing_every_date.addMonth(tenancy_billing_cycle_int),subscription_contract_end_date) > 0)
-														{
-															next_billing_date = current_billing_every_date.addMonth(tenancy_billing_cycle_int);
-															if(subscription_contract_end_date.getDay() == bill_every_int.toLong() || subscription_contract_end_date.getDay() == 1)
+															next_billing_date = anchor_date.addMonth(subscription_billing_cycle_int);
+															if(subscription_contract_end_date.getDay() == bill_every_int || subscription_contract_end_date.getDay() == 1)
 															{
-																subscription_final_billing_date = current_billing_every_date.addMonth(subscription_contract_period - tenancy_billing_cycle_int);
+																period_offset = subscription_contract_period - subscription_billing_cycle_int;
 															}
 															else
 															{
-																subscription_final_billing_date = current_billing_every_date.addMonth(subscription_contract_period);
+																period_offset = subscription_contract_period;
 															}
-															subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,tenancy_bill_every);
-															next_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(next_billing_date,tenancy_bill_every);
-															input.Next_Billing_Date = next_billing_date;
-															//Update tenant next billing date if tenant last billing date null
-															if(tenant_next_billing_date == null)
-															{
-																tenancy_info.Next_Billing_Date=next_billing_date;
-															}
+															subscription_final_billing_date = anchor_date.addMonth(period_offset);
 														}
 														else
 														{
-															subscription_final_billing_date = today;
 															next_billing_date = null;
+															subscription_final_billing_date = today;
 														}
-														input.Next_Billing_Date = next_billing_date;
-														input.Final_Billing_Date = subscription_final_billing_date;
-														if(next_billing_date == null)
-														{
-															thisapp.invoice.create_invoice_current_duration(true,subscription_id,subscription_final_billing_date,subscription_final_billing_date,false,null,null,true);
-														}
-														else
-														{
-															if(daysBetween(today,next_billing_date) <= 5)
-															{
-																thisapp.invoice.create_invoice_current_duration(true,subscription_id,current_billing_every_date,subscription_contract_start_date,true,next_billing_date,next_billing_date,true);
-																if(tenant_next_billing_date == null)
-																{
-																	tenancy_info.Next_Billing_Date=next_billing_date.addMonth(tenancy_billing_cycle_int);
-																}
-																if(tenant_last_billing_date == null)
-																{
-																	tenancy_info.Latest_Billing_Date=subscription_contract_start_date;
-																}
-															}
-															else
-															{
-																thisapp.invoice.create_invoice_current_duration(true,subscription_id,current_billing_every_date,subscription_contract_start_date,false,null,null,true);
-															}
-														}
+														invoice_start_date = subscription_contract_start_date;
+														create_invoice = true;
 													}
 													else
 													{
-														if(tenant_next_billing_date == null)
-														{
-															tenancy_info.Next_Billing_Date=start_billing_every_date;
-														}
-														input.Next_Billing_Date = start_billing_every_date;
+														// Contract starts in the future
+														anchor_date = start_billing_every_date;
+														next_billing_date = anchor_date;
 														if(subscription_contract_end_date.getDay() == bill_every_int || subscription_contract_end_date.getDay() == 1)
 														{
-															subscription_final_billing_date = start_billing_every_date.addMonth(subscription_contract_period - tenancy_billing_cycle_int);
+															period_offset = subscription_contract_period - subscription_billing_cycle_int;
 														}
 														else
 														{
-															subscription_final_billing_date = start_billing_every_date.addMonth(subscription_contract_period);
+															period_offset = subscription_contract_period;
 														}
-														subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,tenancy_bill_every);
-														input.Final_Billing_Date = subscription_final_billing_date;
-														if(daysBetween(today,start_billing_every_date) <= 5)
+														subscription_final_billing_date = anchor_date.addMonth(period_offset);
+														invoice_start_date = anchor_date;
+														if(daysBetween(today,anchor_date) <= 5)
 														{
-															input.Latest_Billing_Date = today;
-															input.Next_Billing_Date = start_billing_every_date.addMonth(tenancy_billing_cycle_int);
-															if(tenant_next_billing_date == null)
-															{
-																tenancy_info.Next_Billing_Date=start_billing_every_date.addMonth(tenancy_billing_cycle_int);
-															}
-															if(tenant_last_billing_date == null)
-															{
-																tenancy_info.Latest_Billing_Date=today;
-															}
-															thisapp.invoice.create_invoice_current_duration(true,subscription_id,start_billing_every_date,subscription_contract_start_date,false,null,null,true);
+															create_invoice = true;
+														}
+													}
+													if(subscription_final_billing_date != null)
+													{
+														subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,subscription_bill_every);
+													}
+													if(next_billing_date != null)
+													{
+														next_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(next_billing_date,subscription_bill_every);
+													}
+													input.Latest_Billing_Date = today;
+													input.Next_Billing_Date = next_billing_date;
+													input.Final_Billing_Date = subscription_final_billing_date;
+													// ── Create invoice ──
+													if(create_invoice)
+													{
+														bundle_next = false;
+														if(next_billing_date != null && daysBetween(today,next_billing_date) <= 5)
+														{
+															bundle_next = true;
+														}
+														if(bundle_next)
+														{
+															thisapp.invoice.create_invoice_current_duration(true,subscription_id,anchor_date,invoice_start_date,true,next_billing_date,next_billing_date,true);
+															input.Next_Billing_Date = next_billing_date.addMonth(subscription_billing_cycle_int);
+														}
+														else
+														{
+															thisapp.invoice.create_invoice_current_duration(true,subscription_id,anchor_date,invoice_start_date,false,null,null,true);
 														}
 													}
 												}
@@ -22669,19 +22400,19 @@
 													if(subscription_contract_start_date < today.toStartOfMonth())
 													{
 														contract_period_left = monthsBetween(current_billing_every_date,subscription_contract_end_date);
-														add_month_value = (contract_period_left / tenancy_billing_cycle_int).toNumber() * tenancy_billing_cycle_int;
+														add_month_value = (contract_period_left / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int;
 														if(add_month_value > 0)
 														{
-															add_value = ((monthsBetween(subscription_contract_start_date,current_billing_every_date) / tenancy_billing_cycle_int).toNumber() + 1) * tenancy_billing_cycle_int;
+															add_value = ((monthsBetween(subscription_contract_start_date,current_billing_every_date) / subscription_billing_cycle_int).toNumber() + 1) * subscription_billing_cycle_int;
 															next_billing_date = subscription_contract_start_date.addMonth(add_value);
-															previous_billing_date = next_billing_date.subMonth(tenancy_billing_cycle_int);
-															if(subscription_contract_period % tenancy_billing_cycle_int == 0)
+															previous_billing_date = next_billing_date.subMonth(subscription_billing_cycle_int);
+															if(subscription_contract_period % subscription_billing_cycle_int == 0)
 															{
-																subscription_final_billing_date = subscription_contract_start_date.addMonth(subscription_contract_period - tenancy_billing_cycle_int);
+																subscription_final_billing_date = subscription_contract_start_date.addMonth(subscription_contract_period - subscription_billing_cycle_int);
 															}
 															else
 															{
-																subscription_final_billing_date = subscription_contract_start_date.addMonth((subscription_contract_period / tenancy_billing_cycle_int).toNumber() * tenancy_billing_cycle_int);
+																subscription_final_billing_date = subscription_contract_start_date.addMonth((subscription_contract_period / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int);
 															}
 															if(subscription_contract_start_date.eomonth(0).getDay() == subscription_contract_start_date.getDay())
 															{
@@ -22692,54 +22423,39 @@
 															input.Final_Billing_Date = subscription_final_billing_date;
 															input.Latest_Billing_Date = today;
 															input.Next_Billing_Date = next_billing_date;
-															if(tenant_next_billing_date == null)
-															{
-																tenancy_info.Next_Billing_Date=next_billing_date;
-															}
-															previous_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(previous_billing_date,tenancy_bill_every);
+															previous_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(previous_billing_date,subscription_bill_every);
 															thisapp.invoice.create_invoice_current_duration(false,subscription_id,previous_billing_date,previous_billing_date,false,null,null,false);
 															if(daysBetween(today,next_billing_date) <= 5)
 															{
 																thisapp.invoice.create_invoice_current_duration(false,subscription_id,next_billing_date,next_billing_date,false,null,null,false);
 															}
 														}
-														if(tenant_last_billing_date == null)
-														{
-															tenancy_info.Latest_Billing_Date=today;
-														}
+														input.Latest_Billing_Date = today;
 													}
 													else if(subscription_contract_start_date >= today.toStartOfMonth() && subscription_contract_start_date <= today.eomonth(0) && subscription_contract_start_date <= today)
 													{
 														input.Latest_Billing_Date = subscription_contract_start_date;
-														add_month_value = (subscription_contract_period / tenancy_billing_cycle_int).toNumber() * tenancy_billing_cycle_int;
-														if(subscription_contract_period % tenancy_billing_cycle_int == 0)
+														add_month_value = (subscription_contract_period / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int;
+														if(subscription_contract_period % subscription_billing_cycle_int == 0)
 														{
-															subscription_final_billing_date = subscription_contract_start_date.addMonth(subscription_contract_period - tenancy_billing_cycle_int);
+															subscription_final_billing_date = subscription_contract_start_date.addMonth(subscription_contract_period - subscription_billing_cycle_int);
 														}
 														else
 														{
-															subscription_final_billing_date = subscription_contract_start_date.addMonth((subscription_contract_period / tenancy_billing_cycle_int).toNumber() * tenancy_billing_cycle_int);
+															subscription_final_billing_date = subscription_contract_start_date.addMonth((subscription_contract_period / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int);
 														}
 														if(subscription_contract_start_date.eomonth(0).getDay() == subscription_contract_start_date.getDay())
 														{
 															subscription_final_billing_date = subscription_final_billing_date.eomonth(0);
 														}
-														if(monthsBetween(current_billing_every_date.addMonth(tenancy_billing_cycle_int),subscription_contract_end_date) > 0)
+														if(monthsBetween(current_billing_every_date.addMonth(subscription_billing_cycle_int),subscription_contract_end_date) > 0)
 														{
-															input.Next_Billing_Date = subscription_contract_start_date.addMonth(tenancy_billing_cycle_int);
-															if(tenant_next_billing_date == null)
-															{
-																tenancy_info.Next_Billing_Date=subscription_contract_start_date.addMonth(tenancy_billing_cycle_int);
-															}
+															input.Next_Billing_Date = subscription_contract_start_date.addMonth(subscription_billing_cycle_int);
 														}
 														else
 														{
 															subscription_final_billing_date = today;
 															input.Next_Billing_Date = null;
-														}
-														if(tenant_last_billing_date == null)
-														{
-															tenancy_info.Latest_Billing_Date=subscription_contract_start_date;
 														}
 														input.Final_Billing_Date = subscription_final_billing_date;
 														thisapp.invoice.create_invoice_current_duration(false,subscription_id,current_billing_every_date,subscription_contract_start_date,false,null,null,false);
@@ -22747,24 +22463,20 @@
 													else
 													{
 														input.Next_Billing_Date = subscription_contract_start_date;
-														if(tenant_next_billing_date == null)
+														if(subscription_contract_period % subscription_billing_cycle_int == 0)
 														{
-															tenancy_info.Next_Billing_Date=subscription_contract_start_date;
-														}
-														if(subscription_contract_period % tenancy_billing_cycle_int == 0)
-														{
-															if(subscription_contract_period < tenancy_billing_cycle_int)
+															if(subscription_contract_period < subscription_billing_cycle_int)
 															{
 																subscription_final_billing_date = start_billing_every_date;
 															}
 															else
 															{
-																subscription_final_billing_date = start_billing_every_date.addMonth((subscription_contract_period / tenancy_billing_cycle_int).toNumber() * tenancy_billing_cycle_int - tenancy_billing_cycle_int);
+																subscription_final_billing_date = start_billing_every_date.addMonth((subscription_contract_period / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int - subscription_billing_cycle_int);
 															}
 														}
 														else
 														{
-															subscription_final_billing_date = start_billing_every_date.addMonth((subscription_contract_period / tenancy_billing_cycle_int).toNumber() * tenancy_billing_cycle_int);
+															subscription_final_billing_date = start_billing_every_date.addMonth((subscription_contract_period / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int);
 														}
 														if(subscription_contract_start_date.eomonth(0).getDay() == subscription_contract_start_date.getDay())
 														{
@@ -22777,22 +22489,14 @@
 														}
 													}
 												}
-												if(subscription_final_billing_date != null)
-												{
-													if(subscription_final_billing_date > tenant_final_billing_date || tenant_final_billing_date == null)
-													{
-														tenancy_info.Final_Billing_Date=subscription_final_billing_date;
-													}
-												}
 											}
-											else if(tenancy_bill_for == "Previous Duration")
+											else if(subscription_bill_for == "Previous Duration")
 											{
-												if(tenancy_billing_cycle == "Monthly")
+												if(subscription_billing_cycle == "Monthly")
 												{
-													/*Determine Next Billing And Final Billing Date */
 													if(subscription_contract_start_date < today.toStartOfMonth())
 													{
-														next_billing_date = current_billing_every_date.addMonth(tenancy_billing_cycle_int);
+														next_billing_date = current_billing_every_date.addMonth(subscription_billing_cycle_int);
 														contract_period_left = monthsBetween(next_billing_date,subscription_contract_end_date);
 														if(contract_period_left >= 0)
 														{
@@ -22802,17 +22506,18 @@
 															}
 															else
 															{
-																subscription_final_billing_date = next_billing_date.addMonth(contract_period_left + tenancy_billing_cycle_int);
+																subscription_final_billing_date = next_billing_date.addMonth(contract_period_left + subscription_billing_cycle_int);
 															}
-															subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,tenancy_bill_every);
-															next_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(next_billing_date,tenancy_bill_every);
+															subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,subscription_bill_every);
+															next_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(next_billing_date,subscription_bill_every);
 															input.Next_Billing_Date = next_billing_date;
 															input.Final_Billing_Date = subscription_final_billing_date;
 															input.Latest_Billing_Date = today;
 															if(daysBetween(today,next_billing_date) <= 5)
 															{
 																thisapp.invoice.create_invoice_previous_duration(true,subscription_id,current_billing_every_date,subscription_contract_start_date,true,next_billing_date,next_billing_date,true);
-																input.Next_Billing_Date = next_billing_date.addMonth(tenancy_billing_cycle_int);
+																input.Next_Billing_Date = next_billing_date.addMonth(subscription_billing_cycle_int);
+																input.Latest_Billing_Date = next_billing_date;
 															}
 															else
 															{
@@ -22821,7 +22526,6 @@
 														}
 														else
 														{
-															/* Contract end date is already past the next billing date — subscription expired before it could be billed */
 															subscription_final_billing_date = subscription_contract_end_date;
 															input.Next_Billing_Date = null;
 															input.Final_Billing_Date = subscription_final_billing_date;
@@ -22831,44 +22535,28 @@
 													}
 													else
 													{
-														next_billing_date = start_billing_every_date.addMonth(tenancy_billing_cycle_int);
-														subscription_final_billing_date = start_billing_every_date.addMonth(subscription_contract_period + tenancy_billing_cycle_int);
-														subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,tenancy_bill_every);
-														next_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(next_billing_date,tenancy_bill_every);
+														next_billing_date = start_billing_every_date.addMonth(subscription_billing_cycle_int);
+														subscription_final_billing_date = start_billing_every_date.addMonth(subscription_contract_period + subscription_billing_cycle_int);
+														subscription_final_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(subscription_final_billing_date,subscription_bill_every);
+														next_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(next_billing_date,subscription_bill_every);
 														input.Next_Billing_Date = next_billing_date;
 														input.Final_Billing_Date = subscription_final_billing_date;
 														input.Latest_Billing_Date = today;
 														if(daysBetween(today,next_billing_date) <= 5)
 														{
 															thisapp.invoice.create_invoice_previous_duration(true,subscription_id,next_billing_date,next_billing_date,false,null,null,true);
-															input.Next_Billing_Date = next_billing_date.addMonth(tenancy_billing_cycle_int);
+															input.Next_Billing_Date = next_billing_date.addMonth(subscription_billing_cycle_int);
 															input.Latest_Billing_Date = next_billing_date;
-														}
-													}
-													if(tenant_last_billing_date == null)
-													{
-														tenancy_info.Latest_Billing_Date=current_billing_every_date;
-													}
-													if(tenant_next_billing_date == null)
-													{
-														tenancy_info.Next_Billing_Date=next_billing_date;
-													}
-													if(subscription_final_billing_date != null)
-													{
-														if(subscription_final_billing_date > tenant_final_billing_date || tenant_final_billing_date == null)
-														{
-															tenancy_info.Final_Billing_Date=subscription_final_billing_date;
 														}
 													}
 												}
 												else
 												{
-													/*Determine Next Billing And Final Billing Date */
 													if(subscription_contract_start_date < today.toStartOfMonth())
 													{
-														add_value = ((monthsBetween(subscription_contract_start_date,today) / tenancy_billing_cycle_int).toNumber() + 1) * tenancy_billing_cycle_int;
+														add_value = ((monthsBetween(subscription_contract_start_date,today) / subscription_billing_cycle_int).toNumber() + 1) * subscription_billing_cycle_int;
 														next_billing_date = subscription_contract_start_date.addMonth(add_value);
-														previous_billing_date = next_billing_date.subMonth(tenancy_billing_cycle_int);
+														previous_billing_date = next_billing_date.subMonth(subscription_billing_cycle_int);
 														if(subscription_contract_start_date.getDay() == subscription_contract_start_date.eomonth(0).getDay())
 														{
 															next_billing_date = next_billing_date.eomonth(0);
@@ -22877,13 +22565,14 @@
 														contract_period_left = monthsBetween(next_billing_date,subscription_contract_end_date);
 														if(contract_period_left > 0)
 														{
-															subscription_final_billing_date = next_billing_date.addMonth((contract_period_left / tenancy_billing_cycle_int).toNumber() * tenancy_billing_cycle_int);
+															subscription_final_billing_date = next_billing_date.addMonth((contract_period_left / subscription_billing_cycle_int).toNumber() * subscription_billing_cycle_int);
 															if(subscription_contract_start_date.getDay() == subscription_contract_start_date.eomonth(0).getDay())
 															{
 																subscription_final_billing_date = subscription_final_billing_date.eomonth(0);
 															}
-															if(next_billing_date.addMonth(tenancy_billing_cycle_int) > subscription_contract_end_date)
+															if(next_billing_date.addMonth(subscription_billing_cycle_int) > subscription_contract_end_date)
 															{
+																input.Next_Billing_Date = null;
 																input.Latest_Billing_Date = next_billing_date;
 																input.Final_Billing_Date = next_billing_date;
 															}
@@ -22892,7 +22581,7 @@
 																input.Next_Billing_Date = next_billing_date;
 																input.Final_Billing_Date = subscription_final_billing_date;
 															}
-															previous_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(previous_billing_date,tenancy_bill_every);
+															previous_billing_date = thisapp.tenancy.normalize_billing_date_for_bill_every(previous_billing_date,subscription_bill_every);
 															if(daysBetween(today,next_billing_date) <= 5)
 															{
 																thisapp.invoice.create_invoice_previous_duration(false,subscription_id,previous_billing_date,previous_billing_date,true,next_billing_date,next_billing_date,false);
@@ -22904,7 +22593,6 @@
 														}
 														else if(contract_period_left == 0)
 														{
-															/* next_billing_date is also the final billing date — one last period to invoice */
 															subscription_final_billing_date = next_billing_date;
 															input.Final_Billing_Date = subscription_final_billing_date;
 															input.Next_Billing_Date = next_billing_date;
@@ -22917,15 +22605,15 @@
 													}
 													else
 													{
-														next_billing_date = subscription_contract_start_date.addMonth(tenancy_billing_cycle_int);
+														next_billing_date = subscription_contract_start_date.addMonth(subscription_billing_cycle_int);
 														input.Next_Billing_Date = next_billing_date;
-														if(subscription_contract_period % tenancy_billing_cycle_int == 0)
+														if(subscription_contract_period % subscription_billing_cycle_int == 0)
 														{
 															subscription_final_billing_date = subscription_contract_start_date.addMonth(subscription_contract_period);
 														}
 														else
 														{
-															subscription_final_billing_date = subscription_contract_start_date.addMonth((1 + (subscription_contract_period / tenancy_billing_cycle_int).toNumber()) * tenancy_billing_cycle_int);
+															subscription_final_billing_date = subscription_contract_start_date.addMonth((1 + (subscription_contract_period / subscription_billing_cycle_int).toNumber()) * subscription_billing_cycle_int);
 														}
 														if(subscription_contract_start_date.getDay() == subscription_contract_start_date.eomonth(0).getDay())
 														{
@@ -22941,24 +22629,10 @@
 															input.Latest_Billing_Date = next_billing_date;
 														}
 													}
-													if(tenant_last_billing_date == null)
-													{
-														tenancy_info.Latest_Billing_Date=current_billing_every_date;
-													}
-													if(tenant_next_billing_date == null)
-													{
-														tenancy_info.Next_Billing_Date=next_billing_date;
-													}
-													if(subscription_final_billing_date != null)
-													{
-														if(subscription_final_billing_date > tenant_final_billing_date || tenant_final_billing_date == null)
-														{
-															tenancy_info.Final_Billing_Date=subscription_final_billing_date;
-														}
-													}
 												}
 											}
 										}
+										*/
 						)
 					}
 				}
@@ -23027,8 +22701,7 @@
 					{
 						custom deluge script
 						(
-											getTenant = Tenancy[ID == input.Customer_Code];
-										input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,getTenant.Billing_Cycle,getTenant.Bill_For,getTenant.Bill_Every,input.Prorate);
+											input.Prorate_Note = thisapp.subscription.get_prorate_note(input.Contract_Start_Date,input.Contract_End_Date,input.Billing_Cycle,input.Bill_For,input.Bill_Every,input.Prorate);
 						)
 					}
 				}
@@ -23055,6 +22728,9 @@
 										disable Contract_Start_Date;
 										disable Contract_End_Date;
 										disable Contract_Period;
+										disable Billing_Cycle;
+										disable Bill_Every;
+										disable Bill_For;
 										disable Payment_Term;
 										disable Charge_Category;
 										disable Prorate;
@@ -25445,11 +25121,9 @@
 											cnNo = thisapp.credit_note.generate_credit_note_no();
 											update Credit_Note[ID == input.ID]
 											[
-												Invoice_No = cnNo
+												Invoice_No=cnNo
 											];
 										}
-										// Credit_Note_Blueprint start stage is already "Draft" on form add.
-										// changeStage to Draft here fails: record is not yet active on the blueprint.
 						)
 					}
 				}
@@ -26677,7 +26351,7 @@
 										// Validate Refund Amount Does Not Exceed Credit Remaining
 										// Fetch explicitly — dot-notation on lookup can return null/0 on validate
 										get_ref_cn = Credit_Note[ID == input.Reference_Credit_Note];
-										credits_remaining = ifnull(get_ref_cn.Grand_Total, 0) - ifnull(get_ref_cn.Credits_Used, 0) - ifnull(get_ref_cn.Refund, 0);
+										credits_remaining = ifnull(get_ref_cn.Grand_Total,0) - ifnull(get_ref_cn.Credits_Used,0) - ifnull(get_ref_cn.Refund,0);
 										if(credits_remaining < input.Grand_Total)
 										{
 											alert "The refund amount cannot exceed the credit remaining of " + credits_remaining;
@@ -26916,64 +26590,64 @@
 											for each  curr_mr in get_cn.Monthly_Rental
 											{
 												rn_mr = Refund_Note.Monthly_Rental();
-												rn_mr.Item_Monthly_Rental = curr_mr.Item_Monthly_Rental;
-												rn_mr.Item_Code_Monthly_Rental = curr_mr.Item_Code_Monthly_Rental;
-												rn_mr.Classification_Codes_Monthly_Rental = curr_mr.Classification_Codes_Monthly_Rental;
-												rn_mr.Description_Monthly_Rental = curr_mr.Description_Monthly_Rental;
-												rn_mr.Quantity_Monthly_Rental = curr_mr.Quantity_Monthly_Rental;
-												rn_mr.Unit_Price_Monthly_Rental = curr_mr.Unit_Price_Monthly_Rental;
-												rn_mr.Sub_Total_Monthly_Rental = curr_mr.Sub_Total_Monthly_Rental;
-												rn_mr.Tax_Monthly_Rental = curr_mr.Tax_Monthly_Rental;
-												rn_mr.Tax_Type_Monthly_Rental = curr_mr.Tax_Type_Monthly_Rental;
-												rn_mr.Tax_Pct_Monthly_Rental = curr_mr.Tax_Pct_Monthly_Rental;
-												rn_mr.Tax_Amount_Monthly_Rental = curr_mr.Tax_Amount_Monthly_Rental;
-												rn_mr.Total_Monthly_Rental = curr_mr.Total_Monthly_Rental;
-												rn_mr.Business_Segment_Monthly_Rental = curr_mr.Business_Segment_Monthly_Rental;
-												rn_mr.Business_Unit_Monthly_Rental = curr_mr.Business_Unit_Monthly_Rental;
-												rn_mr.Circuit_ID_Monthly_Rental = curr_mr.Circuit_ID_Monthly_Rental;
-												rn_mr.Circuit_ID_Type_Monthly_Rental = curr_mr.Circuit_ID_Type_Monthly_Rental;
+												rn_mr.Item_Monthly_Rental=curr_mr.Item_Monthly_Rental;
+												rn_mr.Item_Code_Monthly_Rental=curr_mr.Item_Code_Monthly_Rental;
+												rn_mr.Classification_Codes_Monthly_Rental=curr_mr.Classification_Codes_Monthly_Rental;
+												rn_mr.Description_Monthly_Rental=curr_mr.Description_Monthly_Rental;
+												rn_mr.Quantity_Monthly_Rental=curr_mr.Quantity_Monthly_Rental;
+												rn_mr.Unit_Price_Monthly_Rental=curr_mr.Unit_Price_Monthly_Rental;
+												rn_mr.Sub_Total_Monthly_Rental=curr_mr.Sub_Total_Monthly_Rental;
+												rn_mr.Tax_Monthly_Rental=curr_mr.Tax_Monthly_Rental;
+												rn_mr.Tax_Type_Monthly_Rental=curr_mr.Tax_Type_Monthly_Rental;
+												rn_mr.Tax_Pct_Monthly_Rental=curr_mr.Tax_Pct_Monthly_Rental;
+												rn_mr.Tax_Amount_Monthly_Rental=curr_mr.Tax_Amount_Monthly_Rental;
+												rn_mr.Total_Monthly_Rental=curr_mr.Total_Monthly_Rental;
+												rn_mr.Business_Segment_Monthly_Rental=curr_mr.Business_Segment_Monthly_Rental;
+												rn_mr.Business_Unit_Monthly_Rental=curr_mr.Business_Unit_Monthly_Rental;
+												rn_mr.Circuit_ID_Monthly_Rental=curr_mr.Circuit_ID_Monthly_Rental;
+												rn_mr.Circuit_ID_Type_Monthly_Rental=curr_mr.Circuit_ID_Type_Monthly_Rental;
 												input.Monthly_Rental.insert(rn_mr);
 											}
 											for each  curr_ic in get_cn.Internet_Charges
 											{
 												rn_ic = Refund_Note.Internet_Charges();
-												rn_ic.Item_Internet_Charges = curr_ic.Item_Internet_Charges;
-												rn_ic.Item_Code_Internet_Charges = curr_ic.Item_Code_Internet_Charges;
-												rn_ic.Classification_Codes_Internet_Charges = curr_ic.Classification_Codes_Internet_Charges;
-												rn_ic.Description_Internet_Charges = curr_ic.Description_Internet_Charges;
-												rn_ic.Quantity_Internet_Charges = curr_ic.Quantity_Internet_Charges;
-												rn_ic.Unit_Price_Internet_Charges = curr_ic.Unit_Price_Internet_Charges;
-												rn_ic.Sub_Total_Internet_Charges = curr_ic.Sub_Total_Internet_Charges;
-												rn_ic.Tax_Internet_Charges = curr_ic.Tax_Internet_Charges;
-												rn_ic.Tax_Type_Internet_Charges = curr_ic.Tax_Type_Internet_Charges;
-												rn_ic.Tax_Pct_Internet_Charges = curr_ic.Tax_Pct_Internet_Charges;
-												rn_ic.Tax_Amount_Internet_Charges = curr_ic.Tax_Amount_Internet_Charges;
-												rn_ic.Total_Internet_Charges = curr_ic.Total_Internet_Charges;
-												rn_ic.Business_Segment_Internet_Charges = curr_ic.Business_Segment_Internet_Charges;
-												rn_ic.Business_Unit_Internet_Charges = curr_ic.Business_Unit_Internet_Charges;
-												rn_ic.Circuit_ID_Internet_Charges = curr_ic.Circuit_ID_Internet_Charges;
-												rn_ic.Circuit_ID_Type_Internet_Charges = curr_ic.Circuit_ID_Type_Internet_Charges;
+												rn_ic.Item_Internet_Charges=curr_ic.Item_Internet_Charges;
+												rn_ic.Item_Code_Internet_Charges=curr_ic.Item_Code_Internet_Charges;
+												rn_ic.Classification_Codes_Internet_Charges=curr_ic.Classification_Codes_Internet_Charges;
+												rn_ic.Description_Internet_Charges=curr_ic.Description_Internet_Charges;
+												rn_ic.Quantity_Internet_Charges=curr_ic.Quantity_Internet_Charges;
+												rn_ic.Unit_Price_Internet_Charges=curr_ic.Unit_Price_Internet_Charges;
+												rn_ic.Sub_Total_Internet_Charges=curr_ic.Sub_Total_Internet_Charges;
+												rn_ic.Tax_Internet_Charges=curr_ic.Tax_Internet_Charges;
+												rn_ic.Tax_Type_Internet_Charges=curr_ic.Tax_Type_Internet_Charges;
+												rn_ic.Tax_Pct_Internet_Charges=curr_ic.Tax_Pct_Internet_Charges;
+												rn_ic.Tax_Amount_Internet_Charges=curr_ic.Tax_Amount_Internet_Charges;
+												rn_ic.Total_Internet_Charges=curr_ic.Total_Internet_Charges;
+												rn_ic.Business_Segment_Internet_Charges=curr_ic.Business_Segment_Internet_Charges;
+												rn_ic.Business_Unit_Internet_Charges=curr_ic.Business_Unit_Internet_Charges;
+												rn_ic.Circuit_ID_Internet_Charges=curr_ic.Circuit_ID_Internet_Charges;
+												rn_ic.Circuit_ID_Type_Internet_Charges=curr_ic.Circuit_ID_Type_Internet_Charges;
 												input.Internet_Charges.insert(rn_ic);
 											}
 											for each  curr_cc in get_cn.Call_Charges
 											{
 												rn_cc = Refund_Note.Call_Charges();
-												rn_cc.Item_Call_Charges = curr_cc.Item_Call_Charges;
-												rn_cc.Item_Code_Call_Charges = curr_cc.Item_Code_Call_Charges;
-												rn_cc.Classification_Codes_Call_Charges = curr_cc.Classification_Codes_Call_Charges;
-												rn_cc.Description_Call_Charges = curr_cc.Description_Call_Charges;
-												rn_cc.Quantity_Call_Charges = curr_cc.Quantity_Call_Charges;
-												rn_cc.Unit_Price_Call_Charges = curr_cc.Unit_Price_Call_Charges;
-												rn_cc.Sub_Total_Call_Charges = curr_cc.Sub_Total_Call_Charges;
-												rn_cc.Tax_Call_Charges = curr_cc.Tax_Call_Charges;
-												rn_cc.Tax_Type_Call_Charges = curr_cc.Tax_Type_Call_Charges;
-												rn_cc.Tax_Pct_Call_Charges = curr_cc.Tax_Pct_Call_Charges;
-												rn_cc.Tax_Amount_Call_Charges = curr_cc.Tax_Amount_Call_Charges;
-												rn_cc.Total_Call_Charges = curr_cc.Total_Call_Charges;
-												rn_cc.Business_Segment_Call_Charges = curr_cc.Business_Segment_Call_Charges;
-												rn_cc.Business_Unit_Call_Charges = curr_cc.Business_Unit_Call_Charges;
-												rn_cc.Circuit_ID_Call_Charges = curr_cc.Circuit_ID_Call_Charges;
-												rn_cc.Circuit_ID_Type_Call_Charges = curr_cc.Circuit_ID_Type_Call_Charges;
+												rn_cc.Item_Call_Charges=curr_cc.Item_Call_Charges;
+												rn_cc.Item_Code_Call_Charges=curr_cc.Item_Code_Call_Charges;
+												rn_cc.Classification_Codes_Call_Charges=curr_cc.Classification_Codes_Call_Charges;
+												rn_cc.Description_Call_Charges=curr_cc.Description_Call_Charges;
+												rn_cc.Quantity_Call_Charges=curr_cc.Quantity_Call_Charges;
+												rn_cc.Unit_Price_Call_Charges=curr_cc.Unit_Price_Call_Charges;
+												rn_cc.Sub_Total_Call_Charges=curr_cc.Sub_Total_Call_Charges;
+												rn_cc.Tax_Call_Charges=curr_cc.Tax_Call_Charges;
+												rn_cc.Tax_Type_Call_Charges=curr_cc.Tax_Type_Call_Charges;
+												rn_cc.Tax_Pct_Call_Charges=curr_cc.Tax_Pct_Call_Charges;
+												rn_cc.Tax_Amount_Call_Charges=curr_cc.Tax_Amount_Call_Charges;
+												rn_cc.Total_Call_Charges=curr_cc.Total_Call_Charges;
+												rn_cc.Business_Segment_Call_Charges=curr_cc.Business_Segment_Call_Charges;
+												rn_cc.Business_Unit_Call_Charges=curr_cc.Business_Unit_Call_Charges;
+												rn_cc.Circuit_ID_Call_Charges=curr_cc.Circuit_ID_Call_Charges;
+												rn_cc.Circuit_ID_Type_Call_Charges=curr_cc.Circuit_ID_Type_Call_Charges;
 												input.Call_Charges.insert(rn_cc);
 											}
 											// Recalculate totals
@@ -28192,6 +27866,25 @@
 												}
 												curr_input_invoice.Credits_Applied_Total=curr_credits_applied_total;
 												curr_input_invoice.Amount_Due=curr_input_invoice.Grand_Total - curr_input_invoice.Amount_Paid - curr_credits_applied_total;
+												// Invoice Blueprint status update
+												if(ifnull(curr_input_invoice.Amount_Due,0) <= 0)
+												{
+													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",curr_input_invoice.ID);
+												}
+												else if(ifnull(curr_input_invoice.Amount_Paid,0) > 0 || ifnull(curr_credits_applied_total,0) > 0)
+												{
+													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_input_invoice.ID);
+												}
+												else if(curr_input_invoice.Due_Date > zoho.currentdate)
+												{
+													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_input_invoice.ID);
+												}
+												else
+												{
+													thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_input_invoice.ID);
+												}
+												thisapp.invoice.calculate_invoice_previous_balance_and_total_amount_due(curr_input_invoice.ID);
+												thisapp.tenancy.calculate_opening_balance_by_tenancy(curr_input_invoice.Customer_Code);
 											}
 										}
 										// Credit note calculation (Credit note form)
@@ -31118,8 +30811,7 @@
 											row.Item_Code_Monthly_Rental=itemRecord.Item_Code;
 											row.Classification_Codes_Monthly_Rental=itemRecord.Classification_Codes;
 											row.Description_Monthly_Rental=itemRecord.Description;
-											getTenant = Tenancy[ID == input.Customer_Code];
-											row.Quantity_Monthly_Rental=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+											row.Quantity_Monthly_Rental=thisapp.tenancy.convert_bill_cycle_to_int(input.Billing_Cycle);
 											unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
 											row.Unit_Price_Monthly_Rental=unitPriceMYR / ifnull(input.Exchange_Rate,1);
 											row.Tax_Monthly_Rental=itemRecord.Tax;
@@ -31329,8 +31021,7 @@
 											row.Item_Code_Internet_Charges=itemRecord.Item_Code;
 											row.Classification_Codes_Internet_Charges=itemRecord.Classification_Codes;
 											row.Description_Internet_Charges=itemRecord.Description;
-											getTenant = Tenancy[ID == input.Customer_Code];
-											row.Quantity_Internet_Charges=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+											row.Quantity_Internet_Charges=thisapp.tenancy.convert_bill_cycle_to_int(input.Billing_Cycle);
 											unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
 											row.Unit_Price_Internet_Charges=unitPriceMYR / ifnull(input.Exchange_Rate,1);
 											row.Tax_Internet_Charges=itemRecord.Tax;
@@ -31540,8 +31231,7 @@
 											row.Item_Code_Call_Charges=itemRecord.Item_Code;
 											row.Classification_Codes_Call_Charges=itemRecord.Classification_Codes;
 											row.Description_Call_Charges=itemRecord.Description;
-											getTenant = Tenancy[ID == input.Customer_Code];
-											row.Quantity_Call_Charges=thisapp.tenancy.convert_bill_cycle_to_int(getTenant.Billing_Cycle);
+											row.Quantity_Call_Charges=thisapp.tenancy.convert_bill_cycle_to_int(input.Billing_Cycle);
 											unitPriceMYR = ifnull(itemRecord.Unit_Price,0);
 											row.Unit_Price_Call_Charges=unitPriceMYR / ifnull(input.Exchange_Rate,1);
 											row.Tax_Call_Charges=itemRecord.Tax;
@@ -31864,6 +31554,8 @@
 										disable Invoice_History.Status;
 										disable Invoice_History.Grand_Total;
 										disable Invoice_History.Amount_Paid;
+										disable Invoice_History.Row_Type;
+										disable Invoice_History.Period_Start;
 										if(input.ID != null)
 										{
 											getInvoices = Invoice[Subscriptions.contains(input.ID)].ID.getAll();
@@ -31875,6 +31567,9 @@
 												disable Contract_Start_Date;
 												disable Contract_End_Date;
 												disable Contract_Period;
+												disable Billing_Cycle;
+												disable Bill_Every;
+												disable Bill_For;
 												disable Payment_Term;
 												disable Charge_Category;
 												disable Exchange_Rate;
@@ -31930,26 +31625,6 @@
 										if(input.Create_Work_Order == false)
 										{
 											hide Work_Order_Type;
-										}
-										/* Invoice history */
-										invoice_list = Invoice[Subscriptions == input.ID];
-										invoice_list_size = invoice_list.tolist().size();
-										info invoice_list_size;
-										if(invoice_list_size != 0)
-										{
-											current_invoice_history = Collection();
-											for each  curr_invoice in invoice_list
-											{
-												curr_invoice_history_row = Subscription.Invoice_History();
-												curr_invoice_history_row.Invoice_No=curr_invoice.Invoice_No;
-												curr_invoice_history_row.Invoice_Date=curr_invoice.Invoice_Date;
-												curr_invoice_history_row.Due_Date=curr_invoice.Due_Date;
-												curr_invoice_history_row.Status=curr_invoice.Blueprint.Current_Stage;
-												curr_invoice_history_row.Grand_Total=curr_invoice.Grand_Total;
-												curr_invoice_history_row.Amount_Paid=curr_invoice.Amount_Paid;
-												current_invoice_history.insert(curr_invoice_history_row);
-											}
-											input.Invoice_History.insert(current_invoice_history);
 										}
 										/* Trigger User input */
 										input.User_Input_Trigger = !input.User_Input_Trigger;
@@ -32041,6 +31716,41 @@
 											}
 										}
 						)
+					}
+				}
+
+			}
+			Handle_Billing_Cycle1 as "Handle Billing Cycle"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				on user input of Billing_Cycle
+				{
+					actions  (Billing_Cycle != "Monthly")
+					{
+						custom deluge script
+						(
+											input.Bill_Every = "";
+						)
+					}
+				}
+
+			}
+			Field_Rule_Billing_Cycle1 as "Field Rule Billing Cycle"
+			{
+				type =  form
+				form = Subscription
+
+				record event = on add or edit
+
+				field rules
+				{
+					actions  (Billing_Cycle != "Monthly")
+					{
+						hide Bill_Every;
 					}
 				}
 
@@ -32229,72 +31939,54 @@
 					(
 						failed_subscriptions = List();
 										// Monthly
-										tenancy_list = Tenancy[Billing_Cycle == "Monthly"];
-										for each  curr_tenancy in tenancy_list
+										subscription_list = Subscription[Billing_Cycle == "Monthly" && Subscription_Status == "Active"];
+										for each  curr_subscription in subscription_list
 										{
-											curr_tenancy_id = curr_tenancy.ID;
-											curr_actual_billing_date = curr_tenancy.Next_Billing_Date;
-											curr_tenancy_bill_for = curr_tenancy.Bill_For;
-											curr_tenancy_billing_cycle = curr_tenancy.Billing_Cycle;
-											curr_tenancy_bill_every = curr_tenancy.Bill_Every;
-											curr_tenancy_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(curr_tenancy_billing_cycle);
+											curr_subscription_id = curr_subscription.ID;
+											curr_actual_billing_date = curr_subscription.Next_Billing_Date;
+											curr_bill_for = curr_subscription.Bill_For;
+											curr_bill_every = curr_subscription.Bill_Every;
 											if(curr_actual_billing_date != null && curr_actual_billing_date <= today)
 											{
-												subscription_id_list = Subscription[Customer_Code = curr_tenancy_id && Next_Billing_Date = curr_actual_billing_date && Subscription_Status == "Active"].ID.getAll();
-												if(subscription_id_list.size() > 0)
+												monthly_billing_date = thisapp.tenancy.get_monthly_billing_date_from_actual(curr_bill_every,curr_actual_billing_date);
+												if(curr_bill_for == "Current Duration")
 												{
-													monthly_billing_date = thisapp.tenancy.get_monthly_billing_date_from_actual(curr_tenancy_bill_every,curr_actual_billing_date);
-													for each  curr_subscription_id in subscription_id_list
-													{
-														if(curr_tenancy_bill_for == "Current Duration")
-														{
-															thisapp.invoice.create_invoice_current_duration(true,curr_subscription_id,monthly_billing_date,curr_actual_billing_date,false,null,null,false);
-														}
-														else
-														{
-															thisapp.invoice.create_invoice_previous_duration(true,curr_subscription_id,monthly_billing_date,curr_actual_billing_date,false,null,null,false);
-														}
-														/* Verify invoice was created for this subscription on the billing date */
-														created_check = Invoice[Subscriptions.contains(curr_subscription_id) && Invoice_Date == curr_actual_billing_date].ID.getAll();
-														if(created_check.size() == 0)
-														{
-															failed_subscriptions.add(curr_subscription_id);
-														}
-													}
+													thisapp.invoice.create_invoice_current_duration(true,curr_subscription_id,monthly_billing_date,curr_actual_billing_date,false,null,null,false);
+												}
+												else
+												{
+													thisapp.invoice.create_invoice_previous_duration(true,curr_subscription_id,monthly_billing_date,curr_actual_billing_date,false,null,null,false);
+												}
+												/* Verify invoice was created for this subscription on the billing date */
+												created_check = Invoice[Subscriptions.contains(curr_subscription_id) && Invoice_Date == curr_actual_billing_date].ID.getAll();
+												if(created_check.size() == 0)
+												{
+													failed_subscriptions.add(curr_subscription_id);
 												}
 											}
 										}
 										// Non-Monthly
-										tenancy_list = Tenancy[Billing_Cycle != "Monthly"];
-										for each  curr_tenancy in tenancy_list
+										subscription_list = Subscription[Billing_Cycle != "Monthly" && Subscription_Status == "Active"];
+										for each  curr_subscription in subscription_list
 										{
-											curr_tenancy_id = curr_tenancy.ID;
-											curr_actual_billing_date = curr_tenancy.Next_Billing_Date;
-											curr_tenancy_bill_for = curr_tenancy.Bill_For;
-											curr_tenancy_billing_cycle = curr_tenancy.Billing_Cycle;
-											curr_tenancy_billing_cycle_int = thisapp.tenancy.convert_bill_cycle_to_int(curr_tenancy_billing_cycle);
+											curr_subscription_id = curr_subscription.ID;
+											curr_actual_billing_date = curr_subscription.Next_Billing_Date;
+											curr_bill_for = curr_subscription.Bill_For;
 											if(curr_actual_billing_date != null && curr_actual_billing_date <= today)
 											{
-												subscription_id_list = Subscription[Customer_Code = curr_tenancy_id && Next_Billing_Date = curr_actual_billing_date && Subscription_Status == "Active"].ID.getAll();
-												if(subscription_id_list.size() > 0)
+												if(curr_bill_for == "Current Duration")
 												{
-													for each  curr_subscription_id in subscription_id_list
-													{
-														if(curr_tenancy_bill_for == "Current Duration")
-														{
-															thisapp.invoice.create_invoice_current_duration(false,curr_subscription_id,curr_actual_billing_date,curr_actual_billing_date,false,null,null,false);
-														}
-														else
-														{
-															thisapp.invoice.create_invoice_previous_duration(false,curr_subscription_id,curr_actual_billing_date,curr_actual_billing_date,false,null,null,false);
-														}
-														/* Verify invoice was created for this subscription on the billing date */
-														created_check = Invoice[Subscriptions.contains(curr_subscription_id) && Invoice_Date == curr_actual_billing_date].ID.getAll();
-														if(created_check.size() == 0)
-														{
-															failed_subscriptions.add(curr_subscription_id);
-														}
-													}
+													thisapp.invoice.create_invoice_current_duration(false,curr_subscription_id,curr_actual_billing_date,curr_actual_billing_date,false,null,null,false);
+												}
+												else
+												{
+													thisapp.invoice.create_invoice_previous_duration(false,curr_subscription_id,curr_actual_billing_date,curr_actual_billing_date,false,null,null,false);
+												}
+												/* Verify invoice was created for this subscription on the billing date */
+												created_check = Invoice[Subscriptions.contains(curr_subscription_id) && Invoice_Date == curr_actual_billing_date].ID.getAll();
+												if(created_check.size() == 0)
+												{
+													failed_subscriptions.add(curr_subscription_id);
 												}
 											}
 										}
@@ -35676,8 +35368,6 @@
 												Credits_Remaining=input.Grand_Total
 												Added_User=zoho.loginuser
 											];
-											// Credit_Note_Blueprint start stage is already "Draft" on insert.
-											// changeStage to Draft here fails: record is not yet active on the blueprint.
 											// Add item row to item subform
 											total_monthly_rental = 0;
 											total_internet_charges = 0;
@@ -36886,7 +36576,7 @@
 										}
 										tenancy_id = current_subscription.Customer_Code;
 										tenancy_info = Tenancy[ID == tenancy_id];
-										bill_for = tenancy_info.Bill_For;
+										bill_for = input.Bill_For;
 										last_billing_date = current_subscription.Latest_Billing_Date;
 										contract_start_date = current_subscription.Contract_Start_Date;
 										exchange_rate = current_subscription.Exchange_Rate;
@@ -37005,31 +36695,6 @@
 											current_subscription.Next_Billing_Date=null;
 											current_subscription.Final_Billing_Date=termination_date;
 											current_subscription.Latest_Billing_Date=termination_date;
-										}
-										/* Recalculate tenancy Final_Billing_Date from remaining Active subscriptions */
-										remaining_subs = Subscription[Customer_Code == tenancy_id && Subscription_Status == "Active" && ID != subscription_id];
-										max_final_date = null;
-										for each  remaining_sub in remaining_subs
-										{
-											sub_final_date = remaining_sub.Final_Billing_Date;
-											if(sub_final_date != null)
-											{
-												if(max_final_date == null)
-												{
-													max_final_date = sub_final_date;
-												}
-												else if(sub_final_date > max_final_date)
-												{
-													max_final_date = sub_final_date;
-												}
-											}
-										}
-										tenancy_info.Final_Billing_Date=max_final_date;
-										/* Clear tenancy Next_Billing_Date if no more Active subscriptions remain */
-										remaining_active = Subscription[Customer_Code == tenancy_id && Subscription_Status == "Active" && ID != subscription_id].ID.getAll();
-										if(remaining_active.size() == 0)
-										{
-											tenancy_info.Next_Billing_Date=null;
 										}
 					)
 					}
@@ -41555,7 +41220,6 @@
 								Building
 								Account_Type as "Account Type"
 								Account_Number as "Account Number"
-								Bill_Every as "Bill Every"
 								Tenant_Name as "Tenant Name"
 								Payable_To as "Payable To"
 								Technical_Email as "Technical Email"
@@ -41615,7 +41279,6 @@
 								Building
 								Account_Type as "Account Type"
 								Account_Number as "Account Number"
-								Bill_Every as "Bill Every"
 								Tenant_Name as "Tenant Name"
 								Payable_To as "Payable To"
 								Technical_Email as "Technical Email"

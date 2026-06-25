@@ -15,6 +15,8 @@ Status legend:
 
 ## Master Checklist
 
+### Phase 1 — Steps 01–08 (Old flow fixes)
+
 - [x] 01 - Preflight complete (`01-fix-credit-note-preflight.md`)
 - [x] 02 - `Reference_Invoice` field added + exported (`02-fix-credit-note-reference-invoice-field.md`)
 - [x] 03 - Credit Note blueprint structure aligned (`03-fix-credit-note-blueprint-structure.md`)
@@ -28,13 +30,33 @@ Status legend:
 
 ---
 
+### Phase 2 — Steps 09–15 (New flow requirements from updated `creditNote_Flow.md`)
+
+- [ ] 09 - `Reference_Invoice` mandatory + LHDN UUID block (`09-fix-credit-note-mandatory-reference.md`)
+- [ ] 10 - Clone invoice lines from reference; reduce-only rule (`10-fix-credit-note-clone-invoice-lines.md`)
+- [ ] 11 - `Credit_Mode` field + lock Mode A vs Mode B at creation (`11-fix-credit-note-credit-mode-field.md`)
+- [ ] 12 - Cumulative approved CN cap at save + approval recheck (`12-fix-credit-note-cumulative-cap.md`)
+- [ ] 13 - Mode A: auto-apply on approval → Closed; hide Apply/Refund (`13-fix-credit-note-mode-a-auto-apply.md`)
+- [ ] 14 - Mode B: apply same ref if Amount_Due > 0; other invoices; refund (`14-fix-credit-note-mode-b-apply-controls.md`)
+- [ ] 15 - Test matrix v2, deploy Batch E–I, rollback package (`15-fix-credit-note-test-matrix-v2.md`)
+
+**Prerequisite:** Phase 1 UAT must be signed off before deploying Phase 2.
+
+---
+
 ## Current Sprint Snapshot
 
+### Phase 1
 - Current step: `Complete (UAT pending)`
 - Owner: `TBD`
 - Started at: `2026-06-23`
-- Target finish: `TBD`
 - Current risk/blocker: `Live UAT + post-deploy export not yet run`
+
+### Phase 2
+- Current step: `Planning complete — Step 09 ready to start`
+- Owner: `TBD`
+- Started at: `2026-06-24`
+- Current risk/blocker: `Phase 1 UAT must be signed off first`
 
 ---
 
@@ -148,6 +170,7 @@ Status legend:
 
 ## Change Log
 
+- `2026-06-24` - Phase 2 planning complete: Steps 09–15 written; index and tracker updated
 - `2026-06-23` - Step 08 package: test matrix T1–T15, regression R1–R5, deploy manifest, sync verification, issue closure table
 - `2026-06-23` - Step 07 complete: LHDN reference_invoice_list includes Reference_Invoice; Submit button Closed-only
 - `2026-06-23` - Step 06 complete: apply/refund guards, Reference_Invoice default, field-rule delete hide, guarded Open/Closed
