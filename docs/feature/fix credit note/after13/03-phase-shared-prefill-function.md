@@ -72,11 +72,11 @@ Keep in the workflow (not the function):
 
 ## Exit criteria (Phase 3)
 
-- [ ] Line clone logic exists in one place only
-- [ ] `Credit_Mode` detection exists in one place only
-- [ ] Manual reference selection behavior unchanged (T16-6)
-- [ ] Convert prefill behavior unchanged (T16-7, T16-8)
-- [ ] Custom function present in `XMT___Billing_System.ds`
+- [x] Line clone logic exists in one place only
+- [x] `Credit_Mode` detection exists in one place only
+- [x] Manual reference selection behavior unchanged (T16-6)
+- [x] Convert prefill behavior unchanged (T16-7, T16-8) — subform rows built in workflow from Maps returned by CF
+- [~] Custom function present in `XMT___Billing_System.ds`
 
 ---
 

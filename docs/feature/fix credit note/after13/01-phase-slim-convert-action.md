@@ -86,11 +86,11 @@ On success: open Credit Note add form (no success message required, or brief toa
 
 ## Exit criteria (Phase 1)
 
-- [ ] `Convert_To_Credit_Note.deluge` contains no `insert into Credit_Note`
-- [ ] Convert opens `#Form:Credit_Note` without `recLinkID`
-- [ ] Convert still blocks when `remaining_creditable <= 0`
-- [ ] Convert does **not** block when full invoice amount > remaining (that is Submit’s job)
-- [ ] Synced to `XMT___Billing_System.ds`
+- [x] `Convert_To_Credit_Note.deluge` contains no `insert into Credit_Note`
+- [x] Convert opens `#Form:Credit_Note` without `recLinkID`
+- [x] Convert still blocks when `remaining_creditable <= 0`
+- [x] Convert does **not** block when full invoice amount > remaining (that is Submit’s job)
+- [~] Synced to `XMT___Billing_System.ds`
 
 ---
 

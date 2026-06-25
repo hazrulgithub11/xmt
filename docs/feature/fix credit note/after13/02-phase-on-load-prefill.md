@@ -134,9 +134,9 @@ Ensures tax/grand total workflows run after lines are inserted.
 
 ## Exit criteria (Phase 2)
 
-- [ ] Convert opens add form with full header + lines prefilled
-- [ ] `Credit_Mode` set correctly from invoice stage
-- [ ] Form shows **Submit**, not **Update**
-- [ ] CN **not** in Credit Notes list until Submit
-- [ ] Manual Add path unchanged (user picks reference → `Handle_reference_invoice_2`)
-- [ ] New/updated workflow synced to `XMT___Billing_System.ds`
+- [x] Convert opens add form with full header + lines prefilled
+- [x] `Credit_Mode` set correctly from invoice stage
+- [x] Form shows **Submit**, not **Update**
+- [x] CN **not** in Credit Notes list until Submit
+- [x] Manual Add path unchanged (user picks reference → `Handle_reference_invoice_2`)
+- [~] New/updated workflow synced to `XMT___Billing_System.ds`

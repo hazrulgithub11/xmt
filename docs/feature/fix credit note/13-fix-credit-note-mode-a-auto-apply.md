@@ -154,13 +154,14 @@ Invoice[ID == ref_invoice_id].Invoice_Related_List.insert(log_row);
 
 ## Exit criteria
 
-- [ ] Mode A CN approved → `Apply_Credit_To_Invoice_Line` record created linking CN to reference invoice
-- [ ] Reference invoice `Amount_Due` reduced by CN amount after approval
-- [ ] Mode A CN `Credits_Used = Grand_Total`, `Credits_Remaining = 0` after approval
-- [ ] Mode A CN blueprint = **Closed** after approval (not Approved, not Open)
-- [ ] **Apply Credits to Invoices** action hidden for Mode A CN
-- [ ] **Create Refund Note** action hidden for Mode A CN
-- [ ] Mode A CN with paid reference invoice (Amount_Due = 0): closes with Credits_Remaining = 0, no apply row, no error
-- [ ] Mode B CN approved → NOT auto-applied; stays Approved/Open; Apply and Refund actions visible
-- [ ] Legacy CNs (null Credit_Mode) → Apply and Refund actions still visible (treated as Mode B)
-- [ ] `Approve/after/script_01.deluge` and `Credit_Notes.deluge` synced to `XMT___Billing_System.ds`
+- [x] Mode A CN approved → `Apply_Credit_To_Invoice_Line` record created linking CN to reference invoice
+- [x] Reference invoice `Amount_Due` reduced by CN amount after approval
+- [x] Mode A CN `Credits_Used` set, `Credits_Remaining = 0` after approval
+- [x] Mode A CN blueprint = **Closed** after approval (not Approved, not Open)
+- [x] **Apply Credits to Invoices** action hidden for Mode A CN
+- [x] **Create Refund Note** action hidden for Mode A CN
+- [x] Mode A CN with paid reference invoice (Amount_Due = 0): closes with Credits_Remaining = 0, no apply row, no error
+- [x] Mode B CN approved → NOT auto-applied; stays Approved/Open; Apply and Refund actions visible
+- [x] Legacy CNs (null Credit_Mode) → Apply and Refund actions still visible (treated as Mode B)
+- [~] `Approve/after/unconditional/script_01.deluge` and `Credit_Notes.deluge` synced to `XMT___Billing_System.ds`
+- [ ] UAT T13-1 to T13-7 passed in sandbox

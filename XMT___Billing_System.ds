@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 25-Jun-2026 02:16:27
+ * Generated on : 25-Jun-2026 04:40:45
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -13975,6 +13975,24 @@
                  	}
                  	return sortedList;
                  }
+				 string credit_note.credit_mode_from_invoice_stage(int invoice_id)
+                 {
+                 	ref_invoice = Invoice[ID == invoice_id];
+                 	if(ref_invoice.ID == null)
+                 	{
+                 		return "";
+                 	}
+                 	ref_stage = ref_invoice.Blueprint.Current_Stage;
+                 	if(ref_stage == "Sent" || ref_stage == "Overdue")
+                 	{
+                 		return "Mode A - Debt Reduction";
+                 	}
+                 	else if(ref_stage == "Partially Paid" || ref_stage == "Paid")
+                 	{
+                 		return "Mode B - Open Credit";
+                 	}
+                 	return "";
+                 }
 				 string credit_note.generate_credit_note_no()
                  {
                  	prefix = "CN" + zoho.currentdate.getYear().toString().subText(2,4);
@@ -14014,6 +14032,127 @@
                  	}
                  	invNumber = prefix + pad + count;
                  	return invNumber;
+                 }
+				 map credit_note.prefill_from_reference_invoice(int invoice_id)
+                 {
+                 	result = Map();
+                 	result.put("found",false);
+                 	ref_invoice = Invoice[ID == invoice_id];
+                 	if(ref_invoice.ID == null)
+                 	{
+                 		return result;
+                 	}
+                 	result.put("found",true);
+                 	ref_stage = ref_invoice.Blueprint.Current_Stage;
+                 	result.put("ref_stage",ref_stage);
+                 	credit_mode = thisapp.credit_note.credit_mode_from_invoice_stage(invoice_id);
+                 	result.put("credit_mode",credit_mode);
+                 	result.put("credit_eligible",credit_mode != "");
+                 	result.put("grand_total",ref_invoice.Grand_Total);
+                 	result.put("payment_term_days",ref_invoice.Payment_Term.Days);
+                 	// Header fields as a plain map
+                 	header = Map();
+                 	header.put("Customer_Name",ref_invoice.Customer_Name);
+                 	header.put("Customer_TIN",ref_invoice.Customer_TIN);
+                 	header.put("Customer_ID_Type",ref_invoice.Customer_ID_Type);
+                 	header.put("Customer_Registration_Identification_Passport_Number",ref_invoice.Customer_Registration_Identification_Passport_Number);
+                 	header.put("Customer_SST_Registration_Number",ref_invoice.Customer_SST_Registration_Number);
+                 	header.put("Customer_Code",ref_invoice.Customer_Code);
+                 	header.put("Customer_E_mail",ref_invoice.Customer_E_mail);
+                 	header.put("Customer_Telephone_Number",ref_invoice.Customer_Telephone_Number);
+                 	header.put("Customer_Street",ref_invoice.Customer_Street);
+                 	header.put("Customer_City",ref_invoice.Customer_City);
+                 	header.put("Customer_Postcode",ref_invoice.Customer_Postcode);
+                 	header.put("Customer_Country",ref_invoice.Customer_Country);
+                 	header.put("Customer_State",ref_invoice.Customer_State);
+                 	header.put("Delivery_Street",ref_invoice.Delivery_Street);
+                 	header.put("Delivery_City",ref_invoice.Delivery_City);
+                 	header.put("Delivery_Postcode",ref_invoice.Delivery_Postcode);
+                 	header.put("Delivery_Country",ref_invoice.Delivery_Country);
+                 	header.put("Delivery_State",ref_invoice.Delivery_State);
+                 	header.put("Subscriptions",ref_invoice.Subscriptions);
+                 	header.put("Invoice_For_Usage",ref_invoice.Invoice_For_Usage);
+                 	header.put("Payment_Term",ref_invoice.Payment_Term);
+                 	header.put("Enable_Reminder",ref_invoice.Enable_Reminder);
+                 	header.put("Charge_Category",ref_invoice.Charge_Category);
+                 	header.put("Announcement",ref_invoice.Announcement);
+                 	header.put("Attachment",ref_invoice.Attachment);
+                 	header.put("Invoice_Currency",ref_invoice.Invoice_Currency);
+                 	header.put("Exchange_Rate",ref_invoice.Exchange_Rate);
+                 	header.put("Payable_To",ref_invoice.Payable_To);
+                 	result.put("header",header);
+                 	// Line rows as plain Maps — caller must construct subform row objects
+                 	// (subform row objects created in a custom function cannot be inserted via input.Subform.insert())
+                 	mr_rows = List();
+                 	for each  curr_mr in ref_invoice.Monthly_Rental
+                 	{
+                 		row = Map();
+                 		row.put("Item_Monthly_Rental",curr_mr.Item_Monthly_Rental);
+                 		row.put("Item_Code_Monthly_Rental",curr_mr.Item_Code_Monthly_Rental);
+                 		row.put("Classification_Codes_Monthly_Rental",curr_mr.Classification_Codes_Monthly_Rental);
+                 		row.put("Description_Monthly_Rental",curr_mr.Description_Monthly_Rental);
+                 		row.put("Quantity_Monthly_Rental",curr_mr.Quantity_Monthly_Rental);
+                 		row.put("Unit_Price_Monthly_Rental",curr_mr.Unit_Price_Monthly_Rental);
+                 		row.put("Sub_Total_Monthly_Rental",curr_mr.Sub_Total_Monthly_Rental);
+                 		row.put("Tax_Monthly_Rental",curr_mr.Tax_Monthly_Rental);
+                 		row.put("Tax_Type_Monthly_Rental",curr_mr.Tax_Type_Monthly_Rental);
+                 		row.put("Tax_Pct_Monthly_Rental",curr_mr.Tax_Pct_Monthly_Rental);
+                 		row.put("Tax_Amount_Monthly_Rental",curr_mr.Tax_Amount_Monthly_Rental);
+                 		row.put("Total_Monthly_Rental",curr_mr.Total_Monthly_Rental);
+                 		row.put("Business_Segment_Monthly_Rental",curr_mr.Business_Segment_Monthly_Rental);
+                 		row.put("Business_Unit_Monthly_Rental",curr_mr.Business_Unit_Monthly_Rental);
+                 		row.put("Circuit_ID_Monthly_Rental",curr_mr.Circuit_ID_Monthly_Rental);
+                 		row.put("Circuit_ID_Type_Monthly_Rental",curr_mr.Circuit_ID_Type_Monthly_Rental);
+                 		mr_rows.add(row);
+                 	}
+                 	result.put("monthly_rental_rows",mr_rows);
+                 	ic_rows = List();
+                 	for each  curr_ic in ref_invoice.Internet_Charges
+                 	{
+                 		row = Map();
+                 		row.put("Item_Internet_Charges",curr_ic.Item_Internet_Charges);
+                 		row.put("Item_Code_Internet_Charges",curr_ic.Item_Code_Internet_Charges);
+                 		row.put("Classification_Codes_Internet_Charges",curr_ic.Classification_Codes_Internet_Charges);
+                 		row.put("Description_Internet_Charges",curr_ic.Description_Internet_Charges);
+                 		row.put("Quantity_Internet_Charges",curr_ic.Quantity_Internet_Charges);
+                 		row.put("Unit_Price_Internet_Charges",curr_ic.Unit_Price_Internet_Charges);
+                 		row.put("Sub_Total_Internet_Charges",curr_ic.Sub_Total_Internet_Charges);
+                 		row.put("Tax_Internet_Charges",curr_ic.Tax_Internet_Charges);
+                 		row.put("Tax_Type_Internet_Charges",curr_ic.Tax_Type_Internet_Charges);
+                 		row.put("Tax_Pct_Internet_Charges",curr_ic.Tax_Pct_Internet_Charges);
+                 		row.put("Tax_Amount_Internet_Charges",curr_ic.Tax_Amount_Internet_Charges);
+                 		row.put("Total_Internet_Charges",curr_ic.Total_Internet_Charges);
+                 		row.put("Business_Segment_Internet_Charges",curr_ic.Business_Segment_Internet_Charges);
+                 		row.put("Business_Unit_Internet_Charges",curr_ic.Business_Unit_Internet_Charges);
+                 		row.put("Circuit_ID_Internet_Charges",curr_ic.Circuit_ID_Internet_Charges);
+                 		row.put("Circuit_ID_Type_Internet_Charges",curr_ic.Circuit_ID_Type_Internet_Charges);
+                 		ic_rows.add(row);
+                 	}
+                 	result.put("internet_charges_rows",ic_rows);
+                 	cc_rows = List();
+                 	for each  curr_cc in ref_invoice.Call_Charges
+                 	{
+                 		row = Map();
+                 		row.put("Item_Call_Charges",curr_cc.Item_Call_Charges);
+                 		row.put("Item_Code_Call_Charges",curr_cc.Item_Code_Call_Charges);
+                 		row.put("Classification_Codes_Call_Charges",curr_cc.Classification_Codes_Call_Charges);
+                 		row.put("Description_Call_Charges",curr_cc.Description_Call_Charges);
+                 		row.put("Quantity_Call_Charges",curr_cc.Quantity_Call_Charges);
+                 		row.put("Unit_Price_Call_Charges",curr_cc.Unit_Price_Call_Charges);
+                 		row.put("Sub_Total_Call_Charges",curr_cc.Sub_Total_Call_Charges);
+                 		row.put("Tax_Call_Charges",curr_cc.Tax_Call_Charges);
+                 		row.put("Tax_Type_Call_Charges",curr_cc.Tax_Type_Call_Charges);
+                 		row.put("Tax_Pct_Call_Charges",curr_cc.Tax_Pct_Call_Charges);
+                 		row.put("Tax_Amount_Call_Charges",curr_cc.Tax_Amount_Call_Charges);
+                 		row.put("Total_Call_Charges",curr_cc.Total_Call_Charges);
+                 		row.put("Business_Segment_Call_Charges",curr_cc.Business_Segment_Call_Charges);
+                 		row.put("Business_Unit_Call_Charges",curr_cc.Business_Unit_Call_Charges);
+                 		row.put("Circuit_ID_Call_Charges",curr_cc.Circuit_ID_Call_Charges);
+                 		row.put("Circuit_ID_Type_Call_Charges",curr_cc.Circuit_ID_Type_Call_Charges);
+                 		cc_rows.add(row);
+                 	}
+                 	result.put("call_charges_rows",cc_rows);
+                 	return result;
                  }
 				 string debit_note.generate_debit_note_no()
                  {
@@ -31856,10 +31995,7 @@
 										{
 											if(input.Reference_Invoice.Invoice_UUID == null || input.Reference_Invoice.Invoice_UUID == "" || input.Reference_Invoice.Invoice_Public_Link == null || input.Reference_Invoice.Invoice_Public_Link == "")
 											{
-												invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
-												clear Reference_Invoice;
 												clear Credit_Mode;
-												input.Reference_Invoice:ui.add(invoice_id_list);
 												alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
 											}
 											else
@@ -31908,91 +32044,88 @@
 													current_stage = input.Blueprint.Current_Stage;
 													if(input.ID == null || current_stage == "Draft" || current_stage == "Rejected")
 													{
+														prefill_data = thisapp.credit_note.prefill_from_reference_invoice(input.Reference_Invoice);
 														clear Monthly_Rental;
 														clear Internet_Charges;
 														clear Call_Charges;
-														ref_invoice = Invoice[ID == input.Reference_Invoice];
-														for each  curr_mr in ref_invoice.Monthly_Rental
+														for each  row in prefill_data.get("monthly_rental_rows")
 														{
 															cn_mr = Credit_Note.Monthly_Rental();
-															cn_mr.Item_Monthly_Rental=curr_mr.Item_Monthly_Rental;
-															cn_mr.Item_Code_Monthly_Rental=curr_mr.Item_Code_Monthly_Rental;
-															cn_mr.Classification_Codes_Monthly_Rental=curr_mr.Classification_Codes_Monthly_Rental;
-															cn_mr.Description_Monthly_Rental=curr_mr.Description_Monthly_Rental;
-															cn_mr.Quantity_Monthly_Rental=curr_mr.Quantity_Monthly_Rental;
-															cn_mr.Unit_Price_Monthly_Rental=curr_mr.Unit_Price_Monthly_Rental;
-															cn_mr.Sub_Total_Monthly_Rental=curr_mr.Sub_Total_Monthly_Rental;
-															cn_mr.Tax_Monthly_Rental=curr_mr.Tax_Monthly_Rental;
-															cn_mr.Tax_Type_Monthly_Rental=curr_mr.Tax_Type_Monthly_Rental;
-															cn_mr.Tax_Pct_Monthly_Rental=curr_mr.Tax_Pct_Monthly_Rental;
-															cn_mr.Tax_Amount_Monthly_Rental=curr_mr.Tax_Amount_Monthly_Rental;
-															cn_mr.Total_Monthly_Rental=curr_mr.Total_Monthly_Rental;
-															cn_mr.Business_Segment_Monthly_Rental=curr_mr.Business_Segment_Monthly_Rental;
-															cn_mr.Business_Unit_Monthly_Rental=curr_mr.Business_Unit_Monthly_Rental;
-															cn_mr.Circuit_ID_Monthly_Rental=curr_mr.Circuit_ID_Monthly_Rental;
-															cn_mr.Circuit_ID_Type_Monthly_Rental=curr_mr.Circuit_ID_Type_Monthly_Rental;
+															cn_mr.Item_Monthly_Rental=row.get("Item_Monthly_Rental");
+															cn_mr.Item_Code_Monthly_Rental=row.get("Item_Code_Monthly_Rental");
+															cn_mr.Classification_Codes_Monthly_Rental=row.get("Classification_Codes_Monthly_Rental");
+															cn_mr.Description_Monthly_Rental=row.get("Description_Monthly_Rental");
+															cn_mr.Quantity_Monthly_Rental=row.get("Quantity_Monthly_Rental");
+															cn_mr.Unit_Price_Monthly_Rental=row.get("Unit_Price_Monthly_Rental");
+															cn_mr.Sub_Total_Monthly_Rental=row.get("Sub_Total_Monthly_Rental");
+															cn_mr.Tax_Monthly_Rental=row.get("Tax_Monthly_Rental");
+															cn_mr.Tax_Type_Monthly_Rental=row.get("Tax_Type_Monthly_Rental");
+															cn_mr.Tax_Pct_Monthly_Rental=row.get("Tax_Pct_Monthly_Rental");
+															cn_mr.Tax_Amount_Monthly_Rental=row.get("Tax_Amount_Monthly_Rental");
+															cn_mr.Total_Monthly_Rental=row.get("Total_Monthly_Rental");
+															cn_mr.Business_Segment_Monthly_Rental=row.get("Business_Segment_Monthly_Rental");
+															cn_mr.Business_Unit_Monthly_Rental=row.get("Business_Unit_Monthly_Rental");
+															cn_mr.Circuit_ID_Monthly_Rental=row.get("Circuit_ID_Monthly_Rental");
+															cn_mr.Circuit_ID_Type_Monthly_Rental=row.get("Circuit_ID_Type_Monthly_Rental");
 															input.Monthly_Rental.insert(cn_mr);
 														}
-														for each  curr_ic in ref_invoice.Internet_Charges
+														for each  row in prefill_data.get("internet_charges_rows")
 														{
 															cn_ic = Credit_Note.Internet_Charges();
-															cn_ic.Item_Internet_Charges=curr_ic.Item_Internet_Charges;
-															cn_ic.Item_Code_Internet_Charges=curr_ic.Item_Code_Internet_Charges;
-															cn_ic.Classification_Codes_Internet_Charges=curr_ic.Classification_Codes_Internet_Charges;
-															cn_ic.Description_Internet_Charges=curr_ic.Description_Internet_Charges;
-															cn_ic.Quantity_Internet_Charges=curr_ic.Quantity_Internet_Charges;
-															cn_ic.Unit_Price_Internet_Charges=curr_ic.Unit_Price_Internet_Charges;
-															cn_ic.Sub_Total_Internet_Charges=curr_ic.Sub_Total_Internet_Charges;
-															cn_ic.Tax_Internet_Charges=curr_ic.Tax_Internet_Charges;
-															cn_ic.Tax_Type_Internet_Charges=curr_ic.Tax_Type_Internet_Charges;
-															cn_ic.Tax_Pct_Internet_Charges=curr_ic.Tax_Pct_Internet_Charges;
-															cn_ic.Tax_Amount_Internet_Charges=curr_ic.Tax_Amount_Internet_Charges;
-															cn_ic.Total_Internet_Charges=curr_ic.Total_Internet_Charges;
-															cn_ic.Business_Segment_Internet_Charges=curr_ic.Business_Segment_Internet_Charges;
-															cn_ic.Business_Unit_Internet_Charges=curr_ic.Business_Unit_Internet_Charges;
-															cn_ic.Circuit_ID_Internet_Charges=curr_ic.Circuit_ID_Internet_Charges;
-															cn_ic.Circuit_ID_Type_Internet_Charges=curr_ic.Circuit_ID_Type_Internet_Charges;
+															cn_ic.Item_Internet_Charges=row.get("Item_Internet_Charges");
+															cn_ic.Item_Code_Internet_Charges=row.get("Item_Code_Internet_Charges");
+															cn_ic.Classification_Codes_Internet_Charges=row.get("Classification_Codes_Internet_Charges");
+															cn_ic.Description_Internet_Charges=row.get("Description_Internet_Charges");
+															cn_ic.Quantity_Internet_Charges=row.get("Quantity_Internet_Charges");
+															cn_ic.Unit_Price_Internet_Charges=row.get("Unit_Price_Internet_Charges");
+															cn_ic.Sub_Total_Internet_Charges=row.get("Sub_Total_Internet_Charges");
+															cn_ic.Tax_Internet_Charges=row.get("Tax_Internet_Charges");
+															cn_ic.Tax_Type_Internet_Charges=row.get("Tax_Type_Internet_Charges");
+															cn_ic.Tax_Pct_Internet_Charges=row.get("Tax_Pct_Internet_Charges");
+															cn_ic.Tax_Amount_Internet_Charges=row.get("Tax_Amount_Internet_Charges");
+															cn_ic.Total_Internet_Charges=row.get("Total_Internet_Charges");
+															cn_ic.Business_Segment_Internet_Charges=row.get("Business_Segment_Internet_Charges");
+															cn_ic.Business_Unit_Internet_Charges=row.get("Business_Unit_Internet_Charges");
+															cn_ic.Circuit_ID_Internet_Charges=row.get("Circuit_ID_Internet_Charges");
+															cn_ic.Circuit_ID_Type_Internet_Charges=row.get("Circuit_ID_Type_Internet_Charges");
 															input.Internet_Charges.insert(cn_ic);
 														}
-														for each  curr_cc in ref_invoice.Call_Charges
+														for each  row in prefill_data.get("call_charges_rows")
 														{
 															cn_cc = Credit_Note.Call_Charges();
-															cn_cc.Item_Call_Charges=curr_cc.Item_Call_Charges;
-															cn_cc.Item_Code_Call_Charges=curr_cc.Item_Code_Call_Charges;
-															cn_cc.Classification_Codes_Call_Charges=curr_cc.Classification_Codes_Call_Charges;
-															cn_cc.Description_Call_Charges=curr_cc.Description_Call_Charges;
-															cn_cc.Quantity_Call_Charges=curr_cc.Quantity_Call_Charges;
-															cn_cc.Unit_Price_Call_Charges=curr_cc.Unit_Price_Call_Charges;
-															cn_cc.Sub_Total_Call_Charges=curr_cc.Sub_Total_Call_Charges;
-															cn_cc.Tax_Call_Charges=curr_cc.Tax_Call_Charges;
-															cn_cc.Tax_Type_Call_Charges=curr_cc.Tax_Type_Call_Charges;
-															cn_cc.Tax_Pct_Call_Charges=curr_cc.Tax_Pct_Call_Charges;
-															cn_cc.Tax_Amount_Call_Charges=curr_cc.Tax_Amount_Call_Charges;
-															cn_cc.Total_Call_Charges=curr_cc.Total_Call_Charges;
-															cn_cc.Business_Segment_Call_Charges=curr_cc.Business_Segment_Call_Charges;
-															cn_cc.Business_Unit_Call_Charges=curr_cc.Business_Unit_Call_Charges;
-															cn_cc.Circuit_ID_Call_Charges=curr_cc.Circuit_ID_Call_Charges;
-															cn_cc.Circuit_ID_Type_Call_Charges=curr_cc.Circuit_ID_Type_Call_Charges;
+															cn_cc.Item_Call_Charges=row.get("Item_Call_Charges");
+															cn_cc.Item_Code_Call_Charges=row.get("Item_Code_Call_Charges");
+															cn_cc.Classification_Codes_Call_Charges=row.get("Classification_Codes_Call_Charges");
+															cn_cc.Description_Call_Charges=row.get("Description_Call_Charges");
+															cn_cc.Quantity_Call_Charges=row.get("Quantity_Call_Charges");
+															cn_cc.Unit_Price_Call_Charges=row.get("Unit_Price_Call_Charges");
+															cn_cc.Sub_Total_Call_Charges=row.get("Sub_Total_Call_Charges");
+															cn_cc.Tax_Call_Charges=row.get("Tax_Call_Charges");
+															cn_cc.Tax_Type_Call_Charges=row.get("Tax_Type_Call_Charges");
+															cn_cc.Tax_Pct_Call_Charges=row.get("Tax_Pct_Call_Charges");
+															cn_cc.Tax_Amount_Call_Charges=row.get("Tax_Amount_Call_Charges");
+															cn_cc.Total_Call_Charges=row.get("Total_Call_Charges");
+															cn_cc.Business_Segment_Call_Charges=row.get("Business_Segment_Call_Charges");
+															cn_cc.Business_Unit_Call_Charges=row.get("Business_Unit_Call_Charges");
+															cn_cc.Circuit_ID_Call_Charges=row.get("Circuit_ID_Call_Charges");
+															cn_cc.Circuit_ID_Type_Call_Charges=row.get("Circuit_ID_Type_Call_Charges");
 															input.Call_Charges.insert(cn_cc);
 														}
 														input.User_Input_Trigger = !input.User_Input_Trigger;
 													}
-													ref_stage = Invoice[ID == input.Reference_Invoice].Blueprint.Current_Stage;
-													if(ref_stage == "Sent" || ref_stage == "Overdue")
+													else
 													{
-														input.Credit_Mode = "Mode A - Debt Reduction";
+														prefill_data = thisapp.credit_note.prefill_from_reference_invoice(input.Reference_Invoice);
 													}
-													else if(ref_stage == "Partially Paid" || ref_stage == "Paid")
+													if(!prefill_data.get("credit_eligible"))
 													{
-														input.Credit_Mode = "Mode B - Open Credit";
+														ref_stage = prefill_data.get("ref_stage");
+														clear Credit_Mode;
+														alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note. Choose a different invoice.";
 													}
 													else
 													{
-														invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
-														clear Reference_Invoice;
-														clear Credit_Mode;
-														input.Reference_Invoice:ui.add(invoice_id_list);
-														alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note. Choose a different invoice.";
+														input.Credit_Mode = prefill_data.get("credit_mode");
 													}
 												}
 											}
@@ -32033,6 +32166,149 @@
 					actions  (Billing_Cycle != "Monthly")
 					{
 						hide Bill_Every;
+					}
+				}
+
+			}
+			Handle_Convert_Prefill as "Handle Convert Prefill"
+			{
+				type =  form
+				form = Credit_Note
+
+				record event = on add
+
+				on load
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(input.Reference_Invoice != null)
+										{
+											ref_invoice_id = input.Reference_Invoice;
+											prefill_data = thisapp.credit_note.prefill_from_reference_invoice(ref_invoice_id);
+											if(prefill_data.get("found"))
+											{
+												// Re-commit Reference_Invoice so the lookup resolves and displays correctly
+												input.Reference_Invoice = ref_invoice_id;
+												// Customer block (do NOT re-set input.Customer — it is already set by URL param;
+												// re-setting it fires Handle_Customer_Name_Chan3 which clears Reference_Invoice
+												// and overwrites fields we are about to copy from the invoice)
+												header = prefill_data.get("header");
+												input.Customer_Name = header.get("Customer_Name");
+												input.Customer_TIN = header.get("Customer_TIN");
+												input.Customer_ID_Type = header.get("Customer_ID_Type");
+												input.Customer_Registration_Identification_Passport_Number = header.get("Customer_Registration_Identification_Passport_Number");
+												input.Customer_SST_Registration_Number = header.get("Customer_SST_Registration_Number");
+												input.Customer_Code = header.get("Customer_Code");
+												input.Customer_E_mail = header.get("Customer_E_mail");
+												input.Customer_Telephone_Number = header.get("Customer_Telephone_Number");
+												input.Customer_Street = header.get("Customer_Street");
+												input.Customer_City = header.get("Customer_City");
+												input.Customer_Postcode = header.get("Customer_Postcode");
+												input.Customer_Country = header.get("Customer_Country");
+												input.Customer_State = header.get("Customer_State");
+												input.Delivery_Street = header.get("Delivery_Street");
+												input.Delivery_City = header.get("Delivery_City");
+												input.Delivery_Postcode = header.get("Delivery_Postcode");
+												input.Delivery_Country = header.get("Delivery_Country");
+												input.Delivery_State = header.get("Delivery_State");
+												input.Subscriptions = header.get("Subscriptions");
+												input.Invoice_For_Usage = header.get("Invoice_For_Usage");
+												input.Payment_Term = header.get("Payment_Term");
+												input.Enable_Reminder = header.get("Enable_Reminder");
+												input.Charge_Category = header.get("Charge_Category");
+												input.Announcement = header.get("Announcement");
+												input.Attachment = header.get("Attachment");
+												input.Invoice_Currency = header.get("Invoice_Currency");
+												input.Exchange_Rate = header.get("Exchange_Rate");
+												input.Payable_To = header.get("Payable_To");
+												input.Invoice_Date = zoho.currentdate;
+												input.Due_Date = zoho.currentdate.addDay(prefill_data.get("payment_term_days"));
+												input.Credits_Used = 0;
+												input.Refund = 0;
+												// Subform row objects must be constructed in the workflow context
+												clear Monthly_Rental;
+												clear Internet_Charges;
+												clear Call_Charges;
+												for each  row in prefill_data.get("monthly_rental_rows")
+												{
+													cn_mr = Credit_Note.Monthly_Rental();
+													cn_mr.Item_Monthly_Rental=row.get("Item_Monthly_Rental");
+													cn_mr.Item_Code_Monthly_Rental=row.get("Item_Code_Monthly_Rental");
+													cn_mr.Classification_Codes_Monthly_Rental=row.get("Classification_Codes_Monthly_Rental");
+													cn_mr.Description_Monthly_Rental=row.get("Description_Monthly_Rental");
+													cn_mr.Quantity_Monthly_Rental=row.get("Quantity_Monthly_Rental");
+													cn_mr.Unit_Price_Monthly_Rental=row.get("Unit_Price_Monthly_Rental");
+													cn_mr.Sub_Total_Monthly_Rental=row.get("Sub_Total_Monthly_Rental");
+													cn_mr.Tax_Monthly_Rental=row.get("Tax_Monthly_Rental");
+													cn_mr.Tax_Type_Monthly_Rental=row.get("Tax_Type_Monthly_Rental");
+													cn_mr.Tax_Pct_Monthly_Rental=row.get("Tax_Pct_Monthly_Rental");
+													cn_mr.Tax_Amount_Monthly_Rental=row.get("Tax_Amount_Monthly_Rental");
+													cn_mr.Total_Monthly_Rental=row.get("Total_Monthly_Rental");
+													cn_mr.Business_Segment_Monthly_Rental=row.get("Business_Segment_Monthly_Rental");
+													cn_mr.Business_Unit_Monthly_Rental=row.get("Business_Unit_Monthly_Rental");
+													cn_mr.Circuit_ID_Monthly_Rental=row.get("Circuit_ID_Monthly_Rental");
+													cn_mr.Circuit_ID_Type_Monthly_Rental=row.get("Circuit_ID_Type_Monthly_Rental");
+													input.Monthly_Rental.insert(cn_mr);
+												}
+												for each  row in prefill_data.get("internet_charges_rows")
+												{
+													cn_ic = Credit_Note.Internet_Charges();
+													cn_ic.Item_Internet_Charges=row.get("Item_Internet_Charges");
+													cn_ic.Item_Code_Internet_Charges=row.get("Item_Code_Internet_Charges");
+													cn_ic.Classification_Codes_Internet_Charges=row.get("Classification_Codes_Internet_Charges");
+													cn_ic.Description_Internet_Charges=row.get("Description_Internet_Charges");
+													cn_ic.Quantity_Internet_Charges=row.get("Quantity_Internet_Charges");
+													cn_ic.Unit_Price_Internet_Charges=row.get("Unit_Price_Internet_Charges");
+													cn_ic.Sub_Total_Internet_Charges=row.get("Sub_Total_Internet_Charges");
+													cn_ic.Tax_Internet_Charges=row.get("Tax_Internet_Charges");
+													cn_ic.Tax_Type_Internet_Charges=row.get("Tax_Type_Internet_Charges");
+													cn_ic.Tax_Pct_Internet_Charges=row.get("Tax_Pct_Internet_Charges");
+													cn_ic.Tax_Amount_Internet_Charges=row.get("Tax_Amount_Internet_Charges");
+													cn_ic.Total_Internet_Charges=row.get("Total_Internet_Charges");
+													cn_ic.Business_Segment_Internet_Charges=row.get("Business_Segment_Internet_Charges");
+													cn_ic.Business_Unit_Internet_Charges=row.get("Business_Unit_Internet_Charges");
+													cn_ic.Circuit_ID_Internet_Charges=row.get("Circuit_ID_Internet_Charges");
+													cn_ic.Circuit_ID_Type_Internet_Charges=row.get("Circuit_ID_Type_Internet_Charges");
+													input.Internet_Charges.insert(cn_ic);
+												}
+												for each  row in prefill_data.get("call_charges_rows")
+												{
+													cn_cc = Credit_Note.Call_Charges();
+													cn_cc.Item_Call_Charges=row.get("Item_Call_Charges");
+													cn_cc.Item_Code_Call_Charges=row.get("Item_Code_Call_Charges");
+													cn_cc.Classification_Codes_Call_Charges=row.get("Classification_Codes_Call_Charges");
+													cn_cc.Description_Call_Charges=row.get("Description_Call_Charges");
+													cn_cc.Quantity_Call_Charges=row.get("Quantity_Call_Charges");
+													cn_cc.Unit_Price_Call_Charges=row.get("Unit_Price_Call_Charges");
+													cn_cc.Sub_Total_Call_Charges=row.get("Sub_Total_Call_Charges");
+													cn_cc.Tax_Call_Charges=row.get("Tax_Call_Charges");
+													cn_cc.Tax_Type_Call_Charges=row.get("Tax_Type_Call_Charges");
+													cn_cc.Tax_Pct_Call_Charges=row.get("Tax_Pct_Call_Charges");
+													cn_cc.Tax_Amount_Call_Charges=row.get("Tax_Amount_Call_Charges");
+													cn_cc.Total_Call_Charges=row.get("Total_Call_Charges");
+													cn_cc.Business_Segment_Call_Charges=row.get("Business_Segment_Call_Charges");
+													cn_cc.Business_Unit_Call_Charges=row.get("Business_Unit_Call_Charges");
+													cn_cc.Circuit_ID_Call_Charges=row.get("Circuit_ID_Call_Charges");
+													cn_cc.Circuit_ID_Type_Call_Charges=row.get("Circuit_ID_Type_Call_Charges");
+													input.Call_Charges.insert(cn_cc);
+												}
+												if(!prefill_data.get("credit_eligible"))
+												{
+													ref_stage = prefill_data.get("ref_stage");
+													alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note.";
+													clear Reference_Invoice;
+												}
+												else
+												{
+													input.Credit_Mode = prefill_data.get("credit_mode");
+												}
+												input.User_Input_Trigger = !input.User_Input_Trigger;
+												input.Credits_Remaining = prefill_data.get("grand_total");
+											}
+										}
+						)
 					}
 				}
 
@@ -35681,13 +35957,9 @@
 					{
 					on click
 					(
-										errorMessage = "";
+						errorMessage = "";
 										source_stage = input.Blueprint.Current_Stage;
-										if(source_stage == "Sent" || source_stage == "Overdue" || source_stage == "Partially Paid" || source_stage == "Paid")
-										{
-											// eligible stage
-										}
-										else
+										if(source_stage != "Sent" && source_stage != "Overdue" && source_stage != "Partially Paid" && source_stage != "Paid")
 										{
 											errorMessage = "Invoice stage '" + source_stage + "' is not eligible for a credit note.";
 										}
@@ -35695,7 +35967,7 @@
 										{
 											ref_invoice_id = input.ID;
 											original_total = input.Grand_Total;
-											crediting_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Closed" || Blueprint.Current_Stage == "Open" || Blueprint.Current_Stage == "Pending Approval")];
+											crediting_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Closed" || Blueprint.Current_Stage == "Open" || Blueprint.Current_Stage == "Pending Approval"];
 											crediting_cn_total = 0;
 											for each  cn in crediting_cn_list
 											{
@@ -35709,15 +35981,7 @@
 										}
 										if(errorMessage == "")
 										{
-											ref_uuid = input.Invoice_UUID;
-											if(ref_uuid == null || ref_uuid == "")
-											{
-												errorMessage = "Reference Invoice does not have a valid LHDN UUID. Submit the invoice to LHDN first, then create the credit note.";
-											}
-										}
-										if(errorMessage == "")
-										{
-											openURL("#Form:Credit_Note?viewLinkName=Credit_Notes&Reference_Invoice=" + input.ID + "&Customer=" + input.Customer,"popup window");
+											openURL("#Form:Credit_Note?viewLinkName=Credit_Notes&Reference_Invoice=" + input.ID + "&Customer=" + input.Customer + "&Customer_Code=" + input.Customer_Code,"popup window");
 										}
 										else
 										{
