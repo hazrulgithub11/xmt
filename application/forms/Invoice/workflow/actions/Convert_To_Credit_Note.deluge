@@ -16,6 +16,22 @@ else
 }
 if(errorMessage == "")
 {
+	ref_invoice_id = input.ID;
+	original_total = input.Grand_Total;
+	crediting_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Closed" || Blueprint.Current_Stage == "Open" || Blueprint.Current_Stage == "Pending Approval")];
+	crediting_cn_total = 0;
+	for each  cn in crediting_cn_list
+	{
+		crediting_cn_total = crediting_cn_total + cn.Grand_Total;
+	}
+	remaining_creditable = original_total - crediting_cn_total;
+	if(remaining_creditable <= 0)
+	{
+		errorMessage = "Cannot convert to credit note: no remaining creditable amount for this invoice. Already credited: RM " + crediting_cn_total + " of RM " + original_total + ".";
+	}
+}
+if(errorMessage == "")
+{
 try 
 {
 	create_credit_note_id = insert into Credit_Note

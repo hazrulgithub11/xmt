@@ -169,18 +169,18 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 						cancel submit;
 					}
 				}
-				// Cumulative cap: approved CNs on same reference invoice must not exceed original invoice total
+				// Cumulative cap: issued CNs on same reference invoice must not exceed original invoice total
 				if(input.Reference_Invoice != null && (input.ID == null || cn_stage == "Draft" || cn_stage == "Rejected" || cn_stage == "Pending Approval"))
 				{
 					ref_invoice_id = input.Reference_Invoice;
 					original_total = Invoice[ID == ref_invoice_id].Grand_Total;
-					approved_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && Blueprint.Current_Stage == "Approved" && ID != input.ID];
-					approved_cn_total = 0;
-					for each  cn in approved_cn_list
+					crediting_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Closed" || Blueprint.Current_Stage == "Open" || Blueprint.Current_Stage == "Pending Approval") && ID != input.ID];
+					crediting_cn_total = 0;
+					for each  cn in crediting_cn_list
 					{
-						approved_cn_total = approved_cn_total + cn.Grand_Total;
+						crediting_cn_total = crediting_cn_total + cn.Grand_Total;
 					}
-					remaining_creditable = original_total - approved_cn_total;
+					remaining_creditable = original_total - crediting_cn_total;
 					// Sum line totals — input.Grand_Total may be stale/0 during on validate before save
 					cn_grand_total = 0;
 					for each  curr_mr in input.Monthly_Rental

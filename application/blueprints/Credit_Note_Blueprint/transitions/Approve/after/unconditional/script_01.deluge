@@ -3,17 +3,17 @@ if(input.Reference_Invoice != null)
 {
 	ref_invoice_id = input.Reference_Invoice;
 	original_total = Invoice[ID == ref_invoice_id].Grand_Total;
-	approved_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && Blueprint.Current_Stage == "Approved" && ID != input.ID];
-	approved_cn_total = 0;
-	for each  cn in approved_cn_list
+	crediting_cn_list = Credit_Note[Reference_Invoice == ref_invoice_id && (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Closed" || Blueprint.Current_Stage == "Open" || Blueprint.Current_Stage == "Pending Approval") && ID != input.ID];
+	crediting_cn_total = 0;
+	for each  cn in crediting_cn_list
 	{
-		approved_cn_total = approved_cn_total + cn.Grand_Total;
+		crediting_cn_total = crediting_cn_total + cn.Grand_Total;
 	}
-	remaining_creditable = original_total - approved_cn_total;
+	remaining_creditable = original_total - crediting_cn_total;
 	if(input.Grand_Total > remaining_creditable)
 	{
 		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
-		info "Approval rejected: cumulative credit note cap exceeded. Original invoice total: " + original_total + ", Already approved: " + approved_cn_total + ", This CN: " + input.Grand_Total + ", Remaining: " + remaining_creditable;
+		info "Approval rejected: cumulative credit note cap exceeded. Original invoice total: " + original_total + ", Already credited: " + crediting_cn_total + ", This CN: " + input.Grand_Total + ", Remaining: " + remaining_creditable;
 		return;
 	}
 }
@@ -244,4 +244,88 @@ if(error_messages.size() > 0)
 	info error_message;
 	thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
 	return;
+}
+// Mode A auto-apply: debt reduction on reference invoice, then close CN
+if(input.Credit_Mode == "Mode A - Debt Reduction")
+{
+	ref_invoice_id = input.Reference_Invoice;
+	ref_invoice = Invoice[ID == ref_invoice_id];
+	cn_amount = input.Grand_Total;
+	apply_amount = 0;
+	if(ifnull(ref_invoice.Amount_Due,0) > 0)
+	{
+		apply_amount = cn_amount;
+		if(apply_amount > ref_invoice.Amount_Due)
+		{
+			apply_amount = ref_invoice.Amount_Due;
+		}
+		insert into Apply_Credit_To_Invoice_Line
+		[
+			Invoice=ref_invoice_id
+			Credit_Note=input.ID
+			Amount_Applied_Date=today
+			Amount_Applied=apply_amount
+			Added_User=zoho.loginuser
+		]
+		curr_input_invoice = Invoice[ID == ref_invoice_id];
+		curr_input_invoice.Credits_Applied=null;
+		curr_apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Invoice == ref_invoice_id];
+		curr_credits_applied_total = 0;
+		for each  curr_apply_credit_to_invoice_line in curr_apply_credit_to_invoice_line_list
+		{
+			curr_new_credits_applied_row = Invoice.Credits_Applied();
+			curr_new_credits_applied_row.CA_Apply_Credit_To_Invoice_Line_ID=curr_apply_credit_to_invoice_line.ID;
+			curr_new_credits_applied_row.CA_Date=curr_apply_credit_to_invoice_line.Amount_Applied_Date;
+			curr_new_credits_applied_row.CA_Credit_Note=curr_apply_credit_to_invoice_line.Credit_Note;
+			curr_new_credits_applied_row.CA_Total=curr_apply_credit_to_invoice_line.Amount_Applied;
+			curr_credits_applied_total = curr_credits_applied_total + curr_apply_credit_to_invoice_line.Amount_Applied;
+			curr_input_invoice.Credits_Applied.insert(curr_new_credits_applied_row);
+		}
+		curr_input_invoice.Credits_Applied_Total=curr_credits_applied_total;
+		curr_input_invoice.Amount_Due=curr_input_invoice.Grand_Total - curr_input_invoice.Amount_Paid - curr_credits_applied_total;
+		if(ifnull(curr_input_invoice.Amount_Due,0) <= 0)
+		{
+			thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Paid",curr_input_invoice.ID);
+		}
+		else if(ifnull(curr_input_invoice.Amount_Paid,0) > 0 || ifnull(curr_credits_applied_total,0) > 0)
+		{
+			thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Partially Paid",curr_input_invoice.ID);
+		}
+		else if(curr_input_invoice.Due_Date > zoho.currentdate)
+		{
+			thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",curr_input_invoice.ID);
+		}
+		else
+		{
+			thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",curr_input_invoice.ID);
+		}
+		thisapp.invoice.calculate_invoice_previous_balance_and_total_amount_due(curr_input_invoice.ID);
+		thisapp.tenancy.calculate_opening_balance_by_tenancy(curr_input_invoice.Customer_Code);
+		current_date_time = zoho.currenttime;
+		log_row = Invoice.Invoice_Related_List();
+		log_row.USERNAME=zoho.loginuser;
+		log_row.INVOICE_NUMBER=ref_invoice.Invoice_No;
+		log_row.Related_List_Date=current_date_time.toDate();
+		log_row.Related_List_Time=current_date_time.toTime();
+		log_row.MESSAGE="Credit note " + input.Invoice_No + " auto-applied (Mode A). Amount: " + apply_amount;
+		curr_input_invoice.Invoice_Related_List.insert(log_row);
+	}
+	input_credit_note = Credit_Note[ID == input.ID];
+	input_credit_note.Credit_Applied_Invoices=null;
+	apply_credit_to_invoice_line_list = Apply_Credit_To_Invoice_Line[Credit_Note == input.ID];
+	credits_used_total = 0;
+	for each  curr_apply_credit_to_invoice_line in apply_credit_to_invoice_line_list
+	{
+		curr_new_credit_applied_invoices_row = Credit_Note.Credit_Applied_Invoices();
+		curr_new_credit_applied_invoices_row.CAI_Apply_Credit_To_Invoice_Line_ID=curr_apply_credit_to_invoice_line.ID;
+		curr_new_credit_applied_invoices_row.CAI_Date=curr_apply_credit_to_invoice_line.Amount_Applied_Date;
+		curr_new_credit_applied_invoices_row.CAI_Invoice_No=curr_apply_credit_to_invoice_line.Invoice;
+		curr_new_credit_applied_invoices_row.CAI_Amount_Credited=curr_apply_credit_to_invoice_line.Amount_Applied;
+		credits_used_total = credits_used_total + curr_apply_credit_to_invoice_line.Amount_Applied;
+		input_credit_note.Credit_Applied_Invoices.insert(curr_new_credit_applied_invoices_row);
+	}
+	input_credit_note.Credits_Used=credits_used_total;
+	input_credit_note.Credits_Remaining=0;
+	thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
+	info "Mode A auto-apply complete. CN " + input.ID + " closed. Applied: " + apply_amount;
 }
