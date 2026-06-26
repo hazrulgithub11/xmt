@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 25-Jun-2026 19:35:06
+ * Generated on : 25-Jun-2026 19:44:36
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -1097,16 +1097,6 @@
 				values  = Invoice.ID
     			displayformat = [Invoice_No]
 				sortorder = ascending
-	 			row = 4
-	 			column = 2   
-				width = medium
-			)
-			Credit_Mode
-			(
-				type = picklist
-				displayname = "Credit Mode"
-				maxchar = 100
-				values = {"Mode A - Debt Reduction","Mode B - Open Credit"}
 	 			row = 4
 	 			column = 2   
 				width = medium
@@ -13275,7 +13265,6 @@
 				Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 				Payable_To as "Payable To"
 				Reference_Invoice as "Reference Invoice"
-				Credit_Mode as "Credit Mode"
 				Rejection_Reason as "Rejection Reason"
 				User_Input_Trigger
 				Credits_Used as "Credits Used"
@@ -13486,7 +13475,6 @@
 				Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 				Payable_To as "Payable To"
 				Reference_Invoice as "Reference Invoice"
-				Credit_Mode as "Credit Mode"
 				Rejection_Reason as "Rejection Reason"
 				User_Input_Trigger
 			)
@@ -13974,24 +13962,6 @@
                  		}
                  	}
                  	return sortedList;
-                 }
-				 string credit_note.credit_mode_from_invoice_stage(int invoice_id)
-                 {
-                 	ref_invoice = Invoice[ID == invoice_id];
-                 	if(ref_invoice.ID == null)
-                 	{
-                 		return "";
-                 	}
-                 	ref_stage = ref_invoice.Blueprint.Current_Stage;
-                 	if(ref_stage == "Sent" || ref_stage == "Overdue")
-                 	{
-                 		return "Mode A - Debt Reduction";
-                 	}
-                 	else if(ref_stage == "Partially Paid" || ref_stage == "Paid")
-                 	{
-                 		return "Mode B - Open Credit";
-                 	}
-                 	return "";
                  }
 				 string credit_note.generate_credit_note_no()
                  {
@@ -24865,7 +24835,6 @@
 										disable Delivery_Country;
 										// Invoice info
 										disable Invoice_No;
-										disable Credit_Mode;
 										disable Base_Currency;
 										disable Invoice_Currency;
 										disable Sub_Total_Monthly_Rental;
@@ -31984,7 +31953,6 @@
 										{
 											if(input.Reference_Invoice.Invoice_UUID == null || input.Reference_Invoice.Invoice_UUID == "" || input.Reference_Invoice.Invoice_Public_Link == null || input.Reference_Invoice.Invoice_Public_Link == "")
 											{
-												clear Credit_Mode;
 												alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
 											}
 											else
@@ -32109,12 +32077,7 @@
 													if(!prefill_data.get("credit_eligible"))
 													{
 														ref_stage = prefill_data.get("ref_stage");
-														clear Credit_Mode;
 														alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note. Choose a different invoice.";
-													}
-													else
-													{
-														input.Credit_Mode = prefill_data.get("credit_mode");
 													}
 												}
 											}
@@ -32288,10 +32251,6 @@
 													ref_stage = prefill_data.get("ref_stage");
 													alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note.";
 													clear Reference_Invoice;
-												}
-												else
-												{
-													input.Credit_Mode = prefill_data.get("credit_mode");
 												}
 												input.User_Input_Trigger = !input.User_Input_Trigger;
 												input.Credits_Remaining = prefill_data.get("grand_total");
@@ -41072,7 +41031,6 @@
 								Invoice_No as "Invoice No."
 								Blueprint.Current_Stage as "Status"
 								Reference_Invoice as "Reference Invoice"
-								Credit_Mode as "Credit Mode"
 								Supplier_Name as "Supplier Name"
 								Customer_Name as "Customer Name"
 								Invoice_Date as "Invoice Date"

@@ -13,7 +13,7 @@ if(input.Reference_Invoice != null)
 	if(input.Grand_Total > remaining_creditable)
 	{
 		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
-		info "Approval rejected: cumulative credit note cap exceeded. Original invoice total: " + original_total + ", Already credited: " + crediting_cn_total + ", This CN: " + input.Grand_Total + ", Remaining: " + remaining_creditable;
+		info "Approval blocked for credit note " + input.Invoice_No + ": the total credit notes for this invoice would exceed the original invoice amount of RM " + original_total + ". Already credited: RM " + crediting_cn_total + ". This credit note: RM " + input.Grand_Total + ". Maximum remaining creditable: RM " + remaining_creditable + ". Please reduce the credit note amount and resubmit.";
 		return;
 	}
 }
@@ -332,11 +332,11 @@ if(input.Reference_Invoice != null)
 	if(credits_remaining <= 0)
 	{
 		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
-		info "Unified auto-apply complete. CN " + input.ID + " closed. Applied: " + apply_amount;
+		info "Credit note " + input.Invoice_No + " approved. RM " + apply_amount + " applied to reference invoice. Credit note is now Closed.";
 	}
 	else
 	{
 		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input.ID);
-		info "Unified auto-apply complete. CN " + input.ID + " open. Applied: " + apply_amount + ", Remaining: " + credits_remaining;
+		info "Credit note " + input.Invoice_No + " approved. RM " + apply_amount + " applied to reference invoice. RM " + credits_remaining + " remaining credit is available for future use. Credit note is now Open.";
 	}
 }

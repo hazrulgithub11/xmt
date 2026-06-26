@@ -25,7 +25,7 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 				}
 				else
 				{
-					alert "A Credit Note must be linked to a reference invoice. Please select a Reference_Invoice.";
+					alert "A credit note must be linked to a reference invoice. Please select a reference invoice before saving.";
 					cancel submit;
 				}
 				cn_stage = input.Blueprint.Current_Stage;

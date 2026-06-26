@@ -125,7 +125,7 @@ Handle_Convert_Prefill as "Handle Convert Prefill"
 						if(!prefill_data.get("credit_eligible"))
 						{
 							ref_stage = prefill_data.get("ref_stage");
-							alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note.";
+							alert "A credit note cannot be raised against an invoice with status '" + ref_stage + "'. Only Sent, Overdue, Partially Paid, or Paid invoices are eligible. Please select a different invoice.";
 							clear Reference_Invoice;
 						}
 						input.User_Input_Trigger = !input.User_Input_Trigger;
