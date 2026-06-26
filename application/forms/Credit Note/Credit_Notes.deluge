@@ -69,7 +69,6 @@ list Credit_Notes
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Payable_To as "Payable To"
 		Reference_Invoice as "Reference Invoice"
-		Credit_Mode as "Credit Mode"
 		Rejection_Reason as "Rejection Reason"
 		User_Input_Trigger
 		Credits_Used as "Credits Used"
@@ -121,9 +120,8 @@ list Credit_Notes
 				(
 					Invoice_No as "Invoice No."
 					Blueprint.Current_Stage as "Status"
-					Reference_Invoice as "Reference Invoice"
-					Credit_Mode as "Credit Mode"
-					Supplier_Name as "Supplier Name"
+				Reference_Invoice as "Reference Invoice"
+				Supplier_Name as "Supplier Name"
 					Customer_Name as "Customer Name"
 					Invoice_Date as "Invoice Date"
 					Due_Date as "Due Date"

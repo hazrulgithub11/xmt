@@ -128,10 +128,6 @@ Handle_Convert_Prefill as "Handle Convert Prefill"
 							alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note.";
 							clear Reference_Invoice;
 						}
-						else
-						{
-							input.Credit_Mode = prefill_data.get("credit_mode");
-						}
 						input.User_Input_Trigger = !input.User_Input_Trigger;
 						input.Credits_Remaining = prefill_data.get("grand_total");
 					}

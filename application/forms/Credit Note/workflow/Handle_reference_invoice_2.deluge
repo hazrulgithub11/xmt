@@ -15,8 +15,7 @@ Handle_reference_invoice_2 as "Handle reference invoice selection"
 				{
 					if(input.Reference_Invoice.Invoice_UUID == null || input.Reference_Invoice.Invoice_UUID == "" || input.Reference_Invoice.Invoice_Public_Link == null || input.Reference_Invoice.Invoice_Public_Link == "")
 					{
-						clear Credit_Mode;
-						alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
+					alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
 					}
 					else
 					{
@@ -137,16 +136,11 @@ Handle_reference_invoice_2 as "Handle reference invoice selection"
 							{
 								prefill_data = thisapp.credit_note.prefill_from_reference_invoice(input.Reference_Invoice);
 							}
-							if(!prefill_data.get("credit_eligible"))
-							{
-								ref_stage = prefill_data.get("ref_stage");
-								clear Credit_Mode;
-								alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note. Choose a different invoice.";
-							}
-							else
-							{
-								input.Credit_Mode = prefill_data.get("credit_mode");
-							}
+						if(!prefill_data.get("credit_eligible"))
+						{
+							ref_stage = prefill_data.get("ref_stage");
+							alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note. Choose a different invoice.";
+						}
 						}
 					}
 				}
