@@ -29,23 +29,7 @@ Handle_Validation_Submiss2 as "Handle Validation Submission"
 					cancel submit;
 				}
 				cn_stage = input.Blueprint.Current_Stage;
-				if(input.ID == null || cn_stage == "Draft" || cn_stage == "Rejected")
-				{
-				if(input.Credit_Mode == null || input.Credit_Mode == "")
-				{
-					recovered_mode = thisapp.credit_note.credit_mode_from_invoice_stage(input.Reference_Invoice);
-					if(recovered_mode != "")
-					{
-						input.Credit_Mode = recovered_mode;
-					}
-					else
-					{
-						alert "Credit Mode could not be determined. Please re-select the Reference Invoice.";
-						cancel submit;
-					}
-				}
-				}
-				// Count Total Line Items
+			// Count Total Line Items
 				count_item = 0;
 				for each  curr_monthly_rental in input.Monthly_Rental
 				{

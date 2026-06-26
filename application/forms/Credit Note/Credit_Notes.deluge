@@ -88,7 +88,7 @@ list Credit_Notes
 	  			workflow = Apply_Credits_to_Invoices
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open") && (Credit_Mode == "Mode B - Open Credit" || Credit_Mode == null)
+				condition = Blueprint.Current_Stage == "Open"
 		)
 		"Submit Credit Note to LHDN"
 		(
@@ -108,7 +108,7 @@ list Credit_Notes
 	  			workflow = Create_Refund_Note_From_C
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open") && (Credit_Mode == "Mode B - Open Credit" || Credit_Mode == null)
+				condition = Blueprint.Current_Stage == "Open"
 		)
 	)
 	quickview

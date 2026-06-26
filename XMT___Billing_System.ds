@@ -1,6 +1,6 @@
 /*
  * Author       : xmttechnologiessdnbhd1
- * Generated on : 25-Jun-2026 04:40:45
+ * Generated on : 25-Jun-2026 19:13:12
  * Version      : 1.0
  */
  application "XMT : Billing System"
@@ -9169,7 +9169,7 @@
 				type = picklist
 				displayname = "Bill Every"
 				maxchar = 100
-				values = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","Last Day Of Month"}
+				values = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","Last Day Of Month"}
 	 			row = 2
 	 			column = 1   
 				width = medium
@@ -13294,7 +13294,7 @@
 	  			workflow = Apply_Credits_to_Invoices
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open" && Credit_Mode == "Mode B - Open Credit" || Credit_Mode == null)
+				condition = (Blueprint.Current_Stage == "Open")
 				)
 				"Submit Credit Note to LHDN"
 				(
@@ -13314,7 +13314,7 @@
 	  			workflow = Create_Refund_Note_From_C
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open" && Credit_Mode == "Mode B - Open Credit" || Credit_Mode == null)
+				condition = (Blueprint.Current_Stage == "Open")
 				)
 			)
 		}
@@ -14045,9 +14045,8 @@
                  	result.put("found",true);
                  	ref_stage = ref_invoice.Blueprint.Current_Stage;
                  	result.put("ref_stage",ref_stage);
-                 	credit_mode = thisapp.credit_note.credit_mode_from_invoice_stage(invoice_id);
-                 	result.put("credit_mode",credit_mode);
-                 	result.put("credit_eligible",credit_mode != "");
+                 	eligible_stages = {"Sent","Overdue","Partially Paid","Paid"};
+                 	result.put("credit_eligible",eligible_stages.contains(ref_stage));
                  	result.put("grand_total",ref_invoice.Grand_Total);
                  	result.put("payment_term_days",ref_invoice.Payment_Term.Days);
                  	// Header fields as a plain map
@@ -16702,8 +16701,6 @@
 										hide Next_Billing_Date;
 										hide Latest_Billing_Date;
 										hide Final_Billing_Date;
-										hide Prorate;
-										hide Prorate_Note;
 										hide User_Input_Trigger;
 										/* Subscription initialization */
 										if(input.ID == null)
@@ -25034,14 +25031,6 @@
 											cancel submit;
 										}
 										cn_stage = input.Blueprint.Current_Stage;
-										if(input.ID == null || cn_stage == "Draft" || cn_stage == "Rejected")
-										{
-											if(input.Credit_Mode == null || input.Credit_Mode == "")
-											{
-												alert "Credit Mode could not be determined. Please re-select the Reference Invoice.";
-												cancel submit;
-											}
-										}
 										// Count Total Line Items
 										count_item = 0;
 										for each  curr_monthly_rental in input.Monthly_Rental
@@ -32892,8 +32881,10 @@
 															thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
 															return;
 														}
-														// Mode A auto-apply: debt reduction on reference invoice, then close CN
-														if(input.Credit_Mode == "Mode A - Debt Reduction")
+														// Unified auto-apply: apply min(CN, Amount_Due) to reference invoice on approval.
+														// Credits_Remaining = CN amount - applied amount.
+														// CN → Closed if Credits_Remaining = 0, → Open if Credits_Remaining > 0.
+														if(input.Reference_Invoice != null)
 														{
 															ref_invoice_id = input.Reference_Invoice;
 															ref_invoice = Invoice[ID == ref_invoice_id];
@@ -32954,7 +32945,7 @@
 																log_row.INVOICE_NUMBER=ref_invoice.Invoice_No;
 																log_row.Related_List_Date=current_date_time.toDate();
 																log_row.Related_List_Time=current_date_time.toTime();
-																log_row.MESSAGE="Credit note " + input.Invoice_No + " auto-applied (Mode A). Amount: " + apply_amount;
+																log_row.MESSAGE="Credit note " + input.Invoice_No + " auto-applied. Amount: " + apply_amount;
 																curr_input_invoice.Invoice_Related_List.insert(log_row);
 															}
 															input_credit_note = Credit_Note[ID == input.ID];
@@ -32972,9 +32963,18 @@
 																input_credit_note.Credit_Applied_Invoices.insert(curr_new_credit_applied_invoices_row);
 															}
 															input_credit_note.Credits_Used=credits_used_total;
-															input_credit_note.Credits_Remaining=0;
-															thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
-															info "Mode A auto-apply complete. CN " + input.ID + " closed. Applied: " + apply_amount;
+															credits_remaining = cn_amount - credits_used_total;
+															input_credit_note.Credits_Remaining=credits_remaining;
+															if(credits_remaining <= 0)
+															{
+																thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
+																info "Unified auto-apply complete. CN " + input.ID + " closed. Applied: " + apply_amount;
+															}
+															else
+															{
+																thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input.ID);
+																info "Unified auto-apply complete. CN " + input.ID + " open. Applied: " + apply_amount + ", Remaining: " + credits_remaining;
+															}
 														}
 								)
 							}

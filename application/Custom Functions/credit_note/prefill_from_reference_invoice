@@ -10,9 +10,8 @@ map credit_note.prefill_from_reference_invoice(int invoice_id)
 	result.put("found",true);
 	ref_stage = ref_invoice.Blueprint.Current_Stage;
 	result.put("ref_stage",ref_stage);
-	credit_mode = thisapp.credit_note.credit_mode_from_invoice_stage(invoice_id);
-	result.put("credit_mode",credit_mode);
-	result.put("credit_eligible",credit_mode != "");
+	eligible_stages = {"Sent","Overdue","Partially Paid","Paid"};
+	result.put("credit_eligible",eligible_stages.contains(ref_stage));
 	result.put("grand_total",ref_invoice.Grand_Total);
 	result.put("payment_term_days",ref_invoice.Payment_Term.Days);
 	// Header fields as a plain map
