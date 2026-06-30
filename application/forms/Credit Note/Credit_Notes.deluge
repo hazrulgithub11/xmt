@@ -69,7 +69,6 @@ list Credit_Notes
 		Grand_Total_Base_Currency as "Grand Total (Base Currency)"
 		Payable_To as "Payable To"
 		Reference_Invoice as "Reference Invoice"
-		Credit_Mode as "Credit Mode"
 		Rejection_Reason as "Rejection Reason"
 		User_Input_Trigger
 		Credits_Used as "Credits Used"
@@ -88,7 +87,7 @@ list Credit_Notes
 	  			workflow = Apply_Credits_to_Invoices
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open") && (Credit_Mode == "Mode B - Open Credit" || Credit_Mode == null)
+				condition = Blueprint.Current_Stage == "Open"
 		)
 		"Submit Credit Note to LHDN"
 		(
@@ -108,7 +107,7 @@ list Credit_Notes
 	  			workflow = Create_Refund_Note_From_C
 				show action in view header = true
 				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Approved" || Blueprint.Current_Stage == "Open") && (Credit_Mode == "Mode B - Open Credit" || Credit_Mode == null)
+				condition = Blueprint.Current_Stage == "Open"
 		)
 	)
 	quickview
@@ -121,9 +120,8 @@ list Credit_Notes
 				(
 					Invoice_No as "Invoice No."
 					Blueprint.Current_Stage as "Status"
-					Reference_Invoice as "Reference Invoice"
-					Credit_Mode as "Credit Mode"
-					Supplier_Name as "Supplier Name"
+				Reference_Invoice as "Reference Invoice"
+				Supplier_Name as "Supplier Name"
 					Customer_Name as "Customer Name"
 					Invoice_Date as "Invoice Date"
 					Due_Date as "Due Date"

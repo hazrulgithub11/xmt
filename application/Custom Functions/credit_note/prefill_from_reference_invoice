@@ -1,0 +1,120 @@
+map credit_note.prefill_from_reference_invoice(int invoice_id)
+{
+	result = Map();
+	result.put("found",false);
+	ref_invoice = Invoice[ID == invoice_id];
+	if(ref_invoice.ID == null)
+	{
+		return result;
+	}
+	result.put("found",true);
+	ref_stage = ref_invoice.Blueprint.Current_Stage;
+	result.put("ref_stage",ref_stage);
+	eligible_stages = {"Sent","Overdue","Partially Paid","Paid"};
+	result.put("credit_eligible",eligible_stages.contains(ref_stage));
+	result.put("grand_total",ref_invoice.Grand_Total);
+	result.put("payment_term_days",ref_invoice.Payment_Term.Days);
+	// Header fields as a plain map
+	header = Map();
+	header.put("Customer_Name",ref_invoice.Customer_Name);
+	header.put("Customer_TIN",ref_invoice.Customer_TIN);
+	header.put("Customer_ID_Type",ref_invoice.Customer_ID_Type);
+	header.put("Customer_Registration_Identification_Passport_Number",ref_invoice.Customer_Registration_Identification_Passport_Number);
+	header.put("Customer_SST_Registration_Number",ref_invoice.Customer_SST_Registration_Number);
+	header.put("Customer_Code",ref_invoice.Customer_Code);
+	header.put("Customer_E_mail",ref_invoice.Customer_E_mail);
+	header.put("Customer_Telephone_Number",ref_invoice.Customer_Telephone_Number);
+	header.put("Customer_Street",ref_invoice.Customer_Street);
+	header.put("Customer_City",ref_invoice.Customer_City);
+	header.put("Customer_Postcode",ref_invoice.Customer_Postcode);
+	header.put("Customer_Country",ref_invoice.Customer_Country);
+	header.put("Customer_State",ref_invoice.Customer_State);
+	header.put("Delivery_Street",ref_invoice.Delivery_Street);
+	header.put("Delivery_City",ref_invoice.Delivery_City);
+	header.put("Delivery_Postcode",ref_invoice.Delivery_Postcode);
+	header.put("Delivery_Country",ref_invoice.Delivery_Country);
+	header.put("Delivery_State",ref_invoice.Delivery_State);
+	header.put("Subscriptions",ref_invoice.Subscriptions);
+	header.put("Invoice_For_Usage",ref_invoice.Invoice_For_Usage);
+	header.put("Payment_Term",ref_invoice.Payment_Term);
+	header.put("Enable_Reminder",ref_invoice.Enable_Reminder);
+	header.put("Charge_Category",ref_invoice.Charge_Category);
+	header.put("Announcement",ref_invoice.Announcement);
+	header.put("Attachment",ref_invoice.Attachment);
+	header.put("Invoice_Currency",ref_invoice.Invoice_Currency);
+	header.put("Exchange_Rate",ref_invoice.Exchange_Rate);
+	header.put("Payable_To",ref_invoice.Payable_To);
+	result.put("header",header);
+	// Line rows as plain Maps — caller must construct subform row objects
+	// (subform row objects created in a custom function cannot be inserted via input.Subform.insert())
+	mr_rows = List();
+	for each  curr_mr in ref_invoice.Monthly_Rental
+	{
+		row = Map();
+		row.put("Item_Monthly_Rental",curr_mr.Item_Monthly_Rental);
+		row.put("Item_Code_Monthly_Rental",curr_mr.Item_Code_Monthly_Rental);
+		row.put("Classification_Codes_Monthly_Rental",curr_mr.Classification_Codes_Monthly_Rental);
+		row.put("Description_Monthly_Rental",curr_mr.Description_Monthly_Rental);
+		row.put("Quantity_Monthly_Rental",curr_mr.Quantity_Monthly_Rental);
+		row.put("Unit_Price_Monthly_Rental",curr_mr.Unit_Price_Monthly_Rental);
+		row.put("Sub_Total_Monthly_Rental",curr_mr.Sub_Total_Monthly_Rental);
+		row.put("Tax_Monthly_Rental",curr_mr.Tax_Monthly_Rental);
+		row.put("Tax_Type_Monthly_Rental",curr_mr.Tax_Type_Monthly_Rental);
+		row.put("Tax_Pct_Monthly_Rental",curr_mr.Tax_Pct_Monthly_Rental);
+		row.put("Tax_Amount_Monthly_Rental",curr_mr.Tax_Amount_Monthly_Rental);
+		row.put("Total_Monthly_Rental",curr_mr.Total_Monthly_Rental);
+		row.put("Business_Segment_Monthly_Rental",curr_mr.Business_Segment_Monthly_Rental);
+		row.put("Business_Unit_Monthly_Rental",curr_mr.Business_Unit_Monthly_Rental);
+		row.put("Circuit_ID_Monthly_Rental",curr_mr.Circuit_ID_Monthly_Rental);
+		row.put("Circuit_ID_Type_Monthly_Rental",curr_mr.Circuit_ID_Type_Monthly_Rental);
+		mr_rows.add(row);
+	}
+	result.put("monthly_rental_rows",mr_rows);
+	ic_rows = List();
+	for each  curr_ic in ref_invoice.Internet_Charges
+	{
+		row = Map();
+		row.put("Item_Internet_Charges",curr_ic.Item_Internet_Charges);
+		row.put("Item_Code_Internet_Charges",curr_ic.Item_Code_Internet_Charges);
+		row.put("Classification_Codes_Internet_Charges",curr_ic.Classification_Codes_Internet_Charges);
+		row.put("Description_Internet_Charges",curr_ic.Description_Internet_Charges);
+		row.put("Quantity_Internet_Charges",curr_ic.Quantity_Internet_Charges);
+		row.put("Unit_Price_Internet_Charges",curr_ic.Unit_Price_Internet_Charges);
+		row.put("Sub_Total_Internet_Charges",curr_ic.Sub_Total_Internet_Charges);
+		row.put("Tax_Internet_Charges",curr_ic.Tax_Internet_Charges);
+		row.put("Tax_Type_Internet_Charges",curr_ic.Tax_Type_Internet_Charges);
+		row.put("Tax_Pct_Internet_Charges",curr_ic.Tax_Pct_Internet_Charges);
+		row.put("Tax_Amount_Internet_Charges",curr_ic.Tax_Amount_Internet_Charges);
+		row.put("Total_Internet_Charges",curr_ic.Total_Internet_Charges);
+		row.put("Business_Segment_Internet_Charges",curr_ic.Business_Segment_Internet_Charges);
+		row.put("Business_Unit_Internet_Charges",curr_ic.Business_Unit_Internet_Charges);
+		row.put("Circuit_ID_Internet_Charges",curr_ic.Circuit_ID_Internet_Charges);
+		row.put("Circuit_ID_Type_Internet_Charges",curr_ic.Circuit_ID_Type_Internet_Charges);
+		ic_rows.add(row);
+	}
+	result.put("internet_charges_rows",ic_rows);
+	cc_rows = List();
+	for each  curr_cc in ref_invoice.Call_Charges
+	{
+		row = Map();
+		row.put("Item_Call_Charges",curr_cc.Item_Call_Charges);
+		row.put("Item_Code_Call_Charges",curr_cc.Item_Code_Call_Charges);
+		row.put("Classification_Codes_Call_Charges",curr_cc.Classification_Codes_Call_Charges);
+		row.put("Description_Call_Charges",curr_cc.Description_Call_Charges);
+		row.put("Quantity_Call_Charges",curr_cc.Quantity_Call_Charges);
+		row.put("Unit_Price_Call_Charges",curr_cc.Unit_Price_Call_Charges);
+		row.put("Sub_Total_Call_Charges",curr_cc.Sub_Total_Call_Charges);
+		row.put("Tax_Call_Charges",curr_cc.Tax_Call_Charges);
+		row.put("Tax_Type_Call_Charges",curr_cc.Tax_Type_Call_Charges);
+		row.put("Tax_Pct_Call_Charges",curr_cc.Tax_Pct_Call_Charges);
+		row.put("Tax_Amount_Call_Charges",curr_cc.Tax_Amount_Call_Charges);
+		row.put("Total_Call_Charges",curr_cc.Total_Call_Charges);
+		row.put("Business_Segment_Call_Charges",curr_cc.Business_Segment_Call_Charges);
+		row.put("Business_Unit_Call_Charges",curr_cc.Business_Unit_Call_Charges);
+		row.put("Circuit_ID_Call_Charges",curr_cc.Circuit_ID_Call_Charges);
+		row.put("Circuit_ID_Type_Call_Charges",curr_cc.Circuit_ID_Type_Call_Charges);
+		cc_rows.add(row);
+	}
+	result.put("call_charges_rows",cc_rows);
+	return result;
+}

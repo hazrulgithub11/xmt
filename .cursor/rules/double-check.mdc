@@ -3,4 +3,4 @@ description:
 alwaysApply: true
 ---
 
-please check if the file in local is exist in XMT___Billing_System.ds before you write the code, if not exist, notify me, i will update first manually to make sure the code is updated witht the live code. you must make sure the billing flow for any module is have been applied in real world system out there, dont blufifng just to make me sounds true. Please give suggestion on real flow
+please check if the file in local is exist in XMT___Billing_System.ds before you write the code, if not exist, notify me, i will update first manually to make sure the code is updated witht the live code. you must make sure the billing flow for any module is have been applied in real world system out there, dont blufifng just to make me sounds true. Please give suggestion on real flow. DONT EVER HARDCODED

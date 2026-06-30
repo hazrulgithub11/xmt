@@ -13,7 +13,7 @@ if(input.Reference_Invoice != null)
 	if(input.Grand_Total > remaining_creditable)
 	{
 		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
-		info "Approval rejected: cumulative credit note cap exceeded. Original invoice total: " + original_total + ", Already credited: " + crediting_cn_total + ", This CN: " + input.Grand_Total + ", Remaining: " + remaining_creditable;
+		info "Approval blocked for credit note " + input.Invoice_No + ": the total credit notes for this invoice would exceed the original invoice amount of RM " + original_total + ". Already credited: RM " + crediting_cn_total + ". This credit note: RM " + input.Grand_Total + ". Maximum remaining creditable: RM " + remaining_creditable + ". Please reduce the credit note amount and resubmit.";
 		return;
 	}
 }
@@ -245,8 +245,10 @@ if(error_messages.size() > 0)
 	thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Pending Approval",input.ID);
 	return;
 }
-// Mode A auto-apply: debt reduction on reference invoice, then close CN
-if(input.Credit_Mode == "Mode A - Debt Reduction")
+// Unified auto-apply: apply min(CN, Amount_Due) to reference invoice on approval.
+// Credits_Remaining = CN amount - applied amount.
+// CN → Closed if Credits_Remaining = 0, → Open if Credits_Remaining > 0.
+if(input.Reference_Invoice != null)
 {
 	ref_invoice_id = input.Reference_Invoice;
 	ref_invoice = Invoice[ID == ref_invoice_id];
@@ -307,7 +309,7 @@ if(input.Credit_Mode == "Mode A - Debt Reduction")
 		log_row.INVOICE_NUMBER=ref_invoice.Invoice_No;
 		log_row.Related_List_Date=current_date_time.toDate();
 		log_row.Related_List_Time=current_date_time.toTime();
-		log_row.MESSAGE="Credit note " + input.Invoice_No + " auto-applied (Mode A). Amount: " + apply_amount;
+		log_row.MESSAGE="Credit note " + input.Invoice_No + " auto-applied. Amount: " + apply_amount;
 		curr_input_invoice.Invoice_Related_List.insert(log_row);
 	}
 	input_credit_note = Credit_Note[ID == input.ID];
@@ -325,7 +327,16 @@ if(input.Credit_Mode == "Mode A - Debt Reduction")
 		input_credit_note.Credit_Applied_Invoices.insert(curr_new_credit_applied_invoices_row);
 	}
 	input_credit_note.Credits_Used=credits_used_total;
-	input_credit_note.Credits_Remaining=0;
-	thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
-	info "Mode A auto-apply complete. CN " + input.ID + " closed. Applied: " + apply_amount;
+	credits_remaining = cn_amount - credits_used_total;
+	input_credit_note.Credits_Remaining=credits_remaining;
+	if(credits_remaining <= 0)
+	{
+		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Closed",input.ID);
+		info "Credit note " + input.Invoice_No + " approved. RM " + apply_amount + " applied to reference invoice. Credit note is now Closed.";
+	}
+	else
+	{
+		thisapp.blueprint.changeStage("Credit_Note","Credit_Note_Blueprint","Open",input.ID);
+		info "Credit note " + input.Invoice_No + " approved. RM " + apply_amount + " applied to reference invoice. RM " + credits_remaining + " remaining credit is available for future use. Credit note is now Open.";
+	}
 }

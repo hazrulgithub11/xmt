@@ -1,0 +1,139 @@
+Handle_Convert_Prefill as "Handle Convert Prefill"
+{
+	type =  form
+	form = Credit_Note
+
+	record event = on add
+
+	on load
+	{
+		actions 
+		{
+			custom deluge script
+			(
+					if(input.Reference_Invoice != null)
+				{
+					ref_invoice_id = input.Reference_Invoice;
+					prefill_data = thisapp.credit_note.prefill_from_reference_invoice(ref_invoice_id);
+					if(prefill_data.get("found"))
+					{
+						// Re-commit Reference_Invoice so the lookup resolves and displays correctly
+						input.Reference_Invoice = ref_invoice_id;
+						// Customer block (do NOT re-set input.Customer — it is already set by URL param;
+						// re-setting it fires Handle_Customer_Name_Chan3 which clears Reference_Invoice
+						// and overwrites fields we are about to copy from the invoice)
+						header = prefill_data.get("header");
+						input.Customer_Name = header.get("Customer_Name");
+						input.Customer_TIN = header.get("Customer_TIN");
+						input.Customer_ID_Type = header.get("Customer_ID_Type");
+						input.Customer_Registration_Identification_Passport_Number = header.get("Customer_Registration_Identification_Passport_Number");
+						input.Customer_SST_Registration_Number = header.get("Customer_SST_Registration_Number");
+						input.Customer_Code = header.get("Customer_Code");
+						input.Customer_E_mail = header.get("Customer_E_mail");
+						input.Customer_Telephone_Number = header.get("Customer_Telephone_Number");
+						input.Customer_Street = header.get("Customer_Street");
+						input.Customer_City = header.get("Customer_City");
+						input.Customer_Postcode = header.get("Customer_Postcode");
+						input.Customer_Country = header.get("Customer_Country");
+						input.Customer_State = header.get("Customer_State");
+						input.Delivery_Street = header.get("Delivery_Street");
+						input.Delivery_City = header.get("Delivery_City");
+						input.Delivery_Postcode = header.get("Delivery_Postcode");
+						input.Delivery_Country = header.get("Delivery_Country");
+						input.Delivery_State = header.get("Delivery_State");
+						input.Subscriptions = header.get("Subscriptions");
+						input.Invoice_For_Usage = header.get("Invoice_For_Usage");
+						input.Payment_Term = header.get("Payment_Term");
+						input.Enable_Reminder = header.get("Enable_Reminder");
+						input.Charge_Category = header.get("Charge_Category");
+						input.Announcement = header.get("Announcement");
+						input.Attachment = header.get("Attachment");
+						input.Invoice_Currency = header.get("Invoice_Currency");
+						input.Exchange_Rate = header.get("Exchange_Rate");
+						input.Payable_To = header.get("Payable_To");
+						input.Invoice_Date = zoho.currentdate;
+						input.Due_Date = zoho.currentdate.addDay(prefill_data.get("payment_term_days"));
+						input.Credits_Used = 0;
+						input.Refund = 0;
+						// Subform row objects must be constructed in the workflow context
+						clear Monthly_Rental;
+						clear Internet_Charges;
+						clear Call_Charges;
+						for each  row in prefill_data.get("monthly_rental_rows")
+						{
+							cn_mr = Credit_Note.Monthly_Rental();
+							cn_mr.Item_Monthly_Rental = row.get("Item_Monthly_Rental");
+							cn_mr.Item_Code_Monthly_Rental = row.get("Item_Code_Monthly_Rental");
+							cn_mr.Classification_Codes_Monthly_Rental = row.get("Classification_Codes_Monthly_Rental");
+							cn_mr.Description_Monthly_Rental = row.get("Description_Monthly_Rental");
+							cn_mr.Quantity_Monthly_Rental = row.get("Quantity_Monthly_Rental");
+							cn_mr.Unit_Price_Monthly_Rental = row.get("Unit_Price_Monthly_Rental");
+							cn_mr.Sub_Total_Monthly_Rental = row.get("Sub_Total_Monthly_Rental");
+							cn_mr.Tax_Monthly_Rental = row.get("Tax_Monthly_Rental");
+							cn_mr.Tax_Type_Monthly_Rental = row.get("Tax_Type_Monthly_Rental");
+							cn_mr.Tax_Pct_Monthly_Rental = row.get("Tax_Pct_Monthly_Rental");
+							cn_mr.Tax_Amount_Monthly_Rental = row.get("Tax_Amount_Monthly_Rental");
+							cn_mr.Total_Monthly_Rental = row.get("Total_Monthly_Rental");
+							cn_mr.Business_Segment_Monthly_Rental = row.get("Business_Segment_Monthly_Rental");
+							cn_mr.Business_Unit_Monthly_Rental = row.get("Business_Unit_Monthly_Rental");
+							cn_mr.Circuit_ID_Monthly_Rental = row.get("Circuit_ID_Monthly_Rental");
+							cn_mr.Circuit_ID_Type_Monthly_Rental = row.get("Circuit_ID_Type_Monthly_Rental");
+							input.Monthly_Rental.insert(cn_mr);
+						}
+						for each  row in prefill_data.get("internet_charges_rows")
+						{
+							cn_ic = Credit_Note.Internet_Charges();
+							cn_ic.Item_Internet_Charges = row.get("Item_Internet_Charges");
+							cn_ic.Item_Code_Internet_Charges = row.get("Item_Code_Internet_Charges");
+							cn_ic.Classification_Codes_Internet_Charges = row.get("Classification_Codes_Internet_Charges");
+							cn_ic.Description_Internet_Charges = row.get("Description_Internet_Charges");
+							cn_ic.Quantity_Internet_Charges = row.get("Quantity_Internet_Charges");
+							cn_ic.Unit_Price_Internet_Charges = row.get("Unit_Price_Internet_Charges");
+							cn_ic.Sub_Total_Internet_Charges = row.get("Sub_Total_Internet_Charges");
+							cn_ic.Tax_Internet_Charges = row.get("Tax_Internet_Charges");
+							cn_ic.Tax_Type_Internet_Charges = row.get("Tax_Type_Internet_Charges");
+							cn_ic.Tax_Pct_Internet_Charges = row.get("Tax_Pct_Internet_Charges");
+							cn_ic.Tax_Amount_Internet_Charges = row.get("Tax_Amount_Internet_Charges");
+							cn_ic.Total_Internet_Charges = row.get("Total_Internet_Charges");
+							cn_ic.Business_Segment_Internet_Charges = row.get("Business_Segment_Internet_Charges");
+							cn_ic.Business_Unit_Internet_Charges = row.get("Business_Unit_Internet_Charges");
+							cn_ic.Circuit_ID_Internet_Charges = row.get("Circuit_ID_Internet_Charges");
+							cn_ic.Circuit_ID_Type_Internet_Charges = row.get("Circuit_ID_Type_Internet_Charges");
+							input.Internet_Charges.insert(cn_ic);
+						}
+						for each  row in prefill_data.get("call_charges_rows")
+						{
+							cn_cc = Credit_Note.Call_Charges();
+							cn_cc.Item_Call_Charges = row.get("Item_Call_Charges");
+							cn_cc.Item_Code_Call_Charges = row.get("Item_Code_Call_Charges");
+							cn_cc.Classification_Codes_Call_Charges = row.get("Classification_Codes_Call_Charges");
+							cn_cc.Description_Call_Charges = row.get("Description_Call_Charges");
+							cn_cc.Quantity_Call_Charges = row.get("Quantity_Call_Charges");
+							cn_cc.Unit_Price_Call_Charges = row.get("Unit_Price_Call_Charges");
+							cn_cc.Sub_Total_Call_Charges = row.get("Sub_Total_Call_Charges");
+							cn_cc.Tax_Call_Charges = row.get("Tax_Call_Charges");
+							cn_cc.Tax_Type_Call_Charges = row.get("Tax_Type_Call_Charges");
+							cn_cc.Tax_Pct_Call_Charges = row.get("Tax_Pct_Call_Charges");
+							cn_cc.Tax_Amount_Call_Charges = row.get("Tax_Amount_Call_Charges");
+							cn_cc.Total_Call_Charges = row.get("Total_Call_Charges");
+							cn_cc.Business_Segment_Call_Charges = row.get("Business_Segment_Call_Charges");
+							cn_cc.Business_Unit_Call_Charges = row.get("Business_Unit_Call_Charges");
+							cn_cc.Circuit_ID_Call_Charges = row.get("Circuit_ID_Call_Charges");
+							cn_cc.Circuit_ID_Type_Call_Charges = row.get("Circuit_ID_Type_Call_Charges");
+							input.Call_Charges.insert(cn_cc);
+						}
+						if(!prefill_data.get("credit_eligible"))
+						{
+							ref_stage = prefill_data.get("ref_stage");
+							alert "A credit note cannot be raised against an invoice with status '" + ref_stage + "'. Only Sent, Overdue, Partially Paid, or Paid invoices are eligible. Please select a different invoice.";
+							clear Reference_Invoice;
+						}
+						input.User_Input_Trigger = !input.User_Input_Trigger;
+						input.Credits_Remaining = prefill_data.get("grand_total");
+					}
+				}
+			)
+		}
+	}
+
+}

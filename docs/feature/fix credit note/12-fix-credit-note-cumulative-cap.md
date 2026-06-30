@@ -1,6 +1,7 @@
 # 12 - Cumulative Cap Validation (Save + Approval)
 
 ## Context
+
 Multiple credit notes can be created against the same reference invoice, but the **total approved CN amount must not exceed the original invoice total**. This is checked twice:
 
 1. **At save (Draft):** sum of already-approved CNs + this CN ≤ original invoice total
@@ -9,13 +10,16 @@ Multiple credit notes can be created against the same reference invoice, but the
 V1 ships the looser variant (Q10/Q23): only **approved** CNs count toward the cap at save. Draft and Pending Approval CNs are not reserved. The approval-time recheck is the safety net for concurrent races.
 
 ## Objective
+
 Block saves and approval transitions when the cumulative approved CN total on the same reference invoice would exceed the original invoice amount.
 
 ## Primary files
+
 - `application/forms/Credit Note/workflow/Handle_Submission_Form_an4.deluge` — save-time cap check
 - `application/blueprints/Credit_Note_Blueprint/transitions/Approve/after/script_01.deluge` — approval-time recheck
 
 ## Dependency
+
 Steps 09, 10, 11 must be in place. `Reference_Invoice` is always set; `Grand_Total` is populated from cloned lines.
 
 ---
@@ -134,11 +138,13 @@ This lets finance see at a glance how much credit room remains before submitting
 
 ## Exit criteria
 
-- [ ] CN save blocked when `Grand_Total > original invoice total − approved CNs`
-- [ ] CN save allowed when `Grand_Total <= remaining creditable amount`
-- [ ] Approval of 3rd CN blocked when CN-1 + CN-2 already = invoice total (concurrent race scenario)
-- [ ] Approval-time message logged with original total, approved total, remaining, this CN amount
-- [ ] Approval reverts to Pending Approval on cap breach (user can edit and resubmit)
-- [ ] Per-line check runs before cumulative cap check
-- [ ] CNs with null `Reference_Invoice` (legacy) are not affected
-- [ ] `Handle_Submission_Form_an4.deluge` and `Approve/after/script_01.deluge` synced to `XMT___Billing_System.ds`
+- [x] CN save blocked when `Grand_Total > original invoice total − approved CNs`
+- [x] CN save allowed when `Grand_Total <= remaining creditable amount`
+- [x] Approval of 3rd CN blocked when CN-1 + CN-2 already = invoice total (concurrent race scenario)
+- [x] Approval-time message logged with original total, approved total, remaining, this CN amount
+- [x] Approval reverts to Pending Approval on cap breach (user can edit and resubmit)
+- [x] Per-line check runs before cumulative cap check
+- [x] CNs with null `Reference_Invoice` (legacy) are not affected
+- [~] `Handle_Validation_Submiss2.deluge` and `Approve/after/unconditional/script_01.deluge` synced to `XMT___Billing_System.ds`
+
+**Implementation note:** Cap counts Approved + Closed + Open + Pending Approval (not Approved-only). Save validation lives in `Handle_Validation_Submiss2`, not `Handle_Submission_Form_an4`.

@@ -15,11 +15,7 @@ Handle_reference_invoice_2 as "Handle reference invoice selection"
 				{
 					if(input.Reference_Invoice.Invoice_UUID == null || input.Reference_Invoice.Invoice_UUID == "" || input.Reference_Invoice.Invoice_Public_Link == null || input.Reference_Invoice.Invoice_Public_Link == "")
 					{
-						invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
-						clear Reference_Invoice;
-						clear Credit_Mode;
-						input.Reference_Invoice:ui.add(invoice_id_list);
-						alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
+					alert "The selected invoice is missing required information (UUID or Public Link). Please ensure this invoice is submitted to LHDN.";
 					}
 					else
 					{
@@ -67,92 +63,84 @@ Handle_reference_invoice_2 as "Handle reference invoice selection"
 							current_stage = input.Blueprint.Current_Stage;
 							if(input.ID == null || current_stage == "Draft" || current_stage == "Rejected")
 							{
+								prefill_data = thisapp.credit_note.prefill_from_reference_invoice(input.Reference_Invoice);
 								clear Monthly_Rental;
 								clear Internet_Charges;
 								clear Call_Charges;
-								ref_invoice = Invoice[ID == input.Reference_Invoice];
-								for each  curr_mr in ref_invoice.Monthly_Rental
+								for each  row in prefill_data.get("monthly_rental_rows")
 								{
 									cn_mr = Credit_Note.Monthly_Rental();
-									cn_mr.Item_Monthly_Rental = curr_mr.Item_Monthly_Rental;
-									cn_mr.Item_Code_Monthly_Rental = curr_mr.Item_Code_Monthly_Rental;
-									cn_mr.Classification_Codes_Monthly_Rental = curr_mr.Classification_Codes_Monthly_Rental;
-									cn_mr.Description_Monthly_Rental = curr_mr.Description_Monthly_Rental;
-									cn_mr.Quantity_Monthly_Rental = curr_mr.Quantity_Monthly_Rental;
-									cn_mr.Unit_Price_Monthly_Rental = curr_mr.Unit_Price_Monthly_Rental;
-									cn_mr.Sub_Total_Monthly_Rental = curr_mr.Sub_Total_Monthly_Rental;
-									cn_mr.Tax_Monthly_Rental = curr_mr.Tax_Monthly_Rental;
-									cn_mr.Tax_Type_Monthly_Rental = curr_mr.Tax_Type_Monthly_Rental;
-									cn_mr.Tax_Pct_Monthly_Rental = curr_mr.Tax_Pct_Monthly_Rental;
-									cn_mr.Tax_Amount_Monthly_Rental = curr_mr.Tax_Amount_Monthly_Rental;
-									cn_mr.Total_Monthly_Rental = curr_mr.Total_Monthly_Rental;
-									cn_mr.Business_Segment_Monthly_Rental = curr_mr.Business_Segment_Monthly_Rental;
-									cn_mr.Business_Unit_Monthly_Rental = curr_mr.Business_Unit_Monthly_Rental;
-									cn_mr.Circuit_ID_Monthly_Rental = curr_mr.Circuit_ID_Monthly_Rental;
-									cn_mr.Circuit_ID_Type_Monthly_Rental = curr_mr.Circuit_ID_Type_Monthly_Rental;
+									cn_mr.Item_Monthly_Rental = row.get("Item_Monthly_Rental");
+									cn_mr.Item_Code_Monthly_Rental = row.get("Item_Code_Monthly_Rental");
+									cn_mr.Classification_Codes_Monthly_Rental = row.get("Classification_Codes_Monthly_Rental");
+									cn_mr.Description_Monthly_Rental = row.get("Description_Monthly_Rental");
+									cn_mr.Quantity_Monthly_Rental = row.get("Quantity_Monthly_Rental");
+									cn_mr.Unit_Price_Monthly_Rental = row.get("Unit_Price_Monthly_Rental");
+									cn_mr.Sub_Total_Monthly_Rental = row.get("Sub_Total_Monthly_Rental");
+									cn_mr.Tax_Monthly_Rental = row.get("Tax_Monthly_Rental");
+									cn_mr.Tax_Type_Monthly_Rental = row.get("Tax_Type_Monthly_Rental");
+									cn_mr.Tax_Pct_Monthly_Rental = row.get("Tax_Pct_Monthly_Rental");
+									cn_mr.Tax_Amount_Monthly_Rental = row.get("Tax_Amount_Monthly_Rental");
+									cn_mr.Total_Monthly_Rental = row.get("Total_Monthly_Rental");
+									cn_mr.Business_Segment_Monthly_Rental = row.get("Business_Segment_Monthly_Rental");
+									cn_mr.Business_Unit_Monthly_Rental = row.get("Business_Unit_Monthly_Rental");
+									cn_mr.Circuit_ID_Monthly_Rental = row.get("Circuit_ID_Monthly_Rental");
+									cn_mr.Circuit_ID_Type_Monthly_Rental = row.get("Circuit_ID_Type_Monthly_Rental");
 									input.Monthly_Rental.insert(cn_mr);
 								}
-								for each  curr_ic in ref_invoice.Internet_Charges
+								for each  row in prefill_data.get("internet_charges_rows")
 								{
 									cn_ic = Credit_Note.Internet_Charges();
-									cn_ic.Item_Internet_Charges = curr_ic.Item_Internet_Charges;
-									cn_ic.Item_Code_Internet_Charges = curr_ic.Item_Code_Internet_Charges;
-									cn_ic.Classification_Codes_Internet_Charges = curr_ic.Classification_Codes_Internet_Charges;
-									cn_ic.Description_Internet_Charges = curr_ic.Description_Internet_Charges;
-									cn_ic.Quantity_Internet_Charges = curr_ic.Quantity_Internet_Charges;
-									cn_ic.Unit_Price_Internet_Charges = curr_ic.Unit_Price_Internet_Charges;
-									cn_ic.Sub_Total_Internet_Charges = curr_ic.Sub_Total_Internet_Charges;
-									cn_ic.Tax_Internet_Charges = curr_ic.Tax_Internet_Charges;
-									cn_ic.Tax_Type_Internet_Charges = curr_ic.Tax_Type_Internet_Charges;
-									cn_ic.Tax_Pct_Internet_Charges = curr_ic.Tax_Pct_Internet_Charges;
-									cn_ic.Tax_Amount_Internet_Charges = curr_ic.Tax_Amount_Internet_Charges;
-									cn_ic.Total_Internet_Charges = curr_ic.Total_Internet_Charges;
-									cn_ic.Business_Segment_Internet_Charges = curr_ic.Business_Segment_Internet_Charges;
-									cn_ic.Business_Unit_Internet_Charges = curr_ic.Business_Unit_Internet_Charges;
-									cn_ic.Circuit_ID_Internet_Charges = curr_ic.Circuit_ID_Internet_Charges;
-									cn_ic.Circuit_ID_Type_Internet_Charges = curr_ic.Circuit_ID_Type_Internet_Charges;
+									cn_ic.Item_Internet_Charges = row.get("Item_Internet_Charges");
+									cn_ic.Item_Code_Internet_Charges = row.get("Item_Code_Internet_Charges");
+									cn_ic.Classification_Codes_Internet_Charges = row.get("Classification_Codes_Internet_Charges");
+									cn_ic.Description_Internet_Charges = row.get("Description_Internet_Charges");
+									cn_ic.Quantity_Internet_Charges = row.get("Quantity_Internet_Charges");
+									cn_ic.Unit_Price_Internet_Charges = row.get("Unit_Price_Internet_Charges");
+									cn_ic.Sub_Total_Internet_Charges = row.get("Sub_Total_Internet_Charges");
+									cn_ic.Tax_Internet_Charges = row.get("Tax_Internet_Charges");
+									cn_ic.Tax_Type_Internet_Charges = row.get("Tax_Type_Internet_Charges");
+									cn_ic.Tax_Pct_Internet_Charges = row.get("Tax_Pct_Internet_Charges");
+									cn_ic.Tax_Amount_Internet_Charges = row.get("Tax_Amount_Internet_Charges");
+									cn_ic.Total_Internet_Charges = row.get("Total_Internet_Charges");
+									cn_ic.Business_Segment_Internet_Charges = row.get("Business_Segment_Internet_Charges");
+									cn_ic.Business_Unit_Internet_Charges = row.get("Business_Unit_Internet_Charges");
+									cn_ic.Circuit_ID_Internet_Charges = row.get("Circuit_ID_Internet_Charges");
+									cn_ic.Circuit_ID_Type_Internet_Charges = row.get("Circuit_ID_Type_Internet_Charges");
 									input.Internet_Charges.insert(cn_ic);
 								}
-								for each  curr_cc in ref_invoice.Call_Charges
+								for each  row in prefill_data.get("call_charges_rows")
 								{
 									cn_cc = Credit_Note.Call_Charges();
-									cn_cc.Item_Call_Charges = curr_cc.Item_Call_Charges;
-									cn_cc.Item_Code_Call_Charges = curr_cc.Item_Code_Call_Charges;
-									cn_cc.Classification_Codes_Call_Charges = curr_cc.Classification_Codes_Call_Charges;
-									cn_cc.Description_Call_Charges = curr_cc.Description_Call_Charges;
-									cn_cc.Quantity_Call_Charges = curr_cc.Quantity_Call_Charges;
-									cn_cc.Unit_Price_Call_Charges = curr_cc.Unit_Price_Call_Charges;
-									cn_cc.Sub_Total_Call_Charges = curr_cc.Sub_Total_Call_Charges;
-									cn_cc.Tax_Call_Charges = curr_cc.Tax_Call_Charges;
-									cn_cc.Tax_Type_Call_Charges = curr_cc.Tax_Type_Call_Charges;
-									cn_cc.Tax_Pct_Call_Charges = curr_cc.Tax_Pct_Call_Charges;
-									cn_cc.Tax_Amount_Call_Charges = curr_cc.Tax_Amount_Call_Charges;
-									cn_cc.Total_Call_Charges = curr_cc.Total_Call_Charges;
-									cn_cc.Business_Segment_Call_Charges = curr_cc.Business_Segment_Call_Charges;
-									cn_cc.Business_Unit_Call_Charges = curr_cc.Business_Unit_Call_Charges;
-									cn_cc.Circuit_ID_Call_Charges = curr_cc.Circuit_ID_Call_Charges;
-									cn_cc.Circuit_ID_Type_Call_Charges = curr_cc.Circuit_ID_Type_Call_Charges;
+									cn_cc.Item_Call_Charges = row.get("Item_Call_Charges");
+									cn_cc.Item_Code_Call_Charges = row.get("Item_Code_Call_Charges");
+									cn_cc.Classification_Codes_Call_Charges = row.get("Classification_Codes_Call_Charges");
+									cn_cc.Description_Call_Charges = row.get("Description_Call_Charges");
+									cn_cc.Quantity_Call_Charges = row.get("Quantity_Call_Charges");
+									cn_cc.Unit_Price_Call_Charges = row.get("Unit_Price_Call_Charges");
+									cn_cc.Sub_Total_Call_Charges = row.get("Sub_Total_Call_Charges");
+									cn_cc.Tax_Call_Charges = row.get("Tax_Call_Charges");
+									cn_cc.Tax_Type_Call_Charges = row.get("Tax_Type_Call_Charges");
+									cn_cc.Tax_Pct_Call_Charges = row.get("Tax_Pct_Call_Charges");
+									cn_cc.Tax_Amount_Call_Charges = row.get("Tax_Amount_Call_Charges");
+									cn_cc.Total_Call_Charges = row.get("Total_Call_Charges");
+									cn_cc.Business_Segment_Call_Charges = row.get("Business_Segment_Call_Charges");
+									cn_cc.Business_Unit_Call_Charges = row.get("Business_Unit_Call_Charges");
+									cn_cc.Circuit_ID_Call_Charges = row.get("Circuit_ID_Call_Charges");
+									cn_cc.Circuit_ID_Type_Call_Charges = row.get("Circuit_ID_Type_Call_Charges");
 									input.Call_Charges.insert(cn_cc);
 								}
 								input.User_Input_Trigger = !input.User_Input_Trigger;
 							}
-							ref_stage = Invoice[ID == input.Reference_Invoice].Blueprint.Current_Stage;
-							if(ref_stage == "Sent" || ref_stage == "Overdue")
-							{
-								input.Credit_Mode = "Mode A - Debt Reduction";
-							}
-							else if(ref_stage == "Partially Paid" || ref_stage == "Paid")
-							{
-								input.Credit_Mode = "Mode B - Open Credit";
-							}
 							else
 							{
-								invoice_id_list = Invoice[Customer == input.Customer].ID.getAll();
-								clear Reference_Invoice;
-								clear Credit_Mode;
-								input.Reference_Invoice:ui.add(invoice_id_list);
-								alert "Invoice stage '" + ref_stage + "' is not eligible for a credit note. Choose a different invoice.";
+								prefill_data = thisapp.credit_note.prefill_from_reference_invoice(input.Reference_Invoice);
 							}
+						if(!prefill_data.get("credit_eligible"))
+						{
+							ref_stage = prefill_data.get("ref_stage");
+							alert "A credit note cannot be raised against an invoice with status '" + ref_stage + "'. Only Sent, Overdue, Partially Paid, or Paid invoices are eligible. Please select a different invoice.";
+						}
 						}
 					}
 				}
@@ -161,4 +149,3 @@ Handle_reference_invoice_2 as "Handle reference invoice selection"
 	}
 
 }
-
