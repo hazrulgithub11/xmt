@@ -20,12 +20,6 @@ send_email_ as "send email "
 				placeholders = input.Placeholders;
 				if(docType == "Pro Forma Invoices")
 				{
-					/* 	getRecordPI = invokeurl
-				 				 					[
-				 				 						url :"https://www.zohoapis.com/creator/v2.1/data" + zoho.appuri + "report/All_Pro_Forma_Invoices/" + recId
-				 				 						type :GET
-				 				 						connection:"zoho_creator_connection"
-				 				 					]; */
 					getRecordPI = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Pro_Forma_Invoices",recId,"zoho_creator_connection");
 					if(getRecordPI.get("code") == 3000)
 					{
@@ -59,8 +53,8 @@ send_email_ as "send email "
 							emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",piData.get(placeholder));
 						}
 					}
-					getPI = Pro_Forma_Invoices[ID == recId];
-					downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + getPI.ID + "/" + getPI.Pro_Forma_Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
+					getPI = Pro_Forma_Invoice[ID == recId];
+					downloadPITempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Pro_Forma_Invoices/" + getPI.ID + "/" + getPI.Invoice_No + "/sEA7WFUM1Ffguk6qHdV2as2b2UQs9xS5yyMYDqCKQ5UFnhtwTfkEGJxdkeK0gq5SFa3MseeJ4jTKqaBJ9OBrURDUs4bYmXUddJB6";
 					piFile = invokeurl
 					[
 						url :downloadPITempUrl
