@@ -466,15 +466,6 @@ form Invoice
 	 	column = 2   
 		width = medium
 	)
-	Send_Email
-	(
-    	type = checkbox
-		displayname = "Send Email"
-		initial value = false
-	 	row = 4
-	 	column = 2   
-		width = medium
-	)
 	Transaction_Info
 	(
 		type = section
@@ -1104,26 +1095,6 @@ form Invoice
 	 	column = 2   
 		width = medium
 	)
-	Adjustment
-	(
-		type = decimal
-		displayname = "Adjustment"
-		format = commadotwestern
-		initial value = 0
-	 	row = 9
-	 	column = 2   
-		width = medium
-	)
-	Overdue_Charges
-	(
-		type = decimal
-		displayname = "Overdue Charges"
-		format = commadotwestern
-		initial value = 0
-	 	row = 9
-	 	column = 2   
-		width = medium
-	)
 	Total_Amount_Due
 	(
 		type = decimal
@@ -1317,15 +1288,6 @@ form Invoice
 	Credits_Applied_Trigger
 	(
     	type = checkbox
-		initial value = false
-	 	row = 14
-	 	column = 1   
-		width = medium
-	)
-	Created_By_The_System
-	(
-    	type = checkbox
-		displayname = "Created By The System"
 		initial value = false
 	 	row = 14
 	 	column = 1   

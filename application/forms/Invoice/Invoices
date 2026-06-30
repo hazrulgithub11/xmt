@@ -104,19 +104,6 @@ list All_Invoices
 				show action in view header = true
 				condition = (Blueprint.Current_Stage == "Pending Approval")
 		)
-		"Send Email"
-		(
-	  			workflow = Send_Email5
-				show action in view header = true
-				show action in edit record menu = true
-				condition = (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "Paid" || Blueprint.Current_Stage == "Overdue")
-				confirmation before execution
-				(
-					message for individual record = "Execute the Send Email action for this record?"
-					confirm button text = "Yes"		
-					cancel button text = "No"
-				)
-		)
 		"Convert To Debit Note"
 		(
 	  			workflow = Convert_To_Debit_Note1
@@ -215,7 +202,6 @@ list All_Invoices
 				(
 					Edit 
 					Delete 
-					"Send Email"
 					"Submit Invoice to LHDN"
 					"Convert To Credit Note"
 					"Convert To Debit Note"

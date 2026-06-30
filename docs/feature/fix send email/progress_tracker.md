@@ -4,8 +4,8 @@ Update this tracker after each file gate.
 
 | Step | File | Owner | Status | Test Gate Result | Notes |
 |---|---|---|---|---|---|
-| 01 | `01-preflight.md` |  | Not Started |  |  |
-| 02 | `02-fix-remove-send-email-button.md` |  | Not Started |  |  |
+| 01 | `01-preflight.md` | Agent | Blocked | Partial | Files verified; `Send_Invoice.deluge` drift vs `.ds`; LHDN policy pending |
+| 02 | `02-fix-remove-send-email-button.md` | Agent | Passed | Code review | Send Email removed from `Invoices`; `Send_Email5.deluge` deleted — deploy to Creator required |
 | 03 | `03-fix-send-invoice-entry-gate.md` |  | Not Started |  |  |
 | 04 | `04-fix-email-input-form-load.md` |  | Not Started |  |  |
 | 05 | `05-fix-send-email-engine-core.md` |  | Not Started |  |  |
