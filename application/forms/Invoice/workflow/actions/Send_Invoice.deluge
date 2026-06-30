@@ -1,223 +1,24 @@
 Send_Invoice as "Send Invoice"
-			{
-				type =  functions
-				form = Invoice
-				execution type = for each record	
-				on start
+{
+	type =  functions
+	form = Invoice
+	execution type = for each record
+	on start
+	{
+		actions
+		{
+			on click
+			(
+				stage = input.Blueprint.Current_Stage;
+				if(stage == "Sent" || stage == "Partially Paid" || stage == "Paid" || stage == "Overdue" || stage == "Approved")
 				{
-					actions  (Blueprint.Current_Stage == "Sent" || Blueprint.Current_Stage == "Partially Paid" || Blueprint.Current_Stage == "paid" || Blueprint.Current_Stage == "Overdue")
-					{
-					on click
-					(
-						// otherMp = Map();
-										// mp = Map();
-										// mp.put("Send_Email",true);
-										// zoho.creator.updateRecord(zoho.adminuser,zoho.appname,"All_Invoices",input.ID,mp,otherMp,"zoho_creator_connection");
-										getEmailTemplate = Email_Templates[Template_Type == "Invoice" && Status == "Active"];
-										toAddresses = input.Customer_E_mail;
-										emailSubject = getEmailTemplate.Subject_field;
-										emailBody = getEmailTemplate.Body;
-										placeholders = getEmailTemplate.Placeholders;
-										recId = input.ID;
-										getRecordInv = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Invoices",recId,"zoho_creator_connection");
-										if(getRecordInv.get("code") == 3000)
-										{
-											invData = getRecordInv.get("data");
-										}
-										for each  placeholder in placeholders
-										{
-											if(invData.get(placeholder).size() != null)
-											{
-												listData = invData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
-												placeHolderValue = "";
-												idx = 0;
-												for each  data in listData
-												{
-													if(data.contains("display_value:"))
-													{
-														if(idx > 0)
-														{
-															placeHolderValue = placeHolderValue + ",";
-														}
-														placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
-														idx = idx + 1;
-													}
-												}
-												emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-												emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-											}
-											else
-											{
-												emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
-												emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
-											}
-										}
-										if(Charge_Category == "Miscellaneous Charges")
-										{
-											downloadMiscInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices_Miscellaneous/" + input.ID + "/" + input.Invoice_No + "/eJwAxwnzTyqvYzDYbM1rhs6uEM6p9W5M2vR2HwQNwZA2AQJym6P9BVDB2WpRgmnNXgx7P8fjxKGpaYmgM334Vsx22wCKN0tgn0qW";
-											miscInvFile = invokeurl
-											[
-												url :downloadMiscInvTempUrl
-												type :GET
-											];
-											miscInvFile.setparamname("file");
-											sendmail
-											[
-												from :zoho.adminuserid
-												to :toAddresses
-												subject :emailSubject
-												message :emailBody
-												Attachments :file:miscInvFile
-											]
-										}
-										else
-										{
-											// 	downloadFixInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices/" + input.ID + "/" + input.Invoice_No + "/dAkCA0tuySVX2eUfT4gUn2ywC8Chf72GnmGyMBSx4mN6WV5hXP1hXe4wZMpyy2N9VeRkug5yZWV9HXNd30NeE2qGBOOmQJQFaYQm";
-											downloadFixInvTempUrl = "https://creatorapp.zohopublic.com/xmttechnologiessdnbhd1/xmt-billing-system/record-pdf/Copy_of_All_Invoices/" + input.ID + "/" + input.Invoice_No + "/pbRFqPOxMz2gJjH1YjYdfpNgB21gTOaGfNhCffKKn4KOMA7Ag0NHJub4jWXTggKVYuHSuPB7dBSFPseK4WR5vNfQGz7Gj3XbZAZx";
-											fixInvFile = invokeurl
-											[
-												url :downloadFixInvTempUrl
-												type :GET
-											];
-											fixInvFile.setparamname("file");
-											sendmail
-											[
-												from :zoho.adminuserid
-												to :toAddresses
-												subject :emailSubject
-												message :emailBody
-												Attachments :file:fixInvFile
-											]
-										}
-					)
-					}
-					actions  ((Blueprint.Current_Stage == "Approved" && Customer.Credit_Available <= 0) || (Blueprint.Current_Stage == "Approved" && Customer.Credit_Available is null))
-					{
-					on click
-					(
-						journalEntryLineItem = Collection();
-										row1 = Journal_Entry.Journal_Entry_Line_Item();
-										row1.Account=4662372000000087205;
-										row1.Description="Invoice " + input.Invoice_No + " Subtotal";
-										row1.Debit=0;
-										row1.Credit=ifnull(input.Sub_Total,0);
-										row2 = Journal_Entry.Journal_Entry_Line_Item();
-										row2.Account=4662372000000941743;
-										row2.Description="Invoice " + input.Invoice_No + " Total Tax";
-										row2.Debit=0;
-										row2.Credit=ifnull(input.Total_Tax,0);
-										row3 = Journal_Entry.Journal_Entry_Line_Item();
-										row3.Account=4662372000000941747;
-										row3.Description="Invoice " + input.Invoice_No + " Grand Total";
-										row3.Debit=ifnull(input.Grand_Total,0);
-										row3.Credit=0;
-										journalEntryLineItem.insert(row1,row2,row3);
-										newJournalEntryRecord = insert into Journal_Entry
-										[
-											Journal_Entry_No=thisapp.journal_entry.generate_journal_no()
-											Document_No=input.Invoice_No
-											Added_User=zoho.loginuser
-											Invoice=input.ID
-											Date_field=zoho.currentdate
-											Journal_Entry_Line_Item=journalEntryLineItem
-											Sub_Total_Debit=ifnull(input.Grand_Total,0) - ifnull(input.Total_Tax,0)
-											Sub_Total_Credit=ifnull(input.Sub_Total,0)
-											Total_Debit=ifnull(input.Grand_Total,0)
-											Total_Credit=ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0)
-											Difference=ifnull(input.Grand_Total,0) - (ifnull(input.Sub_Total,0) + ifnull(input.Total_Tax,0))
-											Created_By_The_System=true
-										];
-					)
-					on click
-					(
-						getEmailTemplate = Email_Templates[Template_Type == "Invoice" && Status == "Active"];
-										toAddresses = input.Customer_E_mail;
-										emailSubject = getEmailTemplate.Subject_field;
-										emailBody = getEmailTemplate.Body;
-										placeholders = getEmailTemplate.Placeholders;
-										recId = input.ID;
-										getRecordInv = zoho.creator.getRecordById(zoho.adminuser,zoho.appname,"All_Invoices",recId,"zoho_creator_connection");
-										if(getRecordInv.get("code") == 3000)
-										{
-											invData = getRecordInv.get("data");
-										}
-										for each  placeholder in placeholders
-										{
-											if(invData.get(placeholder).size() != null)
-											{
-												listData = invData.get(placeholder).toString().replaceAllIgnoreCase("\{|\}|\"|\"","").toList(",");
-												placeHolderValue = "";
-												idx = 0;
-												for each  data in listData
-												{
-													if(data.contains("display_value:"))
-													{
-														if(idx > 0)
-														{
-															placeHolderValue = placeHolderValue + ",";
-														}
-														placeHolderValue = placeHolderValue + data.getSuffix("display_value:");
-														idx = idx + 1;
-													}
-												}
-												emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-												emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",placeHolderValue);
-											}
-											else
-											{
-												emailSubject = emailSubject.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
-												emailBody = emailBody.replaceAllIgnoreCase("\{" + placeholder + "\}",invData.get(placeholder));
-											}
-										}
-										if(input.Charge_Category == "Miscellaneous Charges")
-										{
-											sendmail
-											[
-												from :zoho.adminuserid
-												to :toAddresses
-												subject :emailSubject
-												message :emailBody
-												Attachments :template:Miscellaneous_Invoice:Invoice recId as PDF
-											]
-										}
-										else
-										{
-											sendmail
-											[
-												from :zoho.adminuserid
-												to :toAddresses
-												subject :emailSubject
-												message :emailBody
-												Attachments :template:Fixed_And_Telephone_Charges_Invoice:Invoice recId as PDF
-											]
-										}
-					)
-					on click
-					(
-						if(input.Due_Date > today)
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Sent",input.ID);
-										}
-										else
-										{
-											thisapp.blueprint.changeStage("Invoice","Invoice_Blueprint","Overdue",input.ID);
-										}
-					)
-					}
-					actions  (Blueprint.Current_Stage == "Approved" && Customer.Credit_Available > 0)
-					{
-					on click
-					(
-						getCustomerProfile = Customer_Profile[ID == input.Customer];
-										msg = "message=" + input.Customer.Customer_Name + " has a credit balance of " + getCustomerProfile.Credit_Available + ". Would you like to apply it to this Invoice " + input.Invoice_No + "?";
-										customerName = "&Customer_Name=" + input.Customer;
-										customerCode = "&Customer_Code=" + input.Customer_Code;
-										invoice = "&Invoice=" + input.ID;
-										customerEmail = "&Customer_Email=" + input.Customer_E_mail;
-										invoiceNo = "&Invoice_No=" + input.Invoice_No;
-										typeOfAction = "&Type_Of_Action=Send Invoice";
-										openUrl("#Form:Notify_Credits_Available?" + msg + customerName + customerCode + invoice + customerEmail + invoiceNo + typeOfAction,"popup window","height=auto,width=auto");
-					)
-					}
+					openUrl("#Form:Email_Input_Form?Record_ID=" + input.ID + "&Document_Type=Invoice","popup");
 				}
-			}
+				else if(stage == "Draft" || stage == "Pending Approval" || stage == "Rejected")
+				{
+					openUrl("#Form:Alert_Message?Error_Message=This invoice cannot be sent until it is approved.","popup window","height=auto,width=auto");
+				}
+			)
+		}
+	}
+}

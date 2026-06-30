@@ -13,7 +13,7 @@ On Email Input Form submit:
 3. Merge placeholders safely
 4. Attach correct PDF template by charge category
 5. Send email
-6. Hand off to first-send or resend post-actions
+6. Hand off to first-send or resend post-actions (stage + journal rules completed in step 06)
 
 ## File expected to change
 

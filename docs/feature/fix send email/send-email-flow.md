@@ -1,8 +1,10 @@
 # Correct Send-Email Flow (Target State)
 
+> **MVP scope (implementation):** Steps **01–06** in this folder only — popup before send, governed `send_email_`, journal + stage on first send. **Notify Credits**, customer CN comms, audit fields, and sections 1b / credit branches below are **deferred**; use the simplified “At a glance (MVP)” diagram for build order.
+
 **Purpose:** Define how customer document emails **should** work in XMT Billing after the send-email fix. This is the governed flow finance should sign off on — aligned with Zoho Books (review popup before send) plus XMT blueprint and journal rules.
 
-**Scope (this document):** **Invoice only.** Pro forma, debit note, and other documents follow the same pattern later — debit note credit popup is explicitly **out of scope** for this phase.
+**Scope (this document):** **Invoice only.** Pro forma, debit note, and other documents follow the same pattern later.
 
 **Related:** Audit findings and fix requirements → [`overview.md`](./overview.md)
 
@@ -10,24 +12,22 @@
 
 ---
 
-## At a glance (invoice, no credit)
+## At a glance (invoice, MVP — steps 01–06)
 
 ```mermaid
 flowchart LR
   A[Invoice Approved] --> B[User clicks Send Invoice]
-  B --> C{Credit available?}
-  C -->|Yes| N[Notify Credits Available — section 1b]
-  C -->|No| D[Email Input Form review popup]
-  N --> D
+  B --> D[Email Input Form review popup]
   D --> E{User confirms Send?}
   E -->|Cancel| F[Nothing happens]
   E -->|Send| G[Email + PDF to customer]
   G --> H[Journal entry — first send only]
   H --> I[Invoice → Sent or Overdue]
-  G --> J[Audit log written]
 ```
 
-**Plain English:** Approve → Send → (credit question if needed) → check email → confirm → customer gets PDF, books updated, invoice marked sent.
+**Plain English:** Approve → Send → check email → confirm → customer gets PDF, books updated, invoice marked sent.
+
+*(Full target flow with credit notify remains in section 1b below — deferred past MVP.)*
 
 ---
 

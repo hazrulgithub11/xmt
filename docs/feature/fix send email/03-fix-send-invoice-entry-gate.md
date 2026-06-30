@@ -8,10 +8,11 @@
 
 `Send_Invoice` should only route:
 
-- Approved + credit > 0 -> Notify Credits popup
-- Approved + no credit -> Email Input Form popup
+- Approved -> Email Input Form popup (first send)
 - Sent/Partially Paid/Paid/Overdue -> Email Input Form popup (resend)
-- Draft/Pending approval -> blocked
+- Draft/Pending approval/Rejected -> blocked
+
+**Out of scope (MVP):** Notify Credits Available / credit apply before send — deferred to a later credit-comms initiative.
 
 ## File expected to change
 
@@ -21,13 +22,14 @@
 
 - Remove direct `sendmail` from entry action
 - Remove direct inline journal insert from entry action
-- Pass enough context to popup (document type, record id, send type)
+- Pass context to popup: `Record_ID`, `Document_Type=Invoice`
+- No `Credit_Available` / notify popup on Approved
 
 ## Test Gate (must pass before step 04)
 
-- [ ] Entry action does not directly email customer
-- [ ] Entry action does not directly create journal
-- [ ] Approved/no-credit opens Email Input Form
-- [ ] Approved/credit opens Notify Credits popup
-- [ ] Sent+ opens Email Input Form for resend
-- [ ] Draft cannot proceed
+- [x] Entry action does not directly email customer
+- [x] Entry action does not directly create journal
+- [x] Approved opens Email Input Form
+- [x] Sent+ opens Email Input Form for resend
+- [x] Draft cannot proceed (alert popup)
+- [x] No notify-credits branch on Approved

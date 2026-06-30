@@ -1,21 +1,15 @@
-# Fix Send Email — Progress Tracker (Invoice)
+# Fix Send Email — Progress Tracker (Invoice MVP)
 
-Update this tracker after each file gate.
+Update this tracker after each file gate. **MVP ends at step 06.**
 
 | Step | File | Owner | Status | Test Gate Result | Notes |
 |---|---|---|---|---|---|
-| 01 | `01-preflight.md` | Agent | Blocked | Partial | Files verified; `Send_Invoice.deluge` drift vs `.ds`; LHDN policy pending |
-| 02 | `02-fix-remove-send-email-button.md` | Agent | Passed | Code review | Send Email removed from `Invoices`; `Send_Email5.deluge` deleted — deploy to Creator required |
-| 03 | `03-fix-send-invoice-entry-gate.md` |  | Not Started |  |  |
+| 01 | `01-preflight.md` | Agent | Blocked | Partial | Files verified; sync `.ds` when convenient |
+| 02 | `02-fix-remove-send-email-button.md` | Agent | Passed | Code review | Deploy to Creator required |
+| 03 | `03-fix-send-invoice-entry-gate.md` | Agent | Passed | Code review | Approved/Sent+ -> Email popup only; no credit notify |
 | 04 | `04-fix-email-input-form-load.md` |  | Not Started |  |  |
 | 05 | `05-fix-send-email-engine-core.md` |  | Not Started |  |  |
-| 06 | `06-fix-journal-on-first-send.md` |  | Not Started |  |  |
-| 07 | `07-fix-notify-credits-available.md` |  | Not Started |  |  |
-| 08 | `08-fix-first-send-vs-resend-orchestration.md` |  | Not Started |  |  |
-| 09 | `09-fix-invoice-audit-fields.md` |  | Not Started |  |  |
-| 10 | `10-fix-pdf-template-standardization.md` |  | Not Started |  |  |
-| 11 | `11-fix-lhdn-gate-decision.md` |  | Not Started |  |  |
-| 12 | `12-test-matrix-and-signoff.md` |  | Not Started |  |  |
+| 06 | `06-fix-journal-on-first-send.md` |  | Not Started |  | **MVP final** |
 
 ## Status values
 
